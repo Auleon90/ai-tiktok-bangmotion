@@ -18,15 +18,14 @@ def tts(text: str, out_file: str, voice_id: str = DEFAULT_VOICE):
         sys.exit("ERROR: CARTESIA_API_KEY not set. Run: export CARTESIA_API_KEY=your_key")
 
     payload = {
-        "model_id": "sonic-2",
+        "model_id": "sonic-latest",
         "transcript": text,
         "voice": {"mode": "id", "id": voice_id},
         "output_format": {
             "container": "mp3",
             "encoding": "mp3",
             "sample_rate": 44100
-        },
-        "language": "id"
+        }
     }
 
     r = requests.post(
