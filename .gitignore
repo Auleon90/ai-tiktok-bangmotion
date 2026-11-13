@@ -1,0 +1,6 @@
+output/
+*.mp3
+*.mp4
+*.webm
+storyboard.json
+__pycache__/
