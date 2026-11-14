@@ -136,20 +136,31 @@ offer `"none"` if unsure), `epic` for history/battles, `tense` for mystery, `war
 - Styles marked ✦ (manga-panels, text-flash-cuts, comic-history) need an image generator: use our FLUX step (`image` fields).
 - Avoid styles that need real data/scans (lidar-survey, satellite-briefing, map-explainer 3D terrain) unless the user supplies the data.
 
-### QA (local and free — never uses Cloudflare or other quota)
+### QA (local and free — never uses Cloudflare or other quota) — runs BEFORE the render
 
-`produce.py` runs `scripts/qa.py` automatically: after `--no-render` it checks the voice-over; after a render it writes
-`output/qa_report.md` (voice-over + HyperFrames `check` + final-file checks + `output/qa_sheet.jpg`). Before delivering:
+`produce.py` gates every render on a **pre-render QA** (`scripts/qa.py precheck` → `output/qa_precheck.md`):
 
-1. Read `output/qa_report.md` and LOOK at `output/qa_sheet.jpg`.
-2. Voice-over notes: "stretched" words (> 0.65 s) and "odd pause" usually sound unnatural → rewrite that `vo` line
-   (start with a short lead-in word, split long words, add/remove commas, phonetic spelling) and re-run; only that scene is re-generated.
-   Word-count mismatch = a skipped/merged word → always fix. Max one retry per scene, then tell the user.
-3. Visual (HyperFrames): fix runtime errors, real overlaps/overflow and contrast failures; intended overlaps (double-printed titles,
-   map labels) can stay. `rotation_pivot_drift` = wrong pivot → use `svgOrigin`.
-4. Final: loudness −14 ±1.5 LUFS, true peak ≤ −1 dBTP, no black/frozen frames, A/V lengths equal.
-5. Summarise the QA in the delivery message (what passed, what you fixed, what remains).
-Pronunciation is not machine-checked (no free ASR is reachable here): mention the stretched-word list so the user can listen there first.
+| Check | Engines | Blocks the render? |
+|---|---|---|
+| VO: word count script vs audio (skipped/merged word), missing VO | all | ✅ yes |
+| VO: stretched words (> 0.65 s), odd mid-sentence pauses, pace, clipping | all | ⚠️ report only |
+| `hyperframes check`: runtime JS errors, layout overlap/overflow, contrast, lint errors | HyperFrames | ✅ yes (unless the code is in `qa_allow`) |
+| One still per scene → `output/qa_prerender.jpg` (~1 min) | Remotion | look at it before the ~20 min render |
+
+Flow:
+1. `python3 scripts/produce.py ... --check-only` → builds everything, runs the pre-render QA, renders nothing (seconds to ~1 min).
+2. Read `output/qa_precheck.md`; for Remotion LOOK at `output/qa_prerender.jpg`. Fix the storyboard / page and repeat.
+   - Stretched words / odd pauses: rewrite that `vo` (short lead-in word, split long words, commas, phonetic spelling); only that scene is
+     re-generated. Max one retry per scene, then tell the user.
+   - Overlaps that are intended (double-printed titles, map labels on purpose): add the code to the storyboard, e.g.
+     `"qa_allow": ["content_overlap"]`. Never allow `runtime` errors or contrast failures on captions.
+   - `rotation_pivot_drift` = wrong pivot → use `svgOrigin`.
+3. Only when it passes, run the real render (same command without `--check-only`). If it is blocked, the render does not start.
+   `--accept-qa` overrides the gate — use it only after reviewing every remaining finding.
+4. After the render, the final-file QA runs automatically (`output/qa_report.md` + `output/qa_sheet.jpg`): loudness −14 ±1.5 LUFS,
+   true peak ≤ −1 dBTP, no black/frozen frames, equal A/V length. Look at the sheet before delivering.
+5. Summarise QA in the delivery message (passed / fixed / remaining). Pronunciation is not machine-checked (no free ASR is reachable):
+   list the stretched words so the user can listen there first.
 
 ---
 

@@ -5,8 +5,9 @@
   python3 qa.py visual <hf_project_dir>          # HyperFrames check: lint, runtime errors, layout overlap/overflow, contrast
   python3 qa.py final <video.mp4>                # loudness, true peak, black/frozen frames, A/V length, contact sheet
   python3 qa.py all <storyboard.json> <video.mp4> [hf_project_dir]   # everything -> output/qa_report.md
+  python3 qa.py precheck <storyboard.json> [hf_project_dir]         # BEFORE render; exit 2 = blocking issues
 
-Exit code is always 0: QA reports, it never blocks a render. Read the report and fix what matters.
+Exit code is 0, except `precheck`, which exits 2 when something must be fixed before spending render time. Read the report and fix what matters.
 """
 import hashlib, json, os, re, subprocess, sys
 
@@ -28,6 +29,12 @@ def tokens(text):
 
 # ---------------------------------------------------------------- voice-over
 def qa_vo(sb_path):
+    return qa_vo_full(sb_path)[0]
+
+
+def qa_vo_full(sb_path):
+    """-> (report text, blocking issues). Blocking = a word skipped/merged (count mismatch) or VO missing."""
+    blocking = []
     sb = json.load(open(sb_path))
     voice = os.environ.get("CARTESIA_VOICE_ID", "")
     lines, issues = [], 0
@@ -36,13 +43,14 @@ def qa_vo(sb_path):
         side = os.path.join(OUT, "vo", f"{h}.words.json")
         mp3 = os.path.join(OUT, "vo", f"{h}.mp3")
         if not os.path.exists(side):
-            lines.append(f"- scene {s['id']}: VO not generated yet"); continue
+            lines.append(f"- scene {s['id']}: VO not generated yet"); blocking.append(f"scene {s['id']}: VO missing"); continue
         d = json.load(open(side))
         ws = d["words"]
         notes = []
         n_script, n_audio = len(tokens(s["vo"])), len(ws)
         if n_script != n_audio:
             notes.append(f"word count script {n_script} ≠ audio {n_audio} (possible skipped/merged word)")
+            blocking.append(f"scene {s['id']}: word count {n_script} vs {n_audio}")
         for i, w in enumerate(ws):
             dur = (w["end_ms"] - w["start_ms"]) / 1000
             if dur > STRETCH_S:
@@ -66,20 +74,29 @@ def qa_vo(sb_path):
     head = f"### Voice-over ({issues} note{'s' if issues != 1 else ''})"
     tip = ("\n  Fix: rewrite the line (shorter words, commas where a pause is wanted, phonetic spelling) and re-run produce.py;"
            " only changed scenes are re-generated.") if issues else ""
-    return head + "\n" + "\n".join(lines) + tip
+    return head + "\n" + "\n".join(lines) + tip, blocking
 
 
 # ---------------------------------------------------------------- visual (HyperFrames)
 def qa_visual(proj):
+    return qa_visual_full(proj)[0]
+
+
+BLOCKING_SECTIONS = ("runtime", "layout", "contrast", "lint")
+
+
+def qa_visual_full(proj, allow=()):
+    """-> (report text, blocking issues). Blocking = any error in runtime/layout/contrast/lint whose code is not in `allow`."""
+    blocking = []
     hf = os.path.join(ROOT, "hyperframes", "node_modules", ".bin", "hyperframes")
     if not (os.path.exists(hf) and os.path.isdir(proj)):
-        return "### Visual\n- skipped (HyperFrames project not found)"
+        return "### Visual\n- skipped (HyperFrames project not found)", blocking
     proj = os.path.abspath(proj)
     r = sh([hf, "check", proj, "--json"], cwd=os.path.join(ROOT, "hyperframes"), timeout=600)
     try:
         d = json.loads(r.stdout[r.stdout.index("{"):])
     except Exception:
-        return "### Visual\n- hyperframes check failed:\n```\n" + (r.stderr or r.stdout)[-800:] + "\n```"
+        return "### Visual\n- hyperframes check failed:\n```\n" + (r.stderr or r.stdout)[-800:] + "\n```", ["hyperframes check failed"]
     lines = []
     total_err = 0
     for k in ("lint", "runtime", "layout", "contrast", "motion", "audio"):
@@ -89,12 +106,17 @@ def qa_visual(proj):
         e, w = sec.get("errorCount", 0), sec.get("warningCount", 0)
         total_err += e
         lines.append(f"- {'⚠️' if e else '✅'} {k}: {e} error, {w} warning")
+        if k in BLOCKING_SECTIONS:
+            for f in sec.get("findings") or []:
+                if f.get("severity") == "error" and f.get("code") not in allow:
+                    t = f.get("time")
+                    blocking.append(f"{k}/{f.get('code')} {('@%.1fs ' % t) if isinstance(t, (int, float)) else ''}{f.get('selector','')}")
         for f in (sec.get("findings") or [])[:6]:
             t = f.get("time")
             lines.append(f"    - [{f.get('severity')}] {f.get('code')} {('@%.1fs ' % t) if isinstance(t, (int, float)) else ''}{f.get('selector','')}: {f.get('message','')[:140]}")
     note = ("\n  Note: overlap on purpose (double-printed titles, labels on maps) is fine; check each finding against the contact sheet."
             if total_err else "")
-    return "### Visual (hyperframes check)\n" + "\n".join(lines) + note
+    return "### Visual (hyperframes check)\n" + "\n".join(lines) + note, blocking
 
 
 # ---------------------------------------------------------------- final file
@@ -140,6 +162,21 @@ def main():
         print(qa_visual(sys.argv[2]))
     elif cmd == "final":
         print(qa_final(sys.argv[2]))
+    elif cmd == "precheck":
+        sb = sys.argv[2]
+        hf_dir = sys.argv[3] if len(sys.argv) > 3 else None
+        allow = tuple(json.load(open(sb)).get("qa_allow", []))
+        vo_txt, vo_block = qa_vo_full(sb)
+        parts, block = ["## Pre-render QA", vo_txt], list(vo_block)
+        if hf_dir:
+            v_txt, v_block = qa_visual_full(hf_dir, allow)
+            parts.append(v_txt); block += v_block
+        verdict = ("### ❌ BLOCKED — fix before rendering:\n" + "\n".join(f"- {b}" for b in block[:20])
+                   + ("\n  (intended overlaps: add the code to storyboard \"qa_allow\", or re-run with --accept-qa)" if block else "")) if block else "### ✅ Pre-render QA passed"
+        rep = "\n\n".join(parts + [verdict]) + "\n"
+        open(os.path.join(OUT, "qa_precheck.md"), "w").write(rep)
+        print(rep)
+        sys.exit(2 if block else 0)
     elif cmd == "all":
         sb, mp4 = sys.argv[2], sys.argv[3]
         parts = [f"## QA — {os.path.basename(mp4)}", qa_vo(sb)]

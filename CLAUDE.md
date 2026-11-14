@@ -29,8 +29,9 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
 4. Audio: musik orisinal (`music`: warm/epic/tense/calm/playful/sacred/none) + SFX otomatis dari `scripts/score.py`
    (modul `audio/lemo/`, MIT dari Lemo-Opuscar). Sirah → `sacred` atau `none`.
 5. Mode 1 bisa memakai salah satu dari 99 gaya Lemo-Opuscar (`scripts/styles.py`, diunduh ke `.lemo/` — JANGAN commit STYLE.md, lisensi CC BY-NC).
-6. QA lokal & gratis otomatis (`scripts/qa.py` → `output/qa_report.md` + `output/qa_sheet.jpg`): cek VO (kata molor, jeda janggal,
-   tempo), `hyperframes check` (tata letak, kontras, error), dan file akhir (loudness, frame hitam/beku, durasi A/V). Baca sebelum kirim.
+6. QA lokal & gratis SEBELUM render: jalankan dulu `produce.py ... --check-only` (VO + `hyperframes check` / still per scene Remotion
+   → `output/qa_precheck.md`, `output/qa_prerender.jpg`). Render otomatis DIHENTIKAN kalau ada masalah nyata; tumpukan yang disengaja
+   masuk `"qa_allow"` di storyboard. Setelah render: QA file akhir (`output/qa_report.md`, `output/qa_sheet.jpg`). Baca sebelum kirim.
 7. Semua mode berakhir di `output/final.mp4` dengan VO Cartesia — tidak pernah berhenti di halaman HTML.
 
 Detail lengkap: `.claude/skills/bang-motion.md`. Semua mode dijalankan lewat `scripts/produce.py`.

@@ -194,7 +194,7 @@
         const px = 60 + s.pulse.at[0] * 0.96, py = 300 + s.pulse.at[1] * 0.96;
         const fx = BM.lottieFx(el, "pulse-red", px, py, 300);
         tl.fromTo(fx, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)" }, a + (s.pulse.atFrac ?? 0.4) * D);
-        if (s.pulse.label) { const lb = el.appendChild(h(`<div style="position:absolute;left:${px - 300}px;width:600px;top:${py + 90}px;text-align:center;font-weight:900;font-size:40px;color:#ff4d3d;-webkit-text-stroke:8px #1a1008;paint-order:stroke fill">${s.pulse.label}</div>`)); reveal(lb, a + (s.pulse.atFrac ?? 0.4) * D + 0.2); }
+        if (s.pulse.label) { const lb = el.appendChild(h(`<div style="position:absolute;left:${px - 300}px;width:600px;top:${py + 125}px;text-align:center;font-weight:900;font-size:40px;color:#ff4d3d;-webkit-text-stroke:8px #1a1008;paint-order:stroke fill">${s.pulse.label}</div>`)); reveal(lb, a + (s.pulse.atFrac ?? 0.4) * D + 0.2); }
       }
       // camera push-in + panel intro
       const f = s.focus || { at: [500, 500], zoom: 1.06 };

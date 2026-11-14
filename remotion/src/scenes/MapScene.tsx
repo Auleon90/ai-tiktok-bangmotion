@@ -186,7 +186,7 @@ export const MapScene: React.FC<{ s: MapS; theme: Theme }> = ({ s, theme }) => {
                     })}
                     <circle cx={s.pulse.at[0]} cy={s.pulse.at[1]} r={14} fill={c} />
                     {s.pulse.label && (
-                      <text x={s.pulse.at[0]} y={s.pulse.at[1] + 95} textAnchor="middle" fontFamily={FONT.sans} fontWeight={900} fontSize={36} fill={c} stroke="#1a1008" strokeWidth={8} paintOrder="stroke" opacity={reveal(f, st, 12)}>
+                      <text x={s.pulse.at[0]} y={s.pulse.at[1] + 160} textAnchor="middle" fontFamily={FONT.sans} fontWeight={900} fontSize={36} fill={c} stroke="#1a1008" strokeWidth={8} paintOrder="stroke" opacity={reveal(f, st, 12)}>
                         {s.pulse.label}
                       </text>
                     )}

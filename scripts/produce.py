@@ -2,7 +2,7 @@
 """One-shot producer: storyboard.json -> TTS (cached) -> mixed audio -> Remotion props -> MP4.
 
 Usage:
-  python3 produce.py <storyboard.json> <out.mp4> [--draft] [--no-render]
+  python3 produce.py <storyboard.json> <out.mp4> [--draft] [--no-render] [--check-only] [--accept-qa] [--no-qa]
   python3 produce.py <storyboard.json> <out.mp4> --engine=html --html=<animation.html>
 
 HTML engine: same Cartesia VO + audio mix, then the HTML page is injected with
@@ -68,6 +68,23 @@ def image_cached(spec, style: str) -> str:
 
 def ms2f(ms: float) -> int:
     return int(round(ms / 1000 * FPS))
+
+
+def remotion_prestills(props_path, props):
+    """Pre-render check for Remotion: one still per scene (at ~70%) tiled into output/qa_prerender.jpg."""
+    hs = next(iter(sorted(__import__("glob").glob("/opt/pw-browsers/chromium_headless_shell-*/*/chrome-headless-shell"))), None)
+    tmp = os.path.join(OUT, "qa_stills"); shutil.rmtree(tmp, ignore_errors=True); os.makedirs(tmp)
+    frames = [sc["startFrame"] + int(sc["durationFrames"] * 0.7) for sc in props["scenes"]]
+    for i, fr in enumerate(frames):
+        cmd = ["npx", "remotion", "still", "src/index.ts", "BangMotion", os.path.join(tmp, f"{i:02d}.png"), f"--frame={fr}",
+               f"--props={props_path}", "--scale=0.25", "--log=error"] + ([f"--browser-executable={hs}"] if hs else [])
+        r = subprocess.run(cmd, cwd=REMOTION, capture_output=True, text=True)
+        if r.returncode != 0:
+            return [f"remotion still failed at frame {fr}: {r.stderr[-300:]}"]
+    sheet = os.path.join(OUT, "qa_prerender.jpg")
+    run(["ffmpeg", "-y", "-pattern_type", "glob", "-i", os.path.join(tmp, "*.png"), "-vf", "tile=5x2:padding=4", "-frames:v", "1", sheet])
+    print(f"  pre-render stills -> {sheet} (look at every scene before the long render)")
+    return []
 
 
 def run_qa(args):
@@ -180,10 +197,25 @@ def main():
         print("STEP  QA voice-over (local)")
         run_qa(["vo", sb_path])
         return
+
+    # ---------- pre-render QA gate (local, free): catch problems before spending render time ----------
+    proj = build_hyperframes(opts["html"], props, final_audio, total_ms) if engine == "hyperframes" else None
+    print("STEP  pre-render QA (local, free) -> output/qa_precheck.md")
+    pre = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "qa.py"), "precheck", sb_path] + ([proj] if proj else []),
+                         capture_output=True, text=True)
+    verdict = [l for l in pre.stdout.splitlines() if l.startswith("### ✅") or l.startswith("### ❌") or l.startswith("- ")]
+    print("\n".join(l for l in verdict if not l.startswith("- ✅"))[:3000])
+    extra = remotion_prestills(props_path, props) if engine == "remotion" else []
+    if (pre.returncode == 2 or extra) and "--accept-qa" not in flags:
+        sys.exit("STOPPED before render: fix the issues in output/qa_precheck.md (or re-run with --accept-qa after reviewing).")
+    if "--check-only" in flags:
+        print("CHECK-ONLY: pre-render QA done, render skipped.")
+        return
+
     if engine == "html":
         render_html(opts["html"], props, final_audio, out_mp4, total_ms)
     elif engine == "hyperframes":
-        render_hyperframes(opts["html"], props, final_audio, out_mp4, total_ms, "--draft" in flags)
+        render_hyperframes(proj, out_mp4, total_ms, "--draft" in flags)
     elif engine == "manim":
         render_manim(opts.get("scene", os.path.join(OUT, "manim_scene.py")), props, final_audio, out_mp4, total_ms, "--draft" in flags)
     else:
@@ -198,7 +230,7 @@ def main():
         print(f"DONE  {out_mp4}  {total_ms/1000:.1f}s  {size:.1f} MB")
     if "--no-qa" not in flags:
         print("STEP  QA (local, free) -> output/qa_report.md")
-        qa_args = ["all", sb_path, out_mp4] + ([os.path.join(OUT, "hf")] if engine == "hyperframes" else [])
+        qa_args = ["all", sb_path, out_mp4]  # visual check already ran before render
         run_qa(qa_args)
 
 
@@ -212,8 +244,8 @@ def timing_data(props, total_ms):
     }
 
 
-def render_hyperframes(html_path, props, audio, out_mp4, total_ms, draft):
-    """Build a HyperFrames project in output/hf and render it frame-by-frame to MP4."""
+def build_hyperframes(html_path, props, audio, total_ms):
+    """Assemble the HyperFrames project in output/hf (no rendering)."""
     proj = os.path.join(OUT, "hf")
     shutil.rmtree(proj, ignore_errors=True)
     a = os.path.join(proj, "assets")
@@ -234,7 +266,12 @@ def render_hyperframes(html_path, props, audio, out_mp4, total_ms, draft):
     open(os.path.join(a, "lottie.js"), "w").write("window.LOTTIE=" + json.dumps(lot, separators=(",", ":")) + ";")
     src = open(html_path, encoding="utf-8").read().replace("__TOTAL_S__", f"{total_ms/1000:.3f}")
     open(os.path.join(proj, "index.html"), "w", encoding="utf-8").write(src)
+    return proj
 
+
+def render_hyperframes(proj, out_mp4, total_ms, draft):
+    """Render the assembled HyperFrames project frame-by-frame to MP4."""
+    hfmods = os.path.join(ROOT, "hyperframes", "node_modules")
     print("STEP  render (HyperFrames, frame-by-frame)")
     hf = os.path.join(hfmods, ".bin", "hyperframes")
     cmd = [hf, "render", proj, "-o", os.path.abspath(out_mp4), "--fps", str(FPS), "-w", "4", "--no-browser-gpu", "--quiet"]
