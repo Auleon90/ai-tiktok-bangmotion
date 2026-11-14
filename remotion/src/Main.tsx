@@ -7,6 +7,7 @@ import { Captions } from "./components/Captions";
 import { envelope, lerp } from "./components/anim";
 import { Ayat, Counter, Eyebrow, Headline, Quote, Title, Tribute } from "./scenes/TextScenes";
 import { MapScene } from "./scenes/MapScene";
+import { LottieLayer } from "./components/LottieFx";
 
 const TRANS = 12;
 
@@ -32,6 +33,7 @@ const SceneWrap: React.FC<{ s: Scene; theme: Theme; first: boolean }> = ({ s, th
     <AbsoluteFill style={{ opacity: o, transform: `scale(${scale})`, filter: `blur(${blur}px)` }}>
       <Eyebrow text={s.eyebrow} theme={theme} />
       <SceneBody s={s} theme={theme} />
+      <LottieLayer items={s.lottie} sceneFrames={s.durationFrames} />
     </AbsoluteFill>
   );
 };

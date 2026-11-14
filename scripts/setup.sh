@@ -1,38 +1,31 @@
 #!/usr/bin/env bash
-# One-time setup for bang-motion pipeline
+# Idempotent setup for all bang-motion modes (run once per new session).
 set -euo pipefail
-
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 echo "=== bang-motion setup ==="
 
-# Python deps
-echo "→ Installing Python dependencies..."
-pip install requests --quiet
+echo "→ Python deps (requests, fonttools)"
+pip install -q requests fonttools brotli 2>/dev/null || pip install -q --break-system-packages requests fonttools brotli
 
-# Node dep check (playwright is pre-installed in cloud container)
-echo "→ Checking Node / Playwright..."
-node -e "require('playwright')" 2>/dev/null \
-  && echo "  playwright: OK" \
-  || { echo "  playwright not found, installing..."; npm install playwright --no-save; }
+echo "→ Remotion (mode 2)"
+[ -d "$ROOT/remotion/node_modules" ] || (cd "$ROOT/remotion" && npm install --no-audit --no-fund --silent)
 
-# Remotion deps
-echo "→ Installing Remotion dependencies..."
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-if [ ! -d "$ROOT/remotion/node_modules" ]; then
-  (cd "$ROOT/remotion" && npm install --no-audit --no-fund --silent)
+echo "→ HyperFrames + GSAP + lottie-web (mode 1)"
+[ -d "$ROOT/hyperframes/node_modules" ] || (cd "$ROOT/hyperframes" && npm install --no-audit --no-fund --silent)
+
+echo "→ Manim venv (mode 3)"
+if [ ! -x "$ROOT/.venv-manim/bin/manim" ]; then
+  if ! pkg-config --exists pangocairo 2>/dev/null; then
+    (apt-get install -y -q libpango1.0-dev pkg-config >/dev/null 2>&1 || (apt-get update -q >/dev/null 2>&1 && apt-get install -y -q libpango1.0-dev pkg-config >/dev/null 2>&1)) || echo "  WARN: could not install pango dev libs"
+  fi
+  python3 -m venv "$ROOT/.venv-manim"
+  "$ROOT/.venv-manim/bin/pip" install -q --upgrade pip setuptools wheel
+  "$ROOT/.venv-manim/bin/pip" install -q manim==0.19.0 fonttools brotli || echo "  WARN: manim install failed (mode 3 unavailable)"
 fi
-echo "  remotion: OK"
 
-# ffmpeg check
-echo "→ Checking ffmpeg..."
-ffmpeg -version 2>&1 | head -1
+echo "→ Lottie assets"
+[ -n "$(ls -A "$ROOT/assets/lottie" 2>/dev/null)" ] || python3 "$ROOT/scripts/make_lottie.py"
 
-echo ""
+echo "→ ffmpeg: $(ffmpeg -version 2>&1 | head -1 | cut -d' ' -f1-3)"
+[ -n "${CARTESIA_API_KEY:-}" ] && echo "→ CARTESIA_API_KEY: set" || echo "→ CARTESIA_API_KEY: MISSING"
 echo "=== Setup complete ==="
-echo ""
-echo "Set your Cartesia API key:"
-echo "  export CARTESIA_API_KEY=your_key_here"
-echo ""
-echo "Optional — set a custom voice ID:"
-echo "  export CARTESIA_VOICE_ID=your_voice_id"
-echo ""
-echo "Then use the skill: /bang-motion [your prompt]"

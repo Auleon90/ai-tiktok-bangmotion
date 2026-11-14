@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<!--
+  bang-motion HyperFrames template (mode 1: HTML + GSAP + Lottie + HyperFrames).
+  Data-driven: renders every storyboard scene type from window.PROPS (injected by scripts/produce.py).
+  Copy to output/hf_index.html and customise per video (colours, extra scene types, extra GSAP moves).
+  Placeholders replaced by produce.py: __TOTAL_S__
+-->
+<link rel="stylesheet" href="assets/bm/bm.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="assets/lib/lottie.min.js"></script>
+<script src="assets/props.js"></script>
+<script src="assets/lottie.js"></script>
+<script src="assets/bm/bm.js"></script>
+<style>
+  :root { --sky-top:#0d0a17; --sky-mid:#2a1730; --horizon:#b8582f; --ground:#1c120e; --text:#f6efe2; --accent:#e9b552; --muted:#b9a88f; }
+  html, body { margin:0; background:#000; }
+  #root { position:relative; width:1080px; height:1920px; overflow:hidden; background:var(--ground); color:var(--text); font-family:"Inter","Amiri",sans-serif; }
+  .layer { position:absolute; inset:0; }
+  #sky { background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-mid) 45%,var(--horizon) 72%,var(--ground) 100%); }
+  .scene { position:absolute; inset:0; opacity:0; }
+  .stage { position:absolute; top:260px; height:990px; left:70px; width:940px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .eyebrow { position:absolute; top:190px; left:50%; transform:translateX(-50%); white-space:nowrap; font-weight:700; font-size:30px; letter-spacing:8px; text-transform:uppercase; color:var(--accent); padding:12px 28px; border:2px solid var(--accent); border-radius:40px; background:rgba(0,0,0,.35); }
+  .arabic { font-family:"Amiri",serif; font-weight:700; direction:rtl; color:var(--accent); text-shadow:0 0 40px rgba(233,181,82,.4); }
+  .serif { font-family:"Playfair Display","Amiri",serif; }
+  .w { display:inline-block; margin-right:20px; }
+  .orn { width:520px; height:2px; background:var(--accent); margin:28px 0; transform-origin:center; }
+  .num { font-family:"Playfair Display",serif; font-weight:800; font-variant-numeric:tabular-nums; }
+  .map { position:absolute; left:60px; top:300px; width:960px; height:960px; border-radius:36px; overflow:hidden; box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 0 3px rgba(233,181,82,.35); }
+  .map svg { width:100%; height:100%; }
+  #vignette { background:radial-gradient(ellipse at 50% 45%,rgba(0,0,0,0) 45%,rgba(0,0,0,.75) 100%); z-index:40; pointer-events:none; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="root" data-start="0" data-duration="__TOTAL_S__" data-width="1080" data-height="1920">
+  <audio id="vo" src="assets/audio.mp3" data-start="0" data-duration="__TOTAL_S__"></audio>
+  <div id="sky" class="layer"></div>
+  <svg id="stars" class="layer" width="1080" height="1920"></svg>
+  <svg id="ridges" class="layer" width="1080" height="1920"></svg>
+  <div id="fx-bg" class="layer"></div>
+  <div id="scenes" class="layer"></div>
+  <div id="caps" class="bm-captions"></div>
+  <div id="vignette" class="layer"></div>
+</div>
+<script>
+(function () {
+  const P = window.PROPS, T = P.totalMs / 1000;
+  const tl = gsap.timeline({ paused: true });
+  const R = BM.rng(42);
+  const NS = "http://www.w3.org/2000/svg";
+  const svgEl = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent && parent.appendChild(e); return e; };
+  const h = (html) => { const d = document.createElement("div"); d.innerHTML = html.trim(); return d.firstChild; };
+  const css = getComputedStyle(document.documentElement);
+  const C = (n) => css.getPropertyValue(n).trim();
+  if (P.theme) for (const k in P.theme) document.documentElement.style.setProperty("--" + k.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase()), P.theme[k]);
+
+  // ---------- atmosphere ----------
+  const stars = document.getElementById("stars");
+  for (let i = 0; i < 90; i++) {
+    const c = svgEl("circle", { cx: R() * 1080, cy: R() * 960, r: 0.6 + R() * 1.8, fill: "#fff", opacity: 0.3 }, stars);
+    const cyc = 1.5 + R() * 2;
+    tl.to(c, { opacity: 0.8, duration: cyc / 2, ease: "sine.inOut", yoyo: true, repeat: Math.max(0, Math.floor(T / cyc) * 2 - 1) }, R() * 1.5);
+  }
+  const ridges = document.getElementById("ridges");
+  svgEl("circle", { cx: 734, cy: 1150, r: 520, fill: "url(#sun)" }, ridges);
+  const defs = svgEl("defs", {}, ridges);
+  const g = svgEl("radialGradient", { id: "sun" }, defs);
+  svgEl("stop", { offset: "0%", "stop-color": C("--accent"), "stop-opacity": 0.85 }, g);
+  svgEl("stop", { offset: "40%", "stop-color": C("--horizon"), "stop-opacity": 0.4 }, g);
+  svgEl("stop", { offset: "100%", "stop-color": C("--horizon"), "stop-opacity": 0 }, g);
+  [[1180, 260, C("--sky-mid"), 0.55, 60], [1300, 220, C("--ground"), 0.75, 120], [1440, 160, C("--ground"), 1, 220]].forEach(([base, amp, col, op, drift], li) => {
+    let d = `M-200 1920 L-200 ${base}`;
+    for (let i = 0; i <= 14; i++) d += ` L${(i / 14) * 1480 - 200} ${base - R() * amp - (i % 2 ? 0 : amp * 0.25)}`;
+    d += " L1280 1920 Z";
+    const p = svgEl("path", { d, fill: col, opacity: op }, ridges);
+    tl.fromTo(p, { x: 0 }, { x: -drift, duration: T, ease: "none" }, 0);
+  });
+  BM.lottieFx(document.getElementById("fx-bg"), "dust-gold", 540, 960, 1900).style.opacity = 0.6;
+
+  // ---------- scene builders ----------
+  const host = document.getElementById("scenes");
+  const reveal = (el, at, extra = {}) => tl.fromTo(el, { opacity: 0, y: 40, ...extra.from }, { opacity: 1, y: 0, duration: 0.7, ease: "expo.out", ...extra.to }, at);
+  const words = (el, at, step = 0.12) => el.querySelectorAll(".w").forEach((w, i) => tl.fromTo(w, { opacity: 0, y: 50, filter: "blur(8px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "expo.out" }, at + i * step));
+  const split = (t) => t.split(" ").map((w) => `<span class="w">${w}</span>`).join("");
+
+  const B = {
+    title(s, el, a) {
+      const st = el.appendChild(h(`<div class="stage">
+        ${s.arabic ? `<div class="arabic" style="font-size:190px;line-height:1.3">${s.arabic}</div>` : ""}
+        <div class="orn"></div>
+        <div class="serif" style="font-size:104px;font-weight:700;line-height:1.05">${split(s.title)}</div>
+        ${s.subtitle ? `<div style="font-size:40px;color:var(--muted);margin-top:26px;letter-spacing:3px">${s.subtitle}</div>` : ""}</div>`));
+      const ar = st.querySelector(".arabic");
+      if (ar) tl.fromTo(ar, { clipPath: "inset(0 0 0 100%)", scale: 1.1 }, { clipPath: "inset(0 0 0 0%)", scale: 1, duration: 1.4, ease: "power3.out" }, a + 0.1);
+      tl.fromTo(st.querySelector(".orn"), { scaleX: 0 }, { scaleX: 1, duration: 0.9, ease: "expo.out" }, a + 0.6);
+      words(st, a + 0.8);
+      if (st.lastElementChild.style.letterSpacing) reveal(st.lastElementChild, a + 1.3);
+    },
+    headline(s, el, a) {
+      const st = el.appendChild(h(`<div class="stage"><div class="serif" style="font-size:96px;font-weight:800;line-height:1.08">${split(s.headline)}</div>
+        ${s.sub ? `<div class="sub" style="font-size:42px;color:var(--muted);margin-top:30px">${s.sub}</div>` : ""}</div>`));
+      words(st, a + 0.3, 0.1);
+      const sub = st.querySelector(".sub"); if (sub) reveal(sub, a + 1);
+    },
+    counter(s, el, a) {
+      const st = el.appendChild(h(`<div class="stage"><div class="row" style="display:flex;gap:40px;align-items:center"></div></div>`));
+      const row = st.querySelector(".row");
+      s.items.forEach((it, i) => {
+        const col = it.color || C("--accent");
+        if (s.versus && i > 0) { const vs = row.appendChild(h(`<div class="serif" style="font-style:italic;font-size:70px;color:var(--muted)">vs</div>`)); tl.fromTo(vs, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(3)" }, a + 0.5 * i); }
+        const box = row.appendChild(h(`<div style="display:flex;flex-direction:column;align-items:center">
+          <div class="num" style="font-size:${s.items.length > 1 ? 150 : 230}px;color:${col};text-shadow:0 0 50px ${col}88">0</div>
+          <div class="bar" style="width:260px;height:6px;background:${col};border-radius:3px;margin:8px 0 18px;transform-origin:left"></div>
+          <div style="font-weight:700;font-size:40px;letter-spacing:2px;text-transform:uppercase">${it.label}</div></div>`));
+        const st0 = a + 0.2 + i * 0.5, num = box.querySelector(".num"), o = { v: 0 };
+        tl.fromTo(box, { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(2)" }, st0);
+        tl.fromTo(o, { v: 0 }, { v: it.value, duration: 1.5, ease: "power3.out", onUpdate: () => (num.textContent = (it.prefix || "") + Math.round(o.v).toLocaleString("id-ID") + (it.suffix || "")) }, st0);
+        tl.fromTo(box.querySelector(".bar"), { scaleX: 0 }, { scaleX: 1, duration: 1.5, ease: "power3.out" }, st0);
+      });
+    },
+    quote(s, el, a) {
+      const st = el.appendChild(h(`<div class="stage"><div class="serif" style="font-size:220px;line-height:.6;height:110px;color:var(--accent)">“</div>
+        <div class="serif q" style="font-style:italic;font-size:70px;line-height:1.28">${split(s.text)}</div>
+        ${s.source ? `<div class="src" style="font-weight:700;font-size:36px;color:var(--accent);margin-top:40px;letter-spacing:4px">— ${s.source}</div>` : ""}</div>`));
+      const ws = st.querySelectorAll(".w"), step = Math.min(0.15, 1.6 / ws.length);
+      ws.forEach((w, i) => tl.fromTo(w, { opacity: 0.08 }, { opacity: 1, duration: 0.5 }, a + 0.3 + i * step));
+      const src = st.querySelector(".src"); if (src) reveal(src, a + 0.6 + ws.length * step);
+    },
+    ayat(s, el, a) {
+      const st = el.appendChild(h(`<div class="stage"><div class="arabic" style="font-size:74px;line-height:1.8">${s.arabic}</div><div class="orn" style="width:420px"></div>
+        <div class="serif tr" style="font-style:italic;font-size:50px;line-height:1.35">“${s.translation}”</div>
+        <div class="ref" style="font-weight:700;font-size:34px;letter-spacing:4px;color:var(--muted);margin-top:30px">${s.ref}</div></div>`));
+      tl.fromTo(st.querySelector(".arabic"), { clipPath: "inset(0 0 0 100%)" }, { clipPath: "inset(0 0 0 0%)", duration: 2, ease: "power2.inOut" }, a + 0.2);
+      tl.fromTo(st.querySelector(".orn"), { scaleX: 0 }, { scaleX: 1, duration: 0.9, ease: "expo.out" }, a + 1.2);
+      reveal(st.querySelector(".tr"), a + 1.5); reveal(st.querySelector(".ref"), a + 2.1);
+      BM.lottieFx(el, "sparkle-gold", 540, 640, 900).style.opacity = 0.7;
+    },
+    tribute(s, el, a) {
+      const st = el.appendChild(h(`<div class="stage">
+        <div class="glow" style="width:28px;height:110px;background:var(--muted);border-radius:4px;margin-bottom:30px;box-shadow:0 -60px 60px 20px rgba(233,181,82,.5)"></div>
+        ${s.arabic ? `<div class="arabic" style="font-size:88px">${s.arabic}</div>` : ""}
+        <div class="serif nm" style="font-size:84px;font-weight:700">${s.name}</div>
+        ${s.note ? `<div class="nt" style="font-size:40px;color:var(--muted);margin-top:20px;letter-spacing:3px">${s.note}</div>` : ""}</div>`));
+      [...st.children].forEach((c, i) => reveal(c, a + 0.2 + i * 0.4));
+      const glow = st.querySelector(".glow");
+      tl.to(glow, { boxShadow: "0 -60px 90px 34px rgba(233,181,82,.7)", duration: 0.6, yoyo: true, repeat: Math.max(1, Math.floor((s.durationMs / 1000) / 0.6) - 1), ease: "sine.inOut" }, a);
+    },
+    map(s, el, a) {
+      const D = s.durationMs / 1000;
+      const box = el.appendChild(h(`<div class="map"><svg viewBox="0 0 1000 1000"></svg></div>`));
+      const svg = box.querySelector("svg");
+      const d0 = svgEl("defs", {}, svg);
+      const sg = svgEl("radialGradient", { id: "sand" + s.id, cx: "50%", cy: "40%", r: "75%" }, d0);
+      [["0%", "#e7c993"], ["70%", "#c59a5d"], ["100%", "#8a6338"]].forEach(([o, c]) => svgEl("stop", { offset: o, "stop-color": c }, sg));
+      const cam = svgEl("g", {}, svg);
+      svgEl("rect", { x: -200, y: -200, width: 1400, height: 1400, fill: `url(#sand${s.id})` }, cam);
+      for (let i = 0; i < 10; i++) { const cx = R() * 1000, cy = R() * 1000, r = 80 + R() * 200; [1, 0.7, 0.4].forEach((k) => svgEl("circle", { cx, cy, r: r * k, fill: "none", stroke: "#7a5530", "stroke-opacity": 0.18, "stroke-width": 2 }, cam)); }
+      (s.hills || []).forEach((hl, i) => {
+        const gg = svgEl("g", {}, cam);
+        [1, 0.78, 0.56, 0.34].forEach((k, j) => svgEl("ellipse", { cx: hl.at[0], cy: hl.at[1] - (1 - k) * hl.r * 0.2, rx: hl.r * k, ry: hl.r * k * 0.72, fill: hl.color || "#6b4a2b", "fill-opacity": 0.22 + j * 0.14, stroke: C("--ground"), "stroke-opacity": 0.35, "stroke-width": 2 }, gg));
+        if (hl.label) { const t = svgEl("text", { x: hl.at[0], y: hl.at[1] + hl.r * 0.72 + 42, "text-anchor": "middle", "font-family": "Inter", "font-weight": 800, "font-size": 30, "letter-spacing": 3, fill: C("--ground") }, gg); t.textContent = hl.label.toUpperCase(); }
+        tl.fromTo(gg, { opacity: 0 }, { opacity: 1, duration: 0.6 }, a + 0.2 + i * 0.2);
+      });
+      (s.arrows || []).forEach((ar) => {
+        const pts = ar.path; let d = `M${pts[0][0]} ${pts[0][1]}`;
+        for (let i = 1; i < pts.length - 1; i++) { const [x, y] = pts[i], [nx, ny] = pts[i + 1], last = i === pts.length - 2; d += ` Q${x} ${y} ${last ? nx : (x + nx) / 2} ${last ? ny : (y + ny) / 2}`; }
+        if (pts.length === 2) d += ` L${pts[1][0]} ${pts[1][1]}`;
+        const p = svgEl("path", { d, fill: "none", stroke: ar.color, "stroke-width": 14, "stroke-linecap": "round", pathLength: 1, "stroke-dasharray": 1 }, cam);
+        const st0 = a + (ar.at ?? 0.25) * D;
+        tl.fromTo(p, { attr: { "stroke-dashoffset": 1 } }, { attr: { "stroke-dashoffset": 0 }, duration: Math.min(1.4, D * 0.35), ease: "power2.inOut" }, st0);
+      });
+      (s.units || []).forEach((u, ui) => {
+        const gg = svgEl("g", {}, cam), spread = u.spread || 70, cols = Math.ceil(Math.sqrt(u.dots));
+        for (let i = 0; i < u.dots; i++) svgEl("circle", { cx: ((i % cols) / Math.max(1, cols - 1) - 0.5 + (R() - 0.5) * 0.25) * spread, cy: (Math.floor(i / cols) / Math.max(1, cols - 1) - 0.5 + (R() - 0.5) * 0.25) * spread, r: 7, fill: u.color, stroke: "#1a1008", "stroke-width": 1.5 }, gg);
+        if (u.label) {
+          const lg = svgEl("g", { transform: `translate(0 ${-spread * 0.6 - 30})` }, gg), wdt = u.label.length * 18 + 36;
+          svgEl("rect", { x: -wdt / 2, y: -26, width: wdt, height: 44, rx: 22, fill: "#120c08", "fill-opacity": 0.85, stroke: u.color, "stroke-width": 3 }, lg);
+          const t = svgEl("text", { y: 5, "text-anchor": "middle", "font-family": "Inter", "font-weight": 800, "font-size": 26, fill: "#fff" }, lg); t.textContent = u.label;
+        }
+        tl.set(gg, { attr: { transform: `translate(${u.from[0]} ${u.from[1]})` } }, 0);
+        tl.fromTo(gg, { opacity: 0 }, { opacity: 1, duration: 0.5 }, a + 0.3 + ui * 0.2);
+        if (u.to) { const [m0, m1] = u.moveAt || [0.3, 0.8]; const o = { x: u.from[0], y: u.from[1] };
+          tl.to(o, { x: u.to[0], y: u.to[1], duration: (m1 - m0) * D, ease: "power2.inOut", onUpdate: () => gg.setAttribute("transform", `translate(${o.x} ${o.y})`) }, a + m0 * D); }
+      });
+      if (s.pulse) {
+        const px = 60 + s.pulse.at[0] * 0.96, py = 300 + s.pulse.at[1] * 0.96;
+        const fx = BM.lottieFx(el, "pulse-red", px, py, 300);
+        tl.fromTo(fx, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)" }, a + (s.pulse.atFrac ?? 0.4) * D);
+        if (s.pulse.label) { const lb = el.appendChild(h(`<div style="position:absolute;left:${px - 300}px;width:600px;top:${py + 90}px;text-align:center;font-weight:900;font-size:40px;color:#ff4d3d;-webkit-text-stroke:8px #1a1008;paint-order:stroke fill">${s.pulse.label}</div>`)); reveal(lb, a + (s.pulse.atFrac ?? 0.4) * D + 0.2); }
+      }
+      // camera push-in + panel intro
+      const f = s.focus || { at: [500, 500], zoom: 1.06 };
+      tl.fromTo(cam, { attr: { transform: "translate(0 0) scale(1)" } }, { attr: { transform: `translate(${(1 - f.zoom) * f.at[0]} ${(1 - f.zoom) * f.at[1]}) scale(${f.zoom})` }, duration: D, ease: "power1.inOut" }, a);
+      tl.fromTo(box, { rotationX: 18, scale: 0.92, transformPerspective: 1800 }, { rotationX: 0, scale: 1, duration: 0.9, ease: "expo.out" }, a);
+    },
+  };
+
+  // ---------- assemble ----------
+  P.scenes.forEach((s, i) => {
+    const el = host.appendChild(h(`<div class="scene" id="sc${s.id}"></div>`));
+    const w = BM.scene(tl, el, s, { fade: 0.4, keepLast: i === P.scenes.length - 1 });
+    if (s.eyebrow) { const eb = el.appendChild(h(`<div class="eyebrow">${s.eyebrow}</div>`)); tl.fromTo(eb, { clipPath: "inset(0 50% 0 50%)" }, { clipPath: "inset(0 0% 0 0%)", duration: 0.6, ease: "expo.out" }, w.start + 0.05); }
+    (B[s.type] || B.headline)(s, el, w.start);
+    (s.lottie || []).forEach((fx) => { const e = BM.lottieFx(el, fx.name, fx.x, fx.y, fx.size || 400); if (fx.opacity != null) e.style.opacity = fx.opacity; });
+    tl.fromTo(el, { scale: 1 }, { scale: 1.05, duration: w.dur + 0.4, ease: "none" }, w.start); // slow camera drift
+  });
+  BM.captions(tl, document.getElementById("caps"), P.words, { accent: C("--accent"), text: C("--text") });
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["root"] = tl;
+})();
+</script>
+</body>
+</html>

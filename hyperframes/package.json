@@ -1,0 +1,2 @@
+{ "name": "bangmotion-hyperframes", "private": true, "version": "1.0.0",
+  "dependencies": { "hyperframes": "0.8.218", "gsap": "3.13.0", "lottie-web": "5.12.2" } }

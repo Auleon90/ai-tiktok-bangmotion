@@ -12,7 +12,10 @@ export type Theme = {
   muted: string;
 };
 
-type Base = { id: number; startFrame: number; durationFrames: number; eyebrow?: string };
+/** Lottie effect from assets/lottie: name = "<pulse|burst|sparkle|dust|ring>-<gold|white|red>" */
+export type LottieFx = { name: string; x: number; y: number; size?: number; at?: number; loop?: boolean; speed?: number; opacity?: number };
+
+type Base = { id: number; startFrame: number; durationFrames: number; eyebrow?: string; lottie?: LottieFx[] };
 
 export type TitleScene = Base & { type: "title"; arabic?: string; title: string; subtitle?: string };
 export type HeadlineScene = Base & { type: "headline"; headline: string; sub?: string; icon?: IconName };

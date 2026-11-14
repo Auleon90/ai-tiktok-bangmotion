@@ -1,161 +1,176 @@
 # /bang-motion — TikTok Motion Graphic Pipeline
 
-Triggered by: `/bang-motion [prompt] [--engine remotion|html]`
+Triggered by: `/bang-motion [prompt]` or any request to make a video in this repo.
 
-Generates a TikTok-ready MP4 (1080×1920) with Indonesian voiceover (Cartesia sonic-3, word timestamps).
+Every mode produces the same deliverable: a 1080×1920 MP4 with the Cartesia voiceover
+(sonic-3, Galang id-ID, per-word timestamps), word-synced captions and a mixed/normalised soundtrack.
+All modes share one storyboard and one audio pipeline (`scripts/produce.py`); only the visual engine differs.
 
-**Engines**
-- `remotion` — data-driven Remotion composition in `remotion/`, frame-accurate render, word-synced captions, ambience + loudnorm (~20 min render). Section "Remotion engine".
-- `html` — legacy flow: AI-written HTML recorded with Playwright (~1–2 min render, lower quality). Section "Legacy HTML engine".
-
-## STEP 0 — ALWAYS ask which mode first (mandatory)
-
-Before writing any storyboard or calling any API, for EVERY video request, use AskUserQuestion:
-
-- question: "Mau pakai mode render apa untuk video ini?"
-- header: "Mode"
-- options:
-  - **Remotion (kualitas tinggi)** — render per frame, subtitle per kata, backsound; render ±20 menit. Untuk video final.
-  - **HTML (cepat)** — rekam layar, tanpa subtitle per kata; render ±1–2 menit. Untuk draf/tes ide.
-
-Skip this question only if the user already stated the mode in the same request (e.g. `--engine html`, "pakai remotion", "mode cepat"). Then follow ONLY the chosen engine's section below.
+Repo root: `/home/user/ai-tiktok-bangmotion` (below: `$R`).
 
 ---
 
-## Remotion engine (mode "Remotion (kualitas tinggi)")
+## Flow (always in this order)
 
-### R1 — Setup
-```bash
-bash /home/user/ai-tiktok-bangmotion/scripts/setup.sh
-```
-`CARTESIA_API_KEY` must be set (Default environment). If missing, stop and ask.
+1. **Setup** — `bash $R/scripts/setup.sh` (idempotent). `CARTESIA_API_KEY` must be set; if not, stop and ask.
+2. **Idea** — from the prompt, pick an angle/hook (one sentence) and the story arc.
+3. **Storyboard** — write `$R/output/storyboard.json` (format below).
+4. **Approval** — show the summary and AskUserQuestion: **Lanjutkan** / **Revisi**. Loop on Revisi.
+5. **Mode** — ONLY after approval, ask which render mode (section "Mode question"). Skip only if the user already named a mode in this request.
+6. **Voiceover** — `cd $R && python3 scripts/produce.py output/storyboard.json output/final.mp4 --no-render`
+   (TTS is cached per text in `output/vo/`; revisions only re-generate changed scenes.)
+7. **Build + render** — follow the chosen mode's section. Long renders run in background; tell the user.
+8. **Deliver** — `SendUserFile(["$R/output/final.mp4"])` (absolute path) + report duration, size, scene count, mode, voice.
 
-### R2 — Write storyboard
-Write `/home/user/ai-tiktok-bangmotion/output/storyboard.json`. Use `examples/uhud.storyboard.json` as the reference. Format:
+Never stop at an HTML page, an Artifact or a raw render without audio: the result is always `output/final.mp4`.
+
+---
+
+## Storyboard format (shared by all modes)
 
 ```json
 {
   "title": "...",
-  "ambience": "wind",          // or "none"
-  "theme": { "accent": "#e9b552" },   // optional: skyTop, skyMid, horizon, ground, text, accent, muted
-  "scenes": [ { "id": 1, "type": "title", "vo": "Teks yang diucapkan", "eyebrow": "LABEL KECIL", ... } ]
+  "ambience": "wind",                       // "wind" | "none"
+  "theme": { "accent": "#e9b552" },         // optional: skyTop, skyMid, horizon, ground, text, accent, muted
+  "scenes": [
+    { "id": 1, "type": "title", "vo": "Teks yang diucapkan", "eyebrow": "LABEL", "lottie": [ ... ], ... }
+  ]
 }
 ```
 
-Every scene: `id`, `type`, `vo` (spoken Indonesian, ~2.3 words/sec), optional `eyebrow`, `pad_before_ms`, `gap_after_ms`.
-Scene duration is derived from the real audio — never set it manually.
+Every scene: `id`, `type`, `vo` (spoken Indonesian, ~2.3 words/s), optional `eyebrow`, `pad_before_ms`, `gap_after_ms`, `lottie`.
+Durations come from the real audio — never set them by hand. 6–9 scenes, ~55–60 s. Scene 1 must hook.
+
+Built-in scene types (rendered automatically by modes 1 and 2):
 
 | type | fields |
 |------|--------|
 | `title` | `arabic?`, `title`, `subtitle?` |
-| `headline` | `headline`, `sub?`, `icon?` (sword, bow, mountain, moon, drop, star, shield) |
+| `headline` | `headline`, `sub?`, `icon?` (sword, bow, mountain, moon, drop, star, shield — Remotion only) |
 | `counter` | `items: [{value, label, color?, prefix?, suffix?}]`, `versus?` |
 | `quote` | `text`, `source?` |
 | `ayat` | `arabic`, `translation`, `ref` |
 | `tribute` | `name`, `arabic?`, `note?` |
-| `map` | coords 0–1000 (y down): `hills[{label?, at, r, color?}]`, `units[{label?, color, dots, from, to?, moveAt?:[0..1,0..1], spread?}]`, `arrows[{path:[[x,y]...], color, at?}]`, `pulse{at, label?, atFrac?}`, `focus{at, zoom}` |
+| `map` | coords 0–1000 (y down): `hills[{label?, at, r, color?}]`, `units[{label?, color, dots, from, to?, moveAt?, spread?}]`, `arrows[{path, color, at?}]`, `pulse{at, label?, atFrac?}`, `focus{at, zoom}` |
 
-Rules:
-- 6–9 scenes, total ~55–60 s. Open with a strong hook (scene 1 must be visually striking).
-- `vo` is what is spoken; on-screen text can differ (e.g. write "Rasulullah" in vo, "ﷺ" only on screen).
-- Islamic/sirah content: NEVER depict the Prophet ﷺ or sahabat as figures/faces. Use maps, unit dots, symbols, calligraphy, ayat.
-- Verify facts (numbers, dates, hadith wording) and cite source in `quote.source` / `ayat.ref`.
+Manim mode (3) uses free-form types (e.g. `triangle`, `graph`, `formula`) plus a `visual` description — the Manim scene code draws them.
 
-### R3 — Present for approval
-Show the storyboard summary (scene, type, visual, VO). AskUserQuestion:
-- **Lanjutkan** — render with the mode chosen in STEP 0
-- **Revisi** — loop until approved
+`lottie` (modes 1 & 2): `[{ "name": "<pulse|burst|sparkle|dust|ring>-<gold|white|red>", "x": px, "y": px, "size": px, "at": 0..1, "loop": true, "opacity": 1 }]`
+in 1080×1920 pixel space. Assets live in `assets/lottie/` (generated by `scripts/make_lottie.py`; LottieFiles is not reachable from the container — add new animations to that script).
 
-### R4 — Draft check (fast)
-```bash
-cd /home/user/ai-tiktok-bangmotion && python3 scripts/produce.py output/storyboard.json output/final.mp4 --no-render
+Content rules:
+- `vo` is what is spoken; on-screen text can differ (say "Rasulullah" in vo, show "ﷺ" on screen).
+- Sirah/Islamic content: NEVER depict the Prophet ﷺ or sahabat as figures or faces — maps, unit dots, symbols, calligraphy, ayat.
+- Verify facts (numbers, dates, hadith wording) and cite them in `quote.source` / `ayat.ref`.
+- Keep important visuals above pixel y≈1280; captions sit at y 1320+.
+
+Approval summary format:
 ```
-TTS is cached by text hash in `output/vo/` — revisions only regenerate changed scenes.
-Then render stills (≈70% into each scene) to check layout before the long render:
-```bash
-cd remotion && cp ../output/props.json src/sample.json
-npx remotion still src/index.ts BangMotion /tmp/s.png --frame=<N> --props=../output/props.json --scale=0.4 \
-  --browser-executable=$(ls /opt/pw-browsers/chromium_headless_shell-*/*/chrome-headless-shell)
+📋 STORYBOARD — [title]
+━━━━━━━━━━━━━━━━━━━━━━━━
+Scene 1 [type]: [eyebrow]
+  🎬 Visual: [what is shown]
+  🎙️ VO: "[vo]"
+...
+━━━━━━━━━━━━━━━━━━━━━━━━
+Perkiraan durasi: ~Xs
 ```
-Look at them; fix overlaps (map labels vs units, long text) in storyboard.json.
-
-### R5 — Final render
-```bash
-cd /home/user/ai-tiktok-bangmotion && python3 scripts/produce.py output/storyboard.json output/final.mp4
-```
-Takes several minutes — run in background and tell the user. Add `--draft` for half-res quick preview.
-
-### R6 — Deliver
-`SendUserFile(["/home/user/ai-tiktok-bangmotion/output/final.mp4"])` and report duration, size, scene count, voice.
 
 ---
 
-# HTML engine (mode "HTML (cepat)")
+## Mode question
 
-The deliverable is ALWAYS an MP4 with the Cartesia voiceover — never stop at an HTML page or an Artifact.
-Voice, timing and audio mix are identical to Remotion mode; only the visuals are a hand-written HTML page.
+AskUserQuestion allows max 4 options, so ask in two steps.
 
-### H1 — Setup
-```bash
-bash /home/user/ai-tiktok-bangmotion/scripts/setup.sh
-```
+**Q1** — question: "Storyboard disetujui. Mau render pakai mode apa?", header "Mode":
+1. `Auto: <mode pilihanmu> (Recommended)` — description: one line on why (see Auto rules).
+2. `HyperFrames + GSAP + Lottie` — "Render per frame, animasi GSAP halus, efek Lottie. ±2 menit."
+3. `Remotion + Lottie` — "Kualitas tertinggi: peta animasi, grain film, efek Lottie. ±20 menit."
+4. `Manim / Mode cepat…` — "Pilih Manim (sains/matematika) atau mode cepat (draf)."
 
-### H2 — Storyboard + approval
-Write `/home/user/ai-tiktok-bangmotion/output/storyboard.json` in the SAME format as Remotion mode (R2: `vo`, `type`, visual fields).
-Present it and ask **Lanjutkan / Revisi** (as in R3).
+If Q1 = option 4, **Q2** — "Pilih yang mana?", header "Mode":
+- `Manim` — "Animasi sains/matematika ala 3Blue1Brown. ±1 menit."
+- `Cepat (bang-motion klasik)` — "HTML direkam real-time. ±1,5 menit, kualitas draf."
 
-### H3 — Voiceover (Cartesia) + timing
-```bash
-cd /home/user/ai-tiktok-bangmotion && python3 scripts/produce.py output/storyboard.json output/final.mp4 --no-render
-```
-This generates the Cartesia VO (cached), the mixed audio (`remotion/public/audio.mp3`) and `output/props.json` with real timings.
+### Auto rules (pick one, say why in the option description)
 
-### H4 — Write the animation HTML
-Write `/home/user/ai-tiktok-bangmotion/output/animation.html` (1080×1920, self-contained, Google Fonts only, inline SVG, no other network).
-Do NOT hardcode timings. At render time the pipeline injects:
-```js
-window.PROPS = {
-  totalMs,
-  scenes: [{ id, type, startMs, durationMs, eyebrow, ...visual fields from storyboard }],
-  words:  [{ text, startMs, endMs }]   // for word-by-word captions
-};
-```
-The page must:
-1. Start its clock on load (`performance.now()`), and show each scene during `[startMs, startMs+durationMs)` with a 0.4 s fade in/out.
-2. Render captions from `PROPS.words` (current word highlighted), positioned around y=1320px.
-3. Call `window.__motionDone()` after `totalMs`.
-4. Style: dark cinematic background, `Inter` + `Amiri`/`Playfair Display`. For sirah content never draw the Prophet ﷺ or sahabat — maps, symbols, calligraphy only.
+| Topic / storyboard | Mode |
+|---|---|
+| Math, physics, chemistry, formulas, graphs, geometry, algorithms | **3 Manim** |
+| History / sirah with maps, troop movement, cinematic storytelling, final upload where quality matters most | **2 Remotion + Lottie** |
+| Kinetic typography, listicles, tips, facts, motivation, news, promo — most general content | **1 HyperFrames** |
+| User says it's a draft / test / "cepat" | **4 Cepat** |
 
-### H5 — Record + mux to MP4
-```bash
-cd /home/user/ai-tiktok-bangmotion && python3 scripts/produce.py output/storyboard.json output/final.mp4 --engine=html --html=output/animation.html
-```
-(TTS is cached, so this does not spend Cartesia quota again.) It records with Playwright (`scripts/record.js`) and muxes video + audio with `scripts/mux.sh`.
-
-### H6 — Deliver
-`SendUserFile(["/home/user/ai-tiktok-bangmotion/output/final.mp4"])` and report duration, size, scene count, voice.
+When torn between 1 and 2, prefer **1 HyperFrames** (similar look, ~10× faster).
 
 ---
 
-## Error Handling
+## Mode 1 — HyperFrames + GSAP + Lottie
+
+Engine: `hyperframes/` (npm `hyperframes` 0.8.218, GSAP, lottie-web). Renders by seeking a paused GSAP timeline frame by frame.
+
+1. `cp $R/hyperframes/template/index.html $R/output/hf_index.html`. The template already renders every built-in scene type from `window.PROPS` (timings, words, theme), adds atmosphere, Lottie and captions.
+2. Customise `output/hf_index.html` for this video when useful: theme colours in `:root`, extra scene types (add a builder to `B`), extra GSAP moves, `BM.lottieFx(...)`.
+   Contract (from HyperFrames): one paused timeline registered last as `window.__timelines["root"]`; tweens at absolute seconds;
+   no `Date.now()`, unseeded `Math.random()` (use `BM.rng(seed)`), timers, network fetches or `repeat: -1`; keep `__TOTAL_S__` placeholders.
+   Helpers (`hyperframes/runtime/bm.js`): `BM.scene`, `BM.captions`, `BM.lottieFx(parent, name, x, y, size)`, `BM.rng`.
+3. Draft check (~1.5 min, half quality):
+   `cd $R && python3 scripts/produce.py output/storyboard.json output/final.mp4 --engine=hyperframes --html=output/hf_index.html --draft`
+   Extract a frame per scene (`ffmpeg -ss <t> -i output/final.mp4 -frames:v 1 ...`), look at them, fix overlaps.
+4. Final: same command without `--draft` (~2 min for 60 s).
+
+## Mode 2 — Remotion + Lottie
+
+Engine: `remotion/` (Remotion 4, `@remotion/lottie`). Built-in scene types only — no per-video code needed.
+Add `lottie` entries to scenes for extra polish (e.g. `sparkle-gold` on the title, `burst-*` on counters, `pulse-red` on a map danger point).
+
+1. Layout check: `cd $R/remotion && cp ../output/props.json src/sample.json`, then stills at ~70% of each scene:
+   `npx remotion still src/index.ts BangMotion /tmp/s.png --frame=<N> --props=../output/props.json --scale=0.4 --browser-executable=$(ls /opt/pw-browsers/chromium_headless_shell-*/*/chrome-headless-shell)`
+2. Final: `cd $R && python3 scripts/produce.py output/storyboard.json output/final.mp4` (~20 min; `--draft` = half-res preview).
+
+## Mode 3 — Manim
+
+Engine: Manim 0.19 in `$R/.venv-manim` (created by setup.sh). Captions are burned in afterwards by `produce.py` (ASS/libass).
+
+1. Write `$R/output/manim_scene.py` with `class Video(BMScene)`. Start from `examples/pythagoras_manim.py`. Helpers in `manim/bm_manim.py`:
+   `self.scenes` (dicts with `start`, `dur` in seconds + storyboard fields), `self.at(scene_or_time)`, `self.remaining(sc)`, `self.finish()`,
+   `self.eyebrow(text)`, `self.clear_scene()`; colours `TEXT ACCENT MUTED GREEN RED BLUE BG`.
+2. Frame is 4.5 × 8 units (9:16). Keep content in y ∈ [-1.4, 3.6] (bottom reserved for captions).
+3. No LaTeX in the container: use `Text` / `MarkupText` (superscripts like `a²` via Unicode), never `MathTex`/`Tex`.
+   Fonts: `Inter`, `Playfair Display`, `Amiri`; weights `NORMAL`, `BOLD`, `HEAVY` (not `BLACK`).
+4. Render: `cd $R && python3 scripts/produce.py output/storyboard.json output/final.mp4 --engine=manim --scene=output/manim_scene.py` (`--draft` = 540p).
+
+## Mode 4 — Cepat (bang-motion klasik)
+
+Engine: AI-written HTML recorded in real time with Playwright (`scripts/record.js`), muxed with `scripts/mux.sh`. Fastest, lowest quality.
+
+1. Write `$R/output/animation.html` (1080×1920, self-contained, Google Fonts only, inline SVG). At render time `window.PROPS` is injected:
+   `{ totalMs, theme, scenes:[{id,type,startMs,durationMs,...}], words:[{text,startMs,endMs}] }`.
+   The page starts its clock on load (`performance.now()`), shows each scene in `[startMs, startMs+durationMs)` with 0.4 s fades,
+   renders captions from `PROPS.words` around y=1320px, and calls `window.__motionDone()` after `totalMs`. Never hardcode timings.
+2. Render: `cd $R && python3 scripts/produce.py output/storyboard.json output/final.mp4 --engine=html --html=output/animation.html` (~1.5 min).
+
+---
+
+## Error handling
 
 | Error | Action |
 |-------|--------|
-| `CARTESIA_API_KEY not set` | Stop, ask user to run `export CARTESIA_API_KEY=...` |
+| `CARTESIA_API_KEY not set` | Stop, ask the user |
 | Cartesia 402 / quota | Report and stop |
-| `ffmpeg not found` | Run `apt-get install -y ffmpeg` |
-| Playwright chromium missing | Run `node -e "require('playwright').chromium.launch()"` to trigger download |
-| Animation HTML too slow to render | Increase `durationMs` by 2000ms and retry record.js once |
+| `Invalid language for model` | Model must be `sonic-3` (sonic-2 rejects `id`) |
+| HyperFrames render fails | Run `cd $R/hyperframes && npx hyperframes check $R/output/hf --json`, fix each `Fix:` line |
+| Manim `There is no Font Weight Called X` | Use NORMAL / BOLD / HEAVY |
+| Manim `MathTex` / latex errors | Replace with `Text` / `MarkupText` |
+| Missing deps | `bash $R/scripts/setup.sh` |
 
----
-
-## Output Files (all in `/home/user/ai-tiktok-bangmotion/output/`)
+## Output files (`$R/output/`, git-ignored)
 
 | File | Description |
 |------|-------------|
 | `storyboard.json` | Approved storyboard |
-| `vo_scene_N.mp3` | Per-scene voice segments |
-| `voiceover.mp3` | Concatenated full VO |
-| `animation.html` | Generated motion graphic |
-| `animation.webm` | Recorded video (muted) |
+| `vo/<hash>.mp3`, `.words.json` | Cached per-scene voice + word timestamps |
+| `props.json` | Real timings for all engines |
+| `hf/` · `manim_media/` · `animation.*` | Engine working files |
 | `final.mp4` | Finished TikTok-ready video |

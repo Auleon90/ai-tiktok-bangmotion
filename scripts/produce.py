@@ -54,8 +54,8 @@ def main():
     flags = {a.split("=")[0] for a in sys.argv[1:] if a.startswith("--")}
     opts = dict(a[2:].split("=", 1) for a in sys.argv[1:] if a.startswith("--") and "=" in a)
     engine = opts.get("engine", "remotion")
-    if engine == "html" and "html" not in opts:
-        sys.exit("--engine=html requires --html=<animation.html>")
+    if engine in ("html", "hyperframes") and "html" not in opts:
+        sys.exit(f"--engine={engine} requires --html=<index.html>")
     if len(args) < 2:
         sys.exit(__doc__)
     sb_path, out_mp4 = args
@@ -120,6 +120,10 @@ def main():
         return
     if engine == "html":
         return render_html(opts["html"], props, final_audio, out_mp4, total_ms)
+    if engine == "hyperframes":
+        return render_hyperframes(opts["html"], props, final_audio, out_mp4, total_ms, "--draft" in flags)
+    if engine == "manim":
+        return render_manim(opts.get("scene", os.path.join(OUT, "manim_scene.py")), props, final_audio, out_mp4, total_ms, "--draft" in flags)
     print("STEP  render (Remotion)")
     cmd = ["node", os.path.join(REMOTION, "render.mjs"), props_path, os.path.abspath(out_mp4)]
     if "--draft" in flags:
@@ -127,6 +131,126 @@ def main():
     p = subprocess.run(cmd, cwd=REMOTION)
     if p.returncode != 0:
         sys.exit("render failed")
+    size = os.path.getsize(out_mp4) / 1e6
+    print(f"DONE  {out_mp4}  {total_ms/1000:.1f}s  {size:.1f} MB")
+
+
+def timing_data(props, total_ms):
+    ms = lambda fr: round(fr / FPS * 1000)
+    return {
+        "totalMs": total_ms,
+        "theme": props.get("theme", {}),
+        "scenes": [{**s, "startMs": ms(s["startFrame"]), "durationMs": ms(s["durationFrames"])} for s in props["scenes"]],
+        "words": [{"text": w["text"], "startMs": ms(w["startFrame"]), "endMs": ms(w["endFrame"])} for w in props["words"]],
+    }
+
+
+def render_hyperframes(html_path, props, audio, out_mp4, total_ms, draft):
+    """Build a HyperFrames project in output/hf and render it frame-by-frame to MP4."""
+    proj = os.path.join(OUT, "hf")
+    shutil.rmtree(proj, ignore_errors=True)
+    a = os.path.join(proj, "assets")
+    hfmods = os.path.join(ROOT, "hyperframes", "node_modules")
+    os.makedirs(os.path.join(a, "lib"))
+    shutil.copy(os.path.join(hfmods, "gsap", "dist", "gsap.min.js"), os.path.join(a, "lib"))
+    shutil.copy(os.path.join(hfmods, "lottie-web", "build", "player", "lottie.min.js"), os.path.join(a, "lib"))
+    shutil.copytree(os.path.join(ROOT, "assets", "fonts"), os.path.join(a, "fonts"))
+    shutil.copytree(os.path.join(ROOT, "hyperframes", "runtime"), os.path.join(a, "bm"))
+    shutil.copy(audio, os.path.join(a, "audio.mp3"))
+    data = timing_data(props, total_ms)
+    open(os.path.join(a, "props.js"), "w").write("window.PROPS=" + json.dumps(data, ensure_ascii=False) + ";")
+    lot = {}
+    ldir = os.path.join(ROOT, "assets", "lottie")
+    for fn in sorted(os.listdir(ldir)):
+        lot[fn[:-5]] = json.load(open(os.path.join(ldir, fn)))
+    open(os.path.join(a, "lottie.js"), "w").write("window.LOTTIE=" + json.dumps(lot, separators=(",", ":")) + ";")
+    src = open(html_path, encoding="utf-8").read().replace("__TOTAL_S__", f"{total_ms/1000:.3f}")
+    open(os.path.join(proj, "index.html"), "w", encoding="utf-8").write(src)
+
+    print("STEP  render (HyperFrames, frame-by-frame)")
+    hf = os.path.join(hfmods, ".bin", "hyperframes")
+    cmd = [hf, "render", proj, "-o", os.path.abspath(out_mp4), "--fps", str(FPS), "-w", "4", "--no-browser-gpu"]
+    cmd += ["-q", "draft"] if draft else ["--crf", "16"]
+    p = subprocess.run(cmd, cwd=os.path.join(ROOT, "hyperframes"))
+    if p.returncode != 0:
+        sys.exit("hyperframes render failed")
+    size = os.path.getsize(out_mp4) / 1e6
+    print(f"DONE  {out_mp4}  {total_ms/1000:.1f}s  {size:.1f} MB")
+
+
+def ass_captions(words, path, accent="#e9b552", text="#f6efe2"):
+    """Word-synced captions (groups of <=3 words, active word in accent) as an ASS file."""
+    col = lambda h: "&H00%s%s%s&" % (h[5:7], h[3:5], h[1:3])
+    ts = lambda ms: "%d:%02d:%02d.%02d" % (ms // 3600000, ms // 60000 % 60, ms // 1000 % 60, ms % 1000 // 10)
+    groups, cur = [], []
+    for i, w in enumerate(words):
+        cur.append(w)
+        if len(cur) >= 3 or w["text"][-1:] in ".,!?;:" or i == len(words) - 1:
+            groups.append(cur); cur = []
+    ev = []
+    for gi, g in enumerate(groups):
+        g_end = g[-1]["endMs"] + 600
+        if gi + 1 < len(groups):
+            g_end = min(g_end, groups[gi + 1][0]["startMs"])
+        for wi, w in enumerate(g):
+            end = g[wi + 1]["startMs"] if wi + 1 < len(g) else g_end
+            if end <= w["startMs"]:
+                continue
+            parts = []
+            for k, x in enumerate(g[: wi + 1]):
+                t = x["text"].replace("{", "(").replace("}", ")")
+                parts.append("{\\c%s}%s" % (col(accent) if k == wi else col(text), t))
+            ev.append(f"Dialogue: 0,{ts(w['startMs'])},{ts(end)},Cap,,0,0,0,,{{\\an8\\pos(540,1320)}}" + " ".join(parts))
+    head = f"""[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Cap,Inter,78,{col(text)},{col(text)},&H00000000&,&H80000000&,-1,0,0,0,100,100,0,0,1,7,3,8,70,70,0,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+"""
+    open(path, "w", encoding="utf-8").write(head + "\n".join(ev) + "\n")
+
+
+def render_manim(scene_py, props, audio, out_mp4, total_ms, draft):
+    """Render a Manim scene (class Video) with storyboard timings, then burn captions + mux audio."""
+    data = timing_data(props, total_ms)
+    props_path = os.path.join(OUT, "manim_props.json")
+    json.dump(data, open(props_path, "w"), ensure_ascii=False)
+    manim_bin = os.path.join(ROOT, ".venv-manim", "bin", "manim")
+    media = os.path.join(OUT, "manim_media")
+    res = "540,960" if draft else "1080,1920"
+    print("STEP  render (Manim)")
+    env = dict(os.environ, BM_PROPS=props_path)
+    p = subprocess.run([manim_bin, "render", scene_py, "Video", "--resolution", res, "--frame_rate", str(FPS),
+                        "--format", "mp4", "--media_dir", media, "-o", "manim_raw", "--disable_caching", "--progress_bar", "none"],
+                       cwd=ROOT, env=env)
+    if p.returncode != 0:
+        sys.exit("manim render failed")
+    raw = next((os.path.join(d, f) for d, _, fs in os.walk(media) for f in fs if f == "manim_raw.mp4"), None)
+    if not raw:
+        sys.exit("manim output not found")
+
+    print("STEP  captions + mux")
+    fonts_dir = os.path.join(OUT, ".fonts_ttf")
+    if not os.path.isdir(fonts_dir) or not os.listdir(fonts_dir):
+        from fontTools.ttLib import TTFont
+        os.makedirs(fonts_dir, exist_ok=True)
+        fd = os.path.join(ROOT, "assets", "fonts")
+        for f in os.listdir(fd):
+            t = TTFont(os.path.join(fd, f)); t.flavor = None; t.save(os.path.join(fonts_dir, f[:-6] + ".ttf"))
+    ass = os.path.join(OUT, "captions.ass")
+    th = data.get("theme") or {}
+    ass_captions(data["words"], ass, th.get("accent", "#e9b552"), th.get("text", "#f6efe2"))
+    vf = f"scale=1080:1920:flags=lanczos,tpad=stop_mode=clone:stop_duration=5,subtitles={ass}:fontsdir={fonts_dir}"
+    run(["ffmpeg", "-y", "-i", raw, "-i", audio, "-vf", vf, "-map", "0:v", "-map", "1:a", "-t", f"{total_ms/1000:.3f}",
+         "-c:v", "libx264", "-preset", "veryfast" if draft else "slow", "-crf", "26" if draft else "16", "-pix_fmt", "yuv420p",
+         "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", os.path.abspath(out_mp4)])
     size = os.path.getsize(out_mp4) / 1e6
     print(f"DONE  {out_mp4}  {total_ms/1000:.1f}s  {size:.1f} MB")
 

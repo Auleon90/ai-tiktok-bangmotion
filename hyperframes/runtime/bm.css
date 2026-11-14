@@ -1,0 +1,18 @@
+/* bang-motion HyperFrames runtime styles: fonts + caption skin */
+@font-face { font-family: "Inter"; font-weight: 400; src: url("../fonts/inter-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 700; src: url("../fonts/inter-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 800; src: url("../fonts/inter-latin-800-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 900; src: url("../fonts/inter-latin-900-normal.woff2") format("woff2"); }
+@font-face { font-family: "Amiri"; font-weight: 400; src: url("../fonts/amiri-arabic-400-normal.woff2") format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF; }
+@font-face { font-family: "Amiri"; font-weight: 700; src: url("../fonts/amiri-arabic-700-normal.woff2") format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF; }
+@font-face { font-family: "Amiri"; font-weight: 400; src: url("../fonts/amiri-latin-400-normal.woff2") format("woff2"); unicode-range: U+0000-00FF; }
+@font-face { font-family: "Amiri"; font-weight: 700; src: url("../fonts/amiri-latin-700-normal.woff2") format("woff2"); unicode-range: U+0000-00FF; }
+@font-face { font-family: "Playfair Display"; font-weight: 700; src: url("../fonts/playfair-display-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Playfair Display"; font-weight: 800; src: url("../fonts/playfair-display-latin-800-normal.woff2") format("woff2"); }
+@font-face { font-family: "Playfair Display"; font-weight: 400; font-style: italic; src: url("../fonts/playfair-display-latin-400-italic.woff2") format("woff2"); }
+
+.bm-captions { position: absolute; left: 70px; right: 70px; top: 1320px; height: 200px; z-index: 50; }
+.bm-line { position: absolute; inset: 0; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: 0 22px; opacity: 0;
+  font-family: "Inter", "Amiri", sans-serif; font-weight: 800; font-size: 78px; line-height: 1.15; text-align: center; }
+.bm-word { display: inline-block; color: var(--bm-text, #f6efe2); -webkit-text-stroke: 10px rgba(0,0,0,.85); paint-order: stroke fill; text-shadow: 0 6px 18px rgba(0,0,0,.6); }
+.bm-lottie { position: absolute; pointer-events: none; }

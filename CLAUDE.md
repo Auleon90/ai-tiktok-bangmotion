@@ -4,21 +4,28 @@ Repo ini berisi pipeline untuk generate TikTok motion graphic dengan voiceover B
 
 ## Skill tersedia
 
-- `/bang-motion [prompt] [--engine remotion|html]` — generate TikTok MP4 ~60 detik: Cartesia TTS (sonic-3, timestamp per kata) + animasi Remotion + render
+- `/bang-motion [prompt]` — generate TikTok MP4 ~60 detik dengan Cartesia TTS (sonic-3, timestamp per kata) + subtitle per kata.
 
 ## Setup otomatis (jalankan sekali per sesi baru)
 
 ```bash
-bash scripts/setup.sh   # pip requests + npm install di remotion/
+bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes), venv Manim, aset Lottie
 ```
 
-## Engine render
+## Alur wajib setiap request video
 
-- Setiap request video: WAJIB tanya dulu mode mana (Remotion atau HTML) via AskUserQuestion, kecuali user sudah menyebutkannya.
-- **Remotion** (`remotion/`) — render per frame, H.264 CRF 16, subtitle per kata, ambience angin. Jalankan via `python3 scripts/produce.py <storyboard.json> output/final.mp4`.
-- **HTML** (cepat, `--engine html`) — `scripts/record.js` + `scripts/mux.sh`, lebih cepat tapi kualitas lebih rendah.
-- Contoh storyboard: `examples/uhud.storyboard.json`.
-- Konten sirah: JANGAN menggambarkan sosok/wajah Nabi ﷺ atau sahabat — pakai peta, simbol, kaligrafi.
+1. Ide → storyboard (`output/storyboard.json`) → minta approval (Lanjutkan / Revisi).
+2. SETELAH approve: WAJIB tanya mode render via AskUserQuestion (kecuali user sudah menyebut modenya):
+   1. **HyperFrames + GSAP + Lottie** (`hyperframes/`) — render per frame, ±2 menit
+   2. **Remotion + Lottie** (`remotion/`) — kualitas tertinggi, ±20 menit
+   3. **Manim** (`manim/`, `.venv-manim`) — sains/matematika, ±1 menit
+   4. **Cepat** (bang-motion klasik: HTML + rekam layar) — draf, ±1,5 menit
+   5. **Auto** — Claude memilih sesuai topik & storyboard (aturan di skill)
+3. Semua mode berakhir di `output/final.mp4` dengan VO Cartesia — tidak pernah berhenti di halaman HTML.
+
+Detail lengkap: `.claude/skills/bang-motion.md`. Semua mode dijalankan lewat `scripts/produce.py`.
+Contoh: `examples/uhud.storyboard.json` (sirah, mode 1/2), `examples/pythagoras.storyboard.json` + `examples/pythagoras_manim.py` (mode 3).
+Konten sirah: JANGAN menggambarkan sosok/wajah Nabi ﷺ atau sahabat — pakai peta, simbol, kaligrafi.
 
 ## Environment variables yang diperlukan
 

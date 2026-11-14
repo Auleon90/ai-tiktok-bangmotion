@@ -1,0 +1,14 @@
+{
+  "title": "Teorema Pythagoras",
+  "ambience": "none",
+  "scenes": [
+    { "id": 1, "type": "title", "pad_before_ms": 300, "eyebrow": "Matematika 60 Detik", "title": "Teorema Pythagoras",
+      "vo": "Kenapa sisi miring segitiga siku-siku selalu bisa dihitung? Ini rahasianya." },
+    { "id": 2, "type": "triangle", "eyebrow": "Segitiga Siku-siku",
+      "vo": "Ambil segitiga dengan sisi tiga dan empat. Sisi miringnya kita sebut c." },
+    { "id": 3, "type": "squares", "eyebrow": "Buktikan dengan Luas",
+      "vo": "Buat persegi di setiap sisi. Luasnya sembilan, enam belas, dan dua puluh lima." },
+    { "id": 4, "type": "formula", "eyebrow": "Kesimpulan", "gap_after_ms": 1000,
+      "vo": "Sembilan tambah enam belas sama dengan dua puluh lima. Jadi, a kuadrat ditambah b kuadrat, sama dengan c kuadrat." }
+  ]
+}

@@ -4,3 +4,5 @@ output/
 *.webm
 storyboard.json
 __pycache__/
+.venv-manim/
+hyperframes/node_modules/
