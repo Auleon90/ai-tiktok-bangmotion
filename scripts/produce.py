@@ -3,6 +3,11 @@
 
 Usage:
   python3 produce.py <storyboard.json> <out.mp4> [--draft] [--no-render]
+  python3 produce.py <storyboard.json> <out.mp4> --engine=html --html=<animation.html>
+
+HTML engine: same Cartesia VO + audio mix, then the HTML page is injected with
+window.PROPS (scenes with startMs/durationMs, words with startMs/endMs), recorded
+with Playwright (scripts/record.js) and muxed with the audio into an MP4.
 
 Storyboard format: see .claude/skills/bang-motion.md (Remotion engine).
 Each scene needs "vo" (spoken text). Optional per scene: "pad_before_ms", "gap_after_ms".
@@ -46,7 +51,11 @@ def ms2f(ms: float) -> int:
 
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
-    flags = {a for a in sys.argv[1:] if a.startswith("--")}
+    flags = {a.split("=")[0] for a in sys.argv[1:] if a.startswith("--")}
+    opts = dict(a[2:].split("=", 1) for a in sys.argv[1:] if a.startswith("--") and "=" in a)
+    engine = opts.get("engine", "remotion")
+    if engine == "html" and "html" not in opts:
+        sys.exit("--engine=html requires --html=<animation.html>")
     if len(args) < 2:
         sys.exit(__doc__)
     sb_path, out_mp4 = args
@@ -109,6 +118,8 @@ def main():
 
     if "--no-render" in flags:
         return
+    if engine == "html":
+        return render_html(opts["html"], props, final_audio, out_mp4, total_ms)
     print("STEP  render (Remotion)")
     cmd = ["node", os.path.join(REMOTION, "render.mjs"), props_path, os.path.abspath(out_mp4)]
     if "--draft" in flags:
@@ -116,6 +127,29 @@ def main():
     p = subprocess.run(cmd, cwd=REMOTION)
     if p.returncode != 0:
         sys.exit("render failed")
+    size = os.path.getsize(out_mp4) / 1e6
+    print(f"DONE  {out_mp4}  {total_ms/1000:.1f}s  {size:.1f} MB")
+
+
+def render_html(html_path, props, audio, out_mp4, total_ms):
+    """Inject timing into the HTML, record it with Playwright, mux with the mixed audio."""
+    ms = lambda fr: round(fr / FPS * 1000)
+    data = {
+        "totalMs": total_ms,
+        "scenes": [{**s, "startMs": ms(s["startFrame"]), "durationMs": ms(s["durationFrames"])} for s in props["scenes"]],
+        "words": [{"text": w["text"], "startMs": ms(w["startFrame"]), "endMs": ms(w["endFrame"])} for w in props["words"]],
+    }
+    src = open(html_path, encoding="utf-8").read()
+    tag = "<script>window.PROPS=" + json.dumps(data, ensure_ascii=False) + ";</script>"
+    src = src.replace("<head>", "<head>\n" + tag, 1) if "<head>" in src else tag + src
+    rendered = os.path.join(OUT, "animation.rendered.html")
+    open(rendered, "w", encoding="utf-8").write(src)
+
+    print("STEP  record (HTML / Playwright)")
+    webm = os.path.join(OUT, "animation.webm")
+    run(["node", os.path.join(ROOT, "scripts", "record.js"), rendered, webm, str(total_ms), "1080", "1920"])
+    print("STEP  mux -> MP4")
+    run(["bash", os.path.join(ROOT, "scripts", "mux.sh"), webm, audio, os.path.abspath(out_mp4)])
     size = os.path.getsize(out_mp4) / 1e6
     print(f"DONE  {out_mp4}  {total_ms/1000:.1f}s  {size:.1f} MB")
 
