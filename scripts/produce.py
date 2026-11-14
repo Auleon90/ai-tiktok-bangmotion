@@ -120,20 +120,51 @@ def main():
 
     final_audio = os.path.join(REMOTION, "public", "audio.mp3")
     os.makedirs(os.path.dirname(final_audio), exist_ok=True)
-    amb = sb.get("ambience", "wind")
-    if amb == "wind":
-        # synthetic desert wind: brown noise, band-limited, slow swell, ducked under voice
-        dur = total_ms / 1000
-        fc = (
-            f"anoisesrc=color=brown:amplitude=0.6:duration={dur}:sample_rate=44100,"
-            "lowpass=f=900,highpass=f=80,tremolo=f=0.15:d=0.6,volume=0.22,aformat=channel_layouts=stereo[wind];"
-            "[0:a]asplit=2[v1][v2];"
-            "[wind][v2]sidechaincompress=threshold=0.02:ratio=6:attack=40:release=600[duck];"
-            "[v1][duck]amix=inputs=2:normalize=0,loudnorm=I=-14:TP=-1.5:LRA=11[out]"
-        )
-        run(["ffmpeg", "-y", "-i", voice_wav, "-filter_complex", fc, "-map", "[out]", "-ar", "44100", "-c:a", "libmp3lame", "-q:a", "1", final_audio])
+    dur = total_ms / 1000
+
+    # score + sfx (audio/lemo via .venv-audio); optional per storyboard: "music": mood|"none", "sfx": true|false
+    mood = sb.get("music", "warm")
+    want_sfx = sb.get("sfx", True)
+    audio_py = os.path.join(ROOT, ".venv-audio", "bin", "python")
+    stems = os.path.join(OUT, "stems")
+    shutil.rmtree(stems, ignore_errors=True)
+    if (mood != "none" or want_sfx) and os.path.exists(audio_py):
+        print(f"STEP  score (music={mood}, sfx={'on' if want_sfx else 'off'})")
+        ms = lambda fr: round(fr / FPS * 1000)
+        tprops = os.path.join(OUT, "timing_tmp.json")
+        json.dump({"totalMs": total_ms, "scenes": [{**x, "startMs": ms(x["startFrame"]), "durationMs": ms(x["durationFrames"])} for x in scenes]}, open(tprops, "w"))
+        run([audio_py, os.path.join(ROOT, "scripts", "score.py"), tprops, stems, mood, "sfx:on" if want_sfx else "sfx:off"])
+    elif mood != "none" or want_sfx:
+        print("  (skip score: .venv-audio missing, run scripts/setup.sh)")
+
+    # mix: voice (compressed) over a bed (ambience + music) ducked by the voice, plus sfx; master to -14 LUFS
+    ins, chains, bed = ["-i", voice_wav], [], []
+    chains.append("[0:a]aformat=sample_rates=48000:channel_layouts=stereo,acompressor=threshold=0.1:ratio=3:attack=5:release=120,asplit=2[vo][key]")
+    if sb.get("ambience", "wind") == "wind":
+        chains.append(f"anoisesrc=color=brown:amplitude=0.6:duration={dur}:sample_rate=48000,lowpass=f=900,highpass=f=80,tremolo=f=0.15:d=0.6,volume=0.22,aformat=channel_layouts=stereo[wind]")
+        bed.append("[wind]")
+    n = 1
+    if os.path.exists(os.path.join(stems, "music.wav")):
+        ins += ["-i", os.path.join(stems, "music.wav")]
+        chains.append(f"[{n}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=1.1[mus]")
+        bed.append("[mus]"); n += 1
+    sfx_lbl = None
+    if os.path.exists(os.path.join(stems, "sfx.wav")):
+        ins += ["-i", os.path.join(stems, "sfx.wav")]
+        chains.append(f"[{n}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=0.8[sfx]")
+        sfx_lbl = "[sfx]"; n += 1
+    parts = ["[vo]"]
+    if bed:
+        mixbed = "".join(bed) + (f"amix=inputs={len(bed)}:normalize=0[bed0]" if len(bed) > 1 else "anull[bed0]")
+        chains.append(mixbed)
+        chains.append("[bed0][key]sidechaincompress=threshold=0.03:ratio=8:attack=30:release=500[bed]")
+        parts.append("[bed]")
     else:
-        run(["ffmpeg", "-y", "-i", voice_wav, "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-ar", "44100", "-c:a", "libmp3lame", "-q:a", "1", final_audio])
+        chains.append("[key]anullsink")
+    if sfx_lbl:
+        parts.append(sfx_lbl)
+    chains.append("".join(parts) + f"amix=inputs={len(parts)}:normalize=0,atrim=0:{dur},loudnorm=I=-14:TP=-1.5:LRA=11[out]")
+    run(["ffmpeg", "-y", *ins, "-filter_complex", ";".join(chains), "-map", "[out]", "-ar", "44100", "-c:a", "libmp3lame", "-q:a", "1", final_audio])
 
     props = {"fps": FPS, "totalFrames": total_frames, "audio": "audio.mp3", "theme": sb.get("theme", {}), "scenes": scenes, "words": words}
     props_path = os.path.join(OUT, "props.json")

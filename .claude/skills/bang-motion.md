@@ -32,6 +32,9 @@ Never stop at an HTML page, an Artifact or a raw render without audio: the resul
 {
   "title": "...",
   "ambience": "wind",                       // "wind" | "none"
+  "music": "warm",                          // warm | epic | tense | calm | playful | sacred | none  (original score, synthesised)
+  "sfx": true,                              // whooshes on cuts, title hit, counter ticks, map pulse, final ding
+  "style": "risograph",                     // optional, mode 1 only: a Lemo-Opuscar style slug (see "Visual styles")
   "theme": { "accent": "#e9b552" },         // optional: skyTop, skyMid, horizon, ground, text, accent, muted
   "scenes": [
     { "id": 1, "type": "title", "vo": "Teks yang diucapkan", "eyebrow": "LABEL", "lottie": [ ... ], ... }
@@ -94,8 +97,36 @@ Scene 1 [type]: [eyebrow]            (🖼️ if it uses an AI image)
   🎙️ VO: "[vo]"
 ...
 ━━━━━━━━━━━━━━━━━━━━━━━━
+🎨 Gaya: <style or default> · 🎵 Musik: <mood> · 🔊 SFX: on
 Perkiraan durasi: ~Xs · Gambar AI: N dari M scene
 ```
+
+### Sound (all modes)
+
+`scripts/score.py` (run automatically by `produce.py` with `.venv-audio`) writes an original score and timed SFX from the scene timings,
+using `audio/lemo/` (sfx.py + pluck.py, MIT, vendored from Lemo-Opuscar). The mixer compresses the voice, ducks the bed (ambience + music)
+under it, adds SFX and masters to −14 LUFS.
+
+Pick `music` by tone: `sacred` for sirah/Islamic content (drone + soft pulse, no melodic instruments — many viewers prefer no music;
+offer `"none"` if unsure), `epic` for history/battles, `tense` for mystery, `warm` for fables/stories, `calm` for reflections and math,
+`playful` for light facts/tips. State the choice in the approval summary (🎵 line) so the user can change it.
+
+### Visual styles (Lemo-Opuscar library, mode 1)
+
+`setup.sh` downloads 99 film-style guides into `.lemo/lemo-opuscar/styles/<slug>/STYLE.md` (git-ignored).
+`python3 scripts/styles.py search <words>` / `list` / `show <slug>`.
+
+- During the storyboard, propose ONE style that fits (or none = the default template look), name it with its gallery link
+  `https://lemomo-ai.github.io/lemo-opuscar/` and one line why; put `"style": "<slug>"` in the storyboard.
+- Read that STYLE.md fully before writing the page. Translate its essence, palette, type, motion and transitions into
+  `output/hf_index.html` (start from `hyperframes/template/index.html` or from `examples/kopi-riso.hf.html` for a fully custom page).
+  Keep 1080×1920, our captions (restyle `.bm-line`/`.bm-word` to match), and the HyperFrames contract. Approximate shaders with SVG/CSS
+  (blend modes, patterns, filters) when needed.
+- Licence: the STYLE.md docs are CC BY-NC 4.0 + a permission to adapt them for our own films (commercial OK). NEVER copy STYLE.md text into
+  this repo or into a committed file; the finished film is ours. Mention the credit in the delivery message:
+  "Style: <name> — Lemo-Opuscar by Lemomo (LemoLab)".
+- Styles marked ✦ (manga-panels, text-flash-cuts, comic-history) need an image generator: use our FLUX step (`image` fields).
+- Avoid styles that need real data/scans (lidar-survey, satellite-briefing, map-explainer 3D terrain) unless the user supplies the data.
 
 ---
 

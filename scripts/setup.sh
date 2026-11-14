@@ -23,6 +23,22 @@ if [ ! -x "$ROOT/.venv-manim/bin/manim" ]; then
   "$ROOT/.venv-manim/bin/pip" install -q manim==0.19.0 fonttools brotli || echo "  WARN: manim install failed (mode 3 unavailable)"
 fi
 
+echo "→ Audio venv (music + SFX, audio/lemo)"
+if [ ! -x "$ROOT/.venv-audio/bin/python" ]; then
+  python3 -m venv "$ROOT/.venv-audio"
+  "$ROOT/.venv-audio/bin/pip" install -q numpy scipy soundfile numba || echo "  WARN: audio venv failed (no music/SFX)"
+fi
+
+echo "→ Lemo-Opuscar style library (.lemo/, not committed: CC BY-NC docs)"
+LEMO="$ROOT/.lemo/lemo-opuscar"
+if [ ! -d "$LEMO/styles" ]; then
+  mkdir -p "$ROOT/.lemo"
+  git clone -q --depth 1 --filter=blob:none --sparse https://github.com/lemomo-ai/lemo-opuscar.git "$LEMO" \
+    && (cd "$LEMO" && git sparse-checkout set --no-cone '/styles/*/STYLE.md' '/styles/*/style.json' '/styles/*/poster.jpg' '/LICENSE' '/DIRECTOR.md') \
+    || echo "  WARN: style library download failed"
+fi
+[ -d "$LEMO/styles" ] && echo "  styles: $(ls "$LEMO/styles" | wc -l)"
+
 echo "→ Lottie assets"
 [ -n "$(ls -A "$ROOT/assets/lottie" 2>/dev/null)" ] || python3 "$ROOT/scripts/make_lottie.py"
 

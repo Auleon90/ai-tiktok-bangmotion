@@ -23,10 +23,13 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
    5. **Auto** — Claude memilih sesuai topik & storyboard (aturan di skill)
 3. Gambar AI (Cloudflare FLUX) OPSIONAL: hanya untuk cerita yang butuh "dunia" visual (fabel, sejarah umum, misteri, tempat).
    Tandai scene 🖼️ di storyboard + jumlahnya, supaya user bisa menolak. Tidak untuk sains/matematika, listicle, data, sirah Nabi ﷺ.
-4. Semua mode berakhir di `output/final.mp4` dengan VO Cartesia — tidak pernah berhenti di halaman HTML.
+4. Audio: musik orisinal (`music`: warm/epic/tense/calm/playful/sacred/none) + SFX otomatis dari `scripts/score.py`
+   (modul `audio/lemo/`, MIT dari Lemo-Opuscar). Sirah → `sacred` atau `none`.
+5. Mode 1 bisa memakai salah satu dari 99 gaya Lemo-Opuscar (`scripts/styles.py`, diunduh ke `.lemo/` — JANGAN commit STYLE.md, lisensi CC BY-NC).
+6. Semua mode berakhir di `output/final.mp4` dengan VO Cartesia — tidak pernah berhenti di halaman HTML.
 
 Detail lengkap: `.claude/skills/bang-motion.md`. Semua mode dijalankan lewat `scripts/produce.py`.
-Contoh: `examples/uhud.storyboard.json` (sirah, mode 1/2), `examples/angsa-emas.storyboard.json` (fabel + gambar AI), `examples/pythagoras.storyboard.json` + `examples/pythagoras_manim.py` (mode 3).
+Contoh: `examples/uhud.storyboard.json` (sirah, mode 1/2), `examples/angsa-emas.storyboard.json` (fabel + gambar AI), `examples/kopi-riso.storyboard.json` + `examples/kopi-riso.hf.html` (gaya Risograph), `examples/pythagoras.storyboard.json` + `examples/pythagoras_manim.py` (mode 3).
 Konten sirah: JANGAN menggambarkan sosok/wajah Nabi ﷺ atau sahabat — pakai peta, simbol, kaligrafi.
 
 ## Environment variables yang diperlukan

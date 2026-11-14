@@ -1,0 +1,20 @@
+{
+  "title": "Kenapa Kopi Bikin Melek?",
+  "ambience": "none",
+  "music": "playful",
+  "sfx": true,
+  "style": "risograph",
+  "theme": { "accent": "#FF7477", "text": "#00838A" },
+  "scenes": [
+    { "id": 1, "type": "title", "pad_before_ms": 300, "eyebrow": "Sains 20 Detik",
+      "title": "Kenapa kopi bikin melek?",
+      "vo": "Kenapa secangkir kopi bisa bikin kita melek?" },
+    { "id": 2, "type": "headline", "eyebrow": "Si Pembuat Kantuk", "headline": "Adenosin",
+      "vo": "Seharian, otak menumpuk zat bernama adenosin. Makin banyak, makin ngantuk." },
+    { "id": 3, "type": "headline", "eyebrow": "Si Penyusup", "headline": "Kafein",
+      "vo": "Kafein bentuknya mirip adenosin, jadi ia menyumbat pintunya. Sinyal kantuk pun tertahan." },
+    { "id": 4, "type": "counter", "eyebrow": "Waktu Paruh", "gap_after_ms": 900,
+      "items": [ { "value": 5, "label": "jam", "prefix": "±" } ],
+      "vo": "Separuh kafein masih ada di tubuh sekitar lima jam kemudian. Jadi, jangan ngopi terlalu sore." }
+  ]
+}

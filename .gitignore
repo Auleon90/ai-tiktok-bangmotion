@@ -6,3 +6,5 @@ storyboard.json
 __pycache__/
 .venv-manim/
 hyperframes/node_modules/
+.lemo/
+.venv-audio/

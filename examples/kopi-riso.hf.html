@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<!--
+  Example of a Lemo-Opuscar style adapted to our HyperFrames mode: "Risograph Print"
+  (style guide: .lemo/lemo-opuscar/styles/risograph/STYLE.md, Lemo-Opuscar by Lemomo (LemoLab)).
+  Our approximation: two translucent spot-ink plates (teal + fluorescent orange) as SVG groups in multiply,
+  screen-anchored halftone patterns at different angles, fixed misregistration per shot with kicks on accents,
+  paper grain, hard cuts (no cross-dissolve), captions on a paper knockout strip.
+  Render: python3 scripts/produce.py examples/kopi-riso.storyboard.json output/kopi.mp4 --engine=hyperframes --html=examples/kopi-riso.hf.html
+-->
+<link rel="stylesheet" href="assets/bm/bm.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="assets/props.js"></script>
+<script src="assets/bm/bm.js"></script>
+<style>
+  :root { --paper:#F4EEE2; --teal:#00838A; --orange:#FF7477; }
+  html, body { margin:0; background:#000; }
+  #root { position:relative; width:1080px; height:1920px; overflow:hidden; background:var(--paper); font-family:"Inter",sans-serif; }
+  svg.print { position:absolute; inset:0; }
+  .plate { mix-blend-mode:multiply; }
+  .scene { opacity:0; }
+  .t-title { font-family:"Inter"; font-weight:900; letter-spacing:-2px; }
+  #grain { position:absolute; inset:0; mix-blend-mode:multiply; opacity:.55; pointer-events:none; z-index:60; }
+  /* captions: paper knockout strip, text on the teal plate, active word on orange */
+  .bm-captions { top:1360px; }
+  .bm-line { font-family:"Inter"; font-weight:800; font-size:64px; }
+  .bm-line::before { content:""; position:absolute; left:-30px; right:-30px; top:-14px; height:104px; background:var(--paper); border-radius:10px; z-index:-1; box-shadow:3px 2px 0 rgba(0,131,138,.35), -2px -1px 0 rgba(255,116,119,.4); }
+  .bm-word { -webkit-text-stroke:0; text-shadow:none; color:var(--teal); }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="root" data-start="0" data-duration="__TOTAL_S__" data-width="1080" data-height="1920">
+  <audio id="vo" src="assets/audio.mp3" data-start="0" data-duration="__TOTAL_S__"></audio>
+  <svg class="print" width="1080" height="1920" viewBox="0 0 1080 1920">
+    <defs>
+      <!-- halftone screens anchored to the paper: teal 15deg, orange 75deg -->
+      <pattern id="htT" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(15)"><circle cx="4.5" cy="4.5" r="2.4" fill="#00838A"/></pattern>
+      <pattern id="htT2" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(15)"><circle cx="4.5" cy="4.5" r="3.6" fill="#00838A"/></pattern>
+      <pattern id="htO" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(75)"><circle cx="4.5" cy="4.5" r="2.6" fill="#FF7477"/></pattern>
+      <pattern id="htO2" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(75)"><circle cx="4.5" cy="4.5" r="3.8" fill="#FF7477"/></pattern>
+    </defs>
+    <g id="plateT" class="plate"></g>
+    <g id="plateO" class="plate"></g>
+  </svg>
+  <svg id="grain" width="1080" height="1920">
+    <filter id="gr"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4"/><feColorMatrix values="0 0 0 0 .55  0 0 0 0 .5  0 0 0 0 .42  0 0 0 -.9 .62"/></filter>
+    <rect width="1080" height="1920" filter="url(#gr)"/>
+    <rect y="0" width="1080" height="1920" fill="url(#htT)" opacity=".035"/>
+  </svg>
+  <div id="caps" class="bm-captions"></div>
+</div>
+<script>
+(function () {
+  const P = window.PROPS, tl = gsap.timeline({ paused: true }), R = BM.rng(11);
+  const NS = "http://www.w3.org/2000/svg";
+  const T = document.getElementById("plateT"), O = document.getElementById("plateO");
+  const el = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+  const text = (parent, str, x, y, size, fill, extra = {}) => { const t = el("text", { x, y, "font-family": "Inter", "font-weight": 900, "font-size": size, fill, "text-anchor": "middle", "letter-spacing": -2, ...extra }, parent); t.textContent = str; return t; };
+  const sc = (i) => P.scenes[i], S = (i) => sc(i).startMs / 1000, D = (i) => sc(i).durationMs / 1000;
+
+  // each scene = one group per plate; shown with hard cuts
+  const scenes = P.scenes.map((s, i) => ({ t: el("g", { class: "scene", id: "t" + i }, T), o: el("g", { class: "scene", id: "o" + i }, O) }));
+  P.scenes.forEach((s, i) => {
+    [scenes[i].t, scenes[i].o].forEach((g) => { tl.set(g, { opacity: 1 }, S(i)); if (i < P.scenes.length - 1) tl.set(g, { opacity: 0 }, S(i) + D(i)); });
+    // fixed misregistration per shot + a kick on the cut (decays ~0.3 s with a little ringing)
+    const ox = (R() - 0.5) * 6, oy = (R() - 0.5) * 6;
+    tl.fromTo(O, { x: ox + 12, y: oy - 9 }, { x: ox, y: oy, duration: 0.35, ease: "elastic.out(1.2,0.5)" }, S(i));
+    tl.fromTo(T, { x: -4, y: 3 }, { x: 0, y: 0, duration: 0.3, ease: "elastic.out(1.2,0.5)" }, S(i));
+  });
+
+  // ---- 1: title. orange sun disc overprints a teal hill; a cup silhouette; title double-hit
+  {
+    const { t, o } = scenes[0], a = S(0), d = D(0);
+    const sun = el("circle", { cx: 660, cy: 700, r: 240, fill: "#FF7477" }, o);
+    el("rect", { x: 0, y: 0, width: 1080, height: 820, fill: "url(#htT)", opacity: .55 }, t);
+    const hill = el("path", { d: "M0 1240 Q300 1040 620 1150 T1080 1100 L1080 1920 L0 1920 Z", fill: "#00838A" }, t);
+    const cup = el("g", {}, t);
+    el("path", { d: "M380 980 L700 980 L670 1230 Q660 1270 620 1270 L460 1270 Q420 1270 410 1230 Z", fill: "#00838A" }, cup);
+    el("path", { d: "M700 1020 Q800 1030 790 1110 Q780 1180 690 1170", fill: "none", stroke: "#00838A", "stroke-width": 34 }, cup);
+    const steam = el("g", {}, o);
+    [0, 1, 2].forEach((k) => el("path", { d: `M${470 + k * 70} 950 q-40 -60 0 -120 q40 -60 0 -130`, fill: "none", stroke: "url(#htO2)", "stroke-width": 30, "stroke-linecap": "round" }, steam));
+    const tt = text(t, "Kenapa kopi", 540, 250, 128, "#00838A"), tt2 = text(t, "bikin melek?", 540, 380, 128, "#00838A");
+    const to = text(o, "Kenapa kopi", 546, 244, 128, "url(#htO2)"), to2 = text(o, "bikin melek?", 546, 374, 128, "url(#htO2)");
+    tl.fromTo(sun, { attr: { r: 0 } }, { attr: { r: 240 }, duration: 0.7, ease: "back.out(1.6)" }, a + 0.05);
+    tl.fromTo(hill, { y: 300 }, { y: 0, duration: 0.6, ease: "power3.out" }, a);
+    tl.fromTo(cup, { y: 420 }, { y: 0, duration: 0.7, ease: "back.out(1.4)" }, a + 0.25);
+    tl.fromTo(steam, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8 }, a + 0.8);
+    tl.to(steam, { y: -30, duration: d, ease: "none" }, a + 0.8);
+    [tt, tt2, to, to2].forEach((n, k) => tl.fromTo(n, { opacity: 0 }, { opacity: 1, duration: 0.01 }, a + 1.0 + (k % 2) * 0.25));
+    tl.to(sun, { attr: { cy: 640 }, duration: d, ease: "none" }, a);
+  }
+
+  // ---- 2: adenosine dots pile up inside a head silhouette
+  {
+    const { t, o } = scenes[1], a = S(1), d = D(1);
+    el("rect", { x: 0, y: 0, width: 1080, height: 1920, fill: "url(#htT)", opacity: .25 }, t);
+    const head = el("path", { d: "M540 300 C820 300 900 520 880 700 C870 820 820 880 800 960 L800 1180 L560 1180 L560 1080 C380 1080 240 980 220 760 C200 520 300 300 540 300 Z", fill: "#00838A" }, t);
+    const dots = [];
+    for (let k = 0; k < 46; k++) {
+      let x, y; do { x = 300 + R() * 520; y = 380 + R() * 620; } while (Math.hypot(x - 560, (y - 690) * 1.1) > 300);
+      dots.push(el("circle", { cx: x, cy: y, r: 20 + R() * 12, fill: "#FF7477" }, o));
+    }
+    const lbl = text(t, "ADENOSIN", 540, 1300, 120, "#00838A"), lblo = text(o, "ADENOSIN", 545, 1296, 120, "url(#htO)");
+    tl.fromTo(head, { scale: .85, transformOrigin: "540px 740px" }, { scale: 1, duration: 0.6, ease: "back.out(1.5)" }, a);
+    dots.forEach((c, k) => tl.fromTo(c, { attr: { r: 0 } }, { attr: { r: c.getAttribute("r") }, duration: 0.25, ease: "back.out(3)" }, a + 0.4 + (k / dots.length) * (d * 0.75)));
+    [lbl, lblo].forEach((n) => tl.fromTo(n, { opacity: 0 }, { opacity: 1, duration: 0.01 }, a + 0.9));
+    // drowsy: registration drifts while it gets "heavier", snaps at the end
+    tl.to(O, { x: "+=22", y: "+=10", duration: d * 0.8, ease: "sine.inOut" }, a + 0.3);
+  }
+
+  // ---- 3: receptors (teal sockets); caffeine (overprint = darker) plugs them, adenosine bounces off
+  {
+    const { t, o } = scenes[2], a = S(2), d = D(2);
+    el("rect", { x: 0, y: 1000, width: 1080, height: 920, fill: "#00838A" }, t);
+    const xs = [180, 400, 620, 840];
+    const plugs = [];
+    xs.forEach((x, k) => {
+      el("path", { d: `M${x - 80} 1000 L${x - 80} 880 L${x - 40} 880 L${x - 40} 960 L${x + 40} 960 L${x + 40} 880 L${x + 80} 880 L${x + 80} 1000 Z`, fill: "#00838A" }, t);
+      // caffeine: drawn on BOTH plates (teal + orange) -> overprint makes a third, darker colour
+      const gT = el("g", {}, t), gO = el("g", {}, o);
+      el("rect", { x: x - 38, y: 890, width: 76, height: 72, rx: 8, fill: "#00838A" }, gT);
+      el("rect", { x: x - 38, y: 890, width: 76, height: 72, rx: 8, fill: "#FF7477" }, gO);
+      plugs.push([gT, gO]);
+      const st = a + 0.6 + k * 0.45;
+      tl.fromTo([gT, gO], { y: -700, rotation: -30 + k * 20, transformOrigin: `${x}px 926px` }, { y: 0, rotation: 0, duration: 0.55, ease: "bounce.out" }, st);
+    });
+    const aden = [];
+    for (let k = 0; k < 5; k++) {
+      const c = el("circle", { cx: 160 + k * 190, cy: 300, r: 30, fill: "#FF7477" }, o);
+      tl.fromTo(c, { attr: { cy: 200 } }, { attr: { cy: 820 }, duration: 0.6, ease: "power2.in" }, a + 2.6 + k * 0.12);
+      tl.to(c, { attr: { cy: 520, cx: 160 + k * 190 + (k % 2 ? 90 : -90) }, duration: 0.6, ease: "power2.out" }, a + 3.2 + k * 0.12);
+    }
+    const lbl = text(t, "KAFEIN", 540, 560, 150, "#00838A"), lblo = text(o, "KAFEIN", 546, 554, 150, "url(#htO2)");
+    [lbl, lblo].forEach((n) => tl.fromTo(n, { opacity: 0 }, { opacity: 1, duration: 0.01 }, a + 0.3));
+    const pin = text(t, "pintu tertutup", 540, 1180, 64, "#F4EEE2", { "font-weight": 800, "letter-spacing": 0 });
+    tl.fromTo(pin, { opacity: 0 }, { opacity: 1, duration: 0.01 }, a + 2.6);
+  }
+
+  // ---- 4: half-life: a clock disc empties by half, "±5 jam"
+  {
+    const { t, o } = scenes[3], a = S(3), d = D(3);
+    el("rect", { x: 0, y: 1330, width: 1080, height: 590, fill: "url(#htT2)" }, t);
+    const disc = el("circle", { cx: 540, cy: 600, r: 330, fill: "#FF7477" }, o);
+    const half = el("path", { d: "M540 270 A330 330 0 0 1 540 930 Z", fill: "#00838A" }, t); // overprints the right half
+    const ring = el("circle", { cx: 540, cy: 600, r: 360, fill: "none", stroke: "#00838A", "stroke-width": 14 }, t);
+    const hand = el("rect", { x: 532, y: 340, width: 16, height: 270, rx: 8, fill: "#00838A" }, t);
+    const big = text(t, "±0 jam", 540, 1270, 170, "#00838A"), bigo = text(o, "±0 jam", 547, 1262, 170, "url(#htO)");
+    const sub = text(t, "separuh kafein masih ada", 540, 1080, 52, "#00838A", { "font-weight": 800, "letter-spacing": 0 });
+    tl.fromTo(disc, { attr: { r: 0 } }, { attr: { r: 330 }, duration: 0.6, ease: "back.out(1.6)" }, a);
+    tl.fromTo(ring, { opacity: 0 }, { opacity: 1, duration: 0.01 }, a + 0.2);
+    tl.fromTo(hand, { rotation: 0, transformOrigin: "540px 600px" }, { rotation: 150, duration: 2.2, ease: "power2.inOut" }, a + 0.4);
+    tl.fromTo(half, { opacity: 0, scaleX: 0, transformOrigin: "540px 600px" }, { opacity: 1, scaleX: 1, duration: 1.2, ease: "power2.inOut" }, a + 0.9);
+    const n = { v: 0 };
+    tl.fromTo(n, { v: 0 }, { v: 5, duration: 1.6, ease: "power2.out", onUpdate: () => { const s = "±" + Math.round(n.v) + " jam"; big.textContent = s; bigo.textContent = s; } }, a + 0.4);
+    [big, bigo, sub].forEach((x) => tl.fromTo(x, { opacity: 0 }, { opacity: 1, duration: 0.01 }, a + 0.4));
+    // the payoff: full overprint kick
+    tl.fromTo(O, { x: 14, y: -10 }, { x: 0, y: 0, duration: 0.4, ease: "elastic.out(1.3,0.4)" }, a + 2.0);
+  }
+
+  BM.captions(tl, document.getElementById("caps"), P.words, { accent: "#FF7477", text: "#00838A" });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["root"] = tl;
+})();
+</script>
+</body>
+</html>
