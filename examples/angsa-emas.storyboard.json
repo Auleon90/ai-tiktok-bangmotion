@@ -1,0 +1,26 @@
+{
+  "title": "Petani dan Angsa Emas",
+  "ambience": "wind",
+  "theme": { "accent": "#f2c14e", "skyTop": "#0e1a2b", "skyMid": "#2b3a55", "horizon": "#d9893b", "ground": "#1a140d" },
+  "image_style": "warm storybook 2D cartoon illustration, bold clean outlines, soft cel shading, golden hour lighting, vertical composition, no text, no letters, no watermark",
+  "scenes": [
+    { "id": 1, "type": "image", "eyebrow": "Fabel Aesop", "pad_before_ms": 300,
+      "image": "a small humble farmhouse on a green hill at sunrise, a white goose standing in the yard, peaceful countryside",
+      "headline": "Petani dan Angsa Emas",
+      "vo": "Dahulu, seorang petani miskin memelihara seekor angsa yang tampak biasa saja." },
+    { "id": 2, "type": "image", "eyebrow": "Keajaiban",
+      "image": "close-up of a shiny glowing golden egg in a straw nest, sparkles, warm light",
+      "lottie": [ { "name": "sparkle-gold", "x": 540, "y": 700, "size": 900 } ],
+      "vo": "Suatu pagi, ia menemukan sebutir telur emas. Setiap hari, angsa itu bertelur satu lagi." },
+    { "id": 3, "type": "counter", "eyebrow": "Kaya Raya",
+      "image": "a rustic wooden table piled with gold coins and golden eggs inside a cozy farmhouse, candle light",
+      "items": [ { "value": 365, "label": "Telur Emas Setahun", "color": "#f2c14e" } ],
+      "vo": "Petani itu pun kaya. Tapi semakin kaya, ia semakin tidak sabar." },
+    { "id": 4, "type": "image", "eyebrow": "Keserakahan",
+      "image": "dark stormy night outside a farmhouse window, an empty straw nest with a single white feather, dramatic shadows, melancholic",
+      "vo": "Ia ingin semua emas sekaligus. Ia menyembelih angsanya, dan tak menemukan apa pun di dalamnya." },
+    { "id": 5, "type": "headline", "eyebrow": "Pelajaran", "gap_after_ms": 1000,
+      "headline": "Serakah menghabiskan segalanya.",
+      "vo": "Keserakahan bisa menghilangkan berkah yang sudah kita miliki." }
+  ]
+}

@@ -15,7 +15,7 @@ export type Theme = {
 /** Lottie effect from assets/lottie: name = "<pulse|burst|sparkle|dust|ring>-<gold|white|red>" */
 export type LottieFx = { name: string; x: number; y: number; size?: number; at?: number; loop?: boolean; speed?: number; opacity?: number };
 
-type Base = { id: number; startFrame: number; durationFrames: number; eyebrow?: string; lottie?: LottieFx[] };
+type Base = { id: number; startFrame: number; durationFrames: number; eyebrow?: string; lottie?: LottieFx[]; imageSrc?: string };
 
 export type TitleScene = Base & { type: "title"; arabic?: string; title: string; subtitle?: string };
 export type HeadlineScene = Base & { type: "headline"; headline: string; sub?: string; icon?: IconName };
@@ -27,6 +27,7 @@ export type CounterScene = Base & {
 export type QuoteScene = Base & { type: "quote"; text: string; source?: string };
 export type AyatScene = Base & { type: "ayat"; arabic: string; translation: string; ref: string };
 export type TributeScene = Base & { type: "tribute"; name: string; arabic?: string; note?: string };
+export type ImageScene = Base & { type: "image"; headline?: string; sub?: string };
 export type MapScene = Base & {
   type: "map";
   hills?: { label?: string; at: Pt; r: number; color?: string }[];
@@ -53,7 +54,8 @@ export type Scene =
   | QuoteScene
   | AyatScene
   | TributeScene
-  | MapScene;
+  | MapScene
+  | ImageScene;
 
 export type Props = {
   fps: number;

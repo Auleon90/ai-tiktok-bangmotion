@@ -21,16 +21,20 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
    3. **Manim** (`manim/`, `.venv-manim`) — sains/matematika, ±1 menit
    4. **Cepat** (bang-motion klasik: HTML + rekam layar) — draf, ±1,5 menit
    5. **Auto** — Claude memilih sesuai topik & storyboard (aturan di skill)
-3. Semua mode berakhir di `output/final.mp4` dengan VO Cartesia — tidak pernah berhenti di halaman HTML.
+3. Gambar AI (Cloudflare FLUX) OPSIONAL: hanya untuk cerita yang butuh "dunia" visual (fabel, sejarah umum, misteri, tempat).
+   Tandai scene 🖼️ di storyboard + jumlahnya, supaya user bisa menolak. Tidak untuk sains/matematika, listicle, data, sirah Nabi ﷺ.
+4. Semua mode berakhir di `output/final.mp4` dengan VO Cartesia — tidak pernah berhenti di halaman HTML.
 
 Detail lengkap: `.claude/skills/bang-motion.md`. Semua mode dijalankan lewat `scripts/produce.py`.
-Contoh: `examples/uhud.storyboard.json` (sirah, mode 1/2), `examples/pythagoras.storyboard.json` + `examples/pythagoras_manim.py` (mode 3).
+Contoh: `examples/uhud.storyboard.json` (sirah, mode 1/2), `examples/angsa-emas.storyboard.json` (fabel + gambar AI), `examples/pythagoras.storyboard.json` + `examples/pythagoras_manim.py` (mode 3).
 Konten sirah: JANGAN menggambarkan sosok/wajah Nabi ﷺ atau sahabat — pakai peta, simbol, kaligrafi.
 
 ## Environment variables yang diperlukan
 
 - `CARTESIA_API_KEY` — tersimpan di Default environment (otomatis tersedia)
 - `CARTESIA_VOICE_ID` — tersimpan di Default environment (Galang, id-ID)
+- `CF_ACCOUNT_ID` — Cloudflare account (Default environment); token Workers AI tersimpan sebagai network secret untuk api.cloudflare.com
+- Key Gemini juga tersimpan (generativelanguage.googleapis.com), tapi model gambar Gemini TIDAK punya kuota gratis — jangan dipakai untuk gambar
 
 ## Penting
 

@@ -45,6 +45,27 @@ def tts_cached(text: str) -> tuple[str, dict]:
         return mp3, json.load(f)
 
 
+DEFAULT_IMAGE_STYLE = ("clean 2D cartoon illustration, bold outlines, soft cel shading, cinematic lighting, "
+                       "rich colors, vertical composition, no text, no letters, no watermark")
+
+
+def image_cached(spec, style: str) -> str:
+    """Optional AI illustration (Cloudflare FLUX). Returns path relative to output/: img/<hash>.jpg"""
+    prompt = spec if isinstance(spec, str) else spec["prompt"]
+    steps = 6 if isinstance(spec, str) else spec.get("steps", 6)
+    full = f"{prompt}, {style}" if style else prompt
+    h = hashlib.sha1(f"{steps}|{full}".encode()).hexdigest()[:16]
+    rel = f"img/{h}.jpg"
+    path = os.path.join(OUT, rel)
+    if os.path.exists(path):
+        print(f"  IMG  (cache) {prompt[:50]}...")
+    else:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        print(f"  IMG  {prompt[:60]}...")
+        run([sys.executable, os.path.join(ROOT, "scripts", "gen_image.py"), full, path, f"--steps={steps}"])
+    return rel
+
+
 def ms2f(ms: float) -> int:
     return int(round(ms / 1000 * FPS))
 
@@ -60,6 +81,7 @@ def main():
         sys.exit(__doc__)
     sb_path, out_mp4 = args
     os.makedirs(VO_DIR, exist_ok=True)
+    os.makedirs(os.path.join(OUT, "img"), exist_ok=True)
     sb = json.load(open(sb_path))
 
     print("STEP  voiceover")
@@ -74,7 +96,9 @@ def main():
         for w in meta["words"]:
             words.append({"text": w["text"], "startFrame": ms2f(vo_start + w["start_ms"]), "endFrame": ms2f(vo_start + w["end_ms"])})
         dur = pad + meta["duration_ms"] + gap
-        visual = {k: v for k, v in s.items() if k not in ("vo", "pad_before_ms", "gap_after_ms")}
+        visual = {k: v for k, v in s.items() if k not in ("vo", "pad_before_ms", "gap_after_ms", "image")}
+        if s.get("image") and engine != "manim":
+            visual["imageSrc"] = image_cached(s["image"], sb.get("image_style", DEFAULT_IMAGE_STYLE))
         scenes.append({**visual, "startFrame": ms2f(cursor), "durationFrames": ms2f(dur), "vo_ms": meta["duration_ms"]})
         print(f"  scene {s['id']:>2} {s['type']:<9} {dur/1000:5.2f}s")
         cursor += dur
@@ -157,6 +181,7 @@ def render_hyperframes(html_path, props, audio, out_mp4, total_ms, draft):
     shutil.copytree(os.path.join(ROOT, "assets", "fonts"), os.path.join(a, "fonts"))
     shutil.copytree(os.path.join(ROOT, "hyperframes", "runtime"), os.path.join(a, "bm"))
     shutil.copy(audio, os.path.join(a, "audio.mp3"))
+    shutil.copytree(os.path.join(OUT, "img"), os.path.join(a, "img"))
     data = timing_data(props, total_ms)
     open(os.path.join(a, "props.js"), "w").write("window.PROPS=" + json.dumps(data, ensure_ascii=False) + ";")
     lot = {}
@@ -169,7 +194,7 @@ def render_hyperframes(html_path, props, audio, out_mp4, total_ms, draft):
 
     print("STEP  render (HyperFrames, frame-by-frame)")
     hf = os.path.join(hfmods, ".bin", "hyperframes")
-    cmd = [hf, "render", proj, "-o", os.path.abspath(out_mp4), "--fps", str(FPS), "-w", "4", "--no-browser-gpu"]
+    cmd = [hf, "render", proj, "-o", os.path.abspath(out_mp4), "--fps", str(FPS), "-w", "4", "--no-browser-gpu", "--quiet"]
     cmd += ["-q", "draft"] if draft else ["--crf", "16"]
     p = subprocess.run(cmd, cwd=os.path.join(ROOT, "hyperframes"))
     if p.returncode != 0:

@@ -28,4 +28,5 @@ echo "→ Lottie assets"
 
 echo "→ ffmpeg: $(ffmpeg -version 2>&1 | head -1 | cut -d' ' -f1-3)"
 [ -n "${CARTESIA_API_KEY:-}" ] && echo "→ CARTESIA_API_KEY: set" || echo "→ CARTESIA_API_KEY: MISSING"
+[ -n "${CF_ACCOUNT_ID:-}" ] && echo "→ CF_ACCOUNT_ID: set (AI images available)" || echo "→ CF_ACCOUNT_ID: missing (AI images unavailable)"
 echo "=== Setup complete ==="

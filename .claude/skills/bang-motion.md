@@ -54,6 +54,26 @@ Built-in scene types (rendered automatically by modes 1 and 2):
 | `tribute` | `name`, `arabic?`, `note?` |
 | `map` | coords 0–1000 (y down): `hills[{label?, at, r, color?}]`, `units[{label?, color, dots, from, to?, moveAt?, spread?}]`, `arrows[{path, color, at?}]`, `pulse{at, label?, atFrac?}`, `focus{at, zoom}` |
 
+| `image` | full-screen AI illustration only; optional `headline`, `sub` overlay |
+
+### Optional AI illustrations (Cloudflare FLUX — only when the story needs them)
+
+Any scene may add `"image": "<English prompt>"` (or `{"prompt": "...", "steps": 6}`); top-level `"image_style"` is appended to every prompt
+(default: clean 2D cartoon, bold outlines, no text). The image becomes a full-bleed background with a Ken Burns move; the scene's normal
+content (headline, counter, quote…) is drawn on top with a darkening scrim. Images are cached by prompt in `output/img/`.
+
+- Use images ONLY for stories that need a visible place or world: fables, general history, mysteries, travel/places, "what if", nature/space,
+  illustrative characters. Typically 3–6 images per video, mixed with code-drawn scenes.
+- Do NOT use images for: math/science (Manim), listicles/tips, data, quotes/motivation, and **sirah Nabi ﷺ** (maps/calligraphy only;
+  at most a landscape with no human figures).
+- Mark image scenes with 🖼️ in the approval summary and state the count ("3 dari 8 scene pakai gambar AI") so the user can decline.
+- Supported in modes 1 (HyperFrames), 2 (Remotion) and 4 (Cepat, as `PROPS.scenes[i].imageSrc` relative to the page). Ignored in Manim.
+- Prompts in English, describe composition + light + mood, always end with "no text". FLUX output is 1024×1024 (center-cropped to 9:16),
+  so keep the subject centred.
+- Quota: free plan 10,000 neurons/day (~100+ images at 6 steps), resets 07:00 WIB. Error "quota exhausted" → tell the user and offer
+  to render without images or wait for the reset.
+- Needs `CF_ACCOUNT_ID` (Default environment) and the Cloudflare token saved as a network secret for api.cloudflare.com.
+
 Manim mode (3) uses free-form types (e.g. `triangle`, `graph`, `formula`) plus a `visual` description — the Manim scene code draws them.
 
 `lottie` (modes 1 & 2): `[{ "name": "<pulse|burst|sparkle|dust|ring>-<gold|white|red>", "x": px, "y": px, "size": px, "at": 0..1, "loop": true, "opacity": 1 }]`
@@ -69,12 +89,12 @@ Approval summary format:
 ```
 📋 STORYBOARD — [title]
 ━━━━━━━━━━━━━━━━━━━━━━━━
-Scene 1 [type]: [eyebrow]
+Scene 1 [type]: [eyebrow]            (🖼️ if it uses an AI image)
   🎬 Visual: [what is shown]
   🎙️ VO: "[vo]"
 ...
 ━━━━━━━━━━━━━━━━━━━━━━━━
-Perkiraan durasi: ~Xs
+Perkiraan durasi: ~Xs · Gambar AI: N dari M scene
 ```
 
 ---
@@ -164,6 +184,8 @@ Engine: AI-written HTML recorded in real time with Playwright (`scripts/record.j
 | Manim `There is no Font Weight Called X` | Use NORMAL / BOLD / HEAVY |
 | Manim `MathTex` / latex errors | Replace with `Text` / `MarkupText` |
 | Missing deps | `bash $R/scripts/setup.sh` |
+| `CF_ACCOUNT_ID not set` | Start a new session (env var lives in the Default environment) or ask the user for the account id |
+| Cloudflare 3036 / quota exhausted | Offer: render without images, or wait for 07:00 WIB reset |
 
 ## Output files (`$R/output/`, git-ignored)
 
@@ -172,5 +194,6 @@ Engine: AI-written HTML recorded in real time with Playwright (`scripts/record.j
 | `storyboard.json` | Approved storyboard |
 | `vo/<hash>.mp3`, `.words.json` | Cached per-scene voice + word timestamps |
 | `props.json` | Real timings for all engines |
+| `img/<hash>.jpg` | Cached AI illustrations |
 | `hf/` · `manim_media/` · `animation.*` | Engine working files |
 | `final.mp4` | Finished TikTok-ready video |
