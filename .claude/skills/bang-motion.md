@@ -1,12 +1,24 @@
 # /bang-motion — TikTok Motion Graphic Pipeline
 
-Triggered by: `/bang-motion [prompt] [--engine html]`
+Triggered by: `/bang-motion [prompt] [--engine remotion|html]`
 
 Generates a TikTok-ready MP4 (1080×1920) with Indonesian voiceover (Cartesia sonic-3, word timestamps).
 
 **Engines**
-- `remotion` (DEFAULT) — data-driven Remotion composition in `remotion/`, frame-accurate render, word-synced captions, ambience + loudnorm. Run with `scripts/produce.py`.
-- `html` (only if user passes `--engine html` or picks "Cepat/HTML" at approval) — legacy flow in the "Legacy HTML engine" section below.
+- `remotion` — data-driven Remotion composition in `remotion/`, frame-accurate render, word-synced captions, ambience + loudnorm (~20 min render). Section "Remotion engine".
+- `html` — legacy flow: AI-written HTML recorded with Playwright (~1–2 min render, lower quality). Section "Legacy HTML engine".
+
+## STEP 0 — ALWAYS ask which mode first (mandatory)
+
+Before writing any storyboard or calling any API, for EVERY video request, use AskUserQuestion:
+
+- question: "Mau pakai mode render apa untuk video ini?"
+- header: "Mode"
+- options:
+  - **Remotion (kualitas tinggi)** — render per frame, subtitle per kata, backsound; render ±20 menit. Untuk video final.
+  - **HTML (cepat)** — rekam layar, tanpa subtitle per kata; render ±1–2 menit. Untuk draf/tes ide.
+
+Skip this question only if the user already stated the mode in the same request (e.g. `--engine html`, "pakai remotion", "mode cepat"). Then follow ONLY the chosen engine's section below.
 
 ---
 
@@ -51,8 +63,7 @@ Rules:
 
 ### R3 — Present for approval
 Show the storyboard summary (scene, type, visual, VO). AskUserQuestion:
-- **Lanjutkan (Remotion)** — high quality render
-- **Lanjutkan (Cepat/HTML)** — legacy engine
+- **Lanjutkan** — render with the mode chosen in STEP 0
 - **Revisi** — loop until approved
 
 ### R4 — Draft check (fast)
@@ -79,7 +90,7 @@ Takes several minutes — run in background and tell the user. Add `--draft` for
 
 ---
 
-# Legacy HTML engine (`--engine html`)
+# Legacy HTML engine (mode "HTML (cepat)")
 
 ## Prerequisites (run once)
 

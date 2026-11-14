@@ -4,7 +4,7 @@ Repo ini berisi pipeline untuk generate TikTok motion graphic dengan voiceover B
 
 ## Skill tersedia
 
-- `/bang-motion [prompt] [--engine html]` — generate TikTok MP4 ~60 detik: Cartesia TTS (sonic-3, timestamp per kata) + animasi Remotion + render
+- `/bang-motion [prompt] [--engine remotion|html]` — generate TikTok MP4 ~60 detik: Cartesia TTS (sonic-3, timestamp per kata) + animasi Remotion + render
 
 ## Setup otomatis (jalankan sekali per sesi baru)
 
@@ -14,8 +14,9 @@ bash scripts/setup.sh   # pip requests + npm install di remotion/
 
 ## Engine render
 
-- **Remotion** (default, `remotion/`) — render per frame, H.264 CRF 16, subtitle per kata, ambience angin. Jalankan via `python3 scripts/produce.py <storyboard.json> output/final.mp4`.
-- **HTML** (fallback, `--engine html`) — `scripts/record.js` + `scripts/mux.sh`, lebih cepat tapi kualitas lebih rendah.
+- Setiap request video: WAJIB tanya dulu mode mana (Remotion atau HTML) via AskUserQuestion, kecuali user sudah menyebutkannya.
+- **Remotion** (`remotion/`) — render per frame, H.264 CRF 16, subtitle per kata, ambience angin. Jalankan via `python3 scripts/produce.py <storyboard.json> output/final.mp4`.
+- **HTML** (cepat, `--engine html`) — `scripts/record.js` + `scripts/mux.sh`, lebih cepat tapi kualitas lebih rendah.
 - Contoh storyboard: `examples/uhud.storyboard.json`.
 - Konten sirah: JANGAN menggambarkan sosok/wajah Nabi ﷺ atau sahabat — pakai peta, simbol, kaligrafi.
 
