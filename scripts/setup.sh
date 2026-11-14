@@ -14,6 +14,14 @@ node -e "require('playwright')" 2>/dev/null \
   && echo "  playwright: OK" \
   || { echo "  playwright not found, installing..."; npm install playwright --no-save; }
 
+# Remotion deps
+echo "→ Installing Remotion dependencies..."
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+if [ ! -d "$ROOT/remotion/node_modules" ]; then
+  (cd "$ROOT/remotion" && npm install --no-audit --no-fund --silent)
+fi
+echo "  remotion: OK"
+
 # ffmpeg check
 echo "→ Checking ffmpeg..."
 ffmpeg -version 2>&1 | head -1

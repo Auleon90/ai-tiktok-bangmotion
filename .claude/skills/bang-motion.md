@@ -1,10 +1,85 @@
 # /bang-motion — TikTok Motion Graphic Pipeline
 
-Triggered by: `/bang-motion [prompt]`
+Triggered by: `/bang-motion [prompt] [--engine html]`
 
-This skill generates a TikTok-ready MP4 motion graphic with Indonesian voiceover using Cartesia TTS, HTML/CSS animation recorded via Playwright, and ffmpeg for final mux.
+Generates a TikTok-ready MP4 (1080×1920) with Indonesian voiceover (Cartesia sonic-3, word timestamps).
+
+**Engines**
+- `remotion` (DEFAULT) — data-driven Remotion composition in `remotion/`, frame-accurate render, word-synced captions, ambience + loudnorm. Run with `scripts/produce.py`.
+- `html` (only if user passes `--engine html` or picks "Cepat/HTML" at approval) — legacy flow in the "Legacy HTML engine" section below.
 
 ---
+
+## Remotion engine (default)
+
+### R1 — Setup
+```bash
+bash /home/user/ai-tiktok-bangmotion/scripts/setup.sh
+```
+`CARTESIA_API_KEY` must be set (Default environment). If missing, stop and ask.
+
+### R2 — Write storyboard
+Write `/home/user/ai-tiktok-bangmotion/output/storyboard.json`. Use `examples/uhud.storyboard.json` as the reference. Format:
+
+```json
+{
+  "title": "...",
+  "ambience": "wind",          // or "none"
+  "theme": { "accent": "#e9b552" },   // optional: skyTop, skyMid, horizon, ground, text, accent, muted
+  "scenes": [ { "id": 1, "type": "title", "vo": "Teks yang diucapkan", "eyebrow": "LABEL KECIL", ... } ]
+}
+```
+
+Every scene: `id`, `type`, `vo` (spoken Indonesian, ~2.3 words/sec), optional `eyebrow`, `pad_before_ms`, `gap_after_ms`.
+Scene duration is derived from the real audio — never set it manually.
+
+| type | fields |
+|------|--------|
+| `title` | `arabic?`, `title`, `subtitle?` |
+| `headline` | `headline`, `sub?`, `icon?` (sword, bow, mountain, moon, drop, star, shield) |
+| `counter` | `items: [{value, label, color?, prefix?, suffix?}]`, `versus?` |
+| `quote` | `text`, `source?` |
+| `ayat` | `arabic`, `translation`, `ref` |
+| `tribute` | `name`, `arabic?`, `note?` |
+| `map` | coords 0–1000 (y down): `hills[{label?, at, r, color?}]`, `units[{label?, color, dots, from, to?, moveAt?:[0..1,0..1], spread?}]`, `arrows[{path:[[x,y]...], color, at?}]`, `pulse{at, label?, atFrac?}`, `focus{at, zoom}` |
+
+Rules:
+- 6–9 scenes, total ~55–60 s. Open with a strong hook (scene 1 must be visually striking).
+- `vo` is what is spoken; on-screen text can differ (e.g. write "Rasulullah" in vo, "ﷺ" only on screen).
+- Islamic/sirah content: NEVER depict the Prophet ﷺ or sahabat as figures/faces. Use maps, unit dots, symbols, calligraphy, ayat.
+- Verify facts (numbers, dates, hadith wording) and cite source in `quote.source` / `ayat.ref`.
+
+### R3 — Present for approval
+Show the storyboard summary (scene, type, visual, VO). AskUserQuestion:
+- **Lanjutkan (Remotion)** — high quality render
+- **Lanjutkan (Cepat/HTML)** — legacy engine
+- **Revisi** — loop until approved
+
+### R4 — Draft check (fast)
+```bash
+cd /home/user/ai-tiktok-bangmotion && python3 scripts/produce.py output/storyboard.json output/final.mp4 --no-render
+```
+TTS is cached by text hash in `output/vo/` — revisions only regenerate changed scenes.
+Then render stills (≈70% into each scene) to check layout before the long render:
+```bash
+cd remotion && cp ../output/props.json src/sample.json
+npx remotion still src/index.ts BangMotion /tmp/s.png --frame=<N> --props=../output/props.json --scale=0.4 \
+  --browser-executable=$(ls /opt/pw-browsers/chromium_headless_shell-*/*/chrome-headless-shell)
+```
+Look at them; fix overlaps (map labels vs units, long text) in storyboard.json.
+
+### R5 — Final render
+```bash
+cd /home/user/ai-tiktok-bangmotion && python3 scripts/produce.py output/storyboard.json output/final.mp4
+```
+Takes several minutes — run in background and tell the user. Add `--draft` for half-res quick preview.
+
+### R6 — Deliver
+`SendUserFile(["/home/user/ai-tiktok-bangmotion/output/final.mp4"])` and report duration, size, scene count, voice.
+
+---
+
+# Legacy HTML engine (`--engine html`)
 
 ## Prerequisites (run once)
 
@@ -73,6 +148,8 @@ Then use AskUserQuestion with two options:
 If user selects "Revisi", update the storyboard accordingly and re-present. Loop until approved.
 
 ### STEP 3 — Generate Voiceover with Cartesia
+
+(tts.py now also writes `<name>.words.json` with per-word timestamps; MP3 output unchanged.)
 
 For each scene, generate a separate MP3:
 

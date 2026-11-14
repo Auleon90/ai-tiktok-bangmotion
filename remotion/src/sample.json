@@ -1,0 +1,914 @@
+{
+ "fps": 30,
+ "totalFrames": 1722,
+ "audio": "audio.mp3",
+ "theme": {
+  "accent": "#e9b552"
+ },
+ "scenes": [
+  {
+   "id": 1,
+   "type": "title",
+   "eyebrow": "Sirah Nabawiyah",
+   "arabic": "غزوة أحد",
+   "title": "Perang Uhud",
+   "subtitle": "7 SYAWAL 3 H · 625 M",
+   "startFrame": 0,
+   "durationFrames": 198,
+   "vo_ms": 5759
+  },
+  {
+   "id": 2,
+   "type": "counter",
+   "versus": true,
+   "eyebrow": "Kekuatan Pasukan",
+   "items": [
+    {
+     "value": 700,
+     "label": "Muslim",
+     "color": "#4fb477"
+    },
+    {
+     "value": 3000,
+     "label": "Quraisy",
+     "color": "#d2463a"
+    }
+   ],
+   "startFrame": 198,
+   "durationFrames": 122,
+   "vo_ms": 3696
+  },
+  {
+   "id": 3,
+   "type": "map",
+   "eyebrow": "Strategi Rasulullah ﷺ",
+   "hills": [
+    {
+     "label": "Gunung Uhud",
+     "at": [
+      500,
+      120
+     ],
+     "r": 300
+    },
+    {
+     "label": "Bukit Rumat",
+     "at": [
+      270,
+      560
+     ],
+     "r": 80,
+     "color": "#8a5a2e"
+    }
+   ],
+   "units": [
+    {
+     "label": "Muslim",
+     "color": "#4fb477",
+     "dots": 36,
+     "from": [
+      560,
+      420
+     ],
+     "spread": 110
+    },
+    {
+     "label": "Pemanah",
+     "color": "#f2d16b",
+     "dots": 9,
+     "from": [
+      270,
+      640
+     ],
+     "to": [
+      270,
+      545
+     ],
+     "moveAt": [
+      0.15,
+      0.55
+     ],
+     "spread": 50
+    },
+    {
+     "label": "Quraisy",
+     "color": "#d2463a",
+     "dots": 64,
+     "from": [
+      560,
+      830
+     ],
+     "spread": 170
+    }
+   ],
+   "focus": {
+    "at": [
+     330,
+     560
+    ],
+    "zoom": 1.35
+   },
+   "startFrame": 320,
+   "durationFrames": 166,
+   "vo_ms": 5197
+  },
+  {
+   "id": 4,
+   "type": "quote",
+   "eyebrow": "Pesan Rasulullah ﷺ",
+   "text": "Jangan tinggalkan posisi kalian, meskipun kalian melihat kami disambar burung.",
+   "source": "HR. Bukhari",
+   "startFrame": 486,
+   "durationFrames": 182,
+   "vo_ms": 5712
+  },
+  {
+   "id": 5,
+   "type": "map",
+   "eyebrow": "Kemenangan di Depan Mata",
+   "hills": [
+    {
+     "label": "Gunung Uhud",
+     "at": [
+      500,
+      120
+     ],
+     "r": 300
+    },
+    {
+     "label": "Bukit Rumat",
+     "at": [
+      270,
+      560
+     ],
+     "r": 80,
+     "color": "#8a5a2e"
+    }
+   ],
+   "units": [
+    {
+     "label": "Muslim",
+     "color": "#4fb477",
+     "dots": 36,
+     "from": [
+      560,
+      420
+     ],
+     "to": [
+      600,
+      640
+     ],
+     "moveAt": [
+      0.05,
+      0.5
+     ],
+     "spread": 110
+    },
+    {
+     "label": "Quraisy",
+     "color": "#d2463a",
+     "dots": 64,
+     "from": [
+      560,
+      830
+     ],
+     "to": [
+      620,
+      1000
+     ],
+     "moveAt": [
+      0.05,
+      0.55
+     ],
+     "spread": 170
+    },
+    {
+     "label": "Pemanah",
+     "color": "#f2d16b",
+     "dots": 9,
+     "from": [
+      270,
+      545
+     ],
+     "to": [
+      470,
+      720
+     ],
+     "moveAt": [
+      0.55,
+      0.92
+     ],
+     "spread": 50
+    }
+   ],
+   "focus": {
+    "at": [
+     420,
+     640
+    ],
+    "zoom": 1.2
+   },
+   "startFrame": 668,
+   "durationFrames": 228,
+   "vo_ms": 7241
+  },
+  {
+   "id": 6,
+   "type": "map",
+   "eyebrow": "Celah yang Fatal",
+   "hills": [
+    {
+     "label": "Gunung Uhud",
+     "at": [
+      500,
+      120
+     ],
+     "r": 300
+    },
+    {
+     "label": "Bukit Rumat",
+     "at": [
+      270,
+      560
+     ],
+     "r": 80,
+     "color": "#8a5a2e"
+    }
+   ],
+   "units": [
+    {
+     "color": "#4fb477",
+     "dots": 36,
+     "from": [
+      600,
+      640
+     ],
+     "spread": 110
+    },
+    {
+     "label": "Pemanah",
+     "color": "#f2d16b",
+     "dots": 9,
+     "from": [
+      470,
+      720
+     ],
+     "spread": 50
+    },
+    {
+     "label": "Kavaleri Khalid",
+     "color": "#d2463a",
+     "dots": 16,
+     "from": [
+      90,
+      860
+     ],
+     "to": [
+      380,
+      400
+     ],
+     "moveAt": [
+      0.35,
+      0.9
+     ],
+     "spread": 70
+    }
+   ],
+   "arrows": [
+    {
+     "path": [
+      [
+       90,
+       860
+      ],
+      [
+       80,
+       560
+      ],
+      [
+       170,
+       380
+      ],
+      [
+       400,
+       400
+      ]
+     ],
+     "color": "#d2463a",
+     "at": 0.25
+    }
+   ],
+   "pulse": {
+    "at": [
+     270,
+     545
+    ],
+    "label": "BUKIT KOSONG",
+    "atFrac": 0.08
+   },
+   "focus": {
+    "at": [
+     300,
+     520
+    ],
+    "zoom": 1.3
+   },
+   "startFrame": 896,
+   "durationFrames": 170,
+   "vo_ms": 5337
+  },
+  {
+   "id": 7,
+   "type": "tribute",
+   "eyebrow": "70 Syuhada Uhud",
+   "arabic": "حمزة بن عبد المطلب",
+   "name": "Hamzah r.a.",
+   "note": "SAYYIDUSY SYUHADA",
+   "startFrame": 1066,
+   "durationFrames": 221,
+   "vo_ms": 7009
+  },
+  {
+   "id": 8,
+   "type": "headline",
+   "icon": "bow",
+   "eyebrow": "Pelajaran",
+   "headline": "Satu ketidaktaatan, mengubah segalanya.",
+   "startFrame": 1287,
+   "durationFrames": 129,
+   "vo_ms": 3959
+  },
+  {
+   "id": 9,
+   "type": "ayat",
+   "arabic": "وَلَا تَهِنُوا وَلَا تَحْزَنُوا وَأَنتُمُ الْأَعْلَوْنَ إِن كُنتُم مُّؤْمِنِينَ",
+   "translation": "Janganlah kamu lemah dan jangan bersedih, padahal kamulah yang paling tinggi derajatnya, jika kamu orang beriman.",
+   "ref": "QS. ALI 'IMRAN : 139",
+   "startFrame": 1416,
+   "durationFrames": 306,
+   "vo_ms": 8077
+  }
+ ],
+ "words": [
+  {
+   "text": "Tahun",
+   "startFrame": 18,
+   "endFrame": 27
+  },
+  {
+   "text": "ketiga",
+   "startFrame": 27,
+   "endFrame": 36
+  },
+  {
+   "text": "Hijriah.",
+   "startFrame": 36,
+   "endFrame": 49
+  },
+  {
+   "text": "Di",
+   "startFrame": 67,
+   "endFrame": 72
+  },
+  {
+   "text": "kaki",
+   "startFrame": 72,
+   "endFrame": 80
+  },
+  {
+   "text": "Gunung",
+   "startFrame": 80,
+   "endFrame": 87
+  },
+  {
+   "text": "Uhud,",
+   "startFrame": 87,
+   "endFrame": 99
+  },
+  {
+   "text": "sebuah",
+   "startFrame": 103,
+   "endFrame": 126
+  },
+  {
+   "text": "pelajaran",
+   "startFrame": 126,
+   "endFrame": 139
+  },
+  {
+   "text": "besar",
+   "startFrame": 139,
+   "endFrame": 146
+  },
+  {
+   "text": "tentang",
+   "startFrame": 146,
+   "endFrame": 154
+  },
+  {
+   "text": "ketaatan",
+   "startFrame": 154,
+   "endFrame": 167
+  },
+  {
+   "text": "akan",
+   "startFrame": 167,
+   "endFrame": 172
+  },
+  {
+   "text": "terjadi.",
+   "startFrame": 172,
+   "endFrame": 188
+  },
+  {
+   "text": "Sekitar",
+   "startFrame": 202,
+   "endFrame": 214
+  },
+  {
+   "text": "tujuh",
+   "startFrame": 214,
+   "endFrame": 222
+  },
+  {
+   "text": "ratus",
+   "startFrame": 222,
+   "endFrame": 230
+  },
+  {
+   "text": "pasukan",
+   "startFrame": 230,
+   "endFrame": 241
+  },
+  {
+   "text": "Muslim,",
+   "startFrame": 241,
+   "endFrame": 253
+  },
+  {
+   "text": "menghadapi",
+   "startFrame": 253,
+   "endFrame": 268
+  },
+  {
+   "text": "tiga",
+   "startFrame": 268,
+   "endFrame": 276
+  },
+  {
+   "text": "ribu",
+   "startFrame": 276,
+   "endFrame": 282
+  },
+  {
+   "text": "pasukan",
+   "startFrame": 282,
+   "endFrame": 295
+  },
+  {
+   "text": "Quraisy.",
+   "startFrame": 295,
+   "endFrame": 309
+  },
+  {
+   "text": "Rasulullah",
+   "startFrame": 323,
+   "endFrame": 335
+  },
+  {
+   "text": "menempatkan",
+   "startFrame": 335,
+   "endFrame": 349
+  },
+  {
+   "text": "lima",
+   "startFrame": 349,
+   "endFrame": 355
+  },
+  {
+   "text": "puluh",
+   "startFrame": 355,
+   "endFrame": 360
+  },
+  {
+   "text": "pemanah",
+   "startFrame": 360,
+   "endFrame": 371
+  },
+  {
+   "text": "di",
+   "startFrame": 371,
+   "endFrame": 374
+  },
+  {
+   "text": "Bukit",
+   "startFrame": 374,
+   "endFrame": 384
+  },
+  {
+   "text": "Rumat,",
+   "startFrame": 384,
+   "endFrame": 395
+  },
+  {
+   "text": "untuk",
+   "startFrame": 410,
+   "endFrame": 422
+  },
+  {
+   "text": "menjaga",
+   "startFrame": 430,
+   "endFrame": 450
+  },
+  {
+   "text": "punggung",
+   "startFrame": 453,
+   "endFrame": 462
+  },
+  {
+   "text": "pasukan.",
+   "startFrame": 462,
+   "endFrame": 475
+  },
+  {
+   "text": "Pesan",
+   "startFrame": 488,
+   "endFrame": 501
+  },
+  {
+   "text": "beliau",
+   "startFrame": 501,
+   "endFrame": 511
+  },
+  {
+   "text": "tegas:",
+   "startFrame": 511,
+   "endFrame": 531
+  },
+  {
+   "text": "jangan",
+   "startFrame": 554,
+   "endFrame": 564
+  },
+  {
+   "text": "tinggalkan",
+   "startFrame": 564,
+   "endFrame": 579
+  },
+  {
+   "text": "posisi",
+   "startFrame": 579,
+   "endFrame": 589
+  },
+  {
+   "text": "kalian,",
+   "startFrame": 589,
+   "endFrame": 611
+  },
+  {
+   "text": "apa",
+   "startFrame": 618,
+   "endFrame": 625
+  },
+  {
+   "text": "pun",
+   "startFrame": 625,
+   "endFrame": 632
+  },
+  {
+   "text": "yang",
+   "startFrame": 632,
+   "endFrame": 635
+  },
+  {
+   "text": "terjadi.",
+   "startFrame": 635,
+   "endFrame": 657
+  },
+  {
+   "text": "Muslim",
+   "startFrame": 672,
+   "endFrame": 684
+  },
+  {
+   "text": "mulai",
+   "startFrame": 684,
+   "endFrame": 689
+  },
+  {
+   "text": "menang,",
+   "startFrame": 689,
+   "endFrame": 705
+  },
+  {
+   "text": "Quraisy",
+   "startFrame": 730,
+   "endFrame": 745
+  },
+  {
+   "text": "mundur.",
+   "startFrame": 745,
+   "endFrame": 762
+  },
+  {
+   "text": "Melihat",
+   "startFrame": 789,
+   "endFrame": 802
+  },
+  {
+   "text": "harta",
+   "startFrame": 802,
+   "endFrame": 810
+  },
+  {
+   "text": "rampasan,",
+   "startFrame": 810,
+   "endFrame": 828
+  },
+  {
+   "text": "sebagian",
+   "startFrame": 828,
+   "endFrame": 840
+  },
+  {
+   "text": "besar",
+   "startFrame": 840,
+   "endFrame": 846
+  },
+  {
+   "text": "pemanah",
+   "startFrame": 846,
+   "endFrame": 857
+  },
+  {
+   "text": "turun",
+   "startFrame": 857,
+   "endFrame": 864
+  },
+  {
+   "text": "dari",
+   "startFrame": 864,
+   "endFrame": 870
+  },
+  {
+   "text": "bukit.",
+   "startFrame": 870,
+   "endFrame": 885
+  },
+  {
+   "text": "Bukit",
+   "startFrame": 899,
+   "endFrame": 909
+  },
+  {
+   "text": "pun",
+   "startFrame": 909,
+   "endFrame": 915
+  },
+  {
+   "text": "kosong.",
+   "startFrame": 915,
+   "endFrame": 927
+  },
+  {
+   "text": "Khalid",
+   "startFrame": 942,
+   "endFrame": 952
+  },
+  {
+   "text": "bin",
+   "startFrame": 952,
+   "endFrame": 958
+  },
+  {
+   "text": "Walid",
+   "startFrame": 958,
+   "endFrame": 967
+  },
+  {
+   "text": "melihat",
+   "startFrame": 967,
+   "endFrame": 976
+  },
+  {
+   "text": "celah",
+   "startFrame": 976,
+   "endFrame": 983
+  },
+  {
+   "text": "itu,",
+   "startFrame": 983,
+   "endFrame": 995
+  },
+  {
+   "text": "lalu",
+   "startFrame": 1011,
+   "endFrame": 1021
+  },
+  {
+   "text": "menyerang",
+   "startFrame": 1021,
+   "endFrame": 1034
+  },
+  {
+   "text": "dari",
+   "startFrame": 1034,
+   "endFrame": 1040
+  },
+  {
+   "text": "belakang.",
+   "startFrame": 1040,
+   "endFrame": 1055
+  },
+  {
+   "text": "Tujuh",
+   "startFrame": 1070,
+   "endFrame": 1078
+  },
+  {
+   "text": "puluh",
+   "startFrame": 1078,
+   "endFrame": 1083
+  },
+  {
+   "text": "sahabat",
+   "startFrame": 1083,
+   "endFrame": 1093
+  },
+  {
+   "text": "gugur",
+   "startFrame": 1093,
+   "endFrame": 1101
+  },
+  {
+   "text": "sebagai",
+   "startFrame": 1101,
+   "endFrame": 1110
+  },
+  {
+   "text": "syuhada,",
+   "startFrame": 1110,
+   "endFrame": 1127
+  },
+  {
+   "text": "termasuk",
+   "startFrame": 1141,
+   "endFrame": 1154
+  },
+  {
+   "text": "Hamzah,",
+   "startFrame": 1154,
+   "endFrame": 1166
+  },
+  {
+   "text": "paman",
+   "startFrame": 1182,
+   "endFrame": 1192
+  },
+  {
+   "text": "Rasulullah,",
+   "startFrame": 1192,
+   "endFrame": 1208
+  },
+  {
+   "text": "sang",
+   "startFrame": 1234,
+   "endFrame": 1243
+  },
+  {
+   "text": "penghulu",
+   "startFrame": 1243,
+   "endFrame": 1256
+  },
+  {
+   "text": "para",
+   "startFrame": 1256,
+   "endFrame": 1262
+  },
+  {
+   "text": "syuhada.",
+   "startFrame": 1262,
+   "endFrame": 1276
+  },
+  {
+   "text": "Satu",
+   "startFrame": 1291,
+   "endFrame": 1302
+  },
+  {
+   "text": "ketidaktaatan",
+   "startFrame": 1302,
+   "endFrame": 1319
+  },
+  {
+   "text": "kecil,",
+   "startFrame": 1319,
+   "endFrame": 1336
+  },
+  {
+   "text": "bisa",
+   "startFrame": 1342,
+   "endFrame": 1355
+  },
+  {
+   "text": "mengubah",
+   "startFrame": 1355,
+   "endFrame": 1369
+  },
+  {
+   "text": "kemenangan",
+   "startFrame": 1369,
+   "endFrame": 1383
+  },
+  {
+   "text": "menjadi",
+   "startFrame": 1383,
+   "endFrame": 1391
+  },
+  {
+   "text": "ujian.",
+   "startFrame": 1391,
+   "endFrame": 1406
+  },
+  {
+   "text": "Namun",
+   "startFrame": 1420,
+   "endFrame": 1435
+  },
+  {
+   "text": "Allah",
+   "startFrame": 1437,
+   "endFrame": 1444
+  },
+  {
+   "text": "berfirman:",
+   "startFrame": 1444,
+   "endFrame": 1461
+  },
+  {
+   "text": "janganlah",
+   "startFrame": 1470,
+   "endFrame": 1483
+  },
+  {
+   "text": "kamu",
+   "startFrame": 1483,
+   "endFrame": 1490
+  },
+  {
+   "text": "lemah,",
+   "startFrame": 1490,
+   "endFrame": 1502
+  },
+  {
+   "text": "dan",
+   "startFrame": 1523,
+   "endFrame": 1529
+  },
+  {
+   "text": "jangan",
+   "startFrame": 1529,
+   "endFrame": 1536
+  },
+  {
+   "text": "bersedih.",
+   "startFrame": 1536,
+   "endFrame": 1550
+  },
+  {
+   "text": "Kamulah",
+   "startFrame": 1580,
+   "endFrame": 1593
+  },
+  {
+   "text": "yang",
+   "startFrame": 1593,
+   "endFrame": 1596
+  },
+  {
+   "text": "paling",
+   "startFrame": 1596,
+   "endFrame": 1603
+  },
+  {
+   "text": "tinggi,",
+   "startFrame": 1603,
+   "endFrame": 1621
+  },
+  {
+   "text": "jika",
+   "startFrame": 1629,
+   "endFrame": 1639
+  },
+  {
+   "text": "kamu",
+   "startFrame": 1639,
+   "endFrame": 1645
+  },
+  {
+   "text": "beriman.",
+   "startFrame": 1645,
+   "endFrame": 1658
+  }
+ ]
+}
