@@ -162,7 +162,7 @@ When torn between 1 and 2, prefer **1 HyperFrames** (similar look, ~10× faster)
 Engine: `hyperframes/` (npm `hyperframes` 0.8.218, GSAP, lottie-web). Renders by seeking a paused GSAP timeline frame by frame.
 
 1. `cp $R/hyperframes/template/index.html $R/output/hf_index.html`. The template already renders every built-in scene type from `window.PROPS` (timings, words, theme), adds atmosphere, Lottie and captions.
-2. Customise `output/hf_index.html` for this video when useful: theme colours in `:root`, extra scene types (add a builder to `B`), extra GSAP moves, `BM.lottieFx(...)`.
+2. Customise `output/hf_index.html` for this video when useful: theme colours in `:root`, extra scene types (add a builder to `B`), extra GSAP moves, `BM.lottieFx(...)`. For rotation/scale of SVG elements use `svgOrigin: "x y"` (canvas coordinates), never `transformOrigin` (it is relative to the element box, so pivots fly off).
    Contract (from HyperFrames): one paused timeline registered last as `window.__timelines["root"]`; tweens at absolute seconds;
    no `Date.now()`, unseeded `Math.random()` (use `BM.rng(seed)`), timers, network fetches or `repeat: -1`; keep `__TOTAL_S__` placeholders.
    Helpers (`hyperframes/runtime/bm.js`): `BM.scene`, `BM.captions`, `BM.lottieFx(parent, name, x, y, size)`, `BM.rng`.

@@ -103,7 +103,7 @@
       dots.push(el("circle", { cx: x, cy: y, r: 20 + R() * 12, fill: "#FF7477" }, o));
     }
     const lbl = text(t, "ADENOSIN", 540, 1300, 120, "#00838A"), lblo = text(o, "ADENOSIN", 545, 1296, 120, "url(#htO)");
-    tl.fromTo(head, { scale: .85, transformOrigin: "540px 740px" }, { scale: 1, duration: 0.6, ease: "back.out(1.5)" }, a);
+    tl.fromTo(head, { scale: .85, svgOrigin: "540 740" }, { scale: 1, duration: 0.6, ease: "back.out(1.5)" }, a);
     dots.forEach((c, k) => tl.fromTo(c, { attr: { r: 0 } }, { attr: { r: c.getAttribute("r") }, duration: 0.25, ease: "back.out(3)" }, a + 0.4 + (k / dots.length) * (d * 0.75)));
     [lbl, lblo].forEach((n) => tl.fromTo(n, { opacity: 0 }, { opacity: 1, duration: 0.01 }, a + 0.9));
     // drowsy: registration drifts while it gets "heavier", snaps at the end
@@ -124,7 +124,7 @@
       el("rect", { x: x - 38, y: 890, width: 76, height: 72, rx: 8, fill: "#FF7477" }, gO);
       plugs.push([gT, gO]);
       const st = a + 0.6 + k * 0.45;
-      tl.fromTo([gT, gO], { y: -700, rotation: -30 + k * 20, transformOrigin: `${x}px 926px` }, { y: 0, rotation: 0, duration: 0.55, ease: "bounce.out" }, st);
+      tl.fromTo([gT, gO], { y: -700, rotation: -30 + k * 20, svgOrigin: `${x} 926` }, { y: 0, rotation: 0, duration: 0.55, ease: "bounce.out" }, st);
     });
     const aden = [];
     for (let k = 0; k < 5; k++) {
@@ -150,8 +150,8 @@
     const sub = text(t, "separuh kafein masih ada", 540, 1080, 52, "#00838A", { "font-weight": 800, "letter-spacing": 0 });
     tl.fromTo(disc, { attr: { r: 0 } }, { attr: { r: 330 }, duration: 0.6, ease: "back.out(1.6)" }, a);
     tl.fromTo(ring, { opacity: 0 }, { opacity: 1, duration: 0.01 }, a + 0.2);
-    tl.fromTo(hand, { rotation: 0, transformOrigin: "540px 600px" }, { rotation: 150, duration: 2.2, ease: "power2.inOut" }, a + 0.4);
-    tl.fromTo(half, { opacity: 0, scaleX: 0, transformOrigin: "540px 600px" }, { opacity: 1, scaleX: 1, duration: 1.2, ease: "power2.inOut" }, a + 0.9);
+    tl.fromTo(hand, { rotation: 0, svgOrigin: "540 600" }, { rotation: 150, duration: 2.2, ease: "power2.inOut" }, a + 0.4);
+    tl.fromTo(half, { opacity: 0, scaleX: 0, svgOrigin: "540 600" }, { opacity: 1, scaleX: 1, duration: 1.2, ease: "power2.inOut" }, a + 0.9);
     const n = { v: 0 };
     tl.fromTo(n, { v: 0 }, { v: 5, duration: 1.6, ease: "power2.out", onUpdate: () => { const s = "±" + Math.round(n.v) + " jam"; big.textContent = s; bigo.textContent = s; } }, a + 0.4);
     [big, bigo, sub].forEach((x) => tl.fromTo(x, { opacity: 0 }, { opacity: 1, duration: 0.01 }, a + 0.4));
