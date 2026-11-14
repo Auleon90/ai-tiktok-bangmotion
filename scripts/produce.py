@@ -70,6 +70,11 @@ def ms2f(ms: float) -> int:
     return int(round(ms / 1000 * FPS))
 
 
+def run_qa(args):
+    r = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "qa.py"), *args], capture_output=True, text=True)
+    print(r.stdout if r.returncode == 0 else f"  QA failed: {r.stderr[-400:]}")
+
+
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     flags = {a.split("=")[0] for a in sys.argv[1:] if a.startswith("--")}
@@ -172,22 +177,29 @@ def main():
     print(f"  total {total_ms/1000:.1f}s  {total_frames} frames  {len(words)} words  -> {props_path}")
 
     if "--no-render" in flags:
+        print("STEP  QA voice-over (local)")
+        run_qa(["vo", sb_path])
         return
     if engine == "html":
-        return render_html(opts["html"], props, final_audio, out_mp4, total_ms)
-    if engine == "hyperframes":
-        return render_hyperframes(opts["html"], props, final_audio, out_mp4, total_ms, "--draft" in flags)
-    if engine == "manim":
-        return render_manim(opts.get("scene", os.path.join(OUT, "manim_scene.py")), props, final_audio, out_mp4, total_ms, "--draft" in flags)
-    print("STEP  render (Remotion)")
-    cmd = ["node", os.path.join(REMOTION, "render.mjs"), props_path, os.path.abspath(out_mp4)]
-    if "--draft" in flags:
-        cmd.append("--draft")
-    p = subprocess.run(cmd, cwd=REMOTION)
-    if p.returncode != 0:
-        sys.exit("render failed")
-    size = os.path.getsize(out_mp4) / 1e6
-    print(f"DONE  {out_mp4}  {total_ms/1000:.1f}s  {size:.1f} MB")
+        render_html(opts["html"], props, final_audio, out_mp4, total_ms)
+    elif engine == "hyperframes":
+        render_hyperframes(opts["html"], props, final_audio, out_mp4, total_ms, "--draft" in flags)
+    elif engine == "manim":
+        render_manim(opts.get("scene", os.path.join(OUT, "manim_scene.py")), props, final_audio, out_mp4, total_ms, "--draft" in flags)
+    else:
+        print("STEP  render (Remotion)")
+        cmd = ["node", os.path.join(REMOTION, "render.mjs"), props_path, os.path.abspath(out_mp4)]
+        if "--draft" in flags:
+            cmd.append("--draft")
+        p = subprocess.run(cmd, cwd=REMOTION)
+        if p.returncode != 0:
+            sys.exit("render failed")
+        size = os.path.getsize(out_mp4) / 1e6
+        print(f"DONE  {out_mp4}  {total_ms/1000:.1f}s  {size:.1f} MB")
+    if "--no-qa" not in flags:
+        print("STEP  QA (local, free) -> output/qa_report.md")
+        qa_args = ["all", sb_path, out_mp4] + ([os.path.join(OUT, "hf")] if engine == "hyperframes" else [])
+        run_qa(qa_args)
 
 
 def timing_data(props, total_ms):

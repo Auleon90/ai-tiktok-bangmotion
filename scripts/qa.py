@@ -1,0 +1,157 @@
+#!/usr/bin/env python3
+"""Free, local QA for bang-motion videos (no paid or quota-limited APIs; Cloudflare is for images only).
+
+  python3 qa.py vo <storyboard.json>            # voice-over: word count, stretched words, odd pauses, pace, clipping
+  python3 qa.py visual <hf_project_dir>          # HyperFrames check: lint, runtime errors, layout overlap/overflow, contrast
+  python3 qa.py final <video.mp4>                # loudness, true peak, black/frozen frames, A/V length, contact sheet
+  python3 qa.py all <storyboard.json> <video.mp4> [hf_project_dir]   # everything -> output/qa_report.md
+
+Exit code is always 0: QA reports, it never blocks a render. Read the report and fix what matters.
+"""
+import hashlib, json, os, re, subprocess, sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+OUT = os.path.join(ROOT, "output")
+
+STRETCH_S = 0.65      # a single word held longer than this sounds dragged
+PAUSE_S = 0.45        # a pause mid-sentence (not after punctuation) longer than this sounds odd
+PACE = (1.8, 3.6)     # words per second, comfortable Indonesian narration
+
+
+def sh(cmd, **kw):
+    return subprocess.run(cmd, capture_output=True, text=True, **kw)
+
+
+def tokens(text):
+    return [t for t in re.split(r"\s+", text.strip()) if re.search(r"\w", t)]
+
+
+# ---------------------------------------------------------------- voice-over
+def qa_vo(sb_path):
+    sb = json.load(open(sb_path))
+    voice = os.environ.get("CARTESIA_VOICE_ID", "")
+    lines, issues = [], 0
+    for s in sb["scenes"]:
+        h = hashlib.sha1(f"{voice}|{s['vo']}".encode()).hexdigest()[:16]
+        side = os.path.join(OUT, "vo", f"{h}.words.json")
+        mp3 = os.path.join(OUT, "vo", f"{h}.mp3")
+        if not os.path.exists(side):
+            lines.append(f"- scene {s['id']}: VO not generated yet"); continue
+        d = json.load(open(side))
+        ws = d["words"]
+        notes = []
+        n_script, n_audio = len(tokens(s["vo"])), len(ws)
+        if n_script != n_audio:
+            notes.append(f"word count script {n_script} ≠ audio {n_audio} (possible skipped/merged word)")
+        for i, w in enumerate(ws):
+            dur = (w["end_ms"] - w["start_ms"]) / 1000
+            if dur > STRETCH_S:
+                notes.append(f"stretched '{w['text']}' {dur:.2f}s @{w['start_ms']/1000:.1f}s")
+            if i > 0:
+                gap = (w["start_ms"] - ws[i - 1]["end_ms"]) / 1000
+                if gap > PAUSE_S and not re.search(r"[.,!?;:]$", ws[i - 1]["text"]):
+                    notes.append(f"odd pause {gap:.2f}s before '{w['text']}'")
+        speech = (ws[-1]["end_ms"] - ws[0]["start_ms"]) / 1000 if ws else 0
+        wps = n_audio / speech if speech else 0
+        if wps and not (PACE[0] <= wps <= PACE[1]):
+            notes.append(f"pace {wps:.1f} words/s (comfortable {PACE[0]}–{PACE[1]})")
+        if os.path.exists(mp3):
+            r = sh(["ffmpeg", "-hide_banner", "-i", mp3, "-af", "astats=metadata=0", "-f", "null", "-"])
+            m = re.findall(r"Peak level dB:\s*(-?[\d.]+|-?inf)", r.stderr)
+            if m and m[-1] not in ("-inf",) and float(m[-1]) > -0.3:
+                notes.append(f"near-clipping peak {m[-1]} dBFS")
+        issues += len(notes)
+        mark = "⚠️" if notes else "✅"
+        lines.append(f"- {mark} scene {s['id']} ({d['duration_ms']/1000:.1f}s, {wps:.1f} w/s)" + ("".join(f"\n    - {n}" for n in notes)))
+    head = f"### Voice-over ({issues} note{'s' if issues != 1 else ''})"
+    tip = ("\n  Fix: rewrite the line (shorter words, commas where a pause is wanted, phonetic spelling) and re-run produce.py;"
+           " only changed scenes are re-generated.") if issues else ""
+    return head + "\n" + "\n".join(lines) + tip
+
+
+# ---------------------------------------------------------------- visual (HyperFrames)
+def qa_visual(proj):
+    hf = os.path.join(ROOT, "hyperframes", "node_modules", ".bin", "hyperframes")
+    if not (os.path.exists(hf) and os.path.isdir(proj)):
+        return "### Visual\n- skipped (HyperFrames project not found)"
+    proj = os.path.abspath(proj)
+    r = sh([hf, "check", proj, "--json"], cwd=os.path.join(ROOT, "hyperframes"), timeout=600)
+    try:
+        d = json.loads(r.stdout[r.stdout.index("{"):])
+    except Exception:
+        return "### Visual\n- hyperframes check failed:\n```\n" + (r.stderr or r.stdout)[-800:] + "\n```"
+    lines = []
+    total_err = 0
+    for k in ("lint", "runtime", "layout", "contrast", "motion", "audio"):
+        sec = d.get(k) or {}
+        if not isinstance(sec, dict) or "errorCount" not in sec:
+            continue
+        e, w = sec.get("errorCount", 0), sec.get("warningCount", 0)
+        total_err += e
+        lines.append(f"- {'⚠️' if e else '✅'} {k}: {e} error, {w} warning")
+        for f in (sec.get("findings") or [])[:6]:
+            t = f.get("time")
+            lines.append(f"    - [{f.get('severity')}] {f.get('code')} {('@%.1fs ' % t) if isinstance(t, (int, float)) else ''}{f.get('selector','')}: {f.get('message','')[:140]}")
+    note = ("\n  Note: overlap on purpose (double-printed titles, labels on maps) is fine; check each finding against the contact sheet."
+            if total_err else "")
+    return "### Visual (hyperframes check)\n" + "\n".join(lines) + note
+
+
+# ---------------------------------------------------------------- final file
+def qa_final(mp4):
+    if not os.path.exists(mp4):
+        return f"### Final file\n- missing: {mp4}"
+    lines = []
+    r = sh(["ffmpeg", "-hide_banner", "-i", mp4, "-af", "ebur128=peak=true:framelog=quiet", "-f", "null", "-"])
+    I = re.findall(r"I:\s*(-?[\d.]+) LUFS", r.stderr)
+    TP = re.findall(r"Peak:\s*(-?[\d.]+) dBFS", r.stderr)
+    if I:
+        i = float(I[-1]); ok = -15.5 <= i <= -12.5
+        lines.append(f"- {'✅' if ok else '⚠️'} loudness {i:.1f} LUFS (target −14)")
+    if TP:
+        tp = float(TP[-1]); lines.append(f"- {'✅' if tp <= -1.0 else '⚠️'} true peak {tp:.1f} dBTP (≤ −1)")
+    r = sh(["ffmpeg", "-hide_banner", "-i", mp4, "-vf", "blackdetect=d=0.25:pix_th=0.06,freezedetect=n=0.001:d=2.5", "-an", "-f", "null", "-"])
+    blacks = re.findall(r"black_start:([\d.]+) black_end:([\d.]+)", r.stderr)
+    freezes = re.findall(r"freeze_start: ([\d.]+)", r.stderr)
+    lines.append(f"- {'⚠️' if blacks else '✅'} black frames: " + (", ".join(f"{float(a):.1f}–{float(b):.1f}s" for a, b in blacks) if blacks else "none"))
+    lines.append(f"- {'⚠️' if freezes else '✅'} frozen picture ≥2.5s: " + (", ".join(f"@{float(a):.1f}s" for a in freezes) if freezes else "none"))
+    r = sh(["ffprobe", "-v", "error", "-show_entries", "stream=codec_type,duration", "-of", "json", mp4])
+    st = {s["codec_type"]: float(s.get("duration", 0)) for s in json.loads(r.stdout).get("streams", [])}
+    if "video" in st and "audio" in st:
+        diff = abs(st["video"] - st["audio"])
+        lines.append(f"- {'✅' if diff < 0.25 else '⚠️'} A/V length video {st['video']:.2f}s / audio {st['audio']:.2f}s")
+    else:
+        lines.append(f"- ⚠️ streams: {list(st)} (audio missing?)")
+    sheet = os.path.join(OUT, "qa_sheet.jpg")
+    dur = st.get("video", 60) or 60
+    every = max(1.0, dur / 15)
+    sh(["ffmpeg", "-v", "error", "-y", "-i", mp4, "-vf", f"fps=1/{every:.3f},scale=216:384,tile=5x3", "-frames:v", "1", sheet])
+    lines.append(f"- contact sheet: {sheet} (one frame every {every:.1f}s — look at it before delivering)")
+    return "### Final file\n" + "\n".join(lines)
+
+
+def main():
+    if len(sys.argv) < 3:
+        sys.exit(__doc__)
+    cmd = sys.argv[1]
+    if cmd == "vo":
+        print(qa_vo(sys.argv[2]))
+    elif cmd == "visual":
+        print(qa_visual(sys.argv[2]))
+    elif cmd == "final":
+        print(qa_final(sys.argv[2]))
+    elif cmd == "all":
+        sb, mp4 = sys.argv[2], sys.argv[3]
+        parts = [f"## QA — {os.path.basename(mp4)}", qa_vo(sb)]
+        if len(sys.argv) > 4:
+            parts.append(qa_visual(sys.argv[4]))
+        parts.append(qa_final(mp4))
+        rep = "\n\n".join(parts) + "\n"
+        open(os.path.join(OUT, "qa_report.md"), "w").write(rep)
+        print(rep)
+    else:
+        sys.exit(__doc__)
+
+
+if __name__ == "__main__":
+    main()

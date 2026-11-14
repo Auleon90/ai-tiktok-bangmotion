@@ -67,8 +67,16 @@ content (headline, counter, quote…) is drawn on top with a darkening scrim. Im
 
 - Use images ONLY for stories that need a visible place or world: fables, general history, mysteries, travel/places, "what if", nature/space,
   illustrative characters. Typically 3–6 images per video, mixed with code-drawn scenes.
-- Do NOT use images for: math/science (Manim), listicles/tips, data, quotes/motivation, and **sirah Nabi ﷺ** (maps/calligraphy only;
-  at most a landscape with no human figures).
+- ALSO use images for **science/knowledge tied to life inspiration, motivation or Islamic reflection**
+  (e.g. "Ayat tentang lebah dan sains madu", "Air: 70% tubuh kita", "Tafakur alam semesta", "Pelajaran dari pohon yang tumbang").
+  Images there show the **wonder**: nature, cosmos, cells/microscopy look, water, light, landscapes, plants, animals in nature,
+  objects (a candle, an open window, a sajadah from above), mosque architecture. The science itself (numbers, diagrams, cycles)
+  stays code-drawn; the reflection/ayat scene stays typographic (calligraphy) over the image or a calm background.
+- Islamic inspiration rules for images: never the Prophet ﷺ, prophets or sahabat; avoid human faces (people only as tiny silhouettes,
+  from behind, or hands); never ask FLUX to write Arabic/Qur'an text (it garbles it) — ayat are always rendered by code (Amiri font);
+  no symbols of other religions; modest, calm palettes. Pair with `"music": "sacred"` or `"none"`.
+- Do NOT use images for: pure math/science explainers with no reflective angle (Manim), listicles/tips, data,
+  and **sirah Nabi ﷺ** (maps/calligraphy only; at most a landscape with no human figures).
 - Mark image scenes with 🖼️ in the approval summary and state the count ("3 dari 8 scene pakai gambar AI") so the user can decline.
 - Supported in modes 1 (HyperFrames), 2 (Remotion) and 4 (Cepat, as `PROPS.scenes[i].imageSrc` relative to the page). Ignored in Manim.
 - Prompts in English, describe composition + light + mood, always end with "no text". FLUX output is 1024×1024 (center-cropped to 9:16),
@@ -127,6 +135,21 @@ offer `"none"` if unsure), `epic` for history/battles, `tense` for mystery, `war
   "Style: <name> — Lemo-Opuscar by Lemomo (LemoLab)".
 - Styles marked ✦ (manga-panels, text-flash-cuts, comic-history) need an image generator: use our FLUX step (`image` fields).
 - Avoid styles that need real data/scans (lidar-survey, satellite-briefing, map-explainer 3D terrain) unless the user supplies the data.
+
+### QA (local and free — never uses Cloudflare or other quota)
+
+`produce.py` runs `scripts/qa.py` automatically: after `--no-render` it checks the voice-over; after a render it writes
+`output/qa_report.md` (voice-over + HyperFrames `check` + final-file checks + `output/qa_sheet.jpg`). Before delivering:
+
+1. Read `output/qa_report.md` and LOOK at `output/qa_sheet.jpg`.
+2. Voice-over notes: "stretched" words (> 0.65 s) and "odd pause" usually sound unnatural → rewrite that `vo` line
+   (start with a short lead-in word, split long words, add/remove commas, phonetic spelling) and re-run; only that scene is re-generated.
+   Word-count mismatch = a skipped/merged word → always fix. Max one retry per scene, then tell the user.
+3. Visual (HyperFrames): fix runtime errors, real overlaps/overflow and contrast failures; intended overlaps (double-printed titles,
+   map labels) can stay. `rotation_pivot_drift` = wrong pivot → use `svgOrigin`.
+4. Final: loudness −14 ±1.5 LUFS, true peak ≤ −1 dBTP, no black/frozen frames, A/V lengths equal.
+5. Summarise the QA in the delivery message (what passed, what you fixed, what remains).
+Pronunciation is not machine-checked (no free ASR is reachable here): mention the stretched-word list so the user can listen there first.
 
 ---
 

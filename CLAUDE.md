@@ -22,11 +22,16 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
    4. **Cepat** (bang-motion klasik: HTML + rekam layar) — draf, ±1,5 menit
    5. **Auto** — Claude memilih sesuai topik & storyboard (aturan di skill)
 3. Gambar AI (Cloudflare FLUX) OPSIONAL: hanya untuk cerita yang butuh "dunia" visual (fabel, sejarah umum, misteri, tempat).
-   Tandai scene 🖼️ di storyboard + jumlahnya, supaya user bisa menolak. Tidak untuk sains/matematika, listicle, data, sirah Nabi ﷺ.
+   Tandai scene 🖼️ di storyboard + jumlahnya, supaya user bisa menolak. BOLEH untuk sains/pengetahuan yang dikaitkan dengan
+   inspirasi/motivasi hidup atau inspirasi Islam (gambar alam/kosmos/benda, tanpa wajah manusia, tanpa teks Arab dari AI).
+   Tidak untuk sains murni tanpa sudut refleksi, listicle, data, sirah Nabi ﷺ.
+   Kuota Cloudflare HANYA untuk gambar — jangan dipakai untuk QA atau hal lain.
 4. Audio: musik orisinal (`music`: warm/epic/tense/calm/playful/sacred/none) + SFX otomatis dari `scripts/score.py`
    (modul `audio/lemo/`, MIT dari Lemo-Opuscar). Sirah → `sacred` atau `none`.
 5. Mode 1 bisa memakai salah satu dari 99 gaya Lemo-Opuscar (`scripts/styles.py`, diunduh ke `.lemo/` — JANGAN commit STYLE.md, lisensi CC BY-NC).
-6. Semua mode berakhir di `output/final.mp4` dengan VO Cartesia — tidak pernah berhenti di halaman HTML.
+6. QA lokal & gratis otomatis (`scripts/qa.py` → `output/qa_report.md` + `output/qa_sheet.jpg`): cek VO (kata molor, jeda janggal,
+   tempo), `hyperframes check` (tata letak, kontras, error), dan file akhir (loudness, frame hitam/beku, durasi A/V). Baca sebelum kirim.
+7. Semua mode berakhir di `output/final.mp4` dengan VO Cartesia — tidak pernah berhenti di halaman HTML.
 
 Detail lengkap: `.claude/skills/bang-motion.md`. Semua mode dijalankan lewat `scripts/produce.py`.
 Contoh: `examples/uhud.storyboard.json` (sirah, mode 1/2), `examples/angsa-emas.storyboard.json` (fabel + gambar AI), `examples/kopi-riso.storyboard.json` + `examples/kopi-riso.hf.html` (gaya Risograph), `examples/pythagoras.storyboard.json` + `examples/pythagoras_manim.py` (mode 3).
