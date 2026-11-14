@@ -22,7 +22,7 @@ Skip this question only if the user already stated the mode in the same request 
 
 ---
 
-## Remotion engine (default)
+## Remotion engine (mode "Remotion (kualitas tinggi)")
 
 ### R1 — Setup
 ```bash
