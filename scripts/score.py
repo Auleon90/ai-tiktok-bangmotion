@@ -320,7 +320,7 @@ def effects(total, scenes):
             if f is None:
                 print(f"  WARN: unknown sfx {e.get('name')!r} in scene {s.get('id')} (see: score.py preview list)")
                 continue
-            place(buf, f(1.0), a + e.get("at", 0) * d, 0.5 * e.get("gain", 1.0), e.get("pan", 0.0))
+            place(buf, f(1.0), max(0, a + e.get("at", 0) * d - getattr(f, "lead", 0)), 0.5 * e.get("gain", 1.0), e.get("pan", 0.0))
     last = scenes[-1]
     place(buf, X.ding(0.9), last["startMs"] / 1000 + 0.4, 0.22)
     return buf[: int(total * SR)]
@@ -330,7 +330,7 @@ def preview(names, out_dir):
     os.makedirs(out_dir, exist_ok=True)
     for n in (sorted(FX.LIB) if names == "all" else names.split(",")):
         x = np.clip(FX.LIB[n](1.0) * 0.8, -1, 1)
-        sf.write(os.path.join(out_dir, f"{n}.wav"), np.stack([x, x], 1).astype(np.float32), SR)
+        sf.write(os.path.join(out_dir, f"{n}.wav"), (x if x.ndim == 2 else np.stack([x, x], 1)).astype(np.float32), SR)
         print(f"  {n:12s} {len(x) / SR:4.1f}s  -> {out_dir}/{n}.wav")
 
 

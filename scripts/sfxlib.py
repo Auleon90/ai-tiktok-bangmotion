@@ -47,17 +47,62 @@ def _fade(x, a=.005, b=.05):
 
 # ---------- impacts & destruction ----------
 def explosion(v=1.0):
-    d = 3.5; t = _t(d)
-    sub = np.sin(2 * np.pi * (38 * t - 6 * t ** 2)) * _env(d, .55)
-    blast = X.lp(_n(d), 900) * _env(d, .25)
-    crack = X.hp(_n(.12), 1500) * _env(.12, .02)
-    tail = X.lp(X.brown(d), 250) * np.minimum(1, t / .15) * _env(d, 1.1)
-    debris = np.zeros(int(d * SR))
-    for _ in range(25):
-        c = X.clack(.5 + _r.random() * .8, .2 + _r.random() * .4); s = int((.3 + _r.random() ** 1.5 * 2.2) * SR)
-        debris[s:s + len(c)] += c[:len(debris) - s]
-    return _fade(_mix((0, sub, 1.0), (0, blast, .8), (0, crack, .6), (0, tail, .9), (0, debris, .25),
-                      (0, _hit("gran_cassa", vel=1), .7), (0.02, _hit("sus_cymbal", vel=.9), .25))) * v
+    """Cinematic bomb (stereo): pre-suck -> crack -> falling sub drop + saturated body whose brightness collapses
+    -> slapback echoes off buildings -> long wide rumble with debris. Layers Kenney recordings when present."""
+    d, t0 = 6.5, .35
+    n = int(d * SR); t = _t(d)
+    out = np.zeros((n, 2))
+
+    def put(x, at, g, pan=0.0):
+        x = np.asarray(x, float)
+        if x.ndim == 1:
+            x = np.stack([x * np.cos((pan + 1) * np.pi / 4), x * np.sin((pan + 1) * np.pi / 4)], 1)
+        i = int(at * SR); m = min(len(x), n - i)
+        if m > 0: out[i:i + m] += x[:m] * g
+
+    # 1. pre-suck: reversed filtered swell into the hit
+    sw = X.lp(_n(t0), 2500) * (np.linspace(0, 1, int(t0 * SR)) ** 3)
+    put(sw, 0, .35)
+    # 2. crack: very short broadband transient, clipped
+    cr = np.tanh(4 * X.hp(_n(.025), 300) * _env(.025, .006))
+    put(cr, t0, .9)
+    # 3. sub drop 70 -> 25 Hz, saturated so it is felt on phones too (harmonics)
+    dd = 3.5; tt = _t(dd); f = 25 + 45 * np.exp(-tt / .35)
+    sub = np.sin(2 * np.pi * np.cumsum(f) / SR) * (np.minimum(1, tt / .008)) * _env(dd, 1.0)
+    put(np.tanh(2.5 * sub), t0, 1.0)
+    # 4. body: decorrelated L/R noise whose brightness collapses (bands decaying at different speeds), distorted
+    for ch in (0, 1):
+        nz = _n(d - t0)
+        body = (X.lp(nz, 5000) * _env(d - t0, .07) + X.lp(nz, 1600) * _env(d - t0, .28) * 1.2
+                + X.lp(nz, 450) * _env(d - t0, .9) * 1.6 + X.lp(nz, 140) * _env(d - t0, 2.2) * 2.0)
+        body = np.tanh(2.2 * X.norm(body, 1.0))
+        out[int(t0 * SR):, ch] += body[: n - int(t0 * SR)] * .75
+    # 5. rumble tail: wide, slowly swelling and fading, with slow wobble
+    for ch, ph in ((0, 0.0), (1, 1.7)):
+        rb = X.lp(X.brown(d - t0), 110)
+        tr = _t(d - t0)
+        rb *= np.minimum(1, tr / .25) * np.exp(-tr / 2.4) * (1 + .35 * np.sin(2 * np.pi * .9 * tr + ph))
+        out[int(t0 * SR):, ch] += X.norm(rb, 1.0)[: n - int(t0 * SR)] * .55
+    # 6. real recordings (Kenney, CC0) and orchestral bass drum for weight
+    for name, g, at in (("low_frequency_explosion", .7, t0), ("explosion_crunch", .45, t0 + .01)):
+        k = _k(name)
+        if k is not None: put(k, at, g)
+    put(_hit("gran_cassa", vel=1, dur=3), t0, .6)
+    # 7. slapback echoes off buildings / hills (darker, quieter, opposite sides)
+    dry = out.copy()
+    for delay, g, cut in ((.32, .32, 1800), (.71, .2, 1000), (1.25, .12, 600)):
+        i = int(delay * SR)
+        echo = np.stack([X.lp(dry[:, 1], cut), X.lp(dry[:, 0], cut)], 1)  # swap sides
+        out[i:] += echo[: n - i] * g
+    # 8. debris raining down
+    for _ in range(30):
+        at = t0 + .5 + _r.random() ** 1.6 * 2.8
+        c = _k("impact_wood_light", "impact_metal_light", "impact_plank", "impact_mining") if _r.random() < .5 else None
+        c = c if c is not None else X.clack(.5 + _r.random() * .9, 1)
+        put(c, at, .08 + _r.random() * .12, _r.uniform(-.9, .9))
+    out = np.tanh(1.6 * out / (np.abs(out).max() + 1e-9))      # glue / loudness
+    out[-int(.8 * SR):] *= np.linspace(1, 0, int(.8 * SR))[:, None]
+    return (out / np.abs(out).max() * .95) * v
 
 
 def boom(v=1.0):  # cinematic low hit for reveals
@@ -274,7 +319,7 @@ _real("notify", lambda: _k("confirmation", "bong"))
 _real("error", lambda: _k("error"))
 _real("scifi_explosion", lambda: _k("explosion_crunch", "low_frequency_explosion"))
 _real("engine", lambda: _k("space_engine", "engine_circular", "thruster_fire"))
-_syn_explosion = explosion
-_real("explosion", lambda: (lambda e: _mix((0, _syn_explosion(1), 1), (0, e, .6)) if e is not None else None)(_k("low_frequency_explosion")))
+
+explosion.lead = .35  # seconds of pre-suck before the hit; score.py starts it this much earlier
 
 LIB = {k: f for k, f in dict(globals()).items() if callable(f) and not k.startswith("_") and k not in ("X",) and f.__module__ == __name__}
