@@ -31,14 +31,14 @@ def run(cmd, **kw):
     return r.stdout
 
 
-def tts_cached(text: str) -> tuple[str, dict]:
-    voice = os.environ.get("CARTESIA_VOICE_ID", "")
+def tts_cached(text: str, voice: str = "") -> tuple[str, dict]:
+    voice = voice or os.environ.get("CARTESIA_VOICE_ID", "")
     h = hashlib.sha1(f"{voice}|{text}".encode()).hexdigest()[:16]
     mp3 = os.path.join(VO_DIR, f"{h}.mp3")
     side = os.path.join(VO_DIR, f"{h}.words.json")
     if not (os.path.exists(mp3) and os.path.exists(side)):
         print(f"  TTS  {text[:60]}...")
-        run([sys.executable, os.path.join(ROOT, "scripts", "tts.py"), text, mp3])
+        run([sys.executable, os.path.join(ROOT, "scripts", "tts.py"), text, mp3] + ([voice] if voice else []))
     else:
         print(f"  TTS  (cache) {text[:50]}...")
     with open(side) as f:
@@ -110,7 +110,7 @@ def main():
     cursor = 0
     segs, scenes, words = [], [], []
     for s in sb["scenes"]:
-        mp3, meta = tts_cached(s["vo"])
+        mp3, meta = tts_cached(s["vo"], sb.get("voice", ""))
         pad = s.get("pad_before_ms", 0)
         gap = s.get("gap_after_ms", DEFAULT_GAP)
         vo_start = cursor + pad

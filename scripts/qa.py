@@ -36,7 +36,7 @@ def qa_vo_full(sb_path):
     """-> (report text, blocking issues). Blocking = a word skipped/merged (count mismatch) or VO missing."""
     blocking = []
     sb = json.load(open(sb_path))
-    voice = os.environ.get("CARTESIA_VOICE_ID", "")
+    voice = sb.get("voice") or os.environ.get("CARTESIA_VOICE_ID", "")
     lines, issues = [], 0
     for s in sb["scenes"]:
         h = hashlib.sha1(f"{voice}|{s['vo']}".encode()).hexdigest()[:16]

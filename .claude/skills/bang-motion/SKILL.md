@@ -38,6 +38,7 @@ Never stop at an HTML page, an Artifact or a raw render without audio: the resul
 {
   "title": "...",
   "ambience": "wind",                       // "wind" | "none"
+  "voice": "<cartesia voice id>",          // optional; default CARTESIA_VOICE_ID (Galang). Female id-ID: Siti b441c4fd-4910-4c55-ae56-f0291057e2cc (cheerful), Citra 74546efd-3ac5-4c41-ba59-4756227f429a, Safira 9076f14a-5602-48a7-bfd1-67ef9b40dd6d
   "music": "warm",                          // warm | epic | tense | calm | playful | sacred | none  (original score, synthesised)
   "sfx": true,                              // whooshes on cuts, title hit, counter ticks, map pulse, final ding
   "style": "risograph",                     // optional, mode 1 only: a Lemo-Opuscar style slug (see "Visual styles")
