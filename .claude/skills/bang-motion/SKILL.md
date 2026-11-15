@@ -125,6 +125,15 @@ Perkiraan durasi: ~Xs · Gambar AI: N dari M scene
 using `audio/lemo/` (sfx.py + pluck.py, MIT, vendored from Lemo-Opuscar). The mixer compresses the voice, ducks the bed (ambience + music)
 under it, adds SFX and masters to −14 LUFS.
 
+The score is **different for every video**: a seed from the title (or `"music_seed"`) picks key, tempo, chord progression,
+arpeggio patterns and the instrument palette from the mood's options; the Lemo `style` steers the palette (engraving → harpsichord +
+violas, ink-wash/ukiyoe → dan tranh, newsreel → piano, rubber-hose → xylophone + tuba…); the arrangement follows the scenes
+(thin intro, fuller middle, peak around 2/3, thinning outro, final tonic chord). Instruments are real CC0 samples (VCSL + VSCO 2 CE,
+via Lemo-Opuscar `core/audio/sampler.py`, downloaded by `setup.sh` into `.lemo/`); without them it falls back to synth plucks.
+Force instruments when the topic calls for it: `"instruments": {"lead": "marimba", "pad": "violas", "bass": "contrabass_pizz", "perc": "shaker"}`
+(names: `.lemo/lemo-opuscar/core/audio/INSTRUMENTS.md`). Different `"music_seed"` = a different tune for the same title.
+State the music line in the approval summary (mood + main instrument).
+
 Pick `music` by tone: `sacred` for sirah/Islamic content (drone + soft pulse, no melodic instruments — many viewers prefer no music;
 offer `"none"` if unsure), `epic` for history/battles, `tense` for mystery, `warm` for fables/stories, `calm` for reflections and math,
 `playful` for light facts/tips. State the choice in the approval summary (🎵 line) so the user can change it.
