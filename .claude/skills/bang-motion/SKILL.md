@@ -137,9 +137,11 @@ State the music line in the approval summary (mood + main instrument).
 **Scene SFX (pick them while writing the storyboard).** Built-in SFX fire automatically per scene type (whoosh on cuts,
 title hit, counter ticks, map pulse, final ding). For what HAPPENS in a scene, add named effects:
 `"sfx": [{"name": "explosion", "at": 0.3, "gain": 1, "pan": 0}]` (`at` = 0–1 within the scene; a plain string = at 0).
-Library (`scripts/sfxlib.py`, synthesised + CC0 percussion samples): explosion, boom, impact, glass_break, gunshot, sword_clash,
-thunder, rain, wind, fire, splash, earthquake, door_creak, footsteps, clock_tick, typing, camera, coin, bell, gong, heartbeat,
-riser (tension before a reveal), magic, swoosh, ding, pop. Use them where the picture/VO shows the event (1–3 per video is plenty;
+Library (`scripts/sfxlib.py`): real CC0 recordings from the Kenney packs (`.lemo/kenney/`, fetched by setup.sh, random take each
+time, synth fallback) for punch, impact, metal_hit, wood_hit, glass_break, footsteps(_grass/_snow), door_creak, coin, typing,
+camera, clock_tick, page_turn, cloth, knife, laser, powerup, glitch, notify, error, scifi_explosion, engine; synthesised
+(+ CC0 orchestral percussion) for explosion, boom, gunshot, sword_clash, thunder, rain, wind, fire, splash, earthquake, bell, gong,
+heartbeat, riser (tension before a reveal), magic, swoosh, ding, pop. Use them where the picture/VO shows the event (1–3 per video is plenty;
 `riser` before a big reveal, `boom` on it). Mark them 🔊 in the approval summary. Preview without rendering:
 `.venv-audio/bin/python scripts/score.py preview explosion,thunder` → `output/sfx_preview/*.wav` (`preview list` names all).
 Not available (needs real recordings): crowds, animal calls, engines, speech.

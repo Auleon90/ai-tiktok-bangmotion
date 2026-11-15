@@ -50,6 +50,14 @@ for lib in vcsl vsco2ce; do
   fi
 done
 
+echo "→ Kenney SFX recordings (CC0, ~30 MB, GitHub mirrors → .lemo/kenney; used by scripts/sfxlib.py)"
+for r in Boyquotes/kenney-impact-sounds-for-godot Boyquotes/kenney-sci-fi-sounds-for-godot Boyquotes/kenney-digital-audio-for-godot \
+         Boyquotes/kenney-rpg-audio-for-godot Calinou/kenney-ui-audio Calinou/kenney-interface-sounds; do
+  d="$ROOT/.lemo/kenney/$(basename "$r")"
+  [ -d "$d" ] || git clone -q --depth 1 "https://github.com/$r.git" "$d" 2>/dev/null || echo "  WARN: $r download failed (synth SFX used instead)"
+done
+echo "  kenney files: $(find "$ROOT/.lemo/kenney" \( -name '*.ogg' -o -name '*.wav' \) 2>/dev/null | wc -l)"
+
 echo "→ Lottie assets"
 [ -n "$(ls -A "$ROOT/assets/lottie" 2>/dev/null)" ] || python3 "$ROOT/scripts/make_lottie.py"
 

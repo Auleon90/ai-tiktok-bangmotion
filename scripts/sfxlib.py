@@ -1,7 +1,9 @@
 """Named sound effects for storyboard scenes: "sfx": [{"name": "explosion", "at": 0.3, "gain": 1.0}].
 
-Every effect is synthesised (numpy, from audio/lemo/sfx.py primitives); some add a real CC0 percussion sample
-(gran cassa, gong, cymbal, bells…) when Lemo's sampler is available. Each function returns mono float32 at sfx.SR.
+Effects are synthesised (numpy, from audio/lemo/sfx.py primitives); some add a real CC0 percussion sample
+(gran cassa, gong, cymbal, bells…) when Lemo's sampler is available. Where a real recording fits better
+(glass, punches, footsteps, doors, coins, clicks, lasers…) the CC0 Kenney packs in .lemo/kenney/ are used
+(downloaded by scripts/setup.sh), with a random take each time and the synth version as fallback. Each function returns mono float32 at sfx.SR.
 Preview: .venv-audio/bin/python scripts/score.py preview <name|all> [out_dir]
 """
 import numpy as np
@@ -37,7 +39,7 @@ def _hit(inst, var=None, vel=.8, pitch=None, dur=None):
 
 
 def _fade(x, a=.005, b=.05):
-    x = x.copy(); ia, ib = int(a * SR), int(b * SR)
+    x = x.copy(); ia, ib = min(int(a * SR), len(x) // 4), min(int(b * SR), len(x) // 2)
     if ia: x[:ia] *= np.linspace(0, 1, ia)
     if ib: x[-ib:] *= np.linspace(1, 0, ib)
     return x
@@ -210,5 +212,69 @@ def ding(v=1.0):
 def pop(v=1.0):
     return X.pop(1) * v
 
+
+# ---------- Kenney recordings (CC0, .lemo/kenney) ----------
+import glob as _glob, os as _os, re as _re  # noqa: E402
+
+_KDIR = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), ".lemo", "kenney")
+_KIDX = {}
+for _f in _glob.glob(_os.path.join(_KDIR, "**", "*.ogg"), recursive=True) + _glob.glob(_os.path.join(_KDIR, "**", "*.wav"), recursive=True):
+    _KIDX.setdefault(_re.sub(r"[_-]*\d*$", "", _os.path.splitext(_os.path.basename(_f))[0]).lower(), []).append(_f)
+
+
+def _k(*prefixes):
+    """A random take of a Kenney recording whose name starts with one of prefixes (mono, SR); None if missing"""
+    files = sorted(f for k, fs in _KIDX.items() for f in fs if any(k.startswith(p) for p in prefixes))
+    if not files: return None
+    try:
+        import soundfile as sf, soxr
+        x, sr = sf.read(files[int(_r.integers(len(files)))], dtype="float64")
+        x = x.mean(1) if x.ndim == 2 else x
+        if sr != SR: x = soxr.resample(x, sr, SR)
+        return _fade(X.norm(x, .9), .002, .02)
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def _kseq(prefixes, n, gap, jitter=0.0):
+    parts = [(i * gap + _r.random() * jitter, _k(*prefixes), 1) for i in range(n)]
+    return None if any(p[1] is None for p in parts) else _mix(*parts)
+
+
+def _real(name, fn):
+    syn = globals().get(name)
+    def f(v=1.0):
+        x = fn()
+        return x * v if x is not None else (syn(v) if syn else np.zeros(1))
+    f.__name__ = name; f.__module__ = __name__
+    globals()[name] = f
+
+
+_syn_glass = glass_break
+_real("glass_break", lambda: (lambda g: _mix((0, g, 1), (0.02, _syn_glass(1), .45)) if g is not None else None)(_k("impact_glass_heavy")))
+_real("impact", lambda: _k("impact_punch_heavy", "impact_soft_heavy"))
+_real("punch", lambda: _k("impact_punch"))
+_real("metal_hit", lambda: _k("impact_metal", "impact_plate"))
+_real("wood_hit", lambda: _k("impact_wood", "impact_plank"))
+_real("footsteps", lambda: _kseq(["footstep_concrete", "footstep_wood"], 6, .45, .04))
+_real("footsteps_grass", lambda: _kseq(["footstep_grass"], 6, .45, .04))
+_real("footsteps_snow", lambda: _kseq(["footstep_snow"], 6, .5, .04))
+_real("door_creak", lambda: (lambda a, b: None if a is None or b is None else _mix((0, a, 1), (max(.3, len(a) / SR - .1), b, 1)))(_k("creak", "door_open"), _k("door_close")))
+_real("coin", lambda: _k("handle_coins"))
+_real("typing", lambda: _kseq(["click", "mouseclick"], 12, .1, .04))
+_real("camera", lambda: (lambda a, b: None if a is None or b is None else _mix((0, a, 1), (.08, b, 1)))(_k("switch"), _k("mouserelease")))
+_real("clock_tick", lambda: _kseq(["tick"], 6, .5))
+_real("page_turn", lambda: _k("book_flip", "book_open"))
+_real("cloth", lambda: _k("cloth"))
+_real("knife", lambda: _k("knife_slice", "draw_knife", "chop"))
+_real("laser", lambda: _k("laser_small", "laser_retro", "laser_large"))
+_real("powerup", lambda: _k("power_up", "phaser_up", "zap_three_tone_up"))
+_real("glitch", lambda: _kseq(["glitch"], 8, .07, .03))
+_real("notify", lambda: _k("confirmation", "bong"))
+_real("error", lambda: _k("error"))
+_real("scifi_explosion", lambda: _k("explosion_crunch", "low_frequency_explosion"))
+_real("engine", lambda: _k("space_engine", "engine_circular", "thruster_fire"))
+_syn_explosion = explosion
+_real("explosion", lambda: (lambda e: _mix((0, _syn_explosion(1), 1), (0, e, .6)) if e is not None else None)(_k("low_frequency_explosion")))
 
 LIB = {k: f for k, f in dict(globals()).items() if callable(f) and not k.startswith("_") and k not in ("X",) and f.__module__ == __name__}
