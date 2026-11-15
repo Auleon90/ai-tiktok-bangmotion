@@ -1,3 +1,9 @@
+---
+name: bang-motion
+description: Generate a ~60 s vertical TikTok motion-graphic MP4 with Indonesian Cartesia voice-over, word-synced captions, original music and SFX. Use for /bang-motion or any request to make a video in this repo. Flow - idea, storyboard, approval, render-mode question (HyperFrames, Remotion, Manim, Cepat, Auto), pre-render QA, render, deliver.
+argument-hint: "[topik video] [mode/gaya opsional]"
+---
+
 # /bang-motion — TikTok Motion Graphic Pipeline
 
 Triggered by: `/bang-motion [prompt]` or any request to make a video in this repo.

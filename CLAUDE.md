@@ -34,7 +34,7 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
    masuk `"qa_allow"` di storyboard. Setelah render: QA file akhir (`output/qa_report.md`, `output/qa_sheet.jpg`). Baca sebelum kirim.
 7. Semua mode berakhir di `output/final.mp4` dengan VO Cartesia — tidak pernah berhenti di halaman HTML.
 
-Detail lengkap: `.claude/skills/bang-motion.md`. Semua mode dijalankan lewat `scripts/produce.py`.
+Detail lengkap: `.claude/skills/bang-motion/SKILL.md`. Semua mode dijalankan lewat `scripts/produce.py`.
 Contoh: `examples/uhud.storyboard.json` (sirah, mode 1/2), `examples/angsa-emas.storyboard.json` (fabel + gambar AI), `examples/kopi-riso.storyboard.json` + `examples/kopi-riso.hf.html` (gaya Risograph), `examples/pythagoras.storyboard.json` + `examples/pythagoras_manim.py` (mode 3).
 Konten sirah: JANGAN menggambarkan sosok/wajah Nabi ﷺ atau sahabat — pakai peta, simbol, kaligrafi.
 
@@ -47,6 +47,6 @@ Konten sirah: JANGAN menggambarkan sosok/wajah Nabi ﷺ atau sahabat — pakai p
 
 ## Penting
 
-Ketika user mengetik `/bang-motion`, SELALU gunakan skill `.claude/skills/bang-motion.md` dari repo ini — JANGAN gunakan `anthropic-skills:tiktok-motion-generator`.
+Ketika user mengetik `/bang-motion`, SELALU gunakan skill `.claude/skills/bang-motion/SKILL.md` dari repo ini — JANGAN gunakan `anthropic-skills:tiktok-motion-generator`.
 
 Output MP4 disimpan di `output/` (folder ini di-gitignore).

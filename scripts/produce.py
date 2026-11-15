@@ -9,7 +9,7 @@ HTML engine: same Cartesia VO + audio mix, then the HTML page is injected with
 window.PROPS (scenes with startMs/durationMs, words with startMs/endMs), recorded
 with Playwright (scripts/record.js) and muxed with the audio into an MP4.
 
-Storyboard format: see .claude/skills/bang-motion.md (Remotion engine).
+Storyboard format: see .claude/skills/bang-motion/SKILL.md.
 Each scene needs "vo" (spoken text). Optional per scene: "pad_before_ms", "gap_after_ms".
 Top level optional: "theme" {..colors}, "ambience": "wind" | "none" (default "wind").
 """
