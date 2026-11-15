@@ -26,6 +26,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "audio", "lemo"))
 import sfx as X  # noqa: E402
 import pluck as P  # noqa: E402
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import sfxlib as FX  # noqa: E402
 
 SR = X.SR
 S = None  # Lemo sampler, if available
@@ -34,6 +36,7 @@ try:
     from core.audio import sampler as _S  # noqa: E402
     if all(_S._have(l) for l in ("vcsl", "vsco2ce")) and _S.SR == SR:
         S = _S
+        FX.S = _S
 except Exception as e:  # noqa: BLE001
     print(f"  (sampler unavailable, using synth plucks: {e})")
 
@@ -282,7 +285,7 @@ def music(total, cfg, pl, scenes):
 
 
 def effects(total, scenes):
-    buf = np.zeros((int((total + 2) * SR), 2), np.float32)
+    buf = np.zeros((int((total + 6) * SR), 2), np.float32)
     for i, s in enumerate(scenes):
         a = s["startMs"] / 1000
         d = s["durationMs"] / 1000
@@ -310,12 +313,34 @@ def effects(total, scenes):
         for fx in s.get("lottie", []):
             if fx.get("name", "").startswith("burst"):
                 place(buf, X.pop(1.0), a + fx.get("at", 0) * d, 0.3)
+        # named effects chosen in the storyboard: "sfx": [{"name": "explosion", "at": 0.3, "gain": 1, "pan": 0}]
+        for e in s.get("sfx", []) if isinstance(s.get("sfx"), list) else []:
+            e = {"name": e} if isinstance(e, str) else e
+            f = FX.LIB.get(e.get("name", ""))
+            if f is None:
+                print(f"  WARN: unknown sfx {e.get('name')!r} in scene {s.get('id')} (see: score.py preview list)")
+                continue
+            place(buf, f(1.0), a + e.get("at", 0) * d, 0.5 * e.get("gain", 1.0), e.get("pan", 0.0))
     last = scenes[-1]
     place(buf, X.ding(0.9), last["startMs"] / 1000 + 0.4, 0.22)
     return buf[: int(total * SR)]
 
 
+def preview(names, out_dir):
+    os.makedirs(out_dir, exist_ok=True)
+    for n in (sorted(FX.LIB) if names == "all" else names.split(",")):
+        x = np.clip(FX.LIB[n](1.0) * 0.8, -1, 1)
+        sf.write(os.path.join(out_dir, f"{n}.wav"), np.stack([x, x], 1).astype(np.float32), SR)
+        print(f"  {n:12s} {len(x) / SR:4.1f}s  -> {out_dir}/{n}.wav")
+
+
 def main():
+    if sys.argv[1] == "preview":  # score.py preview <name[,name]|all|list> [out_dir]
+        if sys.argv[2] == "list":
+            print(" ".join(sorted(FX.LIB)))
+        else:
+            preview(sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else os.path.join(ROOT, "output", "sfx_preview"))
+        return
     props_path, out_dir = sys.argv[1], sys.argv[2]
     mood = sys.argv[3] if len(sys.argv) > 3 else "warm"
     use_sfx = (sys.argv[4] if len(sys.argv) > 4 else "sfx:on") != "sfx:off"

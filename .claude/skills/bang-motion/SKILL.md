@@ -109,7 +109,7 @@ Approval summary format:
 ```
 📋 STORYBOARD — [title]
 ━━━━━━━━━━━━━━━━━━━━━━━━
-Scene 1 [type]: [eyebrow]            (🖼️ if it uses an AI image)
+Scene 1 [type]: [eyebrow]            (🖼️ if it uses an AI image, 🔊 name if it has scene SFX)
   🎬 Visual: [what is shown]
   🎙️ VO: "[vo]"
 ...
@@ -133,6 +133,16 @@ via Lemo-Opuscar `core/audio/sampler.py`, downloaded by `setup.sh` into `.lemo/`
 Force instruments when the topic calls for it: `"instruments": {"lead": "marimba", "pad": "violas", "bass": "contrabass_pizz", "perc": "shaker"}`
 (names: `.lemo/lemo-opuscar/core/audio/INSTRUMENTS.md`). Different `"music_seed"` = a different tune for the same title.
 State the music line in the approval summary (mood + main instrument).
+
+**Scene SFX (pick them while writing the storyboard).** Built-in SFX fire automatically per scene type (whoosh on cuts,
+title hit, counter ticks, map pulse, final ding). For what HAPPENS in a scene, add named effects:
+`"sfx": [{"name": "explosion", "at": 0.3, "gain": 1, "pan": 0}]` (`at` = 0–1 within the scene; a plain string = at 0).
+Library (`scripts/sfxlib.py`, synthesised + CC0 percussion samples): explosion, boom, impact, glass_break, gunshot, sword_clash,
+thunder, rain, wind, fire, splash, earthquake, door_creak, footsteps, clock_tick, typing, camera, coin, bell, gong, heartbeat,
+riser (tension before a reveal), magic, swoosh, ding, pop. Use them where the picture/VO shows the event (1–3 per video is plenty;
+`riser` before a big reveal, `boom` on it). Mark them 🔊 in the approval summary. Preview without rendering:
+`.venv-audio/bin/python scripts/score.py preview explosion,thunder` → `output/sfx_preview/*.wav` (`preview list` names all).
+Not available (needs real recordings): crowds, animal calls, engines, speech.
 
 Pick `music` by tone: `sacred` for sirah/Islamic content (drone + soft pulse, no melodic instruments — many viewers prefer no music;
 offer `"none"` if unsure), `epic` for history/battles, `tense` for mystery, `warm` for fables/stories, `calm` for reflections and math,
