@@ -88,6 +88,30 @@ def remotion_prestills(props_path, props):
     return []
 
 
+def lufs(path, pre=""):
+    """Integrated loudness (LUFS) of an audio file, optionally after a filter chain; None if silent/unmeasurable."""
+    p = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", path, "-af", (pre + "," if pre else "") + "ebur128", "-f", "null", "-"],
+                       capture_output=True, text=True)
+    import re
+    m = re.findall(r"I:\s+(-?[\d.]+) LUFS", p.stderr)
+    v = float(m[-1]) if m else None
+    return v if v is not None and v > -70 else None
+
+
+# Background levels relative to the voice (dB, integrated loudness). The bed (music + ambience) must sit well under
+# the VO so every word stays intelligible on phone speakers; storyboard may override with "music_level_db" / "sfx_level_db".
+BED_BELOW_VO_DB = 20.0
+SFX_BELOW_VO_DB = 9.0
+
+
+def level_gain(path, target, pre=""):
+    """Linear gain that brings `path` to `target` LUFS (capped so quiet stems are never pushed up more than +6 dB)."""
+    cur = lufs(path, pre)
+    if cur is None:
+        return 1.0, None
+    return 10 ** (min(target - cur, 6.0) / 20), cur
+
+
 def run_qa(args):
     r = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "qa.py"), *args], capture_output=True, text=True)
     print(r.stdout if r.returncode == 0 else f"  QA failed: {r.stderr[-400:]}")
@@ -171,27 +195,42 @@ def main():
     elif mood != "none" or want_sfx:
         print("  (skip score: .venv-audio missing, run scripts/setup.sh)")
 
-    # mix: voice (compressed) over a bed (ambience + music) ducked by the voice, plus sfx; master to -14 LUFS
+    # mix: voice (compressed) over a bed (ambience + music) leveled RELATIVE to the voice, EQ-carved in the speech band
+    # and ducked hard by the voice, plus sfx; master to -14 LUFS. Levels are measured, not guessed, so a loud score can
+    # never bury the VO again.
+    vo_lufs = lufs(voice_wav, "acompressor=threshold=0.1:ratio=3:attack=5:release=120") or -20.0
+    bed_db = -abs(float(sb.get("music_level_db", BED_BELOW_VO_DB)))
+    sfx_db = -abs(float(sb.get("sfx_level_db", SFX_BELOW_VO_DB)))
     ins, chains, bed = ["-i", voice_wav], [], []
     chains.append("[0:a]aformat=sample_rates=48000:channel_layouts=stereo,acompressor=threshold=0.1:ratio=3:attack=5:release=120,asplit=2[vo][key]")
     if sb.get("ambience", "wind") == "wind":
-        chains.append(f"anoisesrc=color=brown:amplitude=0.6:duration={dur}:sample_rate=48000,lowpass=f=900,highpass=f=80,tremolo=f=0.15:d=0.6,volume=0.22,aformat=channel_layouts=stereo[wind]")
+        chains.append(f"anoisesrc=color=brown:amplitude=0.6:duration={dur}:sample_rate=48000,lowpass=f=900,highpass=f=80,tremolo=f=0.15:d=0.6,volume=0.12,aformat=channel_layouts=stereo[wind]")
         bed.append("[wind]")
     n = 1
-    if os.path.exists(os.path.join(stems, "music.wav")):
-        ins += ["-i", os.path.join(stems, "music.wav")]
-        chains.append(f"[{n}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=1.1[mus]")
+    levels = []
+    music_wav = os.path.join(stems, "music.wav")
+    if os.path.exists(music_wav):
+        g, cur = level_gain(music_wav, vo_lufs + bed_db)
+        levels.append(f"music {cur if cur is None else round(cur, 1)} LUFS -> x{g:.2f}")
+        ins += ["-i", music_wav]
+        chains.append(f"[{n}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume={g:.4f}[mus]")
         bed.append("[mus]"); n += 1
     sfx_lbl = None
-    if os.path.exists(os.path.join(stems, "sfx.wav")):
-        ins += ["-i", os.path.join(stems, "sfx.wav")]
-        chains.append(f"[{n}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=0.8[sfx]")
+    sfx_wav = os.path.join(stems, "sfx.wav")
+    if os.path.exists(sfx_wav):
+        g, cur = level_gain(sfx_wav, vo_lufs + sfx_db)
+        levels.append(f"sfx {cur if cur is None else round(cur, 1)} LUFS -> x{g:.2f}")
+        ins += ["-i", sfx_wav]
+        chains.append(f"[{n}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume={g:.4f},alimiter=limit=0.5[sfx]")
         sfx_lbl = "[sfx]"; n += 1
+    print(f"  levels: VO {vo_lufs:.1f} LUFS, bed target {bed_db:+.0f} dB, sfx target {sfx_db:+.0f} dB" + ("; " + ", ".join(levels) if levels else ""))
     parts = ["[vo]"]
     if bed:
         mixbed = "".join(bed) + (f"amix=inputs={len(bed)}:normalize=0[bed0]" if len(bed) > 1 else "anull[bed0]")
         chains.append(mixbed)
-        chains.append("[bed0][key]sidechaincompress=threshold=0.03:ratio=8:attack=30:release=500[bed]")
+        # carve the speech band (presence ~1-4 kHz) out of the bed, then duck it ~10 dB whenever the voice is active
+        chains.append("[bed0]equalizer=f=2500:t=q:w=0.8:g=-6,equalizer=f=600:t=q:w=1:g=-3[bedeq]")
+        chains.append("[bedeq][key]sidechaincompress=threshold=0.015:ratio=12:attack=10:release=350:makeup=1[bed]")
         parts.append("[bed]")
     else:
         chains.append("[key]anullsink")

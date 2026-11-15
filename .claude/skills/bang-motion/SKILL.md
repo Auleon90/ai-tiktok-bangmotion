@@ -125,6 +125,12 @@ Perkiraan durasi: ~Xs · Gambar AI: N dari M scene
 using `audio/lemo/` (sfx.py + pluck.py, MIT, vendored from Lemo-Opuscar). The mixer compresses the voice, ducks the bed (ambience + music)
 under it, adds SFX and masters to −14 LUFS.
 
+**VO always wins.** `produce.py` measures the loudness of the voice and of each stem and levels them RELATIVE to the VO:
+music/ambience bed at **−20 dB** under the voice, SFX at **−9 dB** (gain never pushed up more than +6 dB), the bed gets an
+EQ cut in the speech band (−6 dB @ 2.5 kHz, −3 dB @ 600 Hz) and is ducked ~10 dB by a sidechain whenever the voice speaks.
+The mix log prints `levels: VO … bed target … ` — check it. Override per video only if asked: `"music_level_db": 16`
+(louder music) / `"sfx_level_db": 12` (quieter SFX). Never raise music volume in score.py instead.
+
 The score is **different for every video**: a seed from the title (or `"music_seed"`) picks key, tempo, chord progression,
 arpeggio patterns and the instrument palette from the mood's options; the Lemo `style` steers the palette (engraving → harpsichord +
 violas, ink-wash/ukiyoe → dan tranh, newsreel → piano, rubber-hose → xylophone + tuba…); the arrangement follows the scenes
