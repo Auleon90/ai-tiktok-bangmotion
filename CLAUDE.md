@@ -44,6 +44,7 @@ Konten sirah: JANGAN menggambarkan sosok/wajah Nabi ﷺ atau sahabat — pakai p
 
 - `CARTESIA_API_KEY` — tersimpan di Default environment (otomatis tersedia)
 - `CARTESIA_VOICE_ID` — tersimpan di Default environment (Galang, id-ID)
+- `CARTESIA_MODEL` (sonic-3.6), `CARTESIA_VERSION` (2026-08-14), `CARTESIA_EMOTION` (excited), `CARTESIA_SPEED` (1), `CARTESIA_VOLUME` (1) — Default environment, dibaca `scripts/tts.py`
 - `CF_ACCOUNT_ID` — Cloudflare account (Default environment); token Workers AI tersimpan sebagai network secret untuk api.cloudflare.com
 - Key Gemini juga tersimpan (generativelanguage.googleapis.com), tapi model gambar Gemini TIDAK punya kuota gratis — jangan dipakai untuk gambar
 
