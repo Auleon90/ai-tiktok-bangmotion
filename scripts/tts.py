@@ -14,7 +14,7 @@ import sys, os, json, base64, subprocess, requests
 
 API_KEY  = os.environ.get("CARTESIA_API_KEY", "")
 ENDPOINT = "https://api.cartesia.ai/tts/sse"
-VERSION  = "2025-04-16"
+VERSION  = os.environ.get("CARTESIA_VERSION", "2025-04-16")
 MODEL    = os.environ.get("CARTESIA_MODEL", "sonic-3")
 RATE     = 44100
 BYTES_PER_SAMPLE = 2  # pcm_s16le mono
@@ -36,6 +36,13 @@ def tts(text: str, out_file: str, voice_id: str = DEFAULT_VOICE):
         "add_timestamps": True,
         "output_format": {"container": "raw", "encoding": "pcm_s16le", "sample_rate": RATE},
     }
+    gc = {k: v for k, v in {
+        "speed": os.environ.get("CARTESIA_SPEED"), "volume": os.environ.get("CARTESIA_VOLUME"),
+        "emotion": os.environ.get("CARTESIA_EMOTION")}.items() if v}
+    if gc:
+        for k in ("speed", "volume"):
+            if k in gc: gc[k] = float(gc[k])
+        payload["generation_config"] = gc
     r = requests.post(
         ENDPOINT,
         headers={"X-API-Key": API_KEY, "Cartesia-Version": VERSION, "Content-Type": "application/json"},

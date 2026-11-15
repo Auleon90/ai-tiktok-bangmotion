@@ -39,7 +39,8 @@ def qa_vo_full(sb_path):
     voice = sb.get("voice") or os.environ.get("CARTESIA_VOICE_ID", "")
     lines, issues = [], 0
     for s in sb["scenes"]:
-        h = hashlib.sha1(f"{voice}|{s['vo']}".encode()).hexdigest()[:16]
+        cfg = "|".join(os.environ.get(k, "") for k in ("CARTESIA_MODEL", "CARTESIA_EMOTION", "CARTESIA_SPEED", "CARTESIA_VOLUME"))
+        h = hashlib.sha1(f"{voice}|{s['vo']}{('|' + cfg) if cfg.strip('|') else ''}".encode()).hexdigest()[:16]
         side = os.path.join(OUT, "vo", f"{h}.words.json")
         mp3 = os.path.join(OUT, "vo", f"{h}.mp3")
         if not os.path.exists(side):

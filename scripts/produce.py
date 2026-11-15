@@ -33,7 +33,8 @@ def run(cmd, **kw):
 
 def tts_cached(text: str, voice: str = "") -> tuple[str, dict]:
     voice = voice or os.environ.get("CARTESIA_VOICE_ID", "")
-    h = hashlib.sha1(f"{voice}|{text}".encode()).hexdigest()[:16]
+    cfg = "|".join(os.environ.get(k, "") for k in ("CARTESIA_MODEL", "CARTESIA_EMOTION", "CARTESIA_SPEED", "CARTESIA_VOLUME"))
+    h = hashlib.sha1(f"{voice}|{text}{('|' + cfg) if cfg.strip('|') else ''}".encode()).hexdigest()[:16]
     mp3 = os.path.join(VO_DIR, f"{h}.mp3")
     side = os.path.join(VO_DIR, f"{h}.words.json")
     if not (os.path.exists(mp3) and os.path.exists(side)):
