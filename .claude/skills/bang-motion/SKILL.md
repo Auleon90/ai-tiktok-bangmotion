@@ -66,14 +66,16 @@ Built-in scene types (rendered automatically by modes 1 and 2):
 
 | `image` | full-screen AI illustration only; optional `headline`, `sub` overlay |
 
-### Optional AI illustrations (Cloudflare FLUX — only when the story needs them)
+### AI illustrations (Cloudflare FLUX — any theme, per scene where it fits)
 
 Any scene may add `"image": "<English prompt>"` (or `{"prompt": "...", "steps": 6}`); top-level `"image_style"` is appended to every prompt
 (default: clean 2D cartoon, bold outlines, no text). The image becomes a full-bleed background with a Ken Burns move; the scene's normal
 content (headline, counter, quote…) is drawn on top with a darkening scrim. Images are cached by prompt in `output/img/`.
 
-- Use images ONLY for stories that need a visible place or world: fables, general history, mysteries, travel/places, "what if", nature/space,
-  illustrative characters. Typically 3–6 images per video, mixed with code-drawn scenes.
+- Any theme qualifies (facts, science, tips, listicles, news, history, fables, motivation, Islamic…). Judge each scene: if it has something
+  visible — a place, object, animal, nature, an event, a process (rain hitting soil, bacteria under a microscope), a mood — and an image
+  makes it more engaging, give it an `image`. Typically 3–6 images per video, mixed with code-drawn scenes; default to using images
+  unless the video is pure diagrams/formulas. Numbers, charts, formulas and text stay code-drawn (they may sit on top of an image).
 - ALSO use images for **science/knowledge tied to life inspiration, motivation or Islamic reflection**
   (e.g. "Ayat tentang lebah dan sains madu", "Air: 70% tubuh kita", "Tafakur alam semesta", "Pelajaran dari pohon yang tumbang").
   Images there show the **wonder**: nature, cosmos, cells/microscopy look, water, light, landscapes, plants, animals in nature,
@@ -82,8 +84,8 @@ content (headline, counter, quote…) is drawn on top with a darkening scrim. Im
 - Islamic inspiration rules for images: never the Prophet ﷺ, prophets or sahabat; avoid human faces (people only as tiny silhouettes,
   from behind, or hands); never ask FLUX to write Arabic/Qur'an text (it garbles it) — ayat are always rendered by code (Amiri font);
   no symbols of other religions; modest, calm palettes. Pair with `"music": "sacred"` or `"none"`.
-- Do NOT use images for: pure math/science explainers with no reflective angle (Manim), listicles/tips, data,
-  and **sirah Nabi ﷺ** (maps/calligraphy only; at most a landscape with no human figures).
+- Do NOT use images for: scenes that are only numbers/diagrams/formulas (keep them code-drawn), Manim videos,
+  and **sirah Nabi ﷺ** figures (maps/calligraphy only; at most a landscape with no human figures).
 - Mark image scenes with 🖼️ in the approval summary and state the count ("3 dari 8 scene pakai gambar AI") so the user can decline.
 - Supported in modes 1 (HyperFrames), 2 (Remotion) and 4 (Cepat, as `PROPS.scenes[i].imageSrc` relative to the page). Ignored in Manim.
 - Prompts in English, describe composition + light + mood, always end with "no text". FLUX output is 1024×1024 (center-cropped to 9:16),

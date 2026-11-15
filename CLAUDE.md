@@ -21,10 +21,12 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
    3. **Manim** (`manim/`, `.venv-manim`) — sains/matematika, ±1 menit
    4. **Cepat** (bang-motion klasik: HTML + rekam layar) — draf, ±1,5 menit
    5. **Auto** — Claude memilih sesuai topik & storyboard (aturan di skill)
-3. Gambar AI (Cloudflare FLUX) OPSIONAL: hanya untuk cerita yang butuh "dunia" visual (fabel, sejarah umum, misteri, tempat).
-   Tandai scene 🖼️ di storyboard + jumlahnya, supaya user bisa menolak. BOLEH untuk sains/pengetahuan yang dikaitkan dengan
-   inspirasi/motivasi hidup atau inspirasi Islam (gambar alam/kosmos/benda, tanpa wajah manusia, tanpa teks Arab dari AI).
-   Tidak untuk sains murni tanpa sudut refleksi, listicle, data, sirah Nabi ﷺ.
+3. Gambar AI (Cloudflare FLUX) untuk TEMA APA PUN: nilai tiap scene — kalau adegannya punya sesuatu yang bisa dilihat
+   (tempat, benda, alam, hewan, peristiwa, proses, suasana) dan gambar membuatnya lebih menarik, pakai gambar. Biasanya 3–6 gambar per video,
+   dicampur scene yang digambar kode. Angka/grafik/rumus/teks tetap digambar kode (boleh di atas gambar).
+   Tandai scene 🖼️ di storyboard + jumlahnya, supaya user bisa menolak.
+   Batasan: tanpa wajah manusia untuk konten Islami, tanpa teks Arab dari AI; sirah Nabi ﷺ hanya peta/kaligrafi/lanskap tanpa sosok;
+   Manim tidak mendukung gambar.
    Kuota Cloudflare HANYA untuk gambar — jangan dipakai untuk QA atau hal lain.
 4. Audio: musik orisinal (`music`: warm/epic/tense/calm/playful/sacred/none) + SFX otomatis dari `scripts/score.py`
    (modul `audio/lemo/`, MIT dari Lemo-Opuscar). Sirah → `sacred` atau `none`.
