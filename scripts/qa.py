@@ -121,6 +121,31 @@ def qa_visual_full(proj, allow=()):
 
 
 # ---------------------------------------------------------------- final file
+IMG_BLOCK, IMG_WARN = 0.38, 0.50   # share of each AI image visible on screen (template full-bleed ≈ 0.43)
+
+
+def qa_images_full(proj, allow=()):
+    """-> (report text, blocking issues). Measures how much of each AI image is on screen (scripts/qa_images.js).
+    Blocking = an image with < IMG_BLOCK visible (cropped by its box, object-fit, zoom or the frame), unless "image_crop" is allowed."""
+    if not os.path.isdir(os.path.join(proj, "assets", "img")):
+        return "### Images\n- no AI images", []
+    r = sh(["node", os.path.join(ROOT, "scripts", "qa_images.js"), proj, "0"], timeout=300)
+    try:
+        res = json.loads(r.stdout.strip().splitlines()[-1])
+    except Exception:
+        return "### Images\n- image check failed:\n```\n" + (r.stderr or r.stdout)[-600:] + "\n```", ["image check failed"]
+    lines, block = [], []
+    for x in res:
+        v = x["visible"]
+        mark = "❌" if v < IMG_BLOCK else "⚠️" if v < IMG_WARN else "✅"
+        lines.append(f"- {mark} scene {x['scene']} @{x['t']}s: {int(v * 100)}% of the image visible")
+        if v < IMG_BLOCK and "image_crop" not in allow:
+            block.append(f"images/image_crop scene {x['scene']}: only {int(v * 100)}% of the image visible (min {int(IMG_BLOCK * 100)}%)")
+    tip = ("\n  Fix: show the picture whole — box close to the image's 1:1 aspect, object-fit cover in a box no wider than the frame, "
+           "Ken Burns ≤ 1.08, no fixed 1920px width with a reduced height." if block else "")
+    return "### Images (visible share)\n" + ("\n".join(lines) or "- none rendered") + tip, block
+
+
 def qa_final(mp4):
     if not os.path.exists(mp4):
         return f"### Final file\n- missing: {mp4}"
@@ -172,6 +197,8 @@ def main():
         if hf_dir:
             v_txt, v_block = qa_visual_full(hf_dir, allow)
             parts.append(v_txt); block += v_block
+            i_txt, i_block = qa_images_full(hf_dir, allow)
+            parts.append(i_txt); block += i_block
         verdict = ("### ❌ BLOCKED — fix before rendering:\n" + "\n".join(f"- {b}" for b in block[:20])
                    + ("\n  (intended overlaps: add the code to storyboard \"qa_allow\", or re-run with --accept-qa)" if block else "")) if block else "### ✅ Pre-render QA passed"
         rep = "\n\n".join(parts + [verdict]) + "\n"

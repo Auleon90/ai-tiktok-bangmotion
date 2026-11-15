@@ -166,6 +166,13 @@ offer `"none"` if unsure), `epic` for history/battles, `tense` for mystery, `war
   `output/hf_index.html` (start from `hyperframes/template/index.html` or from `examples/kopi-riso.hf.html` for a fully custom page).
   Keep 1080×1920, our captions (restyle `.bm-line`/`.bm-word` to match), and the HyperFrames contract. Approximate shaders with SVG/CSS
   (blend modes, patterns, filters) when needed.
+- **Images must stay whole.** FLUX images are square. When restyling, keep the template's `.bg-img` logic or put the image in a
+  framed panel near 1:1 (e.g. 940×740 at the top, text below it). NEVER change only the height of the 1920 px-wide `<img>`
+  (it crops the image on both axes), keep the Ken Burns zoom ≤ 1.08 in panels, and never put the headline on top of the subject.
+  The pre-render QA measures this (`scripts/qa_images.js`, code `image_crop`): < 38 % of an image on screen blocks the render,
+  < 50 % is a warning. The template's full-bleed look is ≈ 43 %.
+- After the draft/render, LOOK at each image scene at full size: subject whole and not covered by text, no fake letters from FLUX
+  (if there are any, re-prompt without paper/signs/books and add "no markings").
 - Licence: the STYLE.md docs are CC BY-NC 4.0 + a permission to adapt them for our own films (commercial OK). NEVER copy STYLE.md text into
   this repo or into a committed file; the finished film is ours. Mention the credit in the delivery message:
   "Style: <name> — Lemo-Opuscar by Lemomo (LemoLab)".
@@ -181,6 +188,7 @@ offer `"none"` if unsure), `epic` for history/battles, `tense` for mystery, `war
 | VO: word count script vs audio (skipped/merged word), missing VO | all | ✅ yes |
 | VO: stretched words (> 0.65 s), odd mid-sentence pauses, pace, clipping | all | ⚠️ report only |
 | `hyperframes check`: runtime JS errors, layout overlap/overflow, contrast, lint errors | HyperFrames | ✅ yes (unless the code is in `qa_allow`) |
+| AI images: share of each image visible on screen (`qa_images.js`, < 38 % → `image_crop`) | HyperFrames | ✅ yes (unless `image_crop` is in `qa_allow`) |
 | One still per scene → `output/qa_prerender.jpg` (~1 min) | Remotion | look at it before the ~20 min render |
 
 Flow:
