@@ -100,6 +100,16 @@ def main():
     engine = opts.get("engine", "remotion")
     if engine in ("html", "hyperframes") and "html" not in opts:
         sys.exit(f"--engine={engine} requires --html=<index.html>")
+    if engine == "hyperframes" and "--no-render" not in flags:
+        sb = json.load(open(args[0]))
+        page = open(opts["html"], encoding="utf-8").read()
+        tpl = open(os.path.join(ROOT, "hyperframes", "template", "index.html"), encoding="utf-8").read()
+        if sb.get("style") and page == tpl:
+            sys.exit(f"style '{sb['style']}' is set but {opts['html']} is the unmodified template: write the styled page first")
+        if not sb.get("style") and page == tpl:
+            print("WARN  no Lemo style: rendering the plain default template look")
+        if any(s.get("image") for s in sb["scenes"]) and "imageSrc" not in page:
+            sys.exit(f"scenes have images but {opts['html']} never reads imageSrc: images would be dropped")
     if len(args) < 2:
         sys.exit(__doc__)
     sb_path, out_mp4 = args

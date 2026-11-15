@@ -116,6 +116,7 @@ Scene 1 [type]: [eyebrow]            (🖼️ if it uses an AI image)
 ━━━━━━━━━━━━━━━━━━━━━━━━
 🎨 Gaya: <style or default> · 🎵 Musik: <mood> · 🔊 SFX: on
 Perkiraan durasi: ~Xs · Gambar AI: N dari M scene
+(mode 1: "🎨 Gaya" WAJIB berisi gaya Lemo + link galeri)
 ```
 
 ### Sound (all modes)
@@ -133,8 +134,13 @@ offer `"none"` if unsure), `epic` for history/battles, `tense` for mystery, `war
 `setup.sh` downloads 99 film-style guides into `.lemo/lemo-opuscar/styles/<slug>/STYLE.md` (git-ignored).
 `python3 scripts/styles.py search <words>` / `list` / `show <slug>`.
 
-- During the storyboard, propose ONE style that fits (or none = the default template look), name it with its gallery link
-  `https://lemomo-ai.github.io/lemo-opuscar/` and one line why; put `"style": "<slug>"` in the storyboard.
+- **Mode 1 always uses a Lemo style.** During the storyboard, ALWAYS propose ONE style that fits the topic (run `styles.py search`),
+  name it with its gallery link `https://lemomo-ai.github.io/lemo-opuscar/` and one line why; put `"style": "<slug>"` in the storyboard.
+  The approval summary always has the "🎨 Gaya" line. The plain template look is used only when the user explicitly asks for it.
+  Vary styles between videos — do not reuse the previous video's style unless asked.
+- The styled page MUST render `imageSrc` backgrounds (copy the `.bg-img` logic from `hyperframes/template/index.html`) and treat them in the
+  style's look (duotone, grain, halftone, blend modes via CSS/SVG filters). Set top-level `"image_style"` to match the style
+  (e.g. risograph → "risograph print, two-ink grain, flat shapes, no text"). `produce.py` blocks the render if images would be dropped.
 - Read that STYLE.md fully before writing the page. Translate its essence, palette, type, motion and transitions into
   `output/hf_index.html` (start from `hyperframes/template/index.html` or from `examples/kopi-riso.hf.html` for a fully custom page).
   Keep 1080×1920, our captions (restyle `.bm-line`/`.bm-word` to match), and the HyperFrames contract. Approximate shaders with SVG/CSS
