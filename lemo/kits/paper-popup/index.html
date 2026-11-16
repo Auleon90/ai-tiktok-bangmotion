@@ -1,68 +1,7 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><title>Paper Pop-up · portrait kit</title>
-<style>html,body{margin:0;background:#bfe3f2;overflow:hidden}canvas{display:block}</style>
+<html><head><meta charset="utf-8"><title>Paper Pop-up Book · portrait kit</title>
+<style>html,body{margin:0;background:#3a2a20;overflow:hidden}canvas{display:block}</style>
 <script src="props.js"></script></head><body>
 <canvas id="c"></canvas>
-<script type="module">
-// Paper Pop-up Book — portrait kit. Look and motion from the Lemo-Opuscar demo (MIT code; its three.js card stage is drawn in 2D):
-// every piece is a die-cut card with a thick white margin, a thin brown cut line and a soft drop shadow; bright flat colours;
-// clouds hang on strings and sway; pieces stand up from the page with an overshoot (the pop-up fold) when a scene turns;
-// titles sit on a hanging card sign with a red ribbon; Lilita One + Fredoka.
-import { W, H, SAFE, TAU, clamp, lerp, seg, eo, back, mulberry, mk, cover } from './kit.js';
-import { makeKit } from './kitbase.js';
-
-const C = { sky: '#bfe3f2', skyT: '#e8f6fb', cream: '#fffaf0', brown: '#2d241e', green: '#4fae4c', greenL: '#8fd16a', blue: '#4aa3e0', red: '#e8413a', yellow: '#ffd23f', orange: '#e8a33a', wood: '#d9a066' };
-const card = (g, p, fill, o = {}) => {   // die-cut card: shadow, white margin, colour, cut line
-  g.save(); g.shadowColor = 'rgba(45,36,30,.28)'; g.shadowBlur = o.blur ?? 14; g.shadowOffsetY = o.sy ?? 8; g.lineJoin = 'round';
-  g.strokeStyle = C.cream; g.lineWidth = o.margin ?? 16; g.stroke(p); g.restore();
-  g.save(); g.lineJoin = 'round'; g.strokeStyle = C.cream; g.lineWidth = o.margin ?? 16; g.stroke(p); g.fillStyle = fill; g.fill(p); g.strokeStyle = C.brown; g.lineWidth = 2.5; g.stroke(p); g.restore();
-};
-function pop(g, t0, lt, x, y, fn) { const u = back(seg(lt, t0, t0 + .5), 2.2); if (u <= 0) return; g.save(); g.translate(x, y); g.scale(1, u); fn(); g.restore(); }   // stands up from the fold line y
-function hill(cx, cy, rx, ry) { const p = new Path2D(); p.ellipse(cx, cy, rx, ry, 0, Math.PI, TAU); p.closePath(); return p; }
-function cloud(x, y, s) { const p = new Path2D(); [[0, 0, 1], [-.9, .25, .7], [.9, .25, .75], [-.4, -.35, .7], [.45, -.3, .65]].forEach(([dx, dy, r]) => { p.moveTo(x + dx * 60 * s + r * 60 * s, y + dy * 60 * s); p.arc(x + dx * 60 * s, y + dy * 60 * s, r * 60 * s, 0, TAU); }); return p; }
-function tree(g, x, y, s, k) { const tr = new Path2D(); tr.rect(x - 9 * s, y - 70 * s, 18 * s, 70 * s); card(g, tr, C.wood, { margin: 10 }); const cr = new Path2D(); if (k % 2) { cr.moveTo(x, y - 210 * s); cr.lineTo(x + 70 * s, y - 60 * s); cr.lineTo(x - 70 * s, y - 60 * s); cr.closePath(); } else cr.arc(x, y - 120 * s, 70 * s, 0, TAU); card(g, cr, k % 2 ? '#2f8a4a' : C.green, { margin: 12 }); }
-function flower(g, x, y, col) { g.strokeStyle = C.green; g.lineWidth = 6; g.beginPath(); g.moveTo(x, y); g.lineTo(x, y - 60); g.stroke(); const p = new Path2D(); for (let k = 0; k < 5; k++) { const a = k / 5 * TAU; p.moveTo(x + Math.cos(a) * 18 + 13, y - 60 + Math.sin(a) * 18); p.arc(x + Math.cos(a) * 18, y - 60 + Math.sin(a) * 18, 13, 0, TAU); } card(g, p, col, { margin: 8, blur: 6, sy: 4 }); const c = new Path2D(); c.arc(x, y - 60, 9, 0, TAU); g.fillStyle = C.yellow; g.fill(c); }
-const SIGN = { x: SAFE.x0 - 20, w: SAFE.x1 - SAFE.x0 + 40 };
-const TH = {
-  align: 'center', rise: 0, accent: C.red,
-  title: { family: 'Lilita', weight: 400, size: 116, min: 48, lh: 1.04, color: C.brown, stroke: C.yellow, strokeW: 0 },
-  quote: { family: 'Fredoka', weight: 500, size: 70, min: 36, lh: 1.2, color: C.brown },
-  num: { family: 'Lilita', weight: 400, size: 200, min: 70, lh: 1, color: C.red },
-  body: { family: 'Fredoka', weight: 500, size: 50, min: 30, lh: 1.22, color: '#5a4a3e' },
-  label: { family: 'Fredoka', weight: 700, size: 34, min: 22, ls: .06, upper: true, color: '#8a6a4a' },
-  side: { family: 'Lilita', weight: 400, size: 48, min: 28, color: C.brown },
-  arabic: { family: 'Amiri', weight: 700, color: C.brown },
-  rule: (g, x, y, w, a) => { const p = new Path2D(); p.roundRect(x + w / 2 - 120 * a, y - 5, 240 * a + 1, 10, 5); g.fillStyle = C.yellow; g.fill(p); },
-  bullet: (g, k, x, y, s, a) => { const p = new Path2D(); p.arc(x + s / 2, y + s / 2, s * .32 * back(a, 2) + .5, 0, TAU); card(g, p, [C.red, C.blue, C.green, C.orange][k % 4], { margin: 8, blur: 6, sy: 4 }); },
-};
-makeKit({
-  fonts: [['Lilita', 'fonts/lemo/lilita-400.woff2'], ['Fredoka', 'fonts/lemo/fredoka-500.woff2', '500'], ['Fredoka', 'fonts/lemo/fredoka-700.woff2', '700'], ['Amiri', 'fonts/amiri-arabic-700-normal.woff2', '700']],
-  th: TH, enter: 'rise', textTop: SAFE.y0 + 110, eyebrowY: SAFE.y0 + 36, eyebrowStyle: { color: C.cream },
-  bg(g, t, s, lt) {
-    const sky = g.createLinearGradient(0, 0, 0, H); sky.addColorStop(0, C.skyT); sky.addColorStop(1, C.sky); g.fillStyle = sky; g.fillRect(0, 0, W, H);
-    // clouds on strings (behind the sign)
-    [[160, 330, .8, 0], [900, 250, .7, 1.7], [820, 1180, .55, 3.1]].forEach(([x, y, k, ph]) => { const sw = Math.sin(t * 1.1 + ph) * 10; g.strokeStyle = 'rgba(45,36,30,.5)'; g.lineWidth = 2; g.beginPath(); g.moveTo(x, 0); g.lineTo(x + sw, y - 50 * k); g.stroke(); card(g, cloud(x + sw, y, k), '#ffffff', { margin: 10 }); });
-    // the hills, trees and flowers along the bottom pop up on each scene
-    const fold = 1300;
-    pop(g, 0, lt, 0, fold + 120, () => { card(g, hill(260, 0, 520, 320), C.greenL); card(g, hill(860, 0, 460, 260), C.green); });
-    [[120, 0], [330, .1], [760, .2], [960, .3]].forEach(([x, d], k) => pop(g, .1 + d, lt, x, fold + 70, () => tree(g, 0, 0, .9, k)));
-    pop(g, .25, lt, 0, H, () => { const p = new Path2D(); p.rect(-20, -480, W + 40, 500); card(g, p, '#6cc35a', { margin: 0 }); const path = new Path2D(); path.moveTo(420, 0); path.bezierCurveTo(470, -200, 650, -260, 600, -480); path.lineTo(680, -480); path.bezierCurveTo(740, -250, 560, -200, 600, 0); path.closePath(); card(g, path, '#e9cf8f', { margin: 6, blur: 0, sy: 0 }); });
-    [[90, C.red], [250, C.yellow], [900, '#c86ad8'], [1010, C.red]].forEach(([x, col], k) => pop(g, .35 + k * .06, lt, x, H - 40, () => flower(g, 0, 0, col)));
-    // the hanging sign that carries the text
-    const sg = new Path2D(), top = SAFE.y0 + 60, bot = s.type === 'clash' ? top + 450 : (s.imageSrc ? 640 : SAFE.y1 - 20), d = back(seg(lt, 0, .5), 1.6);
-    g.save(); g.translate(0, (1 - d) * -300);
-    g.strokeStyle = C.brown; g.lineWidth = 3; for (const x of [SIGN.x + 80, SIGN.x + SIGN.w - 80]) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, top); g.stroke(); }
-    sg.roundRect(SIGN.x, top, SIGN.w, bot - top, 26); card(g, sg, '#fff7ea', { margin: 14 });
-    if (s.eyebrow) { const rb = new Path2D(); rb.moveTo(W / 2 - 200, top - 26); rb.lineTo(W / 2 + 200, top - 26); rb.lineTo(W / 2 + 180, top + 30); rb.lineTo(W / 2 - 180, top + 30); rb.closePath(); card(g, rb, C.red, { margin: 8 }); }
-    g.restore();
-  },
-  photo(g, t, s, img, R, lt) { const u = back(seg(lt, .15, .6), 1.6); g.save(); g.translate(R.x + R.w / 2, R.y + R.h); g.scale(1, u); g.translate(-R.x - R.w / 2, -R.y - R.h);
-    const p = new Path2D(); p.roundRect(R.x, R.y, R.w, R.h, 22); card(g, p, '#fff', { margin: 18 }); g.save(); g.clip(p); g.filter = 'saturate(1.15)'; cover(g, img, R.x, R.y, R.w, R.h, 1.03 + lt * .01); g.restore(); g.strokeStyle = C.brown; g.lineWidth = 2.5; g.stroke(p); g.restore(); },
-  photoRect: { x: SAFE.x0 + 10, y: 700, w: SAFE.x1 - SAFE.x0 - 20, h: 520 },
-  field(g, t, s, Z, lt) { pop(g, 0, lt, 0, Z.ground + 30, () => { const p = new Path2D(); p.roundRect(-30, -50, W + 60, 80, 20); card(g, p, '#e9cf8f', { margin: 10 }); }); },
-  look: { fill: f => f.color || (f.side > 0 ? C.blue : C.red), stroke: C.cream, lw: 4, shield: C.yellow, weapon: C.brown, flag: f => f.color, glow: '#ffe066', glowMode: 'source-over' },
-  fx: { dust: '#f0dcb0', arrow: C.brown, spark: C.yellow },
-  cap: { family: 'Fredoka', weight: 700, size: 66, color: C.brown, accent: C.red, pop: true,
-    plate: (g, x0, y0, x1, y1, a) => { const p = new Path2D(); p.roundRect(x0, y0, x1 - x0, y1 - y0, 40); g.globalAlpha = a; card(g, p, '#ffffff', { margin: 10 }); g.globalAlpha = 1; } },
-});
-</script></body></html>
+<script type="module" src="popup.js"></script>
+</body></html>

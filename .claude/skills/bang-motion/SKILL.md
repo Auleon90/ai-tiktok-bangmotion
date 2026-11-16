@@ -292,16 +292,18 @@ Kits (`python3 scripts/styles.py native`, manifest `lemo/kits/kits.json`; ⚔ = 
 | `stick-explainer` | warm paper, one-line stick figures holding hands, signal red | psikologi, perilaku, pengetahuan umum |
 | `flat-space-explainer` | navy night, flat planets, dashed orbits, progress HUD | sains, astronomi, skala |
 | ⚔ `paper-lantern` | layered cut-paper ridges, rising paper moon, glowing lanterns; battle = black paper silhouettes rim-lit | motivasi, renungan, Qur'an/hadits, sirah |
-| ⚔ `gilded-illumination` | vellum page, gilded border, lapis miniature in a pointed arch, banderole captions; battle painted inside the arch | Qur'an/hadits, sejarah Islam, sirah |
-| ⚔ `paper-popup` | die-cut cards with white margins and shadows, clouds on strings, pop-up hills, hanging sign | kisah, dongeng, sejarah ringan |
+| ⚔ `gilded-illumination` | the demo's own painted world full-screen (lapis sky, gold sun, spires, river, castles, gold-leaf glints, red/blue border); text on vellum plaques, photos in a gold roundel, banderole captions | Qur'an/hadits, sejarah Islam, sirah |
+| ⚔ `paper-popup` | a pop-up book on a lamp-lit desk; each scene is a spread (one hue family, `"spread"`: meadow/market/desert/sea/night/sketch); the demo's cut-paper cards pop up back→front and fold before a page turn; text lives in the paper world (sign on strings, typing bubble, pull-tab slats, hanging tags, scroll); cream/brown subtitles. Keep on-screen text short | kisah, dongeng, sejarah ringan |
 | ⚔ `brick-toy` | grey studio sweep, glossy studded bricks that drop and snap, navy caption pill | pengetahuan umum, cara kerja benda |
 | ⚔ `tilt-shift` | isometric toy town at dusk, sharp focus band, blurred edges, neon | kota & peradaban, sejarah dunia |
 | ⚔ `urban-sketch` | fineliner that draws itself, off-register washes, skyline, Caveat | tempat & kota, psikologi sehari-hari |
 | ⚔ `colored-pencil` | hatched colour on toothy paper, soil strata & stones | sains alam, biologi, ayat tentang alam |
 | ⚔ `watercolor` | wet washes with dark edges, misty greens, handwritten notes | alam, renungan, inspirasi hidup |
 
-The 3D demos (paper-popup, brick-toy, tilt-shift, colored-pencil) are three.js films; their kits redraw the look in 2.5D canvas
-(same palette, materials, fonts and motion), so lighting/depth of field are approximations.
+The 3D demos (paper-popup, paper-lantern, brick-toy, tilt-shift, colored-pencil) are three.js films. This server has no GPU (software WebGL:
+~1 s per 1080×1920 frame, ~25 min per 60 s), so with the 1–3 min budget: paper-popup, paper-lantern and colored-pencil are rebuilt in 2D
+from their concepts (demo Canvas2D art reused where it exists); tilt-shift and brick-toy will use 3D stills pre-rendered by the demo engine
+with 2D motion on top (in progress).
 
 Battle scene `clash` (⚔ kits): two sides march in, trade arrow volleys, charge, meet with sparks and dust, some figures fall (more on the
 losing side) and, with `winner`, the loser routs. Figure counts follow the ratio of `count` (6–14 drawn per side), `cavalry` adds riders,

@@ -131,7 +131,7 @@ export function text(g, id, s, x, y, o = {}) {
   return w;
 }
 // register a box drawn by hand (rotated text, multi-piece numbers) so the layout check sees it
-export function reg(id, s, b, o = {}) { TX.push({ id, text: String(s), x0: b.x0, y0: b.y0, x1: b.x1, y1: b.y1, cap: !!o.cap, layer: o.layer || 0 }); }
+export function reg(id, s, b, o = {}) { TX.push({ id, text: String(s), x0: b.x0, y0: b.y0, x1: b.x1, y1: b.y1, cap: !!o.cap, layer: o.layer || 0, over: !!o.over }); }
 export function textWidth(g, s, size, o) { font(g, size, o); return g.measureText(s).width; }
 
 // ---------------------------------------------------------------- captions: fitted into CAP, styled by the kit
