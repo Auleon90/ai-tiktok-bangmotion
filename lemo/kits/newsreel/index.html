@@ -8,7 +8,7 @@
 // footage (FLUX photos graded to silver-gelatin) pushes in with gate weave and flicker; film look = cream multiply, lifted blacks,
 // vignette, vertical scratches and dust; Limelight titles in a silver gradient that scale in with a back-ease;
 // art-deco intertitle cards (ruled double border drawn on, corner fans, rotating sunburst, searchlight sheen); subtitles on a dark band.
-import { W, H, SAFE, TAU, clamp, lerp, seg, eo, eio, ss, back, hash, vnoise, mk, at, SC, IMG, cover, graded, block, text, captions, stdBody, boot } from './kit.js';
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, eio, ss, back, hash, vnoise, mk, at, SC, IMG, cover, graded, block, text, captions, fit, reg, countUp, mulberry, stdBody, boot } from './kit.js';
 
 const FPS = 24, frameOf = t => Math.floor(t * FPS + 1e-6);   // the demo's 24 fps film cadence, kept for grain and weave
 const PIC = mk(W, H), P = PIC.getContext('2d');
@@ -71,6 +71,67 @@ function footage(g, t, s) {   // a photo shot: push-in, text on a dark lower thi
   const s2 = s.type === 'image' ? { ...s, type: 'headline' } : s;
   zoomIn(g, t, s.t0 + .25, W / 2, 1060, () => stdBody(g, t, s2, { x: SAFE.x0, y: 840, w: SAFE.x1 - SAFE.x0, h: SAFE.y1 - 840 }, { ...TH, title: { ...TH.title, size: 96 }, num: { ...TH.num, size: 150 } }));
 }
+
+// ---------------------------------------------------------------- news objects: the newspaper, the telegram (filmed, not typeset)
+const NEWS = '#e4ddd0', NEWSD = '#1d1b18';
+function pencilRing(g, x, y, w, h, u, col = '#d6302a') {   // a grease-pencil ellipse drawn on, slightly open
+  if (u <= 0) return; g.save(); g.strokeStyle = col; g.lineWidth = 9; g.lineCap = 'round'; g.globalAlpha = .9; g.beginPath();
+  for (let k = 0; k <= 60 * u; k++) { const a = -2.4 + k / 60 * TAU * 1.08, r = 1 + .04 * Math.sin(k * .7); const px = x + w / 2 + Math.cos(a) * w * .56 * r, py = y + h / 2 + Math.sin(a) * h * .62 * r; k ? g.lineTo(px, py) : g.moveTo(px, py); }
+  g.stroke(); g.restore();
+}
+function underline(g, x, y, w, u, col = '#d6302a') { if (u <= 0) return; g.save(); g.strokeStyle = col; g.lineWidth = 8; g.lineCap = 'round'; g.globalAlpha = .9; g.beginPath(); g.moveTo(x, y); for (let k = 0; k <= 20; k++) g.lineTo(x + w * u * k / 20, y + Math.sin(k * 1.7) * 3); g.stroke(); g.restore(); }
+// spin in (the newsreel's spinning front page), slam, settle; returns the page transform progress
+function spin(g, t, s, cx, cy, fn) {
+  const lt = t - s.t0, u = seg(lt, 0, .7), e = eo(u), rot = (1 - e) * TAU * 1.5, sc = lerp(.15, 1, e) * (1 + .03 * Math.max(0, 1 - (lt - .7) * 6));
+  g.save(); g.translate(cx, cy); g.rotate(rot - .03); g.scale(sc, sc); g.translate(-cx, -cy); fn(u >= 1); g.restore();
+}
+function newspaper(g, t, s) {   // a front page: masthead, a banner headline, columns, a photo box; marked in grease pencil
+  const lt = t - s.t0, x = 70, y = 300, w = W - 140, h = 940, cx = W / 2, cy = y + h / 2;
+  g.fillStyle = '#0d0c0b'; g.fillRect(0, 0, W, H);
+  spin(g, t, s, cx, cy, settled => {
+    g.fillStyle = NEWS; g.fillRect(x, y, w, h); g.strokeStyle = 'rgba(0,0,0,.25)'; g.lineWidth = 2; g.strokeRect(x, y, w, h);
+    const mast = (window.PROPS.title || 'THE DAILY NEWS').toUpperCase();
+    block(g, 'mast', mast, { x: x + 60, y: y + 26, w: w - 120, h: 80 }, { family: 'Limelight', size: 70, min: 30, color: NEWSD, align: 'center', layer: 2 });
+    g.fillStyle = NEWSD; g.fillRect(x + 30, y + 118, w - 60, 4); g.fillRect(x + 30, y + 128, w - 60, 1.5);
+    const T = s.type, it = s.items || [];
+    const hd = T === 'quote' ? 'BERITA KAWAT' : (s.headline || s.title || s.name || '');
+    let hb = { y1: y + 150 };
+    if (T === 'counter') {
+      it.forEach((xx, k) => { const yy = y + 150 + k * 300, u = seg(lt, .9 + k * .4, 1.8 + k * .4);
+        block(g, 'num' + k, `${xx.prefix || ''}${countUp(xx.value, u)}${xx.suffix || ''}`, { x: x + 60, y: yy, w: w - 120, h: 220 }, { family: 'Osw', weight: 700, size: 230, min: 70, color: NEWSD, align: 'center', valign: 'middle', layer: 2 });
+        if (xx.label) block(g, 'lab' + k, xx.label, { x: x + 60, y: yy + 230, w: w - 120, h: 60 }, { family: 'Osw', weight: 500, size: 46, min: 24, ls: .08, upper: true, color: '#3a3630', align: 'center', layer: 2 });
+        if (k === 0) pencilRing(g, x + 80, yy + 10, w - 160, 210, seg(lt, 1.6, 2.3)); });
+      hb = { y1: y + 160 + it.length * 330 };
+    } else {
+      hb = block(g, 'hd', hd.toUpperCase(), { x: x + 60, y: y + 150, w: w - 120, h: T === 'list' ? 220 : 330 }, { family: 'Osw', weight: 700, size: 150, min: 50, lh: .98, color: NEWSD, align: 'center', valign: 'middle', layer: 2 });
+      if (T !== 'quote') pencilRing(g, x + 50, hb.y0 - 10, w - 100, hb.y1 - hb.y0 + 20, seg(lt, 1.1, 1.8));
+    }
+    // body: the scene's text set as the lead paragraph; points underlined one by one; fake columns below
+    let by = hb.y1 + 30;
+    if (T === 'list') it.forEach((p, k) => { const r = block(g, 'it' + k, '— ' + p, { x: x + 60, y: by, w: w - 120, h: 120 }, { family: 'Osw', weight: 500, size: 52, min: 28, color: NEWSD, layer: 2 }); underline(g, x + 60, r.y1 + 8, r.x1 - x - 60, seg(lt, 1 + k * .6, 1.5 + k * .6)); by = r.y1 + 30; });
+    else { const lead = s.sub || s.subtitle || s.note || (s.source ? '— ' + s.source : ''); if (lead) { const r = block(g, 'lead', lead, { x: x + 60, y: by, w: w - 120, h: 140 }, { family: 'Osw', weight: 500, size: 48, min: 26, ls: .04, color: '#2a2724', align: 'center', layer: 2 }); by = r.y1 + 30; } }
+    const r = mulberry(s.i + 3); g.fillStyle = 'rgba(29,27,24,.45)';
+    for (let c = 0; c < 3; c++) for (let yy = Math.max(by, y + h - 300); yy < y + h - 30; yy += 18) g.fillRect(x + 40 + c * (w - 80) / 3, yy, (w - 80) / 3 - 26 - r() * 50 * (r() < .2), 6);
+  });
+}
+function telegram(g, t, s) {   // a quote arrives as a telegram: typed caps on a yellowish form, stamped
+  const lt = t - s.t0, x = 80, y = 300, w = W - 160, h = 860;
+  g.fillStyle = '#0d0c0b'; g.fillRect(0, 0, W, H);
+  spin(g, t, s, W / 2, y + h / 2, () => {
+    g.fillStyle = '#e6dcc0'; g.fillRect(x, y, w, h); g.strokeStyle = NEWSD; g.lineWidth = 3; g.strokeRect(x + 20, y + 20, w - 40, h - 40);
+    block(g, 'tg', 'TELEGRAM', { x: x + 40, y: y + 40, w: w - 80, h: 90 }, { family: 'Limelight', size: 76, color: NEWSD, align: 'center', layer: 2 });
+    const full = '“' + String(s.text).toUpperCase() + '” STOP', n = Math.floor(full.length * clamp((lt - .8) / Math.max(1, full.length / 30)));
+    const f = fit(g, full, w - 140, h - 330, { family: 'Mono', weight: 400, size: 54, min: 28, lh: 1.3 });
+    block(g, 'quote', full.slice(0, Math.max(1, n)), { x: x + 70, y: y + 170, w: w - 140, h: h - 330 }, { family: 'Mono', weight: 400, size: f.size, min: f.size, lh: 1.3, color: NEWSD, layer: 2 });
+    reg('quote-full', full, { x0: x + 70, y0: y + 170, x1: x + w - 70, y1: y + h - 160 }, { layer: 3, over: !!f.over });
+    if (s.source) { block(g, 'src', s.source.toUpperCase(), { x: x + 70, y: y + h - 140, w: w - 140, h: 60 }, { family: 'Osw', weight: 500, size: 40, ls: .1, color: '#7a2a20', align: 'right', layer: 2 }); }
+  });
+}
+function placeCard(g, t, s) {   // the segment title: top left of the gate, dark box, inset cream frame, pulled out left to right
+  if (!s.eyebrow) return; const u = eo(seg(t - s.t0, .15, .6)), x = SAFE.x0, y = SAFE.y0, w = 520, h = 74;
+  g.save(); g.beginPath(); g.rect(x, y, w * u, h); g.clip(); g.fillStyle = 'rgba(12,11,10,.92)'; g.fillRect(x, y, w, h); g.strokeStyle = '#e4ddd0'; g.lineWidth = 2; g.strokeRect(x + 7, y + 7, w - 14, h - 14);
+  block(g, 'eyebrow', s.eyebrow.toUpperCase(), { x: x + 26, y: y + 18, w: w - 52, h: 40 }, { family: 'Osw', weight: 500, size: 32, min: 20, ls: .16, color: '#ece6da' }); g.restore();
+}
 function filmLook(g, f, strength) {
   g.save();
   g.globalCompositeOperation = 'multiply'; g.fillStyle = '#efe7d6'; g.fillRect(0, 0, W, H);
@@ -93,7 +154,10 @@ function draw(g, t) {
   const { s } = at(t), f = frameOf(t), foot = !!GR[s.i];
   // the picture is drawn to PIC (film look applies to it), then printed through the gate with flicker and weave
   P.setTransform(1, 0, 0, 1, 0, 0); P.clearRect(0, 0, W, H);
-  if (foot) footage(P, t, s); else card(P, t, s);
+  // the intertitle card is used once at most (the first title or the ayat); other text arrives as news objects
+  const cardOnce = (s.type === 'ayat') || (s.i === 0 && (s.type === 'title' || s.type === 'tribute'));
+  if (foot) footage(P, t, s); else if (cardOnce || s.type === 'custom' || s.type === 'clash') card(P, t, s);
+  else if (s.type === 'quote') telegram(P, t, s); else newspaper(P, t, s);
   filmLook(P, f, foot ? 1 : .4);
   // a short white flash on every cut, as a splice
   if (t - s.t0 < 1 / FPS && s.i > 0) { P.fillStyle = 'rgba(255,252,245,.55)'; P.fillRect(0, 0, W, H); }
@@ -104,8 +168,9 @@ function draw(g, t) {
   // dark subtitle band + period subtitles (white with a dark keyline, the spoken word in warm cream)
   const gr = g.createLinearGradient(0, 1270, 0, H); gr.addColorStop(0, 'rgba(10,9,8,0)'); gr.addColorStop(.12, 'rgba(10,9,8,.85)'); gr.addColorStop(.5, 'rgba(10,9,8,.9)'); gr.addColorStop(1, 'rgba(10,9,8,.6)');
   g.fillStyle = gr; g.fillRect(0, 1270, W, H - 1270);
+  if (!foot && !(s.type === 'ayat' || (s.i === 0 && (s.type === 'title' || s.type === 'tribute')) || s.type === 'custom' || s.type === 'clash')) placeCard(g, t, s);
   captions(g, t, { family: 'Osw', weight: 500, size: 66, ls: .03, color: '#fbf8f1', accent: '#f2d48a', stroke: 'rgba(8,7,6,.92)', strokeW: 9 });
 }
-await boot({ fonts: [['Limelight', 'fonts/lemo/limelight-400.woff2'], ['Osw', 'fonts/lemo/oswald-500.woff2', '500'], ['Amiri', 'fonts/amiri-arabic-700-normal.woff2', '700']],
+await boot({ fonts: [['Limelight', 'fonts/lemo/limelight-400.woff2'], ['Osw', 'fonts/lemo/oswald-500.woff2', '500'], ['Osw', 'fonts/lemo/oswald-700.woff2', '700'], ['Mono', 'fonts/lemo/spacemono-700.woff2', '400'], ['Amiri', 'fonts/amiri-arabic-700-normal.woff2', '700']],
   draw: (g, t) => { if (!GR.done) { prep(); GR.done = 1; } draw(g, t); } });
 </script></body></html>

@@ -8,7 +8,7 @@
 // paper #EDE4D0 with seeded fibre, ink #141210, one red #D52B1E; the -18° constructivist axis; red girder slams in on the beat;
 // archive photos (FLUX, graded to hard black-and-white) cut into slanted windows with flicker and flash frames;
 // Oswald numbers that slam in digit by digit; Space Mono tags on ink; steep red diagonal wipes between scenes.
-import { W, H, SAFE, TAU, clamp, lerp, seg, eo, eio, hash, mulberry, mk, at, SC, IMG, cover, graded, block, text, textWidth, captions, countUp, boot, reg, stdBody, DUR } from './kit.js';
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, eio, hash, mulberry, mk, at, SC, IMG, cover, graded, block, text, textWidth, captions, capAt, fit, font, duotone, countUp, boot, reg, stdBody, DUR } from './kit.js';
 
 const RED = '#D52B1E', INK = '#141210', PAPER = '#EDE4D0', TH = -18 * Math.PI / 180, FPS = 30;
 const OSW = { family: 'Osw', weight: 700 }, MONO = { family: 'Mono', weight: 700 };
@@ -20,7 +20,7 @@ function prep() {
   fibre = mk(W, H); const f = fibre.getContext('2d'), d = f.createImageData(W, H), r = mulberry(1930);
   for (let i = 0; i < W * H; i++) { const v = 235 + r() * 20 - (r() < .002 ? 60 : 0); d.data[i * 4] = v; d.data[i * 4 + 1] = v * .985; d.data[i * 4 + 2] = v * .96; d.data[i * 4 + 3] = 255; }
   f.putImageData(d, 0, 0);
-  for (const k in IMG) BW[k] = graded(IMG[k], 'grayscale(1) contrast(1.45) brightness(.92)', 1080, 1080);
+  for (const k in IMG) BW[k] = duotone(IMG[k], INK, PAPER, 1080, 1080, 1.45);   // the one print grade: warm ink → paper
 }
 function poly(g, pts) { g.beginPath(); pts.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.closePath(); }
 function band(g, x, y, L, T_, a, fill) { g.save(); g.translate(x, y); g.rotate(a); g.fillStyle = fill; g.fillRect(-L / 2, -T_ / 2, L, T_); g.restore(); }
@@ -135,8 +135,11 @@ function draw(g, t) {
     g.save(); g.translate(xc, H / 2); g.rotate(A - Math.PI / 2); g.fillStyle = RED; g.fillRect(-90, -H, 180, H * 2); g.restore();
   }
   // captions: paper on an ink plate, the spoken word in red-orange
-  captions(g, t, { family: 'Osw', weight: 700, size: 74, upper: true, color: PAPER, accent: '#FF5B45', pop: true,
-    plate: (g, x0, y0, x1, y1, a) => { g.fillStyle = INK; g.globalAlpha = .92 * a; g.fillRect(x0, y0, x1 - x0, y1 - y0); g.fillStyle = RED; g.fillRect(x0, y0, 12, y1 - y0); g.globalAlpha = 1; } });
+  // subtitles: bottom left, an ink bar at 90 % with a 10 px red tick (never centred)
+  { const c = capAt(t); if (c) { const o = { family: 'Osw', weight: 500 }, full = c.words.join(' ').toUpperCase(), shown = c.words.slice(0, c.active + 1).join(' ').toUpperCase();
+    const f = fit(g, full, 760, 150, { ...o, size: 60, min: 34, maxLines: 2, lh: 1.12 }); font(g, f.size, o); const w = Math.max(...f.widths) + 56, h = f.h + 34, x0 = SAFE.x0, y0 = 1350, u = eo(seg(t - c.t0, 0, .12));
+    g.globalAlpha = .9; g.fillStyle = INK; g.fillRect(x0, y0, w * u, h); g.globalAlpha = 1; g.fillStyle = RED; g.fillRect(x0, y0, 10, h);
+    block(g, 'caption', shown, { x: x0 + 30, y: y0 + 17, w: 760, h: 150 }, { ...o, size: f.size, min: f.size, lh: 1.12, color: PAPER, cap: true, layer: 9 }); } }
   // film grain over everything
   const r = mulberry(frameNo(t) + 7); g.fillStyle = 'rgba(20,18,16,.05)'; for (let i = 0; i < 220; i++) g.fillRect(r() * W, r() * H, 2, 2);
 }
