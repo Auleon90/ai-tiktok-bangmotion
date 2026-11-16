@@ -1,0 +1,111 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Newsreel · portrait kit</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}</style>
+<script src="props.js"></script></head><body>
+<canvas id="c"></canvas>
+<script type="module">
+// 1920s Newsreel — portrait kit. Look and motion from the Lemo-Opuscar demo (MIT code): the whole frame is a rounded film gate;
+// footage (FLUX photos graded to silver-gelatin) pushes in with gate weave and flicker; film look = cream multiply, lifted blacks,
+// vignette, vertical scratches and dust; Limelight titles in a silver gradient that scale in with a back-ease;
+// art-deco intertitle cards (ruled double border drawn on, corner fans, rotating sunburst, searchlight sheen); subtitles on a dark band.
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, eio, ss, back, hash, vnoise, mk, at, SC, IMG, cover, graded, block, text, captions, stdBody, boot } from './kit.js';
+
+const FPS = 24, frameOf = t => Math.floor(t * FPS + 1e-6);   // the demo's 24 fps film cadence, kept for grain and weave
+const PIC = mk(W, H), P = PIC.getContext('2d');
+let GR = {};
+function prep() { for (const k in IMG) GR[k] = graded(IMG[k], 'grayscale(1) sepia(.12) contrast(1.25) brightness(.95)', 1080, 1440); }
+
+function silver(g, s, x, y, size) {
+  g.lineJoin = 'round'; g.lineWidth = size * .12; g.strokeStyle = '#0c0b0a'; g.strokeText(s, x, y);
+  const gr = g.createLinearGradient(0, y - size * .78, 0, y + size * .1);
+  gr.addColorStop(0, '#ffffff'); gr.addColorStop(.48, '#d9d4ca'); gr.addColorStop(.52, '#9e978a'); gr.addColorStop(1, '#efebe2');
+  g.fillStyle = gr; g.fillText(s, x, y);
+}
+const TH = {
+  align: 'center', rise: 0, accent: '#efe7d6',
+  title: { family: 'Limelight', weight: 400, size: 130, min: 48, lh: 1.08, upper: true, paint: silver },
+  quote: { family: 'Limelight', weight: 400, size: 84, min: 40, lh: 1.18, paint: silver },
+  num: { family: 'Limelight', weight: 400, size: 230, min: 70, lh: 1, paint: silver },
+  body: { family: 'Osw', weight: 500, size: 50, min: 28, lh: 1.2, ls: .04, color: '#ece6da', stroke: 'rgba(8,7,6,.9)', strokeW: 6 },
+  label: { family: 'Osw', weight: 500, size: 40, min: 24, ls: .18, upper: true, color: '#d9d2c3' },
+  arabic: { family: 'Amiri', weight: 700, color: '#f3eee4', stroke: '#0c0b0a', strokeW: 8 },
+  rule: (g, x, y, w, a) => { g.fillStyle = `rgba(217,210,195,${a})`; g.fillRect(x + w / 2 - 220 * a, y, 440 * a, 3); },
+  bullet: (g, k, x, y, s, a) => { g.globalAlpha = a; g.strokeStyle = '#d9d2c3'; g.lineWidth = 3; g.strokeRect(x + 6, y + 6, s - 12, s - 12); g.font = `${s * .55}px Limelight`; g.textAlign = 'center'; g.fillStyle = '#efe7d6'; g.fillText(String(k + 1), x + s / 2, y + s * .7); g.textAlign = 'left'; g.globalAlpha = 1; },
+};
+// scale-in like decoTitle: wrap the whole body in a zoom from 1.25 to 1 with back easing
+function zoomIn(g, t, t0, cx, cy, fn) { const u = seg(t, t0, t0 + .5), s = lerp(1.25, 1, back(u, 1.3)); g.save(); g.globalAlpha = clamp(u * 3); g.translate(cx, cy); g.scale(s, s); g.translate(-cx, -cy); fn(); g.restore(); }
+
+function sunburst(g, cx, cy, rot, a) {
+  g.save(); g.globalAlpha = a;
+  for (let i = 0; i < 36; i++) { const a0 = rot + i * TAU / 36; g.fillStyle = i % 2 ? '#2a2723' : '#1b1916'; g.beginPath(); g.moveTo(cx, cy); g.arc(cx, cy, 2400, a0, a0 + TAU / 72); g.closePath(); g.fill(); }
+  g.restore();
+}
+function card(g, t, s) {      // the intertitle
+  g.fillStyle = '#0f0e0d'; g.fillRect(0, 0, W, H);
+  sunburst(g, W / 2, 760, t * .05, .55);
+  const z = 1 + .05 * ss(seg(t, s.t0, s.t1)); g.save(); g.translate(W / 2, 760); g.scale(z, z); g.translate(-W / 2, -760);
+  const u = eo(seg(t, s.t0 + .05, s.t0 + .45)), bx = 60, by = 150, bw = W - 120, bh = 1180, per = 2 * (bw + bh);
+  g.fillStyle = 'rgba(15,14,13,.9)'; g.fillRect(bx, by, bw, bh);
+  g.strokeStyle = '#d9d2c3'; g.lineWidth = 4; g.setLineDash([per * u, per]); g.strokeRect(bx, by, bw, bh);
+  g.lineWidth = 1.5; g.strokeRect(bx + 16, by + 16, bw - 32, bh - 32); g.setLineDash([]);
+  for (const [cx, cy, a0] of [[bx, by, 0], [bx + bw, by, Math.PI / 2], [bx + bw, by + bh, Math.PI], [bx, by + bh, -Math.PI / 2]])
+    for (let k = 0; k < 5; k++) { g.strokeStyle = `rgba(217,210,195,${.9 * u})`; g.lineWidth = 2; g.beginPath(); g.arc(cx, cy, 30 + k * 16, a0, a0 + Math.PI / 2); g.stroke(); }
+  g.restore();
+  if (s.eyebrow) block(g, 'eyebrow', s.eyebrow, { x: SAFE.x0 + 40, y: by + 64, w: SAFE.x1 - SAFE.x0 - 80, h: 60 }, { ...TH.label, align: 'center', reveal: () => ({ a: eo(seg(t, s.t0 + .2, s.t0 + .6)) }) });
+  zoomIn(g, t, s.t0 + .12, W / 2, 760, () => stdBody(g, t, s, { x: SAFE.x0 + 40, y: by + 150, w: SAFE.x1 - SAFE.x0 - 80, h: bh - 230 }, TH));
+  // searchlight sheen across the card at 1 s and 2.5 s
+  for (const T of [s.t0 + 1, s.t0 + 2.5]) {
+    const k = seg(t, T, T + .55); if (k <= 0 || k >= 1) continue;
+    const x = lerp(-300, W + 300, eio(k)), gr = g.createLinearGradient(x - 160, 0, x + 160, 0);
+    gr.addColorStop(0, 'rgba(255,250,235,0)'); gr.addColorStop(.5, 'rgba(255,250,235,.2)'); gr.addColorStop(1, 'rgba(255,250,235,0)');
+    g.save(); g.globalCompositeOperation = 'lighter'; g.fillStyle = gr; g.transform(1, 0, -.35, 1, 0, 0); g.fillRect(x + 40, 0, 320, H); g.restore();
+  }
+}
+function footage(g, t, s) {   // a photo shot: push-in, text on a dark lower third inside the safe area
+  g.fillStyle = '#0d0c0b'; g.fillRect(0, 0, W, H);
+  const push = lerp(1.0, 1.07, ss(seg(t, s.t0, s.t1)));
+  cover(g, GR[s.i], 0, 0, W, 1440, push, .5, .45);
+  const gr = g.createLinearGradient(0, 640, 0, 1440); gr.addColorStop(0, 'rgba(10,9,8,0)'); gr.addColorStop(.45, 'rgba(10,9,8,.82)'); gr.addColorStop(1, '#0d0c0b');
+  g.fillStyle = gr; g.fillRect(0, 640, W, 800); g.fillStyle = '#0d0c0b'; g.fillRect(0, 1440, W, H - 1440);
+  if (s.eyebrow) block(g, 'eyebrow', s.eyebrow, { x: SAFE.x0, y: SAFE.y0, w: SAFE.x1 - SAFE.x0, h: 56 }, { ...TH.label, align: 'left', stroke: 'rgba(8,7,6,.9)', strokeW: 6, reveal: () => ({ a: eo(seg(t, s.t0 + .2, s.t0 + .6)) }) });
+  const s2 = s.type === 'image' ? { ...s, type: 'headline' } : s;
+  zoomIn(g, t, s.t0 + .25, W / 2, 1060, () => stdBody(g, t, s2, { x: SAFE.x0, y: 840, w: SAFE.x1 - SAFE.x0, h: SAFE.y1 - 840 }, { ...TH, title: { ...TH.title, size: 96 }, num: { ...TH.num, size: 150 } }));
+}
+function filmLook(g, f, strength) {
+  g.save();
+  g.globalCompositeOperation = 'multiply'; g.fillStyle = '#efe7d6'; g.fillRect(0, 0, W, H);
+  g.globalCompositeOperation = 'screen'; g.fillStyle = '#17140f'; g.fillRect(0, 0, W, H);
+  g.globalCompositeOperation = 'source-over';
+  const gr = g.createRadialGradient(W / 2, H / 2, H * .32, W / 2, H / 2, H * .78);
+  gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, `rgba(0,0,0,${.55 * strength + .2})`); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  for (let k = 0; k < 3; k++) {
+    const id = Math.floor((f + k * 5) / 9) * 7 + k; if (hash(id * 1.3) > .55) continue;
+    const x = hash(id * 2.1) * W + (f % 9) * (hash(id * 3.7) - .5) * 6, y0 = hash(id * 5.1) * H * .4, y1 = H - hash(id * 6.3) * H * .3;
+    g.fillStyle = hash(id) > .5 ? 'rgba(255,250,240,.2)' : 'rgba(0,0,0,.28)'; g.fillRect(x, y0, 1 + hash(id * 8.2) * 1.6, y1 - y0);
+  }
+  const n = Math.floor(hash(f * .91) * (3 + 3 * strength));
+  for (let k = 0; k < n; k++) { const s = f * 13 + k * 3.1, x = hash(s) * W, y = hash(s + 1) * H, r = 1 + hash(s + 2) * 4;
+    g.fillStyle = hash(s + 3) > .35 ? 'rgba(10,8,6,.55)' : 'rgba(255,252,245,.45)'; g.beginPath(); g.ellipse(x, y, r, r * (.4 + hash(s + 4)), hash(s + 5) * 3, 0, TAU); g.fill(); }
+  g.restore();
+}
+
+function draw(g, t) {
+  const { s } = at(t), f = frameOf(t), foot = !!GR[s.i];
+  // the picture is drawn to PIC (film look applies to it), then printed through the gate with flicker and weave
+  P.setTransform(1, 0, 0, 1, 0, 0); P.clearRect(0, 0, W, H);
+  if (foot) footage(P, t, s); else card(P, t, s);
+  filmLook(P, f, foot ? 1 : .4);
+  // a short white flash on every cut, as a splice
+  if (t - s.t0 < 1 / FPS && s.i > 0) { P.fillStyle = 'rgba(255,252,245,.55)'; P.fillRect(0, 0, W, H); }
+  g.fillStyle = '#000'; g.fillRect(0, 0, W, H);
+  const flick = foot ? 1 + (hash(f * .37) - .5) * .07 + (vnoise(t * 3) - .5) * .05 : 1 + (hash(f * .37) - .5) * .025;
+  const wx = foot ? (vnoise(f * .21) - .5) * 3.2 : 0, wy = foot ? (vnoise(f * .17 + 9) - .5) * 4.4 : 0;
+  g.save(); g.beginPath(); g.roundRect(0, 0, W, H, 26); g.clip(); g.filter = `brightness(${flick.toFixed(3)})`; g.drawImage(PIC, wx, wy); g.filter = 'none'; g.restore();
+  // dark subtitle band + period subtitles (white with a dark keyline, the spoken word in warm cream)
+  const gr = g.createLinearGradient(0, 1270, 0, H); gr.addColorStop(0, 'rgba(10,9,8,0)'); gr.addColorStop(.12, 'rgba(10,9,8,.85)'); gr.addColorStop(.5, 'rgba(10,9,8,.9)'); gr.addColorStop(1, 'rgba(10,9,8,.6)');
+  g.fillStyle = gr; g.fillRect(0, 1270, W, H - 1270);
+  captions(g, t, { family: 'Osw', weight: 500, size: 66, ls: .03, color: '#fbf8f1', accent: '#f2d48a', stroke: 'rgba(8,7,6,.92)', strokeW: 9 });
+}
+await boot({ fonts: [['Limelight', 'fonts/lemo/limelight-400.woff2'], ['Osw', 'fonts/lemo/oswald-500.woff2', '500'], ['Amiri', 'fonts/amiri-arabic-700-normal.woff2', '700']],
+  draw: (g, t) => { if (!GR.done) { prep(); GR.done = 1; } draw(g, t); } });
+</script></body></html>

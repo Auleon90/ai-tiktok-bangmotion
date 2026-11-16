@@ -19,7 +19,8 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
    1. **HyperFrames + GSAP + Lottie** (`hyperframes/`) — render per frame, ±2 menit
    2. **Remotion + Lottie** (`remotion/`) — kualitas tertinggi, ±20 menit
    3. **Manim** (`manim/`, `.venv-manim`) — sains/matematika, ±1 menit
-   4. **Cepat** (bang-motion klasik: HTML + rekam layar) — draf, ±1,5 menit
+   4. **Lemo native** (`lemo/`) — kode demo Lemo-Opuscar diadaptasi ke 9:16, tampilan persis 6 gaya: kino-montage, newsreel,
+      stick-explainer, flat-space-explainer, paper-lantern, gilded-illumination (`python3 scripts/styles.py native`) — ±1 menit
    5. **Auto** — Claude memilih sesuai topik & storyboard (aturan di skill)
 3. Gambar AI (Cloudflare FLUX) untuk TEMA APA PUN: nilai tiap scene — kalau adegannya punya sesuatu yang bisa dilihat
    (tempat, benda, alam, hewan, peristiwa, proses, suasana) dan gambar membuatnya lebih menarik, pakai gambar. Biasanya 3–6 gambar per video,
@@ -31,13 +32,13 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
 4. Audio: musik orisinal (`music`: warm/epic/tense/calm/playful/sacred/none) + SFX otomatis dari `scripts/score.py`
    (modul `audio/lemo/`, MIT dari Lemo-Opuscar). Sirah → `sacred` atau `none`.
 5. Mode 1 WAJIB memakai salah satu dari 99 gaya Lemo-Opuscar (usulkan di storyboard; template polos hanya jika user minta; halaman bergaya wajib menampilkan gambar FLUX) (`scripts/styles.py`, diunduh ke `.lemo/` — JANGAN commit STYLE.md, lisensi CC BY-NC).
-6. QA lokal & gratis SEBELUM render: jalankan dulu `produce.py ... --check-only` (VO + `hyperframes check` / still per scene Remotion
+6. QA lokal & gratis SEBELUM render: jalankan dulu `produce.py ... --check-only` (VO + `hyperframes check` / cek komposisi 9:16 Lemo native / still per scene Remotion
    → `output/qa_precheck.md`, `output/qa_prerender.jpg`). Render otomatis DIHENTIKAN kalau ada masalah nyata; tumpukan yang disengaja
    masuk `"qa_allow"` di storyboard. Setelah render: QA file akhir (`output/qa_report.md`, `output/qa_sheet.jpg`). Baca sebelum kirim.
 7. Semua mode berakhir di `output/final.mp4` dengan VO Cartesia — tidak pernah berhenti di halaman HTML.
 
 Detail lengkap: `.claude/skills/bang-motion/SKILL.md`. Semua mode dijalankan lewat `scripts/produce.py`.
-Contoh: `examples/uhud.storyboard.json` (sirah, mode 1/2), `examples/angsa-emas.storyboard.json` (fabel + gambar AI), `examples/kopi-riso.storyboard.json` + `examples/kopi-riso.hf.html` (gaya Risograph), `examples/pythagoras.storyboard.json` + `examples/pythagoras_manim.py` (mode 3).
+Contoh: `examples/uhud.storyboard.json` (sirah, mode 1/2), `examples/angsa-emas.storyboard.json` (fabel + gambar AI), `examples/kopi-riso.storyboard.json` + `examples/kopi-riso.hf.html` (gaya Risograph), `examples/pythagoras.storyboard.json` + `examples/pythagoras_manim.py` (mode 3), `examples/insyirah.lemo.storyboard.json` (mode 4).
 Konten sirah: JANGAN menggambarkan sosok/wajah Nabi ﷺ atau sahabat — pakai peta, simbol, kaligrafi.
 
 ## Environment variables yang diperlukan

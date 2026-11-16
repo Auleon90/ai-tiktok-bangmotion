@@ -1,0 +1,86 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Flat Space Explainer · portrait kit</title>
+<style>html,body{margin:0;background:#1D2052;overflow:hidden}canvas{display:block}</style>
+<script src="props.js"></script></head><body>
+<canvas id="c"></canvas>
+<script type="module">
+// Flat Space Explainer — portrait kit. Look and motion from the Lemo-Opuscar demo (MIT code): night #1D2052 with two lifted panels,
+// seeded twinkling stars, flat planets with a hard terminator shadow and one rim highlight, dashed orbits, a spiral of dots,
+// cream Jost headings, sun/coral/mint accents, the field-of-view HUD bar that counts its number up, zoom transitions between scenes.
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, eio, back, mulberry, mk, at, SC, IMG, cover, block, text, captions, stdBody, boot, reg, countUp } from './kit.js';
+
+const C = { night: '#1D2052', p1: '#252A63', p2: '#30367C', blue: '#4D7CFE', blueD: '#3A5FD9', coral: '#FF6B5E', coralD: '#E14B45', cream: '#FFF4E2',
+  creamD: '#F0DCC0', mint: '#3FD8AE', mintD: '#22B38C', mist: '#9298D4', sun: '#FFC84A', sunD: '#F2A12F' };
+const PLAN = [[C.sun, C.sunD], [C.coral, C.coralD], [C.mint, C.mintD], [C.blue, C.blueD]];
+const TH = {
+  align: 'left', rise: 34, accent: C.sun,
+  title: { family: 'Jost', weight: 600, size: 120, min: 46, lh: 1.04, ls: -.02, color: C.cream },
+  quote: { family: 'Jost', weight: 400, size: 74, min: 36, lh: 1.2, color: C.cream },
+  num: { family: 'Jost', weight: 600, size: 210, min: 64, lh: 1, ls: -.03, color: C.sun },
+  body: { family: 'Jost', weight: 400, size: 48, min: 28, lh: 1.25, color: C.mist },
+  label: { family: 'Jost', weight: 600, size: 32, min: 22, ls: .14, upper: true, color: C.coral },
+  arabic: { family: 'Amiri', weight: 700, color: C.cream },
+  rule: (g, x, y, w, a) => { g.fillStyle = C.sun; g.beginPath(); g.roundRect(x, y - 4, 140 * a, 8, 4); g.fill(); },
+  bullet: (g, k, x, y, s, a) => { const [c, d] = PLAN[k % 4]; planet(g, x + s / 2, y + s / 2, s * .36 * back(a, 2), c, d, .9); },
+};
+let STARS;
+function prep() { const r = mulberry(42); STARS = [...Array(260)].map(() => ({ x: r() * W, y: r() * H, r: .8 + r() * 2.4, ph: r() * TAU, sp: .6 + r() * 2 })); }
+function planet(g, x, y, R, c, d, rot = .7) {
+  if (R <= 0) return; g.save(); g.beginPath(); g.arc(x, y, R, 0, TAU); g.clip(); g.fillStyle = c; g.fillRect(x - R, y - R, 2 * R, 2 * R);
+  g.fillStyle = d; g.beginPath(); g.arc(x + Math.cos(rot) * R * .55, y + Math.sin(rot) * R * .55, R * 1.05, 0, TAU); g.fill();
+  g.restore(); g.strokeStyle = 'rgba(255,244,226,.85)'; g.lineWidth = Math.max(2, R * .05); g.beginPath(); g.arc(x, y, R * .82, Math.PI * 1.1, Math.PI * 1.45); g.stroke();
+}
+function orbit(g, x, y, rx, ry, u, col = C.mist) { g.save(); g.setLineDash([10, 14]); g.lineDashOffset = -u * 400; g.strokeStyle = col; g.globalAlpha = .55; g.lineWidth = 3; g.beginPath(); g.ellipse(x, y, rx, ry, -.25, 0, TAU * clamp(u * 1.4)); g.stroke(); g.restore(); }
+function galaxy(g, x, y, R, t, a) {
+  const r = mulberry(7); g.save(); g.globalAlpha = a;
+  for (let i = 0; i < 900; i++) { const arm = i % 2, k = r(), th = k * 3.6 + arm * Math.PI + t * .05, rr = k * R + (r() - .5) * R * .12;
+    g.fillStyle = k < .2 ? C.cream : k < .5 ? (r() < .5 ? C.sun : C.blue) : C.mist; g.beginPath(); g.arc(x + Math.cos(th) * rr, y + Math.sin(th) * rr * .55, 1.2 + r() * 2.4 * (1 - k), 0, TAU); g.fill(); }
+  g.fillStyle = C.cream; g.beginPath(); g.arc(x, y, R * .08, 0, TAU); g.fill(); g.restore();
+}
+// a flat motif per scene in the lower part of the safe area (decor; clear of the text box)
+function motif(g, t, s, cy) {
+  const lt = t - s.t0, u = eo(seg(lt, .1, .9)), [c, d] = PLAN[s.i % 4];
+  if (s.type === 'title') { galaxy(g, 560, cy, 300, t, u); }
+  else if (s.type === 'counter') { const it = s.items || []; it.forEach((x, k) => { const R = (k ? 70 : 130) * back(seg(lt, .3 + k * .3, .8 + k * .3), 1.6); planet(g, k ? 840 : 300, cy + (k ? -40 : 30), R, ...PLAN[(k + 1) % 4]); }); orbit(g, 560, cy, 420, 140, u); }
+  else if (s.type === 'ayat' || s.type === 'quote') { planet(g, 540, cy, 130 * back(seg(lt, .2, .9), 1.3), C.sun, C.sunD, 2.4); orbit(g, 540, cy, 330, 100, u, C.sun); }
+  else { const R = 150 * back(seg(lt, .2, .8), 1.5); planet(g, 760, cy, R, c, d); orbit(g, 760, cy, 300, 110, u); const a = t * .6 + s.i; planet(g, 760 + Math.cos(a) * 300, cy + Math.sin(a) * 110 * .9 - Math.cos(a) * 70, 34 * u, C.cream, C.creamD); }
+}
+
+function draw(g, t) {
+  const { s } = at(t), lt = t - s.t0, img = IMG[s.i];
+  g.fillStyle = C.night; g.fillRect(0, 0, W, H);
+  g.fillStyle = C.p1; g.beginPath(); g.ellipse(980, 260, 700, 520, 0, 0, TAU); g.fill(); g.fillStyle = C.p2; g.globalAlpha = .45; g.beginPath(); g.ellipse(980, 260, 420, 300, 0, 0, TAU); g.fill(); g.globalAlpha = 1;
+  for (const st of STARS) { const a = .35 + .65 * (.5 + .5 * Math.sin(t * st.sp + st.ph)); g.fillStyle = `rgba(255,244,226,${a})`; g.beginPath(); g.arc(st.x, st.y, st.r, 0, TAU); g.fill(); }
+  { const [c, d] = PLAN[(s.i + 2) % 4], rise = (1 - eo(seg(lt, 0, .8))) * 120; planet(g, 540, 2420 + rise, 860, c, d, -1.9);
+    g.strokeStyle = 'rgba(255,244,226,.25)'; g.lineWidth = 3; g.setLineDash([10, 14]); g.beginPath(); g.ellipse(540, 2420 + rise, 960, 960, 0, Math.PI * 1.05, Math.PI * 1.95); g.stroke(); g.setLineDash([]); }
+  // zoom-through on each cut (the demo's powers-of-ten camera): the new scene grows from .8 to 1
+  const z = s.i ? lerp(.82, 1, eio(seg(lt, 0, .5))) : 1; g.save(); g.translate(W / 2, 760); g.scale(z, z); g.translate(-W / 2, -760); g.globalAlpha = clamp(lt / .3);
+  if (s.eyebrow) block(g, 'eyebrow', s.eyebrow, { x: SAFE.x0, y: SAFE.y0, w: SAFE.x1 - SAFE.x0, h: 48 }, TH.label);
+  const top = SAFE.y0 + 70;
+  if (img) {
+    // a porthole: the photo in a cream ring with a dashed outer orbit
+    const R = 250, cx = 540, cy = 930, u = back(seg(lt, .15, .6), 1.4);
+    orbit(g, cx, cy, R + 70, R + 70, eo(seg(lt, .2, 1)), C.sun);
+    g.save(); g.beginPath(); g.arc(cx, cy, R * u, 0, TAU); g.clip(); cover(g, img, cx - R, cy - R, 2 * R, 2 * R, 1.05 + lt * .01); g.restore();
+    g.strokeStyle = C.cream; g.lineWidth = 16; g.beginPath(); g.arc(cx, cy, R * u, 0, TAU); g.stroke();
+    reg('photo', '[photo]', { x0: cx - R - 8, y0: cy - R - 8, x1: cx + R + 8, y1: cy + R + 8 });
+    const s2 = s.type === 'image' ? { ...s, type: 'headline' } : s;
+    stdBody(g, t, s2, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: cy - R - 40 - top }, { ...TH, title: { ...TH.title, size: 90 }, num: { ...TH.num, size: 120 } });
+  } else {
+    const split = s.type === 'list' ? 1040 : s.type === 'counter' ? 1000 : 820;
+    stdBody(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: split - top }, TH);
+    if (s.type !== 'list') motif(g, t, s, split + (1190 - split) / 2 + 10);
+  }
+  g.restore();
+  // field-of-view HUD (bottom of the safe area): scene index on a dial + bar
+  const hy = 1226, k = (s.i + Math.min(1, lt / s.d)) / SC.length;
+  g.strokeStyle = 'rgba(146,152,212,.5)'; g.lineWidth = 3; g.beginPath(); g.moveTo(SAFE.x0, hy); g.lineTo(SAFE.x1 - 140, hy); g.stroke();
+  g.strokeStyle = C.sun; g.lineWidth = 5; g.beginPath(); g.moveTo(SAFE.x0, hy); g.lineTo(lerp(SAFE.x0, SAFE.x1 - 140, k), hy); g.stroke();
+  g.fillStyle = C.sun; g.beginPath(); g.arc(lerp(SAFE.x0, SAFE.x1 - 140, k), hy, 9, 0, TAU); g.fill();
+  text(g, 'hud', `${String(s.i + 1).padStart(2, '0')} / ${String(SC.length).padStart(2, '0')}`, SAFE.x1, hy + 11, { family: 'Jost', weight: 600, size: 30, color: C.mist, align: 'right', layer: 5 });
+  captions(g, t, { family: 'Jost', weight: 600, size: 66, color: C.cream, accent: C.sun, pop: true,
+    plate: (g, x0, y0, x1, y1, a) => { g.globalAlpha = .9 * a; g.fillStyle = C.p2; g.beginPath(); g.roundRect(x0, y0, x1 - x0, y1 - y0, 30); g.fill(); g.globalAlpha = 1; } });
+}
+await boot({ fonts: [['Jost', 'fonts/lemo/jost-600.woff2', '600'], ['Jost', 'fonts/lemo/jost-400.woff2', '400'], ['Amiri', 'fonts/amiri-arabic-700-normal.woff2', '700']],
+  draw: (g, t) => { if (!STARS) prep(); draw(g, t); } });
+</script></body></html>

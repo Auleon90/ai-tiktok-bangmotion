@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Lemo-Opuscar style library helper (styles are downloaded by setup.sh into .lemo/, git-ignored).
 
-  python3 scripts/styles.py list                 # all styles: slug, name, category, uses
+  python3 scripts/styles.py native               # ★ styles with a Lemo-native kit (render mode Lemo native)
+  python3 scripts/styles.py list                 # all styles: slug, name, category, uses (★ = native kit)
   python3 scripts/styles.py search <words...>    # match slug/name/category/uses/logline
   python3 scripts/styles.py show <slug>          # path to STYLE.md + metadata
 
@@ -27,12 +28,20 @@ def load():
     return out
 
 
+NATIVE = json.load(open(os.path.join(ROOT, "lemo", "kits", "kits.json")))
+
+
 def row(d):
-    return f"{d['slug']:<24} {d['en']:<28} {d.get('category_en',''):<24} {', '.join(d.get('uses', []))[:60]}"
+    mark = "★" if d["slug"] in NATIVE else " "
+    return f"{mark} {d['slug']:<24} {d['en']:<28} {d.get('category_en',''):<24} {', '.join(d.get('uses', []))[:60]}"
 
 
 def main():
     cmd = sys.argv[1] if len(sys.argv) > 1 else "list"
+    if cmd == "native":   # styles with a Lemo-native portrait kit (lemo/kits/)
+        for slug, k in NATIVE.items():
+            print(f"★ {slug:<22} {k['name']:<24} {', '.join(k['themes'])}")
+        return
     styles = load()
     if cmd == "list":
         for d in styles:

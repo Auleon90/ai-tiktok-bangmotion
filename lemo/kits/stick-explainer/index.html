@@ -1,0 +1,108 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Stick-figure Explainer · portrait kit</title>
+<style>html,body{margin:0;background:#F3F0EA;overflow:hidden}canvas{display:block}</style>
+<script src="props.js"></script></head><body>
+<canvas id="c"></canvas>
+<script type="module">
+// Stick-figure Explainer — portrait kit. Look and motion from the Lemo-Opuscar demo (MIT code): warm paper #F3F0EA, one ink #24242C,
+// mute #9C978C, one signal red #EB4A2A for "you" and the key number; a single line weight for every figure (round caps, each limb one
+// quadratic curve, round head); figures breathe and sway on damped noise, link hands, pop in with overshoot; Jost with tight tracking.
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, back, vnoise, at, SC, IMG, cover, block, text, captions, stdBody, boot, reg } from './kit.js';
+
+const C = { paper: '#F3F0EA', ink: '#24242C', mute: '#9C978C', tint: '#E2DDD2', sig: '#EB4A2A', soft: '#F4C3B4' };
+const LW = 7;
+const TH = {
+  align: 'left', rise: 26, accent: C.sig,
+  title: { family: 'Jost', weight: 600, size: 110, min: 44, lh: 1.08, ls: -.025, color: C.ink },
+  quote: { family: 'Jost', weight: 400, size: 76, min: 36, lh: 1.2, ls: -.01, color: C.ink },
+  num: { family: 'Jost', weight: 600, size: 200, min: 64, lh: 1, ls: -.03, color: C.sig },
+  body: { family: 'Jost', weight: 400, size: 50, min: 28, lh: 1.25, color: C.ink },
+  label: { family: 'Jost', weight: 600, size: 34, min: 22, ls: .12, upper: true, color: C.mute },
+  arabic: { family: 'Amiri', weight: 700, color: C.ink },
+  rule: (g, x, y, w, a) => { g.strokeStyle = C.sig; g.lineWidth = 5; g.lineCap = 'round'; g.beginPath(); g.moveTo(x, y); g.lineTo(x + 160 * a, y); g.stroke(); },
+  bullet: (g, k, x, y, s, a) => { const r = s * .36 * back(a, 2); g.lineWidth = 5; g.strokeStyle = k === 0 ? C.sig : C.ink; g.beginPath(); g.arc(x + s / 2, y + s / 2, Math.max(0, r), 0, TAU); g.stroke(); },
+};
+
+// ---------------------------------------------------------------- the figure
+// ground point (x,y), height S; pose: {lean, armL, armR (radians from straight down, + = outward), wave, look}
+function figure(g, x, y, S, col, t, seed, pose = {}, appear = 1) {
+  if (appear <= 0) return null;
+  const sc = back(clamp(appear), 1.8), br = Math.sin(t * 2.1 + seed) * .012, sw = (vnoise(t * .7, seed) - .5) * .06 + (pose.lean || 0);
+  g.save(); g.translate(x, y); g.scale(sc, sc); g.rotate(sw * .5);
+  g.lineWidth = LW * (S / 300) ** .4 / sc; g.lineCap = 'round'; g.lineJoin = 'round'; g.strokeStyle = col;
+  const hipH = S * .44, sp = S * .32, hr = S * .1, hip = [0, -hipH], neck = [Math.sin(sw) * sp * .3, -hipH - sp * (1 + br)];
+  const leg = s => { g.beginPath(); g.moveTo(...hip); g.quadraticCurveTo(s * S * .07, -hipH * .5, s * S * .1, 0); g.stroke(); };
+  leg(-1); leg(1);
+  g.beginPath(); g.moveTo(...hip); g.quadraticCurveTo(hip[0] + sw * 30, (hip[1] + neck[1]) / 2, ...neck); g.stroke();
+  const sh = [neck[0], neck[1] + S * .05], L = S * .3, hands = [];
+  for (const [s, a0] of [[-1, pose.armL ?? .35], [1, pose.armR ?? .35]]) {
+    const a = a0 + Math.sin(t * 1.7 + seed + s) * .05 + (s > 0 && pose.wave ? Math.sin(t * 9) * .35 : 0);
+    const hx = sh[0] + s * Math.sin(a) * L, hy = sh[1] + Math.cos(a) * L, ex = (sh[0] + hx) / 2 + s * S * .04, ey = (sh[1] + hy) / 2 + S * .03;
+    g.beginPath(); g.moveTo(...sh); g.quadraticCurveTo(ex, ey, hx, hy); g.stroke(); hands.push([hx, hy]);
+  }
+  const head = [neck[0] + (pose.look || 0) * hr * .3, neck[1] - hr * 1.15];
+  g.fillStyle = pose.fill ? col : C.paper; g.beginPath(); g.arc(head[0], head[1], hr, 0, TAU); g.fill(); g.stroke();
+  const m = g.getTransform(); g.restore();
+  return hands.map(([hx, hy]) => [m.a * hx + m.c * hy + m.e, m.b * hx + m.d * hy + m.f]);
+}
+function link(g, a, b, col, u) { if (!a || !b || u <= 0) return; g.strokeStyle = col; g.lineWidth = LW * .8; g.lineCap = 'round'; const mx = (a[0] + b[0]) / 2, my = Math.max(a[1], b[1]) + 22; g.beginPath(); g.moveTo(...a); g.quadraticCurveTo(lerp(a[0], mx, u), lerp(a[1], my, u), lerp(a[0], b[0], u), lerp(a[1], b[1], u)); g.stroke(); }
+function ground(g, y, u) { g.strokeStyle = C.tint; g.lineWidth = 3; g.beginPath(); g.moveTo(W / 2 - 470 * u, y); g.lineTo(W / 2 + 470 * u, y); g.stroke(); }
+
+// the figure stage below the text, chosen by scene type
+function stage(g, t, s, y0, y1) {
+  const lt = t - s.t0, gy = y1, S = Math.min(300, (y1 - y0) * .95), ap = k => seg(lt, .2 + k * .12, .55 + k * .12);
+  ground(g, gy + 4, eo(seg(lt, 0, .4)));
+  const type = s.type;
+  if (type === 'title' || type === 'counter' || type === 'tribute') {
+    const n = type === 'counter' ? 7 : 6, xs = [...Array(n)].map((_, k) => lerp(160, 920, k / (n - 1))), S2 = S * .85;
+    const reds = type === 'counter' ? Math.round(lerp(0, n, eo(seg(lt, .5, 1.6)))) : -1;
+    const H_ = xs.map((x, k) => figure(g, x, gy, S2, (type === 'title' ? (k === 0 || k === n - 1) : k < reds) ? C.sig : C.ink, t, k * 3.1, { armL: .9, armR: .9 }, ap(k)));
+    for (let k = 0; k < n - 1; k++) link(g, H_[k] && H_[k][1], H_[k + 1] && H_[k + 1][0], C.ink, eo(seg(lt, .9 + k * .1, 1.2 + k * .1)));
+  } else if (type === 'quote') {
+    figure(g, 300, gy, S, C.sig, t, 1, { armR: 2.2, look: 1 }, ap(0));
+    const u = eo(seg(lt, .5, .9)); g.strokeStyle = C.ink; g.lineWidth = 5; g.beginPath(); g.ellipse(640, gy - S * .95, 230 * u, 110 * u, 0, 0, TAU); g.stroke();
+    g.fillStyle = C.ink; for (let k = 0; k < 3; k++) { g.beginPath(); g.arc(570 + k * 70, gy - S * .95, 12 * back(seg(lt, .9 + k * .15, 1.2 + k * .15), 2), 0, TAU); g.fill(); }
+  } else if (type === 'ayat') {
+    const u = eo(seg(lt, .3, 1.2)); g.strokeStyle = C.sig; g.lineWidth = 6; g.beginPath(); g.arc(780, gy - S * 1.05, 80 * u, 0, TAU); g.stroke();
+    for (let k = 0; k < 10; k++) { const a = k / 10 * TAU + t * .15, r0 = 110, r1 = 110 + 40 * u; g.beginPath(); g.moveTo(780 + Math.cos(a) * r0, gy - S * 1.05 + Math.sin(a) * r0); g.lineTo(780 + Math.cos(a) * r1, gy - S * 1.05 + Math.sin(a) * r1); g.stroke(); }
+    figure(g, 360, gy, S, C.ink, t, 2, { armL: 2.5, armR: 2.5, look: 1 }, ap(0));
+  } else if (type === 'list') {
+    figure(g, 820, gy, S * .9, C.sig, t, 4, { armL: 2.0, wave: true }, ap(0));
+    figure(g, 560, gy, S * .78, C.ink, t, 5, { look: 1 }, ap(1));
+  } else {
+    figure(g, 330, gy, S, C.sig, t, 6, { armR: 2.4, look: 1 }, ap(0));
+    figure(g, 700, gy, S * .9, C.ink, t, 7, { armL: .2, armR: .5, lean: -.08 }, ap(1));
+    const u = seg(lt, .8, 1.1); if (u > 0) text(g, 'q', '?', 760, gy - S * 1.12, { family: 'Jost', weight: 600, size: 90 * back(u, 2), color: C.sig, layer: 4 });
+  }
+}
+
+function draw(g, t) {
+  const { s } = at(t), lt = t - s.t0, img = IMG[s.i];
+  g.fillStyle = C.paper; g.fillRect(0, 0, W, H);
+  // faint guide lines on the paper (the demo's construction grid)
+  g.strokeStyle = 'rgba(156,151,140,.13)'; g.lineWidth = 2; for (let y = 120; y < H; y += 120) { g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+  // slide the whole scene in from the right on each cut (the demo's camera pan)
+  const pan = (1 - eo(seg(lt, 0, .45))) * (s.i ? 160 : 0); g.save(); g.translate(pan, 0); g.globalAlpha = clamp(lt / .25);
+  if (s.eyebrow) block(g, 'eyebrow', s.eyebrow, { x: SAFE.x0, y: SAFE.y0, w: SAFE.x1 - SAFE.x0, h: 50 }, { ...TH.label, color: C.sig });
+  const top = SAFE.y0 + 70;
+  if (img) {
+    // a photo card held by the scene: ink outline, slight tilt, the presenter beside it
+    const u = back(seg(lt, .15, .6), 1.4), cy = 930, ch = 460, cw = 620, cardTop = cy - ch / 2 - 14;
+    g.save(); g.translate(560, cy); g.rotate(-.025); g.scale(u, u);
+    g.fillStyle = '#fff'; g.fillRect(-cw / 2 - 14, -ch / 2 - 14, cw + 28, ch + 28); g.save(); g.beginPath(); g.rect(-cw / 2, -ch / 2, cw, ch); g.clip(); g.filter = 'saturate(.75) contrast(1.05)'; cover(g, img, -cw / 2, -ch / 2, cw, ch, 1.03 + lt * .01); g.restore();
+    g.strokeStyle = C.ink; g.lineWidth = 5; g.strokeRect(-cw / 2 - 14, -ch / 2 - 14, cw + 28, ch + 28); g.restore();
+    reg('photo', '[photo]', { x0: 560 - cw / 2 - 14, y0: cardTop, x1: 560 + cw / 2 + 14, y1: cy + ch / 2 + 14 });
+    figure(g, 940, 1235, 260, C.sig, t, 9, { armL: 2.2, look: -1 }, seg(lt, .4, .8));
+    const s2 = s.type === 'image' ? { ...s, type: 'headline' } : s;
+    stdBody(g, t, s2, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: cardTop - 30 - top }, { ...TH, title: { ...TH.title, size: 76 }, num: { ...TH.num, size: 110 } });
+  } else {
+    const split = s.type === 'list' ? 1000 : s.type === 'ayat' ? 900 : 860;
+    stdBody(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: split - top }, TH);
+    stage(g, t, s, split + 20, 1240);
+  }
+  g.restore();
+  captions(g, t, { family: 'Jost', weight: 600, size: 64, ls: -.01, color: C.ink, accent: C.sig, pop: true,
+    plate: (g, x0, y0, x1, y1, a) => { g.globalAlpha = a; g.fillStyle = '#fff'; g.beginPath(); g.roundRect(x0, y0, x1 - x0, y1 - y0, 22); g.fill(); g.strokeStyle = C.ink; g.lineWidth = 4; g.stroke(); g.globalAlpha = 1; } });
+}
+await boot({ fonts: [['Jost', 'fonts/lemo/jost-600.woff2', '600'], ['Jost', 'fonts/lemo/jost-400.woff2', '400'], ['Amiri', 'fonts/amiri-arabic-700-normal.woff2', '700']], draw });
+</script></body></html>

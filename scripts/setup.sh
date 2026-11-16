@@ -34,7 +34,7 @@ LEMO="$ROOT/.lemo/lemo-opuscar"
 if [ ! -d "$LEMO/styles" ]; then
   mkdir -p "$ROOT/.lemo"
   git clone -q --depth 1 --filter=blob:none --sparse https://github.com/lemomo-ai/lemo-opuscar.git "$LEMO" \
-    && (cd "$LEMO" && git sparse-checkout set --no-cone '/styles/*/STYLE.md' '/styles/*/style.json' '/styles/*/poster.jpg' '/LICENSE' '/DIRECTOR.md') \
+    && (cd "$LEMO" && git sparse-checkout set --no-cone '/styles/*/STYLE.md' '/styles/*/style.json' '/styles/*/poster.jpg' '/styles/*/demo/*.html' '/styles/*/demo/*.js' '/styles/*/demo/src/' '/LICENSE' '/DIRECTOR.md') \
     || echo "  WARN: style library download failed"
 fi
 [ -d "$LEMO/styles" ] && echo "  styles: $(ls "$LEMO/styles" | wc -l)"

@@ -1,0 +1,92 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Paper Lantern · portrait kit</title>
+<style>html,body{margin:0;background:#0e1532;overflow:hidden}canvas{display:block}</style>
+<script src="props.js"></script></head><body>
+<canvas id="c"></canvas>
+<script type="module">
+// Paper Lantern — portrait kit. Look and motion from the Lemo-Opuscar demo (MIT code; its three.js paper stage is approximated in 2D):
+// a night of layered cut-paper sheets (ridges and fir lines) lit from behind, each sheet with fibre grain and a warm rim of light;
+// a backlit paper moon with a halo; glowing paper lanterns (#ffcd82) that drift up; Cormorant Garamond in warm cream; slow parallax.
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, ss, back, mulberry, vnoise, mk, at, SC, IMG, cover, duotone, block, captions, stdBody, boot, reg } from './kit.js';
+
+const C = { sky0: '#0b1028', sky1: '#151d3c', sky2: '#2a3a78', cream: '#f7e6c8', gold: '#ffcd82', glow: '#ffbf6a', ink: '#22170f', red: '#b3302a' };
+const TH = {
+  align: 'center', rise: 30, accent: C.gold,
+  title: { family: 'Corm', weight: 500, size: 124, min: 50, lh: 1.04, color: C.cream, shadow: 'rgba(255,190,104,.45)', shadowBlur: 30 },
+  quote: { family: 'Corm', weight: 500, italic: true, size: 84, min: 40, lh: 1.16, color: C.cream, shadow: 'rgba(255,190,104,.35)', shadowBlur: 24 },
+  num: { family: 'Corm', weight: 500, size: 220, min: 70, lh: 1, color: C.gold, shadow: 'rgba(255,190,104,.6)', shadowBlur: 40 },
+  body: { family: 'Corm', weight: 500, italic: true, size: 56, min: 30, lh: 1.22, color: '#e9dcc4' },
+  label: { family: 'Corm', weight: 500, size: 38, min: 24, ls: .22, upper: true, color: C.gold },
+  arabic: { family: 'Amiri', weight: 700, color: C.gold, shadow: 'rgba(255,190,104,.55)', shadowBlur: 30 },
+  rule: (g, x, y, w, a) => { g.fillStyle = C.gold; g.globalAlpha = a; const cx = x + w / 2; g.fillRect(cx - 110 * a, y, 220 * a, 2); g.beginPath(); g.arc(cx, y + 1, 7, 0, TAU); g.fill(); g.globalAlpha = 1; },
+  bullet: (g, k, x, y, s, a) => lantern(g, x + s / 2, y + s * .55, s * .42 * a, 1),
+};
+
+let GRAIN, SHEETS, LANT, DUO = {};
+function makeGrain(n, seed) {
+  const c = mk(n, n), x = c.getContext('2d'), R = mulberry(seed), img = x.createImageData(n, n), d = img.data;
+  for (let i = 0; i < n * n; i++) { const v = R(); d[i * 4] = d[i * 4 + 1] = d[i * 4 + 2] = v < .5 ? 0 : 255; d[i * 4 + 3] = Math.abs(v - .5) * 30; }
+  x.putImageData(img, 0, 0); x.lineCap = 'round';
+  for (let i = 0; i < n * 1.4; i++) { const px = R() * n, py = R() * n, a = R() * TAU, l = 5 + R() * 22; x.strokeStyle = R() < .5 ? 'rgba(40,30,20,.10)' : 'rgba(255,255,255,.16)'; x.lineWidth = .5 + R() * .8;
+    x.beginPath(); x.moveTo(px, py); x.quadraticCurveTo(px + Math.cos(a + .5) * l * .5, py + Math.sin(a + .5) * l * .5, px + Math.cos(a) * l, py + Math.sin(a) * l); x.stroke(); }
+  return c;
+}
+// one cut-paper sheet: a ridge (or fir) silhouette, flat colour + grain + a warm rim along the cut edge
+function sheet(seed, base, amp, col, rim, firs) {
+  const c = mk(W + 400, H), g = c.getContext('2d'), R = mulberry(seed), pts = [];
+  for (let x = -20; x <= W + 420; x += 12) pts.push([x, base - amp * (.5 * vnoise(x / 260, seed) + .35 * vnoise(x / 90, seed + 3) + .15 * Math.abs(Math.sin(x / 140 + seed)))]);
+  const path = () => { g.beginPath(); g.moveTo(-20, H); pts.forEach(p => g.lineTo(...p)); if (firs) for (let i = 0; i < 26; i++) { const x = R() * (W + 400), y = base - amp * .6, h = 60 + R() * 120; g.moveTo(x - 24, y + 30); g.lineTo(x, y - h); g.lineTo(x + 24, y + 30); } g.lineTo(W + 420, H); g.closePath(); };
+  path(); g.fillStyle = col; g.fill();
+  g.save(); path(); g.clip(); g.globalCompositeOperation = 'overlay'; g.fillStyle = g.createPattern(GRAIN, 'repeat'); g.fillRect(0, 0, c.width, H);
+  g.globalCompositeOperation = 'source-over'; g.strokeStyle = rim; g.lineWidth = 7; g.shadowColor = rim; g.shadowBlur = 18; g.beginPath(); pts.forEach((p, i) => i ? g.lineTo(...p) : g.moveTo(...p)); g.stroke(); g.restore();
+  return c;
+}
+function lantern(g, x, y, s, a) {
+  if (s <= 0) return; g.save(); g.globalAlpha = a;
+  const gl = g.createRadialGradient(x, y, 0, x, y, s * 3.2); gl.addColorStop(0, 'rgba(255,191,106,.55)'); gl.addColorStop(1, 'rgba(255,191,106,0)'); g.fillStyle = gl; g.fillRect(x - s * 3.2, y - s * 3.2, s * 6.4, s * 6.4);
+  g.fillStyle = C.ink; g.fillRect(x - s * .5, y - s * 1.25, s, s * .18); g.fillRect(x - s * .5, y + s * 1.05, s, s * .18);
+  const b = g.createLinearGradient(x - s, 0, x + s, 0); b.addColorStop(0, '#e9862e'); b.addColorStop(.5, '#ffe2a6'); b.addColorStop(1, '#e9862e');
+  g.fillStyle = b; g.beginPath(); g.ellipse(x, y, s * .82, s * 1.12, 0, 0, TAU); g.fill();
+  g.strokeStyle = 'rgba(179,48,42,.55)'; g.lineWidth = Math.max(1, s * .05); for (const k of [-.45, 0, .45]) { g.beginPath(); g.ellipse(x, y, s * .82 * Math.abs(Math.cos(k * 2)) + 1, s * 1.12, 0, 0, TAU); g.stroke(); }
+  g.restore();
+}
+function prep() {
+  GRAIN = makeGrain(512, 7);
+  SHEETS = [sheet(11, 1330, 300, '#24306a', '#6a7ac8', false), sheet(23, 1500, 300, '#1a2352', '#ffbe68', true), sheet(37, 1700, 260, '#121a3e', '#ffc46a', false), sheet(51, 1860, 200, '#0a1029', '#ffcd82', true)];
+  const r = mulberry(9); LANT = [...Array(14)].map(() => ({ x: 60 + r() * 960, y0: 1500 + r() * 700, sp: 30 + r() * 50, s: 14 + r() * 26, ph: r() * TAU }));
+  for (const k in IMG) DUO[k] = duotone(IMG[k], '#0b1028', '#f3d29a', 1080, 1080, 1.15);
+}
+
+function draw(g, t) {
+  const { s } = at(t), lt = t - s.t0, img = DUO[s.i];
+  const sky = g.createLinearGradient(0, 0, 0, H); sky.addColorStop(0, C.sky0); sky.addColorStop(.55, C.sky1); sky.addColorStop(1, C.sky2); g.fillStyle = sky; g.fillRect(0, 0, W, H);
+  // the moon, backlit paper with a halo; it rises a little through the film
+  const my = lerp(1200, 1080, t / SC[SC.length - 1].t1), mx = 780;
+  const halo = g.createRadialGradient(mx, my, 80, mx, my, 520); halo.addColorStop(0, 'rgba(255,236,190,.35)'); halo.addColorStop(1, 'rgba(255,236,190,0)'); g.fillStyle = halo; g.fillRect(0, 0, W, H);
+  g.fillStyle = '#fbefd0'; g.beginPath(); g.arc(mx, my, 130, 0, TAU); g.fill(); g.save(); g.beginPath(); g.arc(mx, my, 130, 0, TAU); g.clip(); g.globalAlpha = .5; g.fillStyle = g.createPattern(GRAIN, 'repeat'); g.fillRect(mx - 130, my - 130, 260, 260); g.restore();
+  // a photo (FLUX) as a backlit paper panel behind the sheets: duotone night/gold, soft paper edge
+  const sheetsAt = (a, b) => SHEETS.slice(a, b).forEach((c, j) => { const k = a + j, dx = -((t * (6 + k * 10)) % 200) - 100, lift = (1 - ss(seg(lt, 0, .9))) * (k + 1) * 26 * (s.i ? 1 : 0); g.drawImage(c, dx, lift); });
+  sheetsAt(0, 2);
+  if (img) {
+    const u = eo(seg(lt, 0, .8)), y0 = 630, h = 600;
+    g.save(); g.globalAlpha = u; g.beginPath(); g.roundRect(120, y0, 840, h, 18); g.clip(); cover(g, img, 120, y0, 840, h, 1.04 + lt * .008); g.globalCompositeOperation = 'overlay'; g.fillStyle = g.createPattern(GRAIN, 'repeat'); g.fillRect(120, y0, 840, h); g.restore();
+    g.save(); g.globalAlpha = u; g.strokeStyle = C.gold; g.lineWidth = 3; g.shadowColor = C.glow; g.shadowBlur = 24; g.beginPath(); g.roundRect(120, y0, 840, h, 18); g.stroke(); g.restore();
+    reg('photo', '[photo]', { x0: 120, y0, x1: 960, y1: y0 + h });
+  }
+  // the sheets, back to front, with parallax drift and a lift on each cut
+  sheetsAt(2, 4);
+  // lanterns drifting up between the sheets
+  for (const L of LANT) { const y = L.y0 - ((t * L.sp) % 1700), x = L.x + Math.sin(t * .6 + L.ph) * 24; if (y > 900 && y < H) lantern(g, x, y, L.s, .9 * seg(y, 980, 1200)); }
+  // text
+  g.save(); g.globalAlpha = clamp(lt / .5);
+  if (s.eyebrow) block(g, 'eyebrow', s.eyebrow, { x: SAFE.x0, y: SAFE.y0, w: SAFE.x1 - SAFE.x0, h: 50 }, { ...TH.label, align: 'center' });
+  const top = SAFE.y0 + 80;
+  if (img) { const s2 = s.type === 'image' ? { ...s, type: 'headline' } : s; stdBody(g, t, s2, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: 600 - top }, { ...TH, title: { ...TH.title, size: 92 }, num: { ...TH.num, size: 120 } }); }
+  else stdBody(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: (s.type === 'list' || s.type === 'counter' ? 1120 : 1000) - top }, TH);
+  g.restore();
+  captions(g, t, { family: 'Corm', weight: 500, italic: true, size: 72, color: C.cream, accent: C.gold, shadow: true,
+    plate: (g, x0, y0, x1, y1, a) => { const gr = g.createLinearGradient(0, y0, 0, y1); gr.addColorStop(0, 'rgba(8,10,28,.0)'); gr.addColorStop(.5, `rgba(8,10,28,${.6 * a})`); gr.addColorStop(1, 'rgba(8,10,28,0)'); g.fillStyle = gr; g.fillRect(0, y0 - 30, W, y1 - y0 + 60); } });
+}
+await boot({ fonts: [['Corm', 'fonts/lemo/cormorant-500.woff2', '500'], ['Corm', 'fonts/lemo/cormorant-500i.woff2', '500', 'italic'], ['Amiri', 'fonts/amiri-arabic-700-normal.woff2', '700']],
+  draw: (g, t) => { if (!GRAIN) prep(); draw(g, t); } });
+</script></body></html>

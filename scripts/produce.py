@@ -3,11 +3,11 @@
 
 Usage:
   python3 produce.py <storyboard.json> <out.mp4> [--draft] [--no-render] [--check-only] [--accept-qa] [--no-qa]
-  python3 produce.py <storyboard.json> <out.mp4> --engine=html --html=<animation.html>
+  python3 produce.py <storyboard.json> <out.mp4> --engine=lemo [--style=<slug>] [--workers=4]
 
-HTML engine: same Cartesia VO + audio mix, then the HTML page is injected with
-window.PROPS (scenes with startMs/durationMs, words with startMs/endMs), recorded
-with Playwright (scripts/record.js) and muxed with the audio into an MP4.
+Lemo engine (Lemo native): the storyboard's "style" picks a portrait kit in lemo/kits/<slug>/ (code adapted from the
+Lemo-Opuscar demo films, MIT). The kit is built in output/lemo/, checked for 9:16 composition (lemo/render.mjs layout),
+rendered frame by frame (window.render(t)) and muxed with the mixed audio.
 
 Storyboard format: see .claude/skills/bang-motion/SKILL.md.
 Each scene needs "vo" (spoken text). Optional per scene: "pad_before_ms", "gap_after_ms".
@@ -98,7 +98,9 @@ def main():
     flags = {a.split("=")[0] for a in sys.argv[1:] if a.startswith("--")}
     opts = dict(a[2:].split("=", 1) for a in sys.argv[1:] if a.startswith("--") and "=" in a)
     engine = opts.get("engine", "remotion")
-    if engine in ("html", "hyperframes") and "html" not in opts:
+    if engine == "html":
+        sys.exit("--engine=html was removed: use --engine=lemo (Lemo native) instead")
+    if engine == "hyperframes" and "html" not in opts:
         sys.exit(f"--engine={engine} requires --html=<index.html>")
     if engine == "hyperframes" and "--no-render" not in flags:
         sb = json.load(open(args[0]))
@@ -116,6 +118,17 @@ def main():
     os.makedirs(VO_DIR, exist_ok=True)
     os.makedirs(os.path.join(OUT, "img"), exist_ok=True)
     sb = json.load(open(sb_path))
+    kit = None
+    if engine == "lemo":
+        sys.path.insert(0, os.path.join(ROOT, "lemo"))
+        from build import manifest
+        kits = manifest()
+        slug = opts.get("style") or sb.get("style")
+        if slug not in kits:
+            sys.exit(f"--engine=lemo needs a storyboard \"style\" with a Lemo-native kit: {', '.join(kits)} (got {slug!r})")
+        kit = (slug, kits[slug])
+        if "image_style" not in sb:
+            sb["image_style"] = kits[slug]["image_style"]
 
     print("STEP  voiceover")
     cursor = 0
@@ -211,6 +224,11 @@ def main():
 
     # ---------- pre-render QA gate (local, free): catch problems before spending render time ----------
     proj = build_hyperframes(opts["html"], props, final_audio, total_ms) if engine == "hyperframes" else None
+    if engine == "lemo":
+        from build import build as build_lemo
+        data = timing_data(props, total_ms); data["title"] = sb.get("title", "")
+        proj = build_lemo(kit[0], data, os.path.join(OUT, "lemo"))
+        print(f"STEP  Lemo-native kit '{kit[0]}' ({kit[1]['name']}) -> {proj}")
     print("STEP  pre-render QA (local, free) -> output/qa_precheck.md")
     pre = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "qa.py"), "precheck", sb_path] + ([proj] if proj else []),
                          capture_output=True, text=True)
@@ -223,8 +241,8 @@ def main():
         print("CHECK-ONLY: pre-render QA done, render skipped.")
         return
 
-    if engine == "html":
-        render_html(opts["html"], props, final_audio, out_mp4, total_ms)
+    if engine == "lemo":
+        render_lemo(proj, final_audio, out_mp4, total_ms, opts.get("workers", "4"))
     elif engine == "hyperframes":
         render_hyperframes(proj, out_mp4, total_ms, "--draft" in flags)
     elif engine == "manim":
@@ -371,25 +389,15 @@ def render_manim(scene_py, props, audio, out_mp4, total_ms, draft):
     print(f"DONE  {out_mp4}  {total_ms/1000:.1f}s  {size:.1f} MB")
 
 
-def render_html(html_path, props, audio, out_mp4, total_ms):
-    """Inject timing into the HTML, record it with Playwright, mux with the mixed audio."""
-    ms = lambda fr: round(fr / FPS * 1000)
-    data = {
-        "totalMs": total_ms,
-        "scenes": [{**s, "startMs": ms(s["startFrame"]), "durationMs": ms(s["durationFrames"])} for s in props["scenes"]],
-        "words": [{"text": w["text"], "startMs": ms(w["startFrame"]), "endMs": ms(w["endFrame"])} for w in props["words"]],
-    }
-    src = open(html_path, encoding="utf-8").read()
-    tag = "<script>window.PROPS=" + json.dumps(data, ensure_ascii=False) + ";</script>"
-    src = src.replace("<head>", "<head>\n" + tag, 1) if "<head>" in src else tag + src
-    rendered = os.path.join(OUT, "animation.rendered.html")
-    open(rendered, "w", encoding="utf-8").write(src)
-
-    print("STEP  record (HTML / Playwright)")
-    webm = os.path.join(OUT, "animation.webm")
-    run(["node", os.path.join(ROOT, "scripts", "record.js"), rendered, webm, str(total_ms), "1080", "1920"])
-    print("STEP  mux -> MP4")
-    run(["bash", os.path.join(ROOT, "scripts", "mux.sh"), webm, audio, os.path.abspath(out_mp4)])
+def render_lemo(proj, audio, out_mp4, total_ms, workers="4"):
+    """Render the built kit frame by frame (lemo/render.mjs), then mux the mixed audio."""
+    print("STEP  render (Lemo native, frame-by-frame)")
+    raw = os.path.join(OUT, "lemo_raw.mp4")
+    p = subprocess.run(["node", os.path.join(ROOT, "lemo", "render.mjs"), proj, "video", raw, "--fps", str(FPS), "--workers", str(workers)])
+    if p.returncode != 0:
+        sys.exit("lemo render failed")
+    run(["ffmpeg", "-y", "-i", raw, "-i", audio, "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
+         "-t", f"{total_ms/1000:.3f}", "-movflags", "+faststart", os.path.abspath(out_mp4)])
     size = os.path.getsize(out_mp4) / 1e6
     print(f"DONE  {out_mp4}  {total_ms/1000:.1f}s  {size:.1f} MB")
 

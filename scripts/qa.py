@@ -5,7 +5,7 @@
   python3 qa.py visual <hf_project_dir>          # HyperFrames check: lint, runtime errors, layout overlap/overflow, contrast
   python3 qa.py final <video.mp4>                # loudness, true peak, black/frozen frames, A/V length, contact sheet
   python3 qa.py all <storyboard.json> <video.mp4> [hf_project_dir]   # everything -> output/qa_report.md
-  python3 qa.py precheck <storyboard.json> [hf_project_dir]         # BEFORE render; exit 2 = blocking issues
+  python3 qa.py precheck <storyboard.json> [hf_project_dir|lemo_dir] # BEFORE render; exit 2 = blocking issues
 
 Exit code is 0, except `precheck`, which exits 2 when something must be fixed before spending render time. Read the report and fix what matters.
 """
@@ -120,6 +120,33 @@ def qa_visual_full(proj, allow=()):
     return "### Visual (hyperframes check)\n" + "\n".join(lines) + note, blocking
 
 
+LEMO_BLOCKING = ("runtime", "text_overflow", "out_of_frame", "outside_safe_area", "caption_outside_band", "text_overlap")
+
+
+def qa_lemo_full(proj, allow=()):
+    """Lemo-native kit: composition check on window.TEXTS (lemo/render.mjs layout) + one still per scene -> output/qa_prerender.jpg."""
+    rep = os.path.join(OUT, "qa_layout.json")
+    r = sh(["node", os.path.join(ROOT, "lemo", "render.mjs"), proj, "layout", rep], timeout=900)
+    if r.returncode != 0 or not os.path.exists(rep):
+        return "### Visual (Lemo layout)\n- layout check failed: " + (r.stderr or r.stdout)[-600:], ["layout check failed"]
+    d = json.load(open(rep))
+    issues = d["issues"]
+    blocking = [f"{i['code']} {i['where']}: {i['text']}" for i in issues if i["code"] in LEMO_BLOCKING and i["code"] not in allow]
+    lines = [f"- {'⚠️' if issues else '✅'} composition (9:16 safe area, captions band, overlaps, overflow): {len(issues)} issue(s) in {d['scenes']} scenes"]
+    lines += [f"    - {i['code']} {i['where']}: {i['text']}" + (f" box={i['box']}" if i.get('box') else '') + (f" — {i['msg']}" if i.get('msg') else '') for i in issues[:12]]
+    # one still per scene (at ~70%) for the eye
+    props = open(os.path.join(proj, "props.js"), encoding="utf-8").read()
+    data = json.loads(props[props.index("=") + 1:].rstrip().rstrip(";"))
+    ts = [str(round((sc["startMs"] + sc["durationMs"] * .7) / 1000, 2)) for sc in data["scenes"]]
+    tmp = os.path.join(OUT, "qa_stills"); subprocess.run(["rm", "-rf", tmp])
+    if sh(["node", os.path.join(ROOT, "lemo", "render.mjs"), proj, "stills", tmp, *ts], timeout=900).returncode == 0:
+        cols = min(5, len(ts))
+        sh(["ffmpeg", "-y", "-loglevel", "error", "-pattern_type", "glob", "-i", os.path.join(tmp, "*.png"), "-vf", f"scale=360:640,tile={cols}x{(len(ts) + cols - 1) // cols}:padding=4",
+            "-frames:v", "1", os.path.join(OUT, "qa_prerender.jpg")])
+        lines.append("- stills per scene -> output/qa_prerender.jpg (look at it before the render)")
+    return "### Visual (Lemo-native kit)\n" + "\n".join(lines), blocking
+
+
 # ---------------------------------------------------------------- final file
 def qa_final(mp4):
     if not os.path.exists(mp4):
@@ -170,7 +197,7 @@ def main():
         vo_txt, vo_block = qa_vo_full(sb)
         parts, block = ["## Pre-render QA", vo_txt], list(vo_block)
         if hf_dir:
-            v_txt, v_block = qa_visual_full(hf_dir, allow)
+            v_txt, v_block = (qa_lemo_full if os.path.exists(os.path.join(hf_dir, "kit.js")) else qa_visual_full)(hf_dir, allow)
             parts.append(v_txt); block += v_block
         verdict = ("### ❌ BLOCKED — fix before rendering:\n" + "\n".join(f"- {b}" for b in block[:20])
                    + ("\n  (intended overlaps: add the code to storyboard \"qa_allow\", or re-run with --accept-qa)" if block else "")) if block else "### ✅ Pre-render QA passed"

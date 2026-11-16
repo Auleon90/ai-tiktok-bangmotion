@@ -1,6 +1,6 @@
 ---
 name: bang-motion
-description: Generate a ~60 s vertical TikTok motion-graphic MP4 with Indonesian Cartesia voice-over, word-synced captions, original music and SFX. Use for /bang-motion or any request to make a video in this repo. Flow - idea, storyboard, approval, render-mode question (HyperFrames, Remotion, Manim, Cepat, Auto), pre-render QA, render, deliver.
+description: Generate a ~60 s vertical TikTok motion-graphic MP4 with Indonesian Cartesia voice-over, word-synced captions, original music and SFX. Use for /bang-motion or any request to make a video in this repo. Flow - idea, storyboard, approval, render-mode question (HyperFrames, Remotion, Manim, Lemo native, Auto), pre-render QA, render, deliver.
 argument-hint: "[topik video] [mode/gaya opsional]"
 ---
 
@@ -41,7 +41,7 @@ Never stop at an HTML page, an Artifact or a raw render without audio: the resul
   "voice": "<cartesia voice id>",          // optional; default CARTESIA_VOICE_ID (Galang). Female id-ID: Siti b441c4fd-4910-4c55-ae56-f0291057e2cc (cheerful), Citra 74546efd-3ac5-4c41-ba59-4756227f429a, Safira 9076f14a-5602-48a7-bfd1-67ef9b40dd6d
   "music": "warm",                          // warm | epic | tense | calm | playful | sacred | none  (original score, synthesised)
   "sfx": true,                              // whooshes on cuts, title hit, counter ticks, map pulse, final ding
-  "style": "risograph",                     // optional, mode 1 only: a Lemo-Opuscar style slug (see "Visual styles")
+  "style": "risograph",                     // mode 1: any Lemo-Opuscar slug; mode 4 (Lemo native): one of the ★ kits
   "theme": { "accent": "#e9b552" },         // optional: skyTop, skyMid, horizon, ground, text, accent, muted
   "scenes": [
     { "id": 1, "type": "title", "vo": "Teks yang diucapkan", "eyebrow": "LABEL", "lottie": [ ... ], ... }
@@ -65,6 +65,7 @@ Built-in scene types (rendered automatically by modes 1 and 2):
 | `map` | coords 0–1000 (y down): `hills[{label?, at, r, color?}]`, `units[{label?, color, dots, from, to?, moveAt?, spread?}]`, `arrows[{path, color, at?}]`, `pulse{at, label?, atFrac?}`, `focus{at, zoom}` |
 
 | `image` | full-screen AI illustration only; optional `headline`, `sub` overlay |
+| `list` | `headline`, `items: [string]` (3–4 short points) — Lemo native |
 
 ### AI illustrations (Cloudflare FLUX — any theme, per scene where it fits)
 
@@ -87,7 +88,7 @@ content (headline, counter, quote…) is drawn on top with a darkening scrim. Im
 - Do NOT use images for: scenes that are only numbers/diagrams/formulas (keep them code-drawn), Manim videos,
   and **sirah Nabi ﷺ** figures (maps/calligraphy only; at most a landscape with no human figures).
 - Mark image scenes with 🖼️ in the approval summary and state the count ("3 dari 8 scene pakai gambar AI") so the user can decline.
-- Supported in modes 1 (HyperFrames), 2 (Remotion) and 4 (Cepat, as `PROPS.scenes[i].imageSrc` relative to the page). Ignored in Manim.
+- Supported in modes 1 (HyperFrames), 2 (Remotion) and 4 (Lemo native: each kit treats the photo in its own look). Ignored in Manim.
 - Prompts in English, describe composition + light + mood, always end with "no text". FLUX output is 1024×1024 (center-cropped to 9:16),
   so keep the subject centred.
 - Quota: free plan 10,000 neurons/day (~100+ images at 6 steps), resets 07:00 WIB. Error "quota exhausted" → tell the user and offer
@@ -187,11 +188,11 @@ AskUserQuestion allows max 4 options, so ask in two steps.
 1. `Auto: <mode pilihanmu> (Recommended)` — description: one line on why (see Auto rules).
 2. `HyperFrames + GSAP + Lottie` — "Render per frame, animasi GSAP halus, efek Lottie. ±2 menit."
 3. `Remotion + Lottie` — "Kualitas tertinggi: peta animasi, grain film, efek Lottie. ±20 menit."
-4. `Manim / Mode cepat…` — "Pilih Manim (sains/matematika) atau mode cepat (draf)."
+4. `Lemo native / Manim…` — "Lemo native: tampilan persis gaya Opuscar (6 gaya). Atau Manim untuk sains/matematika."
 
 If Q1 = option 4, **Q2** — "Pilih yang mana?", header "Mode":
+- `Lemo native: <slug>` — "Kode demo Opuscar, komposisi 9:16 asli. ±1 menit render per 60 s."
 - `Manim` — "Animasi sains/matematika ala 3Blue1Brown. ±1 menit."
-- `Cepat (bang-motion klasik)` — "HTML direkam real-time. ±1,5 menit, kualitas draf."
 
 ### Auto rules (pick one, say why in the option description)
 
@@ -200,7 +201,8 @@ If Q1 = option 4, **Q2** — "Pilih yang mana?", header "Mode":
 | Math, physics, chemistry, formulas, graphs, geometry, algorithms | **3 Manim** |
 | History / sirah with maps, troop movement, cinematic storytelling, final upload where quality matters most | **2 Remotion + Lottie** |
 | Kinetic typography, listicles, tips, facts, motivation, news, promo — most general content | **1 HyperFrames** |
-| User says it's a draft / test / "cepat" | **4 Cepat** |
+| Topic fits a ★ native kit and the user wants the Opuscar look (sejarah dunia, sains, psikologi, motivasi, Qur'an/hadits, sejarah Islam) | **4 Lemo native** |
+| User says it's a draft / test / "cepat" | **4 Lemo native** (fastest full-quality render) |
 
 When torn between 1 and 2, prefer **1 HyperFrames** (similar look, ~10× faster).
 
@@ -241,15 +243,36 @@ Engine: Manim 0.19 in `$R/.venv-manim` (created by setup.sh). Captions are burne
    Fonts: `Inter`, `Playfair Display`, `Amiri`; weights `NORMAL`, `BOLD`, `HEAVY` (not `BLACK`).
 4. Render: `cd $R && python3 scripts/produce.py output/storyboard.json output/final.mp4 --engine=manim --scene=output/manim_scene.py` (`--draft` = 540p).
 
-## Mode 4 — Cepat (bang-motion klasik)
+## Mode 4 — Lemo native (replaces the old "Cepat" HTML recording)
 
-Engine: AI-written HTML recorded in real time with Playwright (`scripts/record.js`), muxed with `scripts/mux.sh`. Fastest, lowest quality.
+Engine: `lemo/` — portrait kits whose drawing code, palettes, fonts and motion are adapted from the Lemo-Opuscar demo films
+(MIT, see `lemo/LICENSE-lemo-opuscar-MIT.txt`). Each kit is designed natively for 1080×1920 (not a crop of the 16:9 demo) and draws every
+frame with `window.render(t)` on one canvas; `lemo/render.mjs` renders it frame by frame (4 workers, ~35 s per 15 s of video).
 
-1. Write `$R/output/animation.html` (1080×1920, self-contained, Google Fonts only, inline SVG). At render time `window.PROPS` is injected:
-   `{ totalMs, theme, scenes:[{id,type,startMs,durationMs,...}], words:[{text,startMs,endMs}] }`.
-   The page starts its clock on load (`performance.now()`), shows each scene in `[startMs, startMs+durationMs)` with 0.4 s fades,
-   renders captions from `PROPS.words` around y=1320px, and calls `window.__motionDone()` after `totalMs`. Never hardcode timings.
-2. Render: `cd $R && python3 scripts/produce.py output/storyboard.json output/final.mp4 --engine=html --html=output/animation.html` (~1.5 min).
+Kits (`python3 scripts/styles.py native`, manifest `lemo/kits/kits.json`):
+
+| slug | look | use for |
+|---|---|---|
+| `kino-montage` | constructivist paper, red girder on −18°, B&W archive photos in slanted windows, Oswald numbers | sejarah dunia, pengetahuan umum, angka besar |
+| `newsreel` | 1920s film gate, silver Limelight titles, art-deco intertitle cards, scratches & flicker | sejarah dunia, peristiwa abad 20 |
+| `stick-explainer` | warm paper, one-line stick figures holding hands, signal red | psikologi, perilaku, pengetahuan umum |
+| `flat-space-explainer` | navy night, flat planets, dashed orbits, progress HUD | sains, astronomi, skala |
+| `paper-lantern` | layered cut-paper ridges, rising paper moon, glowing lanterns | motivasi, renungan, Qur'an/hadits |
+| `gilded-illumination` | vellum page, gilded border, lapis miniature in a pointed arch, verse in gold, banderole captions | Qur'an/hadits, sejarah Islam |
+
+1. Storyboard: `"style": "<slug>"` (one of the six), built-in scene types only (`title headline counter quote ayat tribute list image`;
+   `map` is not supported — use Remotion for maps). The kit's `image_style` is used for FLUX automatically unless the storyboard sets one.
+   Kits never draw people: Islamic kits (`paper-lantern`, `gilded-illumination`) are safe for sirah (landscape, calligraphy only).
+2. No page to write: the kit renders every scene type from `PROPS`. Keep on-screen text short (titles ≤ 6 words, list items ≤ 6 words);
+   every text is fitted into its box (wrap, then shrink), so long text gets small rather than spilling.
+3. Pre-render QA: `cd $R && python3 scripts/produce.py output/storyboard.json output/final.mp4 --engine=lemo --check-only`
+   → composition check (`lemo/render.mjs layout`: text overflow, outside the 9:16 safe area x 84–960 / y 210–1250, captions outside the
+   band y 1330–1560, overlapping texts or text over the photo) + `output/qa_prerender.jpg`. Blocking issues stop the render; shorten the text.
+4. Render: same command without `--check-only` (`--workers=6` on a free machine).
+
+To add a kit: copy one in `lemo/kits/`, read the demo's code in `.lemo/lemo-opuscar/styles/<slug>/demo/` (setup.sh downloads it), keep the
+`kit.js` contract (`boot`, `block`/`text` for every text, `captions`, `reg` for photos), add it to `kits.json`, and run the layout check on
+`lemo/test_props.py` output for all scene types until it reports 0 issues.
 
 ---
 
@@ -275,5 +298,5 @@ Engine: AI-written HTML recorded in real time with Playwright (`scripts/record.j
 | `vo/<hash>.mp3`, `.words.json` | Cached per-scene voice + word timestamps |
 | `props.json` | Real timings for all engines |
 | `img/<hash>.jpg` | Cached AI illustrations |
-| `hf/` · `manim_media/` · `animation.*` | Engine working files |
+| `hf/` · `lemo/` · `manim_media/` | Engine working files |
 | `final.mp4` | Finished TikTok-ready video |

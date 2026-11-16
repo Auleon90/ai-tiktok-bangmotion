@@ -1,0 +1,38 @@
+{
+  "kino-montage": {
+    "name": "Constructivist Montage",
+    "themes": ["sejarah dunia", "pengetahuan umum", "tokoh & penemuan", "angka besar"],
+    "image_style": "1930s black and white archival documentary photograph, high contrast, film grain, dramatic low angle, no text, no letters",
+    "music": "epic"
+  },
+  "newsreel": {
+    "name": "1920s Newsreel",
+    "themes": ["sejarah dunia", "peristiwa abad 20", "pengetahuan umum"],
+    "image_style": "1920s silver gelatin newsreel photograph, black and white, soft focus, period atmosphere, no text, no letters",
+    "music": "playful"
+  },
+  "stick-explainer": {
+    "name": "Stick-figure Explainer",
+    "themes": ["psikologi", "pengetahuan umum", "kebiasaan & perilaku", "inspirasi hidup"],
+    "image_style": "simple clean photograph, soft natural light, calm muted colours, minimal background, no text, no letters",
+    "music": "playful"
+  },
+  "flat-space-explainer": {
+    "name": "Flat Space Explainer",
+    "themes": ["sains", "astronomi", "fisika & biologi", "skala & ukuran"],
+    "image_style": "flat vector illustration, deep navy background, cream, sun yellow, coral and mint shapes, simple geometric forms, no text, no letters",
+    "music": "calm"
+  },
+  "paper-lantern": {
+    "name": "Paper Lantern",
+    "themes": ["inspirasi & motivasi hidup", "renungan", "inspirasi Qur'an & hadits", "sejarah Islam (lanskap)"],
+    "image_style": "cut paper diorama at night, layered paper silhouettes, warm lantern glow, deep blue and gold, no people, no text, no letters",
+    "music": "calm"
+  },
+  "gilded-illumination": {
+    "name": "Gilded Illumination",
+    "themes": ["inspirasi Qur'an & hadits", "sejarah Islam", "kisah & hikmah"],
+    "image_style": "illuminated manuscript miniature painting, lapis blue sky, gold leaf, flat pigments, ornamental detail, no people, no figures, no text, no letters",
+    "music": "sacred"
+  }
+}
