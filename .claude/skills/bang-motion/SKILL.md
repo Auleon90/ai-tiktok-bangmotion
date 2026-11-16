@@ -297,7 +297,7 @@ Kits (`python3 scripts/styles.py native`, manifest `lemo/kits/kits.json`; ⚔ = 
 | ⚔ `brick-toy` | grey studio sweep, glossy studded bricks that drop and snap, navy caption pill | pengetahuan umum, cara kerja benda |
 | ⚔ `tilt-shift` | isometric toy town at dusk, sharp focus band, blurred edges, neon | kota & peradaban, sejarah dunia |
 | ⚔ `urban-sketch` | fineliner that draws itself, off-register washes, skyline, Caveat | tempat & kota, psikologi sehari-hari |
-| ⚔ `colored-pencil` | hatched colour on toothy paper, soil strata & stones | sains alam, biologi, ayat tentang alam |
+| ⚔ `colored-pencil` | one pencil drawing on toothed paper: a cutaway (sky wash, trees, grass line, soil horizons, stones, roots, a buried pipe) drawn with four pencil layers, a boiling graphite contour, colour drawn in by a ragged front, the camera sinking per scene, magnifier-circle transitions; titles pencilled on the sky, cream tags, subtitles on a cream slip | sains alam, biologi, ayat tentang alam |
 | ⚔ `watercolor` | wet washes with dark edges, misty greens, handwritten notes | alam, renungan, inspirasi hidup |
 
 The 3D demos (paper-popup, paper-lantern, brick-toy, tilt-shift, colored-pencil) are three.js films. This server has no GPU (software WebGL:
