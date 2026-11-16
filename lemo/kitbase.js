@@ -38,7 +38,7 @@ export function makeKit(cfg) {
     } else stdBody(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: SAFE.y1 - 10 - top }, th);
     g.restore();
     cfg.post && cfg.post(g, t, s, lt);
-    captions(g, t, cfg.cap);
+    if (cfg.cap) captions(g, t, cfg.cap);
   };
   return boot({ fonts: cfg.fonts, draw });
 }

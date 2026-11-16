@@ -262,3 +262,17 @@ export function custom(g, t, s, box, th = {}) {
 }
 export const API = { W, H, SAFE, CAP, TAU, clamp, lerp, seg, ss, eo, ei, eio, back, mulberry, hash, vnoise, mk, mix, cover, graded, duotone,
   font, fit, block, text, reg, textWidth, countUp, parseNum, stdBody };
+
+// bottom-left subtitles with no box (stick-explainer, flat-space, urban-sketch, colored-pencil style): an optional accent bar at the
+// margin, an optional halo (shadow in the page colour) so they read over the drawing; words appear as they are spoken
+export function capLeft(g, t, o) {
+  const c = capAt(t); if (!c) return;
+  const full = c.words.join(' '), shown = c.words.slice(0, c.active + 1).join(' '), x = o.x ?? SAFE.x0 + (o.bar ? 22 : 0), w = o.w ?? 800;
+  const f = fit(g, full, w, o.h ?? 160, { ...o, size: o.size || 60, min: o.min || 34, maxLines: 2 });
+  const u = eo(clamp((t - c.t0) / (o.rise ?? .16)));
+  if (o.bar) { g.fillStyle = o.bar; g.fillRect(SAFE.x0, (o.y ?? 1350) + 4, o.barW ?? 5, f.h - 4); }
+  g.save(); if (o.halo) { g.shadowColor = o.halo; g.shadowBlur = o.haloBlur ?? 10; }
+  block(g, 'caption', shown, { x, y: (o.y ?? 1350) + (1 - u) * 14, w, h: o.h ?? 160 }, { ...o, size: f.size, min: f.size, cap: true, layer: 9, alpha: u });
+  if (o.halo) { g.shadowBlur = 0; block(g, 'caption', shown, { x, y: (o.y ?? 1350) + (1 - u) * 14, w, h: o.h ?? 160 }, { ...o, size: f.size, min: f.size, cap: true, layer: 9 }); TX.pop(); }
+  g.restore();
+}

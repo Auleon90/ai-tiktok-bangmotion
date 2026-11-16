@@ -7,20 +7,28 @@
 // Watercolor — portrait kit. Look and motion from the Lemo-Opuscar demo (MIT code): cold-press paper, layered wet washes that pool
 // darker at their edges, misty green layers receding into the paper, Cormorant Garamond titles, Caveat field notes, IBM Plex Mono
 // measurements with dashed leader lines, washes that bloom in on each scene. Figures in a battle are painted as washes, no ink.
-import { W, H, SAFE, TAU, clamp, lerp, seg, eo, mulberry, vnoise, mk, cover, text } from './kit.js';
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, mulberry, vnoise, mk, cover, text , capLeft, block } from './kit.js';
 import { makeKit } from './kitbase.js';
 import { hexA } from './clash.js';
 
 const C = { paper: '#f4efe3', ink: '#3a3530', mute: '#7a736c', green: '#56845a', greenL: '#8fbf5a', sage: '#b3b07a', blue: '#3f7fa8', ochre: '#cda35f', rust: '#cf7c4f', deep: '#2f5a45' };
 let PAPER, HILLS, BLOOMS = [];
 // one wash: an irregular blob, filled several times at low alpha, its rim darkened (pigment pools at the edge)
+// everything is brush strokes: a tapered ribbon at partial opacity + thin bristle tracks that break into dashes (flying white);
+// strokes overlap and darken where they cross. wash() lays a patch of such strokes (structure first, then a darker accent stroke)
+function stroke(g, x0, y0, x1, y1, w, col, a, seed) {
+  const r = mulberry(seed), n = 18, nx = -(y1 - y0), ny = x1 - x0, L = Math.hypot(nx, ny) || 1, ux = nx / L, uy = ny / L, bend = (r() - .5) * w * 1.5;
+  const P = k => { const u = k / n, s = Math.sin(u * Math.PI); return [x0 + (x1 - x0) * u + ux * bend * s, y0 + (y1 - y0) * u + uy * bend * s, w * (.25 + .75 * Math.pow(s, .6)) * (.85 + r() * .3)]; };
+  const pts = [...Array(n + 1)].map((_, k) => P(k));
+  g.beginPath(); pts.forEach(([x, y, ww], k) => k ? g.lineTo(x + ux * ww / 2, y + uy * ww / 2) : g.moveTo(x + ux * ww / 2, y + uy * ww / 2)); for (let k = n; k >= 0; k--) { const [x, y, ww] = pts[k]; g.lineTo(x - ux * ww / 2, y - uy * ww / 2); }
+  g.closePath(); g.fillStyle = hexA(col, a); g.fill();
+  g.strokeStyle = hexA(col, Math.min(1, a * 1.8)); g.lineWidth = 1.4; g.lineCap = 'round';
+  for (let b = 0; b < 4; b++) { const off = (r() - .5) * .8; g.beginPath(); let on = true; pts.forEach(([x, y, ww], k) => { if (r() < .18) on = !on; const px = x + ux * ww * off, py = y + uy * ww * off; on ? (k ? g.lineTo(px, py) : g.moveTo(px, py)) : g.moveTo(px, py); }); g.stroke(); }
+}
 function wash(g, cx, cy, rx, ry, col, seed, a = .55) {
-  const r = mulberry(seed);
-  for (let pass = 0; pass < 3; pass++) {
-    g.beginPath(); const n = 28;
-    for (let i = 0; i <= n; i++) { const th = i / n * TAU, k = 1 + (vnoise(i * .7 + pass * 3, seed) - .5) * .35 + (r() - .5) * .06; const x = cx + Math.cos(th) * rx * k, y = cy + Math.sin(th) * ry * k; i ? g.lineTo(x, y) : g.moveTo(x, y); }
-    g.closePath(); g.fillStyle = hexA(col, a * .3); g.fill(); g.strokeStyle = hexA(col, a * .35); g.lineWidth = 3; g.stroke();
-  }
+  const r = mulberry(seed), n = Math.max(3, Math.round(ry / 14));
+  for (let k = 0; k < n; k++) { const y = cy - ry + (k + .5) * 2 * ry / n + (r() - .5) * 8, half = rx * Math.sqrt(Math.max(.05, 1 - Math.pow((y - cy) / ry, 2))) * (.85 + r() * .3), tilt = (r() - .5) * 18;
+    stroke(g, cx - half, y - tilt, cx + half, y + tilt, 2 * ry / n * 1.9, col, a * .32, seed * 31 + k); }
 }
 function prep() {
   PAPER = mk(W, H); const p = PAPER.getContext('2d'), d = p.createImageData(W, H), r = mulberry(3);
@@ -67,8 +75,7 @@ makeKit({
   field(g, t, s, Z, lt) { const u = eo(seg(lt, 0, .8)); g.save(); g.globalAlpha = u; for (let x = -60; x < W + 100; x += 150) wash(g, x, Z.ground + 20, 170, 60, C.sage, 700 + x, .5); g.restore(); },
   look: { fill: f => hexA(f.color || (f.side > 0 ? C.blue : C.rust), .78), shield: hexA(C.ochre, .8), weapon: C.ink, stroke: null, glow: '#ffd77a', glowMode: 'source-over' },
   fx: { dust: '#cdb68c', arrow: C.ink, spark: C.ochre },
-  post(g, t, s, lt) { text(g, 'scale', `${String(s.i + 1).padStart(2, '0')} / ${String(window.SCENES.length).padStart(2, '0')}`, SAFE.x1, SAFE.y0 + 60, { family: 'Plex', size: 26, color: C.mute, align: 'right', layer: 6 }); },
-  cap: { family: 'Corm', weight: 500, italic: true, size: 74, color: C.ink, accent: C.rust,
-    plate: (g, x0, y0, x1, y1, a) => { g.globalAlpha = a * .85; wash(g, (x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0) / 2 + 30, (y1 - y0) / 2 + 20, '#fbf7ee', 77, 1); g.fillStyle = 'rgba(251,247,238,.7)'; g.fillRect(x0, y0, x1 - x0, y1 - y0); g.globalAlpha = 1; } },
+  post(g, t, s, lt) { capLeft(g, t, { family: 'Corm', weight: 500, italic: true, size: 64, color: 'rgba(58,53,48,.88)', align: 'center', x: 84, w: 912, halo: '#f4efe3', haloBlur: 16 }); text(g, 'scale', `${String(s.i + 1).padStart(2, '0')} / ${String(window.SCENES.length).padStart(2, '0')}`, SAFE.x1, SAFE.y0 + 60, { family: 'Plex', size: 26, color: C.mute, align: 'right', layer: 6 }); },
+  cap: null,
 });
 </script></body></html>

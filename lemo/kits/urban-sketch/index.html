@@ -7,7 +7,7 @@
 // Urban Sketch — portrait kit. Look and motion from the Lemo-Opuscar demo (MIT code): fineliner ink that wobbles and overshoots
 // its corners, loose watercolour washes laid off-register from the line, white paper left as highlights, a city skyline and park
 // trees sketched along the bottom, handwritten notes (Reenie Beanie / Caveat). Lines draw themselves on at each scene.
-import { W, H, SAFE, TAU, clamp, lerp, seg, eo, mulberry, vnoise, mk, cover } from './kit.js';
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, mulberry, vnoise, mk, cover , capLeft, block } from './kit.js';
 import { makeKit } from './kitbase.js';
 import { hexA } from './clash.js';
 
@@ -60,11 +60,16 @@ makeKit({
     g.filter = 'saturate(.85) contrast(1.05) sepia(.12)'; cover(g, img, -R.w / 2, -R.h / 2, R.w, R.h, 1.03 + lt * .008); g.filter = 'none'; g.restore();
     inkLine(g, rect(R.x, R.y, R.w, R.h, s.i + 40), 3.2, C.ink, eo(seg(lt, .2, 1.2)));
   },
+  post(g, t, s, lt) {
+    capLeft(g, t, { family: 'Caveat', weight: 600, size: 66, color: C.ink, halo: '#f5eede', haloBlur: 14, y: 1345 });
+    // the corner note: place, scene, a weather mark (written on, like the demo's day/time/weather note)
+    const note = ((window.PROPS.title || '') + ' · ' + String(s.id).padStart(2, '0')).slice(0, 34), u = seg(lt, .2, 1);
+    g.save(); g.beginPath(); g.rect(SAFE.x1 - 360, SAFE.y0, 360 * u, 60); g.clip(); block(g, 'note', note, { x: SAFE.x1 - 360, y: SAFE.y0 + 4, w: 360, h: 46 }, { family: 'Reenie', size: 44, min: 26, color: C.ink2, align: 'right', layer: 6 }); g.restore();
+  },
   field(g, t, s, Z, lt) { const p = eo(seg(lt, 0, 1)); washRect(g, -20, Z.ground - 30, W + 40, 70, C.sand, .45 * p, 5); inkLine(g, wob(seg2(0, Z.ground + 4, W, Z.ground, 30), 5, 11), 2.6, C.ink, p); },
   // each figure: a loose wash off the line, then the ink outline
   look: { fill: f => hexA(f.color || (f.side > 0 ? C.sky : C.rose), .55), stroke: C.ink, lw: 2.6, shield: hexA(C.sand, .7), weapon: C.ink, glow: '#ffd77a', glowMode: 'source-over' },
   fx: { dust: '#d9c39a', arrow: C.ink, spark: C.rose },
-  cap: { family: 'Caveat', weight: 600, size: 76, color: C.ink, accent: C.rose,
-    plate: (g, x0, y0, x1, y1, a) => { washRect(g, x0, y0, x1 - x0, y1 - y0, '#fffaf0', .9 * a, 13); inkLine(g, rect(x0, y0, x1 - x0, y1 - y0, 14), 2.2, C.ink, a); } },
+  cap: null,
 });
 </script></body></html>
