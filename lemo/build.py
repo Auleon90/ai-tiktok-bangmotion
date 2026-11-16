@@ -27,6 +27,11 @@ def build(slug, data, out_dir):
     img = os.path.join(ROOT, "output", "img")
     if os.path.isdir(img):
         shutil.copytree(img, os.path.join(out_dir, "img"))
+    if os.path.isdir(os.path.join(out_dir, "engine")):   # kits that pre-render stills with a demo's three.js engine
+        nm = os.path.join(ROOT, "lemo", "node_modules")
+        if not os.path.isdir(os.path.join(nm, "three")):
+            sys.exit("three.js missing: run bash scripts/setup.sh (npm install in lemo/)")
+        os.symlink(nm, os.path.join(out_dir, "node_modules"))
     cust = os.path.join(ROOT, "output", "custom")
     if os.path.isdir(cust):
         shutil.copytree(cust, os.path.join(out_dir, "custom"))

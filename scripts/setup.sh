@@ -13,6 +13,9 @@ echo "→ Remotion (mode 2)"
 echo "→ HyperFrames + GSAP + lottie-web (mode 1)"
 [ -d "$ROOT/hyperframes/node_modules" ] || (cd "$ROOT/hyperframes" && npm install --no-audit --no-fund --silent)
 
+echo "→ three.js for Lemo-native 3D engines (tilt-shift, brick-toy)"
+[ -d "$ROOT/lemo/node_modules/three" ] || (cd "$ROOT/lemo" && npm install --no-audit --no-fund --silent)
+
 echo "→ Manim venv (mode 3)"
 if [ ! -x "$ROOT/.venv-manim/bin/manim" ]; then
   if ! pkg-config --exists pangocairo 2>/dev/null; then

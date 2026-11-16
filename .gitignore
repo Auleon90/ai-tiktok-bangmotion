@@ -8,3 +8,4 @@ __pycache__/
 hyperframes/node_modules/
 .lemo/
 .venv-audio/
+lemo/node_modules/

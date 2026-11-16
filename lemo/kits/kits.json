@@ -92,16 +92,17 @@
     "clash": true
   },
   "tilt-shift": {
-    "name": "Tilt-shift Miniature",
+    "name": "Tilt-shift Miniature (hybrid: demo 3D engine stills)",
     "themes": [
       "kota & peradaban",
+      "suasana kota",
       "sejarah dunia",
-      "fakta urban",
-      "ekonomi"
+      "sistem & logistik"
     ],
     "image_style": "tilt-shift miniature photograph, aerial view, saturated colours, dusk lights, shallow focus band, no text, no letters",
     "music": "epic",
-    "clash": true
+    "clash": true,
+    "prerender": true
   },
   "urban-sketch": {
     "name": "Urban Sketch",

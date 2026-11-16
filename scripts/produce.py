@@ -231,6 +231,11 @@ def main():
         from build import build as build_lemo
         data = timing_data(props, total_ms); data["title"] = sb.get("title", "")
         proj = build_lemo(kit[0], data, os.path.join(OUT, "lemo"))
+        if os.path.exists(os.path.join(proj, "prerender.mjs")):   # hybrid kits: stills from the demo's own 3D engine
+            print("STEP  pre-render 3D stills (demo engine, software WebGL)")
+            p = subprocess.run(["node", os.path.join(proj, "prerender.mjs"), proj])
+            if p.returncode != 0:
+                sys.exit("pre-render failed")
         print(f"STEP  Lemo-native kit '{kit[0]}' ({kit[1]['name']}) -> {proj}")
     print("STEP  pre-render QA (local, free) -> output/qa_precheck.md")
     pre = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "qa.py"), "precheck", sb_path] + ([proj] if proj else []),

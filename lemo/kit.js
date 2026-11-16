@@ -235,8 +235,8 @@ export function stdBody(g, t, s, b, th) {
     });
   } else {
     const main = s.headline || s.title || s.text || '';
-    const hasSub = !!s.sub, r = block(g, 'main', main, { x: b.x, y: b.y, w: b.w, h: hasSub ? b.h * .72 : b.h }, T(th.title, { align: al, valign: hasSub ? 'bottom' : 'middle', reveal: rv(.2) }));
-    if (hasSub && r) { rule(r.y1 + 26, .6); block(g, 'sub', s.sub, { x: b.x, y: r.y1 + 60, w: b.w, h: b.y + b.h - r.y1 - 60 }, T(th.body, { align: al, reveal: rv(.7) })); }
+    const hasSub = !!s.sub, gap = Math.min(60, b.h * .1), r = block(g, 'main', main, { x: b.x, y: b.y, w: b.w, h: hasSub ? b.h * .64 : b.h }, T(th.title, { align: al, valign: hasSub ? 'bottom' : 'middle', reveal: rv(.2) }));
+    if (hasSub && r) { rule(r.y1 + gap * .45, .6); block(g, 'sub', s.sub, { x: b.x, y: r.y1 + gap, w: b.w, h: b.y + b.h - r.y1 - gap }, T(th.body, { align: al, reveal: rv(.7) })); }
   }
 }
 
