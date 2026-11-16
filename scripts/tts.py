@@ -11,6 +11,8 @@ Writes:
 Note: sonic-2 rejects language "id"; sonic-3 supports Indonesian and timestamps.
 """
 import sys, os, json, base64, subprocess, requests
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import envfile  # noqa: E402  (loads .env for local installs)
 
 API_KEY  = os.environ.get("CARTESIA_API_KEY", "")
 ENDPOINT = "https://api.cartesia.ai/tts/sse"

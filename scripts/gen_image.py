@@ -9,6 +9,8 @@ Output: 1024x1024 JPEG. Scenes use it full-bleed (cover) with a slow Ken Burns m
 Cost ~58 neurons/image at 4 steps (free plan: 10,000 neurons/day, resets 00:00 UTC).
 """
 import base64, json, os, sys, requests
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import envfile  # noqa: E402  (loads .env for local installs)
 
 MODEL = "@cf/black-forest-labs/flux-1-schnell"
 

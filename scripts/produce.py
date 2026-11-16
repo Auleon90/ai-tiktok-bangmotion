@@ -14,6 +14,8 @@ Each scene needs "vo" (spoken text). Optional per scene: "pad_before_ms", "gap_a
 Top level optional: "theme" {..colors}, "ambience": "wind" | "none" (default "wind").
 """
 import hashlib, json, os, shutil, subprocess, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import envfile  # noqa: E402  (loads .env for local installs)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "output")
@@ -73,7 +75,7 @@ def ms2f(ms: float) -> int:
 
 def remotion_prestills(props_path, props):
     """Pre-render check for Remotion: one still per scene (at ~70%) tiled into output/qa_prerender.jpg."""
-    hs = next(iter(sorted(__import__("glob").glob("/opt/pw-browsers/chromium_headless_shell-*/*/chrome-headless-shell"))), None)
+    hs = next(iter(sorted(__import__("glob").glob("/opt/pw-browsers/chromium_headless_shell-*/*/chrome-headless-shell") + __import__("glob").glob(os.path.expanduser("~/.cache/ms-playwright/chromium_headless_shell-*/*/chrome-headless-shell")))), None)
     tmp = os.path.join(OUT, "qa_stills"); shutil.rmtree(tmp, ignore_errors=True); os.makedirs(tmp)
     frames = [sc["startFrame"] + int(sc["durationFrames"] * 0.7) for sc in props["scenes"]]
     for i, fr in enumerate(frames):

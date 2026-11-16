@@ -26,7 +26,7 @@ const H          = parseInt(height, 10);
 
 (async () => {
   const browser = await chromium.launch({
-    executablePath: '/opt/pw-browsers/chromium',
+    ...(require('fs').existsSync('/opt/pw-browsers/chromium') ? { executablePath: '/opt/pw-browsers/chromium' } : {}),
     args: ['--no-sandbox', '--disable-setuid-sandbox', '--headless']
   });
 

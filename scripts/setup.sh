@@ -5,7 +5,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 echo "=== bang-motion setup ==="
 
 echo "→ Python deps (requests, fonttools)"
-pip install -q requests fonttools brotli 2>/dev/null || pip install -q --break-system-packages requests fonttools brotli
+python3 -c "import requests, fontTools, brotli" 2>/dev/null || pip install -q requests fonttools brotli 2>/dev/null || pip install -q --break-system-packages requests fonttools brotli || echo "  WARN: python deps"
 
 echo "→ Remotion (mode 2)"
 [ -d "$ROOT/remotion/node_modules" ] || (cd "$ROOT/remotion" && npm install --no-audit --no-fund --silent)
