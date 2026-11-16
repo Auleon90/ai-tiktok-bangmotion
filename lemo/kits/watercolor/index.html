@@ -1,0 +1,74 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Watercolor · portrait kit</title>
+<style>html,body{margin:0;background:#f4efe3;overflow:hidden}canvas{display:block}</style>
+<script src="props.js"></script></head><body>
+<canvas id="c"></canvas>
+<script type="module">
+// Watercolor — portrait kit. Look and motion from the Lemo-Opuscar demo (MIT code): cold-press paper, layered wet washes that pool
+// darker at their edges, misty green layers receding into the paper, Cormorant Garamond titles, Caveat field notes, IBM Plex Mono
+// measurements with dashed leader lines, washes that bloom in on each scene. Figures in a battle are painted as washes, no ink.
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, mulberry, vnoise, mk, cover, text } from './kit.js';
+import { makeKit } from './kitbase.js';
+import { hexA } from './clash.js';
+
+const C = { paper: '#f4efe3', ink: '#3a3530', mute: '#7a736c', green: '#56845a', greenL: '#8fbf5a', sage: '#b3b07a', blue: '#3f7fa8', ochre: '#cda35f', rust: '#cf7c4f', deep: '#2f5a45' };
+let PAPER, HILLS, BLOOMS = [];
+// one wash: an irregular blob, filled several times at low alpha, its rim darkened (pigment pools at the edge)
+function wash(g, cx, cy, rx, ry, col, seed, a = .55) {
+  const r = mulberry(seed);
+  for (let pass = 0; pass < 3; pass++) {
+    g.beginPath(); const n = 28;
+    for (let i = 0; i <= n; i++) { const th = i / n * TAU, k = 1 + (vnoise(i * .7 + pass * 3, seed) - .5) * .35 + (r() - .5) * .06; const x = cx + Math.cos(th) * rx * k, y = cy + Math.sin(th) * ry * k; i ? g.lineTo(x, y) : g.moveTo(x, y); }
+    g.closePath(); g.fillStyle = hexA(col, a * .3); g.fill(); g.strokeStyle = hexA(col, a * .35); g.lineWidth = 3; g.stroke();
+  }
+}
+function prep() {
+  PAPER = mk(W, H); const p = PAPER.getContext('2d'), d = p.createImageData(W, H), r = mulberry(3);
+  for (let i = 0; i < W * H; i++) { const v = 240 + (r() - .5) * 14; d.data[i * 4] = v + 4; d.data[i * 4 + 1] = v; d.data[i * 4 + 2] = v - 12; d.data[i * 4 + 3] = 255; }
+  p.putImageData(d, 0, 0);
+  for (let i = 0; i < 40; i++) wash(p, r() * W, r() * H, 80 + r() * 200, 60 + r() * 120, '#e9dcc4', 100 + i, .25);
+  // misty hills and trees at the bottom of the frame (behind the captions band, below the content)
+  HILLS = mk(W, H); const h = HILLS.getContext('2d');
+  [[1500, C.sage, .35], [1600, C.green, .4], [1720, C.deep, .45]].forEach(([y, c, a], k) => { for (let x = -100; x < W + 200; x += 170) wash(h, x, y + Math.sin(x * .01 + k) * 40, 180, 110, c, 300 + k * 50 + x, a); });
+  for (let i = 0; i < 9; i++) { const x = 60 + i * 120 + r() * 40, y = 1560 + r() * 120, th = 200 + r() * 160; h.strokeStyle = hexA(C.ink, .35); h.lineWidth = 5; h.beginPath(); h.moveTo(x, y); h.lineTo(x + 6, y - th); h.stroke();
+    for (let k = 0; k < 4; k++) wash(h, x + (r() - .5) * 90, y - th - r() * 60, 70 + r() * 40, 55 + r() * 30, k % 2 ? C.green : C.greenL, 500 + i * 9 + k, .5); }
+}
+const TH = {
+  align: 'left', rise: 22, accent: C.rust,
+  title: { family: 'Corm', weight: 500, size: 124, min: 48, lh: 1.04, color: C.ink },
+  quote: { family: 'Corm', weight: 500, italic: true, size: 80, min: 38, lh: 1.16, color: C.ink },
+  num: { family: 'Corm', weight: 500, size: 210, min: 70, lh: 1, color: C.blue },
+  body: { family: 'Caveat', weight: 600, size: 60, min: 32, lh: 1.15, color: C.deep },
+  label: { family: 'Plex', weight: 400, size: 30, min: 20, ls: .14, upper: true, color: C.mute },
+  side: { family: 'Caveat', weight: 600, size: 52, min: 30, color: C.ink },
+  arabic: { family: 'Amiri', weight: 700, color: C.deep },
+  rule: (g, x, y, w, a) => { g.save(); g.setLineDash([8, 10]); g.strokeStyle = C.mute; g.lineWidth = 2; g.beginPath(); g.moveTo(x, y); g.lineTo(x + 360 * a, y); g.stroke(); g.restore(); },
+  bullet: (g, k, x, y, s, a) => { g.globalAlpha = a; wash(g, x + s / 2, y + s / 2, s * .38, s * .34, [C.rust, C.blue, C.green, C.ochre][k % 4], 900 + k, .9); g.globalAlpha = 1; },
+};
+makeKit({
+  fonts: [['Corm', 'fonts/lemo/cormorant-500.woff2', '500'], ['Corm', 'fonts/lemo/cormorant-500i.woff2', '500', 'italic'], ['Caveat', 'fonts/lemo/caveat-600.woff2', '600'],
+    ['Plex', 'fonts/lemo/plexmono-400.woff2', '400'], ['Amiri', 'fonts/amiri-arabic-700-normal.woff2', '700']],
+  prep, th: TH, enter: 'rise',
+  bg(g, t, s, lt) {
+    g.drawImage(PAPER, 0, 0); g.globalAlpha = .9; g.drawImage(HILLS, Math.sin(t * .1) * 8, 0); g.globalAlpha = 1;
+    // a wash blooms behind each scene's title (the demo's "bloom": the wet patch spreads in)
+    const u = eo(seg(lt, 0, .9)); g.save(); g.globalAlpha = u * .8; wash(g, 300, 470, 380 * (.6 + .4 * u), 260 * (.6 + .4 * u), [C.ochre, C.blue, C.green, C.rust][s.i % 4], 40 + s.i, .45); g.restore();
+    // measurement in the top right, as in the poster: scene index on a dashed scale
+    g.save(); g.setLineDash([4, 6]); g.strokeStyle = C.mute; g.lineWidth = 2; g.beginPath(); g.moveTo(SAFE.x1 - 220, SAFE.y0 + 74); g.lineTo(SAFE.x1, SAFE.y0 + 74); g.stroke(); g.restore();
+  },
+  photo(g, t, s, img, R, lt) {   // the photo as a wash: feathered irregular edge, multiplied on the paper, a little faded
+    const u = eo(seg(lt, .1, .9)), c = mk(R.w, R.h), x = c.getContext('2d');
+    x.filter = 'saturate(.8) contrast(.95) brightness(1.04)'; cover(x, img, 0, 0, R.w, R.h, 1.03 + lt * .008); x.filter = 'none';
+    x.globalCompositeOperation = 'destination-in'; const m = mk(R.w, R.h), mm = m.getContext('2d'); mm.filter = 'blur(18px)'; mm.fillStyle = '#000';
+    mm.beginPath(); const n = 40; for (let i = 0; i <= n; i++) { const th = i / n * TAU, k = .92 + (vnoise(i * .8, s.i) - .5) * .12; mm.lineTo(R.w / 2 + Math.cos(th) * R.w * .5 * k, R.h / 2 + Math.sin(th) * R.h * .5 * k * 1.02); } mm.fill();
+    x.drawImage(m, 0, 0);
+    g.save(); g.globalAlpha = u; g.globalCompositeOperation = 'multiply'; g.drawImage(c, R.x, R.y); g.restore();
+  },
+  field(g, t, s, Z, lt) { const u = eo(seg(lt, 0, .8)); g.save(); g.globalAlpha = u; for (let x = -60; x < W + 100; x += 150) wash(g, x, Z.ground + 20, 170, 60, C.sage, 700 + x, .5); g.restore(); },
+  look: { fill: f => hexA(f.color || (f.side > 0 ? C.blue : C.rust), .78), shield: hexA(C.ochre, .8), weapon: C.ink, stroke: null, glow: '#ffd77a', glowMode: 'source-over' },
+  fx: { dust: '#cdb68c', arrow: C.ink, spark: C.ochre },
+  post(g, t, s, lt) { text(g, 'scale', `${String(s.i + 1).padStart(2, '0')} / ${String(window.SCENES.length).padStart(2, '0')}`, SAFE.x1, SAFE.y0 + 60, { family: 'Plex', size: 26, color: C.mute, align: 'right', layer: 6 }); },
+  cap: { family: 'Corm', weight: 500, italic: true, size: 74, color: C.ink, accent: C.rust,
+    plate: (g, x0, y0, x1, y1, a) => { g.globalAlpha = a * .85; wash(g, (x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0) / 2 + 30, (y1 - y0) / 2 + 20, '#fbf7ee', 77, 1); g.fillStyle = 'rgba(251,247,238,.7)'; g.fillRect(x0, y0, x1 - x0, y1 - y0); g.globalAlpha = 1; } },
+});
+</script></body></html>

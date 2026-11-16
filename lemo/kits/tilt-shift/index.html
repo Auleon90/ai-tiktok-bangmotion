@@ -1,0 +1,78 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Tilt-shift Miniature · portrait kit</title>
+<style>html,body{margin:0;background:#2a2d33;overflow:hidden}canvas{display:block}</style>
+<script src="props.js"></script></head><body>
+<canvas id="c"></canvas>
+<script type="module">
+// Tilt-shift Miniature — portrait kit. Look and motion from the Lemo-Opuscar demo (MIT code; its three.js city and DOF pass are
+// drawn in 2.5D): an isometric toy town at dusk, saturated paint, lit windows, tiny cars running the streets, the tilt-shift blur
+// band (sharp in the middle, soft above and below), a slow camera drift, neon signs (Overpass 800) with a coloured glow.
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, back, mulberry, mk, cover, mix } from './kit.js';
+import { makeKit } from './kitbase.js';
+
+const C = { asphalt: '#2a2d33', road: '#3a3e46', walk: '#c9ccd0', pink: '#e07bb0', cyan: '#5fe3e8', yellow: '#f2c230', red: '#d8412f', purple: '#7a4a8c', cream: '#f4f1ea', win: '#ffd98a' };
+const PAL = ['#d8412f', '#e8c24a', '#7a4a8c', '#3f7fbf', '#e07bb0', '#4fae7a', '#c97a3a', '#e8e4dc'];
+const IS = 1.5, ISO = (x, y, z = 0) => [540 + (x - y) * 0.866 * IS, -260 + (x + y) * .5 * IS - z * IS];
+function box(g, x, y, w, d, h, col, seed) {   // an iso block: two walls with lit windows, a roof
+  const r = mulberry(seed), P = (a, b, c) => ISO(x + a, y + b, c), poly = (...pts) => { g.beginPath(); pts.forEach((p, i) => i ? g.lineTo(...p) : g.moveTo(...p)); g.closePath(); g.fill(); };
+  g.fillStyle = mix(col, '#000000', .38); poly(P(w, 0, 0), P(w, d, 0), P(w, d, h), P(w, 0, h));
+  g.fillStyle = mix(col, '#000000', .18); poly(P(0, d, 0), P(w, d, 0), P(w, d, h), P(0, d, h));
+  g.fillStyle = col; poly(P(0, 0, h), P(w, 0, h), P(w, d, h), P(0, d, h));
+  for (let z = 14; z < h - 10; z += 22) for (let a = 8; a < w - 6; a += 16) if (r() < .55) { g.fillStyle = r() < .7 ? C.win : '#ffeec2'; const [px, py] = P(a, d, z); g.fillRect(px - 4, py - 10, 7, 9); }
+  for (let z = 14; z < h - 10; z += 22) for (let b = 8; b < d - 6; b += 16) if (r() < .5) { g.fillStyle = C.win; g.globalAlpha = .8; const [px, py] = P(w, b, z); g.fillRect(px - 3, py - 10, 6, 9); g.globalAlpha = 1; }
+}
+let CITY, CITYB, ROADS = [];
+function prep() {
+  CITY = mk(W, H); const g = CITY.getContext('2d'), r = mulberry(31);
+  const sky = g.createLinearGradient(0, 0, 0, H); sky.addColorStop(0, '#1d2140'); sky.addColorStop(.5, '#2a2d33'); sky.addColorStop(1, '#202329'); g.fillStyle = sky; g.fillRect(0, 0, W, H);
+  // ground grid: blocks of 260 units separated by 60-unit streets
+  for (let bx = -2; bx < 9; bx++) for (let by = -2; by < 9; by++) {
+    const x = bx * 320, y = by * 320, [ax, ay] = ISO(x, y), [cx, cy] = ISO(x + 260, y + 260); if (cy < -400 || ay > H + 400 || ax < -900 || ax > W + 900) continue;
+    g.fillStyle = C.walk; g.beginPath(); [[x - 10, y - 10], [x + 270, y - 10], [x + 270, y + 270], [x - 10, y + 270]].forEach(([a, b], i) => { const p = ISO(a, b); i ? g.lineTo(...p) : g.moveTo(...p); }); g.fill();
+    if (r() < .18) { g.fillStyle = '#4fae4c'; g.beginPath(); [[x, y], [x + 260, y], [x + 260, y + 260], [x, y + 260]].forEach(([a, b], i) => { const p = ISO(a, b); i ? g.lineTo(...p) : g.moveTo(...p); }); g.fill(); continue; }
+    for (const [ox, oy] of [[0, 0], [140, 0], [0, 140], [140, 140]]) box(g, x + ox, y + oy, 110, 110, 60 + r() * 260, PAL[Math.floor(r() * PAL.length)], bx * 99 + by * 7 + ox + oy);
+  }
+  for (let k = -2; k < 9; k++) { ROADS.push({ ax: 'x', c: k * 320 - 30 }); ROADS.push({ ax: 'y', c: k * 320 - 30 }); }
+  CITYB = mk(W, H); const b = CITYB.getContext('2d'); b.filter = 'blur(9px) saturate(1.2)'; b.drawImage(CITY, 0, 0);
+}
+function cars(g, t) { const r = mulberry(5); for (let k = 0; k < 40; k++) { const rd = ROADS[Math.floor(r() * ROADS.length)], sp = 60 + r() * 80, u = ((t * sp + r() * 3000) % 3000) - 600, col = PAL[k % PAL.length];
+  const [x, y] = rd.ax === 'x' ? ISO(u, rd.c) : ISO(rd.c, u); if (y < -20 || y > H + 20) continue; g.fillStyle = col; g.fillRect(x - 7, y - 6, 14, 8); g.fillStyle = '#fff6c0'; g.fillRect(x + (rd.ax === 'x' ? 5 : -7), y - 3, 3, 3); } }
+function neon(g, s, x, y, size, col) { g.save(); g.font = `800 ${size}px Overpass`; g.textAlign = 'center'; g.shadowColor = col; g.shadowBlur = size * .35; g.fillStyle = col; g.fillText(s, x, y); g.shadowBlur = 0; g.fillStyle = '#ffffff'; g.globalAlpha = .55; g.fillText(s, x, y); g.restore(); }
+const TH = {
+  align: 'center', rise: 0, accent: C.pink,
+  title: { family: 'Overpass', weight: 800, size: 116, min: 46, lh: 1.02, upper: true, color: '#ffffff', shadow: C.pink, shadowBlur: 34 },
+  quote: { family: 'Overpass', weight: 700, size: 64, min: 34, lh: 1.2, color: '#ffffff', shadow: 'rgba(0,0,0,.8)', shadowBlur: 14 },
+  num: { family: 'Overpass', weight: 800, size: 190, min: 64, lh: 1, color: '#ffffff', shadow: C.cyan, shadowBlur: 40 },
+  body: { family: 'Overpass', weight: 700, size: 48, min: 28, lh: 1.25, color: C.cream, shadow: 'rgba(0,0,0,.85)', shadowBlur: 12 },
+  label: { family: 'OMono', weight: 600, size: 32, min: 22, ls: .12, upper: true, color: C.cyan, shadow: 'rgba(0,0,0,.8)', shadowBlur: 10 },
+  side: { family: 'Overpass', weight: 800, size: 46, min: 28, upper: true, fixed: true, color: '#ffffff', shadow: 'rgba(0,0,0,.9)', shadowBlur: 12 },
+  arabic: { family: 'Amiri', weight: 700, color: '#ffffff', shadow: C.yellow, shadowBlur: 30 },
+  rule: (g, x, y, w, a) => { g.save(); g.shadowColor = C.pink; g.shadowBlur = 16; g.fillStyle = C.pink; g.fillRect(x + w / 2 - 140 * a, y - 3, 280 * a, 6); g.restore(); },
+  bullet: (g, k, x, y, s, a) => { g.save(); g.globalAlpha = a; g.shadowColor = [C.pink, C.cyan, C.yellow][k % 3]; g.shadowBlur = 20; g.strokeStyle = g.shadowColor; g.lineWidth = 6; g.beginPath(); g.arc(x + s / 2, y + s / 2, s * .3, 0, TAU); g.stroke(); g.restore(); },
+};
+makeKit({
+  fonts: [['Overpass', 'fonts/lemo/overpass-800.woff2', '800'], ['Overpass', 'fonts/lemo/overpass-700.woff2', '700'], ['OMono', 'fonts/lemo/overpassmono-600.woff2', '600'], ['Amiri', 'fonts/amiri-arabic-700-normal.woff2', '700']],
+  prep, th: TH, enter: 'zoom',
+  bg(g, t, s, lt) {
+    // camera drift over the town; the tilt-shift band: blurred city everywhere, the sharp city only in the middle band
+    const dx = -((t * 14) % 320), dy = -((t * 8) % 320) * .5 + Math.sin(t * .2) * 20, band = s.type === 'clash' ? [760, 1260] : s.imageSrc ? [1240, 1920] : [1300, 1920];
+    g.save(); g.translate(dx * .3, dy * .3); g.drawImage(CITYB, -60, -60, W + 120, H + 120); g.restore();
+    g.save(); const m = new Path2D(); m.rect(0, band[0], W, band[1] - band[0]); g.clip(m); g.translate(dx * .3, dy * .3); g.drawImage(CITY, -60, -60, W + 120, H + 120); g.translate(-30, 0); cars(g, t); g.restore();
+    // feather the band edges and darken behind the text (the demo's dusk grade + vignette)
+    const fe = (y, up) => { const gr = g.createLinearGradient(0, y - 60, 0, y + 60); gr.addColorStop(up ? 0 : 1, 'rgba(0,0,0,0)'); gr.addColorStop(.5, 'rgba(0,0,0,0)'); g.fillStyle = gr; };
+    const top = g.createLinearGradient(0, 0, 0, 1290); const tb = s.type === 'clash' ? 720 : 1290; top.addColorStop(0, 'rgba(18,20,36,.86)'); top.addColorStop(1, 'rgba(18,20,36,.62)'); g.fillStyle = top; g.fillRect(0, 0, W, tb);
+    const v = g.createRadialGradient(W / 2, H / 2, 500, W / 2, H / 2, 1250); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,.55)'); g.fillStyle = v; g.fillRect(0, 0, W, H);
+  },
+  photo(g, t, s, img, R, lt) {   // a billboard on a rooftop: lit frame, the photo as the poster
+    const u = back(seg(lt, .1, .6), 1.6); g.save(); g.translate(R.x + R.w / 2, R.y + R.h / 2); g.scale(u, u); g.translate(-R.x - R.w / 2, -R.y - R.h / 2);
+    g.shadowColor = C.cyan; g.shadowBlur = 30; g.fillStyle = '#111'; g.fillRect(R.x - 12, R.y - 12, R.w + 24, R.h + 24); g.shadowBlur = 0;
+    g.save(); g.beginPath(); g.rect(R.x, R.y, R.w, R.h); g.clip(); g.filter = 'saturate(1.35) contrast(1.1)'; cover(g, img, R.x, R.y, R.w, R.h, 1.03 + lt * .01); g.restore(); g.restore();
+  },
+  field(g, t, s, Z, lt) { const gr = g.createLinearGradient(0, Z.ground - 40, 0, Z.ground + 40); gr.addColorStop(0, 'rgba(201,204,208,0)'); gr.addColorStop(.5, 'rgba(201,204,208,.85)'); gr.addColorStop(1, 'rgba(201,204,208,0)'); g.fillStyle = gr; g.fillRect(0, Z.ground - 40, W, 80); },
+  look: { fill: f => f.color || (f.side > 0 ? '#3f7fbf' : C.red), stroke: 'rgba(0,0,0,.6)', lw: 2, shield: C.yellow, weapon: '#22252b', glow: '#ffe7a0', glowMode: 'lighter' },
+  fx: { dust: '#9aa0a8', arrow: '#111111', spark: C.yellow },
+  post(g, t, s, lt) { if (s.i === 0 && lt < 2.5) neon(g, 'TOY TOWN', W / 2, SAFE.y0 + 48, 40, C.pink); },
+  cap: { family: 'Overpass', weight: 800, size: 64, upper: true, color: '#ffffff', accent: C.yellow,
+    plate: (g, x0, y0, x1, y1, a) => { g.globalAlpha = .82 * a; g.fillStyle = '#121424'; g.beginPath(); g.roundRect(x0, y0, x1 - x0, y1 - y0, 14); g.fill(); g.globalAlpha = a; g.save(); g.shadowColor = C.cyan; g.shadowBlur = 14; g.strokeStyle = C.cyan; g.lineWidth = 3; g.stroke(); g.restore(); g.globalAlpha = 1; } },
+});
+</script></body></html>

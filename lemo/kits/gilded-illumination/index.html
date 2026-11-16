@@ -9,6 +9,7 @@
 // burnished gold that catches a moving glint, the subtitle written on a banderole (scroll ribbon) that unrolls.
 // Portrait adaptation: the miniature sits in a pointed-arch window (no figures: suitable for Qur'an/hadith and sirah), text below on vellum.
 import { W, H, SAFE, TAU, clamp, lerp, seg, eo, ss, back, mulberry, mk, at, SC, IMG, cover, graded, block, captions, capAt, stdBody, boot, reg, font, fit } from './kit.js';
+import { clashModel, drawFigure, drawFx, clashText } from './clash.js';
 
 const VELL = '#efe2c4', INK = '#2a1a10', GALL = '#3b2416', LAPIS = '#1f3f9a', LAPIS_D = '#132a6e', ULTRA_D = '#141f66', VERM = '#c8321f', AZUR = '#3d7fa6',
   OCHRE = '#d39a45', OCHRE_D = '#9a6424', OCHRE_L = '#e8bd72', VERDI = '#3f8f7a', VERDI_D = '#25604f', LILAC = '#a596c4', LILAC_D = '#6c5d92', VERD = '#2f6b3a', VERD_L = '#5f9a52', ROSE = '#d97a8a';
@@ -36,7 +37,9 @@ function gold(g, x0, y0, x1, y1, t) {   // burnished leaf: ochre ramp + a glint 
 }
 function star(g, x, y, R, n, col, rot = 0) { g.beginPath(); for (let i = 0; i < n * 2; i++) { const a = rot + i * Math.PI / n, r = i % 2 ? R * .45 : R; g.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r); } g.closePath(); g.fillStyle = col; g.fill(); g.strokeStyle = INK; g.lineWidth = 1.6; g.stroke(); }
 // pointed (Islamic) arch window
-function arch(g, x, y, w, h) { const r = w * .62; g.beginPath(); g.moveTo(x, y + h); g.lineTo(x, y + w * .5); g.arc(x + r, y + w * .5, r, Math.PI, Math.PI * 1.32); g.lineTo(x + w / 2, y); const p = Math.PI * 1.68; g.arc(x + w - r, y + w * .5, r, p, 0); g.lineTo(x + w, y + h); g.closePath(); }
+function arch(g, x, y, w, h) {   // a pointed arch: two arcs of radius .62w meeting at the apex (y), straight jambs below
+  const r = w * .62, c = (w / 2 - r) / r, aL = TAU - Math.acos(c), aR = TAU - Math.acos(-c), sy = y - r * Math.sin(aL);
+  g.beginPath(); g.moveTo(x, y + h); g.lineTo(x, sy); g.arc(x + r, sy, r, Math.PI, aL); g.arc(x + w - r, sy, r, aR, TAU); g.lineTo(x + w, y + h); g.closePath(); }
 function spire(g, bx, by, w, h, col, rim) { g.beginPath(); g.moveTo(bx - w / 2, by); g.bezierCurveTo(bx - w * .35, by - h * .5, bx - w * .25, by - h * .85, bx - w * .1, by - h); g.lineTo(bx + w * .12, by - h * .96); g.bezierCurveTo(bx + w * .3, by - h * .7, bx + w * .4, by - h * .4, bx + w / 2, by); g.closePath(); g.fillStyle = col; g.fill(); g.strokeStyle = INK; g.lineWidth = 2.4; g.stroke(); g.save(); g.clip(); g.fillStyle = rim; g.globalAlpha = .55; g.fillRect(bx + w * .12, by - h, w, h); g.restore(); }
 function miniature(g, t, s, P) {     // lapis sky, gold sun, stars, rocks and meadow, all inside the arch
   const lt = t - s.t0;
@@ -81,9 +84,14 @@ function draw(g, t) {
   g.fillStyle = VELL; g.fillRect(0, 0, W, H); g.fillStyle = g.createPattern(SPK, 'repeat'); g.fillRect(0, 0, W, H);
   border(g, t);
   // the arch window: the miniature, or the photo (warmed, like a painted panel), or — for ayat — the verse in gold on lapis
-  const P = { x: 170, y: 225, w: 740, h: s.type === 'ayat' ? 540 : 500 }, ap = eo(seg(lt, 0, .5));
+  const P = { x: 170, y: 225, w: 740, h: s.type === 'ayat' ? 540 : s.type === 'clash' ? 640 : 500 }, ap = eo(seg(lt, 0, .5));
   g.save(); arch(g, P.x, P.y, P.w, P.h); g.clip(); g.globalAlpha = ap;
-  if (img && s.type !== 'ayat') cover(g, img, P.x, P.y, P.w, P.h, 1.04 + lt * .01); else miniature(g, t, s, P);
+  if (img && s.type !== 'ayat' && s.type !== 'clash') cover(g, img, P.x, P.y, P.w, P.h, 1.04 + lt * .01); else miniature(g, t, s, P);
+  if (s.type === 'clash') {   // the battle painted inside the arch: flat pigment, iron-gall outline, gold shields
+    const m = clashModel(s, t, { x0: P.x + 40, x1: P.x + P.w - 40, ground: P.y + P.h - 26, S: 175 });
+    for (const f of m.figs) drawFigure(g, f, t, { fill: f => f.color || (f.side > 0 ? VERD : VERM), stroke: INK, lw: 2.2, shield: OCHRE, weapon: GALL, glow: '#ffd77a', glowMode: 'lighter' });
+    drawFx(g, m.fx, { dust: '#d8c69c', arrow: INK, spark: OCHRE_L });
+  }
   g.restore();
   g.save(); arch(g, P.x, P.y, P.w, P.h); g.lineWidth = 16; g.strokeStyle = gold(g, P.x, P.y, P.x + P.w, P.y + P.h, t); g.stroke(); g.lineWidth = 3; g.strokeStyle = INK; g.stroke(); g.restore();
   reg('arch', '[miniature]', { x0: P.x - 8, y0: P.y - 8, x1: P.x + P.w + 8, y1: P.y + P.h + 8 });
@@ -91,6 +99,8 @@ function draw(g, t) {
     block(g, 'ar', s.arabic, { x: P.x + 60, y: P.y + 200, w: P.w - 120, h: P.h - 260 }, { family: 'Amiri', weight: 700, size: 104, min: 44, lh: 1.6, align: 'center', valign: 'middle', layer: 1,
       stroke: INK, strokeW: 5, paint: (g, ln, x, y) => { g.fillStyle = gold(g, x, y - 80, x + 600, y + 20, t); g.fillText(ln, x, y); }, reveal: () => ({ a: eo(seg(lt, .2, 1)) }) });
     stdBody(g, t, { ...s, type: 'quote', text: s.translation, source: s.ref }, { x: SAFE.x0 + 30, y: P.y + P.h + 40, w: SAFE.x1 - SAFE.x0 - 60, h: SAFE.y1 - P.y - P.h - 40 }, TH);
+  } else if (s.type === 'clash') {
+    clashText(g, t, s, { x: SAFE.x0 + 30, y: P.y + P.h + 34, w: SAFE.x1 - SAFE.x0 - 60, h: 1170 - P.y - P.h - 34 }, { ...TH, title: { ...TH.title, size: 96 }, side: { family: 'Fell', weight: 400, size: 44, min: 26, color: INK } }, 1180);
   } else {
     const s2 = s.type === 'image' ? { ...s, type: 'headline' } : s;
     if (s.eyebrow) block(g, 'eyebrow', s.eyebrow, { x: SAFE.x0, y: P.y + P.h + 26, w: SAFE.x1 - SAFE.x0, h: 44 }, { ...TH.label, align: 'center', reveal: () => ({ a: eo(seg(lt, .2, .6)) }) });

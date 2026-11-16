@@ -1,0 +1,7 @@
+{"title":"Perang Badar","style":"paper-lantern","music":"sacred","scenes":[
+{"id":1,"type":"title","eyebrow":"Sirah","title":"Perang Badar","subtitle":"17 Ramadan, tahun 2 Hijriah","vo":"Tujuh belas Ramadan, tahun kedua Hijriah, di sebuah lembah bernama Badar."},
+{"id":2,"type":"clash","eyebrow":"Pertempuran","headline":"313 melawan 1.000","sub":"Lembah Badar","left":{"label":"Muslimin","count":313,"color":"#2f6b3a","cavalry":1},"right":{"label":"Quraisy","count":1000,"color":"#8a2a1e","cavalry":3},"winner":"left","hero":{"side":"left","prophet":true},
+ "sfx":[{"name":"swoosh","at":0.15},{"name":"sword_clash","at":0.47},{"name":"sword_clash","at":0.62}],
+ "vo":"Tiga ratus tiga belas pasukan Muslimin berhadapan dengan seribu pasukan Quraisy. Rasulullah berdoa sepanjang malam, dan pertolongan Allah pun datang."},
+{"id":3,"type":"ayat","arabic":"وَلَقَدْ نَصَرَكُمُ اللَّهُ بِبَدْرٍ وَأَنتُمْ أَذِلَّةٌ","translation":"Dan sungguh Allah telah menolong kamu dalam perang Badar, padahal kamu dalam keadaan lemah.","ref":"QS. Ali 'Imran: 123","vo":"Dan sungguh Allah telah menolong kalian di Badar, padahal kalian dalam keadaan lemah."}
+]}

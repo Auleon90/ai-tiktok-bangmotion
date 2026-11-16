@@ -19,14 +19,15 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
    1. **HyperFrames + GSAP + Lottie** (`hyperframes/`) — render per frame, ±2 menit
    2. **Remotion + Lottie** (`remotion/`) — kualitas tertinggi, ±20 menit
    3. **Manim** (`manim/`, `.venv-manim`) — sains/matematika, ±1 menit
-   4. **Lemo native** (`lemo/`) — kode demo Lemo-Opuscar diadaptasi ke 9:16, tampilan persis 6 gaya: kino-montage, newsreel,
-      stick-explainer, flat-space-explainer, paper-lantern, gilded-illumination (`python3 scripts/styles.py native`) — ±1 menit
+   4. **Lemo native** (`lemo/`) — kode demo Lemo-Opuscar diadaptasi ke 9:16, 12 gaya (`python3 scripts/styles.py native`), ±1 menit.
+      Adegan perang/kericuhan dua kubu: scene `clash` (gaya bertanda ⚔: paper-lantern, gilded-illumination, paper-popup, brick-toy,
+      tilt-shift, urban-sketch, colored-pencil, watercolor)
    5. **Auto** — Claude memilih sesuai topik & storyboard (aturan di skill)
 3. Gambar AI (Cloudflare FLUX) untuk TEMA APA PUN: nilai tiap scene — kalau adegannya punya sesuatu yang bisa dilihat
    (tempat, benda, alam, hewan, peristiwa, proses, suasana) dan gambar membuatnya lebih menarik, pakai gambar. Biasanya 3–6 gambar per video,
    dicampur scene yang digambar kode. Angka/grafik/rumus/teks tetap digambar kode (boleh di atas gambar).
    Tandai scene 🖼️ di storyboard + jumlahnya, supaya user bisa menolak.
-   Batasan: tanpa wajah manusia untuk konten Islami, tanpa teks Arab dari AI; sirah Nabi ﷺ hanya peta/kaligrafi/lanskap tanpa sosok;
+   Batasan GAMBAR AI: tanpa wajah manusia untuk konten Islami, tanpa teks Arab dari AI, tidak pernah menggambar Nabi ﷺ/sahabat dengan AI;
    Manim tidak mendukung gambar.
    Kuota Cloudflare HANYA untuk gambar — jangan dipakai untuk QA atau hal lain.
 4. Audio: musik orisinal (`music`: warm/epic/tense/calm/playful/sacred/none) + SFX otomatis dari `scripts/score.py`
@@ -39,7 +40,10 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
 
 Detail lengkap: `.claude/skills/bang-motion/SKILL.md`. Semua mode dijalankan lewat `scripts/produce.py`.
 Contoh: `examples/uhud.storyboard.json` (sirah, mode 1/2), `examples/angsa-emas.storyboard.json` (fabel + gambar AI), `examples/kopi-riso.storyboard.json` + `examples/kopi-riso.hf.html` (gaya Risograph), `examples/pythagoras.storyboard.json` + `examples/pythagoras_manim.py` (mode 3), `examples/insyirah.lemo.storyboard.json` (mode 4).
-Konten sirah: JANGAN menggambarkan sosok/wajah Nabi ﷺ atau sahabat — pakai peta, simbol, kaligrafi.
+Sosok manusia (keputusan pemilik repo): siluet TANPA WAJAH yang digambar kode (scene `clash`) boleh di semua konten, termasuk sirah.
+Sosok Nabi ﷺ hanya boleh sebagai siluet itu dengan `"hero": {"prophet": true}` — ditandai cahaya di atas kepala supaya berbeda dari figuran,
+tidak pernah ikut menebas (pose berdiri, tangan terangkat), tidak pernah berwajah/berdetail. Sahabat = siluet anonim seperti figuran.
+Gambar AI (FLUX) tetap tanpa Nabi ﷺ/sahabat dan tanpa wajah untuk konten Islami.
 
 ## Environment variables yang diperlukan
 

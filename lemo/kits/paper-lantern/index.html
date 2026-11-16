@@ -8,6 +8,7 @@
 // a night of layered cut-paper sheets (ridges and fir lines) lit from behind, each sheet with fibre grain and a warm rim of light;
 // a backlit paper moon with a halo; glowing paper lanterns (#ffcd82) that drift up; Cormorant Garamond in warm cream; slow parallax.
 import { W, H, SAFE, TAU, clamp, lerp, seg, eo, ss, back, mulberry, vnoise, mk, at, SC, IMG, cover, duotone, block, captions, stdBody, boot, reg } from './kit.js';
+import { clashModel, drawFigure, drawFx, clashText } from './clash.js';
 
 const C = { sky0: '#0b1028', sky1: '#151d3c', sky2: '#2a3a78', cream: '#f7e6c8', gold: '#ffcd82', glow: '#ffbf6a', ink: '#22170f', red: '#b3302a' };
 const TH = {
@@ -73,6 +74,15 @@ function draw(g, t) {
     g.save(); g.globalAlpha = u; g.strokeStyle = C.gold; g.lineWidth = 3; g.shadowColor = C.glow; g.shadowBlur = 24; g.beginPath(); g.roundRect(120, y0, 840, h, 18); g.stroke(); g.restore();
     reg('photo', '[photo]', { x0: 120, y0, x1: 960, y1: y0 + h });
   }
+  // battle: black paper silhouettes on a cut-paper ledge, lit from behind (warm rim); the prophet's light glows gold
+  if (s.type === 'clash') {
+    const Z = { x0: SAFE.x0, x1: SAFE.x1, ground: 1235, S: 230 };
+    g.fillStyle = '#0a1029'; g.beginPath(); g.moveTo(-20, H); g.lineTo(-20, Z.ground + 4); for (let x = 0; x <= W + 20; x += 40) g.lineTo(x, Z.ground + 4 + Math.sin(x * .02) * 6); g.lineTo(W + 20, H); g.fill();
+    g.strokeStyle = C.glow; g.lineWidth = 4; g.shadowColor = C.glow; g.shadowBlur = 14; g.beginPath(); for (let x = 0; x <= W + 20; x += 40) g.lineTo(x, Z.ground + 4 + Math.sin(x * .02) * 6); g.stroke(); g.shadowBlur = 0;
+    const m = clashModel(s, t, Z);
+    for (const f of m.figs) drawFigure(g, f, t, { fill: '#0a1029', stroke: 'rgba(255,190,104,.85)', lw: 2.4, shield: '#121a3e', weapon: '#0a1029', flag: f => f.color || C.red, glow: C.gold, glowMode: 'lighter' });
+    drawFx(g, m.fx, { dust: '#3a4a88', arrow: '#0a1029', spark: C.gold });
+  }
   // the sheets, back to front, with parallax drift and a lift on each cut
   sheetsAt(2, 4);
   // lanterns drifting up between the sheets
@@ -81,7 +91,8 @@ function draw(g, t) {
   g.save(); g.globalAlpha = clamp(lt / .5);
   if (s.eyebrow) block(g, 'eyebrow', s.eyebrow, { x: SAFE.x0, y: SAFE.y0, w: SAFE.x1 - SAFE.x0, h: 50 }, { ...TH.label, align: 'center' });
   const top = SAFE.y0 + 80;
-  if (img) { const s2 = s.type === 'image' ? { ...s, type: 'headline' } : s; stdBody(g, t, s2, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: 600 - top }, { ...TH, title: { ...TH.title, size: 92 }, num: { ...TH.num, size: 120 } }); }
+  if (s.type === 'clash') clashText(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: 560 - top }, { ...TH, side: { family: 'Corm', weight: 500, italic: true, size: 46, min: 28, fixed: true, color: C.cream } }, 590);
+  else if (img) { const s2 = s.type === 'image' ? { ...s, type: 'headline' } : s; stdBody(g, t, s2, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: 600 - top }, { ...TH, title: { ...TH.title, size: 92 }, num: { ...TH.num, size: 120 } }); }
   else stdBody(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: (s.type === 'list' || s.type === 'counter' ? 1120 : 1000) - top }, TH);
   g.restore();
   captions(g, t, { family: 'Corm', weight: 500, italic: true, size: 72, color: C.cream, accent: C.gold, shadow: true,

@@ -1,38 +1,142 @@
 {
   "kino-montage": {
     "name": "Constructivist Montage",
-    "themes": ["sejarah dunia", "pengetahuan umum", "tokoh & penemuan", "angka besar"],
+    "themes": [
+      "sejarah dunia",
+      "pengetahuan umum",
+      "tokoh & penemuan",
+      "angka besar"
+    ],
     "image_style": "1930s black and white archival documentary photograph, high contrast, film grain, dramatic low angle, no text, no letters",
     "music": "epic"
   },
   "newsreel": {
     "name": "1920s Newsreel",
-    "themes": ["sejarah dunia", "peristiwa abad 20", "pengetahuan umum"],
+    "themes": [
+      "sejarah dunia",
+      "peristiwa abad 20",
+      "pengetahuan umum"
+    ],
     "image_style": "1920s silver gelatin newsreel photograph, black and white, soft focus, period atmosphere, no text, no letters",
     "music": "playful"
   },
   "stick-explainer": {
     "name": "Stick-figure Explainer",
-    "themes": ["psikologi", "pengetahuan umum", "kebiasaan & perilaku", "inspirasi hidup"],
+    "themes": [
+      "psikologi",
+      "pengetahuan umum",
+      "kebiasaan & perilaku",
+      "inspirasi hidup"
+    ],
     "image_style": "simple clean photograph, soft natural light, calm muted colours, minimal background, no text, no letters",
     "music": "playful"
   },
   "flat-space-explainer": {
     "name": "Flat Space Explainer",
-    "themes": ["sains", "astronomi", "fisika & biologi", "skala & ukuran"],
+    "themes": [
+      "sains",
+      "astronomi",
+      "fisika & biologi",
+      "skala & ukuran"
+    ],
     "image_style": "flat vector illustration, deep navy background, cream, sun yellow, coral and mint shapes, simple geometric forms, no text, no letters",
     "music": "calm"
   },
   "paper-lantern": {
     "name": "Paper Lantern",
-    "themes": ["inspirasi & motivasi hidup", "renungan", "inspirasi Qur'an & hadits", "sejarah Islam (lanskap)"],
+    "themes": [
+      "inspirasi & motivasi hidup",
+      "renungan",
+      "inspirasi Qur'an & hadits",
+      "sejarah Islam (lanskap)",
+      "adegan perang (clash)"
+    ],
     "image_style": "cut paper diorama at night, layered paper silhouettes, warm lantern glow, deep blue and gold, no people, no text, no letters",
-    "music": "calm"
+    "music": "calm",
+    "clash": true
   },
   "gilded-illumination": {
     "name": "Gilded Illumination",
-    "themes": ["inspirasi Qur'an & hadits", "sejarah Islam", "kisah & hikmah"],
+    "themes": [
+      "inspirasi Qur'an & hadits",
+      "sejarah Islam",
+      "kisah & hikmah",
+      "adegan perang (clash)"
+    ],
     "image_style": "illuminated manuscript miniature painting, lapis blue sky, gold leaf, flat pigments, ornamental detail, no people, no figures, no text, no letters",
-    "music": "sacred"
+    "music": "sacred",
+    "clash": true
+  },
+  "paper-popup": {
+    "name": "Paper Pop-up Book",
+    "themes": [
+      "kisah & dongeng",
+      "pengetahuan umum anak",
+      "sejarah ringan",
+      "motivasi"
+    ],
+    "image_style": "paper cut-out pop-up book illustration, bright flat colours, white paper edges, soft shadows, no text, no letters",
+    "music": "playful",
+    "clash": true
+  },
+  "brick-toy": {
+    "name": "Brick Toy",
+    "themes": [
+      "pengetahuan umum",
+      "sains ringan",
+      "cara kerja benda",
+      "sejarah ringan"
+    ],
+    "image_style": "toy brick diorama photograph, plastic bricks, studio lighting, shallow depth of field, no text, no letters",
+    "music": "playful",
+    "clash": true
+  },
+  "tilt-shift": {
+    "name": "Tilt-shift Miniature",
+    "themes": [
+      "kota & peradaban",
+      "sejarah dunia",
+      "fakta urban",
+      "ekonomi"
+    ],
+    "image_style": "tilt-shift miniature photograph, aerial view, saturated colours, dusk lights, shallow focus band, no text, no letters",
+    "music": "epic",
+    "clash": true
+  },
+  "urban-sketch": {
+    "name": "Urban Sketch",
+    "themes": [
+      "sejarah kota & tempat",
+      "perjalanan",
+      "pengetahuan umum",
+      "psikologi sehari-hari"
+    ],
+    "image_style": "urban sketch, ink pen lines with loose watercolour washes, sketchbook page, no text, no letters",
+    "music": "warm",
+    "clash": true
+  },
+  "colored-pencil": {
+    "name": "Colored-Pencil Science Illustration",
+    "themes": [
+      "sains alam",
+      "biologi",
+      "bumi & tanah",
+      "inspirasi Qur'an tentang alam"
+    ],
+    "image_style": "coloured pencil scientific illustration, visible hatching strokes, cream paper, soft colours, no text, no letters",
+    "music": "calm",
+    "clash": true
+  },
+  "watercolor": {
+    "name": "Watercolor",
+    "themes": [
+      "alam & ekologi",
+      "inspirasi hidup",
+      "renungan",
+      "sejarah (lanskap)"
+    ],
+    "image_style": "loose watercolour painting, wet washes, soft edges, misty greens, cold-press paper texture, no text, no letters",
+    "music": "calm",
+    "clash": true
   }
 }

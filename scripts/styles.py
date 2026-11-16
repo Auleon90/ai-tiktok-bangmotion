@@ -40,7 +40,7 @@ def main():
     cmd = sys.argv[1] if len(sys.argv) > 1 else "list"
     if cmd == "native":   # styles with a Lemo-native portrait kit (lemo/kits/)
         for slug, k in NATIVE.items():
-            print(f"★ {slug:<22} {k['name']:<24} {', '.join(k['themes'])}")
+            print(f"★ {slug:<22} {k['name']:<36} {'⚔ ' if k.get('clash') else '  '}{', '.join(k['themes'])}")
         return
     styles = load()
     if cmd == "list":

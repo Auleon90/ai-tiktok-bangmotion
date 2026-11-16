@@ -1,0 +1,70 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Urban Sketch · portrait kit</title>
+<style>html,body{margin:0;background:#f5eede;overflow:hidden}canvas{display:block}</style>
+<script src="props.js"></script></head><body>
+<canvas id="c"></canvas>
+<script type="module">
+// Urban Sketch — portrait kit. Look and motion from the Lemo-Opuscar demo (MIT code): fineliner ink that wobbles and overshoots
+// its corners, loose watercolour washes laid off-register from the line, white paper left as highlights, a city skyline and park
+// trees sketched along the bottom, handwritten notes (Reenie Beanie / Caveat). Lines draw themselves on at each scene.
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, mulberry, vnoise, mk, cover } from './kit.js';
+import { makeKit } from './kitbase.js';
+import { hexA } from './clash.js';
+
+const C = { paper: '#f5eede', ink: '#2e2622', ink2: '#4a3a30', sky: '#8ea6c4', sand: '#e2c46a', rose: '#c9796a', leaf: '#6f8a55', clay: '#c89274', lilac: '#b58fb0' };
+let PAPER, CITY;
+function wob(pts, amp, seed) { return pts.map(([x, y], i) => [x + (vnoise(i * .9, seed) - .5) * amp, y + (vnoise(i * .9 + 50, seed) - .5) * amp]); }
+function inkLine(g, pts, w = 2.6, col = C.ink, p = 1) {   // p: how much of the line is drawn
+  const n = Math.max(2, Math.floor(pts.length * p)); g.beginPath(); for (let i = 0; i < n; i++) i ? g.lineTo(...pts[i]) : g.moveTo(...pts[i]);
+  g.strokeStyle = col; g.lineWidth = w; g.lineCap = 'round'; g.lineJoin = 'round'; g.stroke();
+}
+function seg2(x0, y0, x1, y1, n = 10) { return [...Array(n + 1)].map((_, i) => [lerp(x0, x1, i / n), lerp(y0, y1, i / n)]); }
+function rect(x, y, w, h, seed) { const o = 6; return wob([...seg2(x - o, y, x + w + o, y), ...seg2(x + w, y - o, x + w, y + h + o), ...seg2(x + w + o, y + h, x - o, y + h), ...seg2(x, y + h + o, x, y - o)], 3, seed); }
+function washRect(g, x, y, w, h, col, a, seed) { const r = mulberry(seed); g.fillStyle = hexA(col, a); g.beginPath(); g.moveTo(x + r() * 10, y + r() * 10); g.lineTo(x + w - r() * 14, y + r() * 12); g.lineTo(x + w + r() * 8, y + h - r() * 10); g.lineTo(x - r() * 8, y + h + r() * 6); g.closePath(); g.fill(); }
+function prep() {
+  PAPER = mk(W, H); const p = PAPER.getContext('2d'), d = p.createImageData(W, H), r = mulberry(8);
+  for (let i = 0; i < W * H; i++) { const v = 243 + (r() - .5) * 10; d.data[i * 4] = v + 2; d.data[i * 4 + 1] = v - 3; d.data[i * 4 + 2] = v - 15; d.data[i * 4 + 3] = 255; }
+  p.putImageData(d, 0, 0);
+  // the skyline + park (bottom of the frame): washes first, off-register, then ink is drawn per frame from CITY.lines
+  const rr = mulberry(21), lines = [], c = mk(W, H), g = c.getContext('2d');
+  g.fillStyle = hexA(C.sky, .28); g.fillRect(0, 1380, W, 260);
+  for (let i = 0; i < 9; i++) { const w = 70 + rr() * 70, h = 160 + rr() * 260, x = i * 125 + rr() * 30, y = 1640 - h;
+    washRect(g, x + 10, y + 8, w, h, [C.clay, C.sky, C.sand, C.lilac][i % 4], .35, 30 + i); lines.push(rect(x, y, w, h, 60 + i));
+    for (let k = 0; k < 6; k++) lines.push(wob(seg2(x + 8, y + 20 + k * h / 7, x + w - 8, y + 20 + k * h / 7, 4), 2, 90 + i * 7 + k)); }
+  for (let i = 0; i < 8; i++) { const x = 40 + i * 140 + rr() * 30, y = 1760; for (let k = 0; k < 5; k++) { g.fillStyle = hexA(C.leaf, .32); g.beginPath(); g.arc(x + (rr() - .5) * 80, y - 120 - rr() * 70, 40 + rr() * 30, 0, TAU); g.fill(); }
+    lines.push(wob(seg2(x, y, x + 4, y - 120, 6), 2, 200 + i)); }
+  g.fillStyle = hexA(C.leaf, .4); g.fillRect(0, 1740, W, H - 1740); lines.push(wob(seg2(0, 1745, W, 1738, 30), 4, 300));
+  CITY = { wash: c, lines };
+}
+const TH = {
+  align: 'left', rise: 16, accent: C.rose,
+  title: { family: 'Caveat', weight: 600, size: 130, min: 52, lh: 1, color: C.ink },
+  quote: { family: 'Caveat', weight: 600, size: 86, min: 42, lh: 1.08, color: C.ink },
+  num: { family: 'Caveat', weight: 600, size: 220, min: 70, lh: .95, color: C.rose },
+  body: { family: 'Caveat', weight: 600, size: 60, min: 34, lh: 1.1, color: C.ink2 },
+  label: { family: 'Caveat', weight: 600, size: 46, min: 30, color: C.rose },
+  side: { family: 'Caveat', weight: 600, size: 50, min: 30, color: C.ink },
+  arabic: { family: 'Amiri', weight: 700, color: C.ink },
+  rule: (g, x, y, w, a) => inkLine(g, wob(seg2(x, y, x + 320, y + 4, 16), 3, 7), 3, C.ink, a),
+  bullet: (g, k, x, y, s, a) => { washRect(g, x + 8, y + 10, s * .7, s * .7, [C.sand, C.sky, C.rose, C.leaf][k % 4], .6 * a, k + 3); inkLine(g, rect(x + 4, y + 4, s * .66, s * .66, k + 9), 2.4, C.ink, a); },
+};
+makeKit({
+  fonts: [['Caveat', 'fonts/lemo/caveat-600.woff2', '600'], ['Reenie', 'fonts/lemo/reenie-400.woff2'], ['Amiri', 'fonts/amiri-arabic-700-normal.woff2', '700']],
+  prep, th: TH, enter: 'fade',
+  bg(g, t, s, lt) {
+    g.drawImage(PAPER, 0, 0); g.drawImage(CITY.wash, 0, 0);
+    const p = eo(seg(lt, 0, 1.4)); CITY.lines.forEach((l, k) => inkLine(g, l, 2.2, C.ink2, s.i ? clamp(p * 1.4 - k * .01) : 1));
+  },
+  photo(g, t, s, img, R, lt) {   // the photo pasted in the sketchbook: slightly tilted, washed edges, ink frame drawn on
+    const u = eo(seg(lt, .1, .7)); g.save(); g.translate(R.x + R.w / 2, R.y + R.h / 2); g.rotate(-.012); g.globalAlpha = u;
+    g.filter = 'saturate(.85) contrast(1.05) sepia(.12)'; cover(g, img, -R.w / 2, -R.h / 2, R.w, R.h, 1.03 + lt * .008); g.filter = 'none'; g.restore();
+    inkLine(g, rect(R.x, R.y, R.w, R.h, s.i + 40), 3.2, C.ink, eo(seg(lt, .2, 1.2)));
+  },
+  field(g, t, s, Z, lt) { const p = eo(seg(lt, 0, 1)); washRect(g, -20, Z.ground - 30, W + 40, 70, C.sand, .45 * p, 5); inkLine(g, wob(seg2(0, Z.ground + 4, W, Z.ground, 30), 5, 11), 2.6, C.ink, p); },
+  // each figure: a loose wash off the line, then the ink outline
+  look: { fill: f => hexA(f.color || (f.side > 0 ? C.sky : C.rose), .55), stroke: C.ink, lw: 2.6, shield: hexA(C.sand, .7), weapon: C.ink, glow: '#ffd77a', glowMode: 'source-over' },
+  fx: { dust: '#d9c39a', arrow: C.ink, spark: C.rose },
+  cap: { family: 'Caveat', weight: 600, size: 76, color: C.ink, accent: C.rose,
+    plate: (g, x0, y0, x1, y1, a) => { washRect(g, x0, y0, x1 - x0, y1 - y0, '#fffaf0', .9 * a, 13); inkLine(g, rect(x0, y0, x1 - x0, y1 - y0, 14), 2.2, C.ink, a); } },
+});
+</script></body></html>

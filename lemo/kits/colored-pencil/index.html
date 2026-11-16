@@ -1,0 +1,74 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Colored Pencil · portrait kit</title>
+<style>html,body{margin:0;background:#f8f4ea;overflow:hidden}canvas{display:block}</style>
+<script src="props.js"></script></head><body>
+<canvas id="c"></canvas>
+<script type="module">
+// Colored-Pencil Science Illustration — portrait kit. Look from the Lemo-Opuscar demo (MIT code; its three.js pencil shader is
+// approximated in 2D): toothy cream paper, every shape filled with directional pencil hatching that lets the paper show through,
+// a darker pencil outline drawn twice slightly off, a cut-away of soil strata, roots and stones at the bottom, a light humanist title.
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, mulberry, vnoise, mk, cover } from './kit.js';
+import { makeKit } from './kitbase.js';
+
+const C = { paper: '#f8f4ea', graphite: '#4b4640', green: '#6f9a4a', greenD: '#3f6b3a', soil: '#8a5a3a', soilL: '#b9875a', clay: '#c9a06a', stone: '#9a978f', sky: '#7fa6c9', red: '#c8553d', ochre: '#d9a441' };
+let PAPER, STRATA, PAT = {};
+// pencil hatching inside a path: parallel strokes at angle a, jittered, alpha varied (paper tooth shows through)
+function hatch(g, path, col, a = -.9, gap = 6, seed = 1, w = 1.6, alpha = .75) {
+  const r = mulberry(seed), b = 2400; g.save(); g.clip(path); g.strokeStyle = col; g.lineCap = 'round';
+  g.translate(W / 2, H / 2); g.rotate(a);
+  for (let y = -b; y < b; y += gap * (.8 + r() * .4)) { g.globalAlpha = alpha * (.55 + r() * .45); g.lineWidth = w * (.7 + r() * .6); g.beginPath(); g.moveTo(-b, y + (r() - .5) * 2); g.lineTo(b, y + (r() - .5) * 2); g.stroke(); }
+  g.restore();
+}
+function outline(g, path, col, w = 2.4) { g.save(); g.strokeStyle = col; g.lineJoin = 'round'; for (const [dx, dy, a] of [[0, 0, .85], [1.6, -1.2, .4]]) { g.globalAlpha = a; g.lineWidth = w; g.translate(dx, dy); g.stroke(path); g.translate(-dx, -dy); } g.restore(); }
+function blobPath(cx, cy, rx, ry, seed, n = 22) { const p = new Path2D(); for (let i = 0; i <= n; i++) { const th = i / n * TAU, k = 1 + (vnoise(i * .8, seed) - .5) * .3; const x = cx + Math.cos(th) * rx * k, y = cy + Math.sin(th) * ry * k; i ? p.lineTo(x, y) : p.moveTo(x, y); } p.closePath(); return p; }
+function hatchPattern(col) {   // a tile of hatching, used to fill figures
+  if (PAT[col]) return PAT[col]; const c = mk(64, 64), g = c.getContext('2d'); g.fillStyle = col; g.globalAlpha = .25; g.fillRect(0, 0, 64, 64); g.globalAlpha = 1;
+  const r = mulberry(col.length * 7); g.strokeStyle = col; for (let k = -64; k < 128; k += 6) { g.globalAlpha = .55 + r() * .4; g.lineWidth = 1.4 + r(); g.beginPath(); g.moveTo(k, 64); g.lineTo(k + 64, 0); g.stroke(); }
+  return PAT[col] = document.createElement('canvas').getContext('2d').createPattern(c, 'repeat');
+}
+function prep() {
+  PAPER = mk(W, H); const p = PAPER.getContext('2d'), d = p.createImageData(W, H), r = mulberry(4);
+  for (let i = 0; i < W * H; i++) { const v = 246 + (r() - .5) * 12 - (r() < .01 ? 18 : 0); d.data[i * 4] = v + 2; d.data[i * 4 + 1] = v - 1; d.data[i * 4 + 2] = v - 12; d.data[i * 4 + 3] = 255; }
+  p.putImageData(d, 0, 0);
+  STRATA = mk(W, H); const g = STRATA.getContext('2d'), top = 1290;
+  const layer = (y0, y1, col, a, seed) => { const pth = new Path2D(); pth.moveTo(0, y0); for (let x = 0; x <= W; x += 30) pth.lineTo(x, y0 + Math.sin(x * .01 + seed) * 10); pth.lineTo(W, y1); pth.lineTo(0, y1); pth.closePath(); hatch(g, pth, col, a, 5, seed, 1.6, .7); return pth; };
+  layer(top, 1460, C.soil, -.8, 1); layer(1450, 1640, C.soilL, -1.1, 2); layer(1630, 1780, C.clay, -.6, 3); layer(1770, H, C.stone, -1, 4);
+  for (let i = 0; i < 22; i++) { const x = r() * W, y = 1790 + r() * 120, pth = blobPath(x, y, 30 + r() * 40, 22 + r() * 22, 40 + i); g.fillStyle = C.paper; g.fill(pth); hatch(g, pth, C.stone, r() * 2, 5, 60 + i, 1.4, .8); outline(g, pth, C.graphite, 2); }
+  g.strokeStyle = C.soil; g.globalAlpha = .7; for (let i = 0; i < 14; i++) { let x = 40 + i * 75, y = top; g.lineWidth = 3; g.beginPath(); g.moveTo(x, y); for (let k = 0; k < 9; k++) { x += (r() - .5) * 50; y += 25 + r() * 20; g.lineTo(x, y); } g.stroke(); } g.globalAlpha = 1;
+  // grass along the surface
+  for (let x = 0; x < W; x += 9) { g.strokeStyle = r() < .5 ? C.green : C.greenD; g.lineWidth = 2; g.beginPath(); g.moveTo(x, top + 4); g.lineTo(x + (r() - .5) * 10, top - 14 - r() * 18); g.stroke(); }
+}
+const TH = {
+  align: 'left', rise: 20, accent: C.red,
+  title: { family: 'WK', weight: 400, size: 120, min: 48, lh: 1.08, color: C.graphite },
+  quote: { family: 'WK', weight: 400, size: 76, min: 38, lh: 1.2, color: C.graphite },
+  num: { family: 'WK', weight: 400, size: 210, min: 70, lh: 1, color: C.greenD },
+  body: { family: 'WK', weight: 400, size: 52, min: 30, lh: 1.25, color: '#6a645b' },
+  label: { family: 'WK', weight: 400, size: 32, min: 22, ls: .1, color: '#8a8378' },
+  side: { family: 'WK', weight: 400, size: 46, min: 28, color: C.graphite },
+  arabic: { family: 'Amiri', weight: 700, color: C.greenD },
+  rule: (g, x, y, w, a) => { g.strokeStyle = C.graphite; g.globalAlpha = .7; g.lineWidth = 2; g.beginPath(); g.moveTo(x, y); g.lineTo(x + (w * .55) * a, y + 2); g.stroke(); g.globalAlpha = 1; },
+  bullet: (g, k, x, y, s, a) => { const p = blobPath(x + s / 2, y + s / 2, s * .34 * a + 1, s * .3 * a + 1, 70 + k); hatch(g, p, [C.green, C.red, C.ochre, C.sky][k % 4], -.8, 4, 80 + k, 1.6, .9); outline(g, p, C.graphite, 2); },
+};
+makeKit({
+  fonts: [['WK', 'fonts/lemo/wenkai-400.woff2'], ['Amiri', 'fonts/amiri-arabic-700-normal.woff2', '700']],
+  prep, th: TH, enter: 'rise',
+  bg(g, t, s, lt) {
+    g.drawImage(PAPER, 0, 0);
+    // the strata rise in on the first scene; later scenes reveal a band of fresh hatching sweeping across (the demo's pencil reveal)
+    g.drawImage(STRATA, 0, 0);
+    const u = eo(seg(lt, 0, .8)); if (u < 1) { g.fillStyle = C.paper; g.fillRect(W * u, 1270, W, H - 1270); }
+  },
+  photo(g, t, s, img, R, lt) {   // a "pencil plate": the photo softened and toned, hatching laid over it, a drawn frame
+    const u = eo(seg(lt, .1, .7)), pth = new Path2D(); pth.rect(R.x, R.y, R.w, R.h);
+    g.save(); g.globalAlpha = u; g.filter = 'saturate(.7) contrast(.92) brightness(1.08)'; cover(g, img, R.x, R.y, R.w, R.h, 1.02 + lt * .008); g.filter = 'none';
+    g.globalCompositeOperation = 'multiply'; hatch(g, pth, '#d8cdb8', -.9, 7, s.i + 3, 1.2, .5); g.restore();
+    outline(g, pth, C.graphite, 2.6);
+  },
+  field(g, t, s, Z, lt) { const p = new Path2D(); p.rect(-10, Z.ground - 6, W + 20, 46); hatch(g, p, C.green, -.5, 5, 9, 1.6, .8 * eo(seg(lt, 0, .6))); },
+  look: { fill: f => hatchPattern(f.color || (f.side > 0 ? C.greenD : C.red)), stroke: C.graphite, lw: 2, shield: hatchPattern(C.ochre), weapon: C.graphite, glow: '#ffcf5a', glowMode: 'source-over' },
+  fx: { dust: '#cfb894', arrow: C.graphite, spark: C.ochre },
+  cap: { family: 'WK', weight: 400, size: 70, color: C.graphite, accent: C.red,
+    plate: (g, x0, y0, x1, y1, a) => { const p = new Path2D(); p.rect(x0, y0, x1 - x0, y1 - y0); g.globalAlpha = a; g.fillStyle = 'rgba(248,244,234,.94)'; g.fill(p); outline(g, p, C.graphite, 2); g.globalAlpha = 1; } },
+});
+</script></body></html>

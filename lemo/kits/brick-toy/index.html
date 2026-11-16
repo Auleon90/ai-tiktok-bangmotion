@@ -1,0 +1,72 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Brick Toy · portrait kit</title>
+<style>html,body{margin:0;background:#c9cdd1;overflow:hidden}canvas{display:block}</style>
+<script src="props.js"></script></head><body>
+<canvas id="c"></canvas>
+<script type="module">
+// Brick Toy — portrait kit. Look and motion from the Lemo-Opuscar demo (MIT code; its three.js studio is drawn in 2.5D):
+// a seamless grey studio sweep with a soft key light, glossy plastic bricks with studs and a specular edge, a stud baseplate,
+// bricks that drop in and snap with a small bounce as a model builds itself, a soft depth-of-field haze far back,
+// subtitles on a dark navy pill with a yellow brick icon; Fredoka throughout.
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, back, mulberry, mk, cover, mix } from './kit.js';
+import { makeKit } from './kitbase.js';
+
+const C = { navy: '#0f2036', red: '#ff4b3e', yellow: '#f2cd37', white: '#fff6ee', blue: '#2f6fd6', green: '#3aa655', grey: '#9aa0a6', greyD: '#6b7177', orange: '#ff8a3a' };
+// one brick in 2.5D: front face, top face, studs; (x,y) = front-bottom-left; depth goes up-right
+function brick(g, x, y, w, h, col, studs = Math.round(w / 40)) {
+  const dx = 18, dy = -12, top = col, front = mix(col, '#000000', .18), side = mix(col, '#000000', .32);
+  g.fillStyle = side; g.beginPath(); g.moveTo(x + w, y); g.lineTo(x + w + dx, y + dy); g.lineTo(x + w + dx, y - h + dy); g.lineTo(x + w, y - h); g.fill();
+  g.fillStyle = front; g.fillRect(x, y - h, w, h);
+  g.fillStyle = top; g.beginPath(); g.moveTo(x, y - h); g.lineTo(x + dx, y - h + dy); g.lineTo(x + w + dx, y - h + dy); g.lineTo(x + w, y - h); g.fill();
+  const hl = g.createLinearGradient(x, y - h, x, y); hl.addColorStop(0, 'rgba(255,255,255,.28)'); hl.addColorStop(.25, 'rgba(255,255,255,0)'); g.fillStyle = hl; g.fillRect(x, y - h, w, h);
+  for (let k = 0; k < studs; k++) { const sx = x + (k + .5) * w / studs + dx * .5, sy = y - h + dy * .5; g.fillStyle = front; g.fillRect(sx - 11, sy - 8, 22, 8); g.fillStyle = top; g.beginPath(); g.ellipse(sx, sy - 8, 11, 5, 0, 0, TAU); g.fill(); g.fillStyle = 'rgba(255,255,255,.35)'; g.beginPath(); g.ellipse(sx - 3, sy - 9, 5, 2, 0, 0, TAU); g.fill(); }
+}
+function drop(lt, t0) { const u = seg(lt, t0, t0 + .35); return u >= 1 ? 0 : -(1 - back(u, 2.6)) * 260; }
+let STUDIO, PLATE;
+function prep() {
+  STUDIO = mk(W, H); const g = STUDIO.getContext('2d'), gr = g.createRadialGradient(W * .4, 600, 100, W * .5, 900, 1500);
+  gr.addColorStop(0, '#eceef0'); gr.addColorStop(.5, '#c9cdd1'); gr.addColorStop(1, '#8d9399'); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  PLATE = mk(W, H); const p = PLATE.getContext('2d'), y0 = 1300;
+  p.fillStyle = '#7f858b'; p.beginPath(); p.moveTo(-100, H); p.lineTo(-40, y0); p.lineTo(W + 40, y0); p.lineTo(W + 100, H); p.fill();
+  for (let r = 0; r < 14; r++) { const y = y0 + 14 + r * r * 3.2 + r * 18, s = .55 + r * .06; for (let x = -40; x < W + 60; x += 46 * s) { p.fillStyle = '#6f757b'; p.fillRect(x - 10 * s, y - 6 * s, 20 * s, 7 * s); p.fillStyle = '#9ba1a7'; p.beginPath(); p.ellipse(x, y - 6 * s, 10 * s, 4.5 * s, 0, 0, TAU); p.fill(); } }
+}
+const TH = {
+  align: 'center', rise: 0, accent: C.red,
+  title: { family: 'Fredoka', weight: 700, size: 116, min: 48, lh: 1.02, color: C.navy },
+  quote: { family: 'Fredoka', weight: 500, size: 68, min: 36, lh: 1.2, color: C.navy },
+  num: { family: 'Fredoka', weight: 700, size: 200, min: 70, lh: 1, color: C.red },
+  body: { family: 'Fredoka', weight: 500, size: 50, min: 30, lh: 1.22, color: '#34465c' },
+  label: { family: 'Fredoka', weight: 700, size: 34, min: 22, ls: .08, upper: true, color: C.greyD },
+  side: { family: 'Fredoka', weight: 700, size: 46, min: 28, color: C.navy },
+  arabic: { family: 'Amiri', weight: 700, color: C.navy },
+  rule: (g, x, y, w, a) => { if (a > .05) brick(g, x + w / 2 - 80, y + 14, 160, 26, C.yellow, 4); },
+  bullet: (g, k, x, y, s, a) => { if (a > .05) brick(g, x + 4, y + s * .8 + (1 - a) * -60, s * .78, s * .5, [C.red, C.blue, C.yellow, C.green][k % 4], 2); },
+};
+makeKit({
+  fonts: [['Fredoka', 'fonts/lemo/fredoka-500.woff2', '500'], ['Fredoka', 'fonts/lemo/fredoka-700.woff2', '700'], ['Amiri', 'fonts/amiri-arabic-700-normal.woff2', '700']],
+  prep, th: TH, enter: 'zoom',
+  bg(g, t, s, lt) {
+    g.drawImage(STUDIO, 0, 0); g.drawImage(PLATE, 0, 0);
+    // a model builds itself on the plate each scene: two towers left and right, brick by brick (soft-focused: background depth)
+    const cols = [C.red, C.white, C.yellow, C.blue, C.green, C.orange], r = mulberry(s.i + 5);
+    g.save(); g.globalAlpha = .92;
+    for (const [x0, n] of [[40, 5], [820, 4]]) for (let k = 0; k < n; k++) { const w = 120 + Math.round(r() * 2) * 40, y = 1470 - k * 46 + drop(lt, .1 + k * .12 + (x0 > 400 ? .3 : 0)), x = x0 + (r() - .5) * 30;
+      if (lt > .1 + k * .12 + (x0 > 400 ? .3 : 0)) brick(g, x, y, w, 46, cols[(k + s.i) % cols.length]); }
+    g.restore();
+    // contact shadow + soft vignette like the studio light falloff
+    const v = g.createRadialGradient(W / 2, 800, 500, W / 2, 900, 1300); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(15,32,54,.25)'); g.fillStyle = v; g.fillRect(0, 0, W, H);
+  },
+  photo(g, t, s, img, R, lt) {   // a printed tile on a brick frame
+    const yo = drop(lt, .1); g.save(); g.translate(0, yo);
+    brick(g, R.x - 18, R.y + R.h + 26, R.w + 36, R.h + 52, C.white, 14);
+    g.save(); g.beginPath(); g.rect(R.x, R.y, R.w, R.h); g.clip(); g.filter = 'saturate(1.1) contrast(1.05)'; cover(g, img, R.x, R.y, R.w, R.h, 1.03 + lt * .008); g.restore();
+    const sh = g.createLinearGradient(R.x, R.y, R.x + R.w, R.y + R.h); sh.addColorStop(0, 'rgba(255,255,255,.22)'); sh.addColorStop(.3, 'rgba(255,255,255,0)'); g.fillStyle = sh; g.fillRect(R.x, R.y, R.w, R.h); g.restore();
+  },
+  photoRect: { x: SAFE.x0 + 30, y: 720, w: SAFE.x1 - SAFE.x0 - 80, h: 480 },
+  field(g, t, s, Z, lt) { for (let k = 0; k < 9; k++) if (lt > k * .05) brick(g, -20 + k * 125, Z.ground + 40 + drop(lt, k * .05), 125, 40, C.green, 3); },
+  look: { fill: f => f.color || (f.side > 0 ? C.blue : C.red), stroke: 'rgba(15,32,54,.55)', lw: 2, shield: C.yellow, weapon: '#3a3f45', glow: '#ffe066', glowMode: 'lighter' },
+  fx: { dust: '#e6e8ea', arrow: C.navy, spark: C.yellow },
+  cap: { family: 'Fredoka', weight: 700, size: 60, color: '#ffffff', accent: C.yellow,
+    plate: (g, x0, y0, x1, y1, a) => { g.globalAlpha = .92 * a; g.fillStyle = C.navy; g.beginPath(); g.roundRect(x0 - 50, y0, x1 - x0 + 70, y1 - y0, (y1 - y0) / 2 > 60 ? 40 : (y1 - y0) / 2); g.fill(); g.globalAlpha = a; brick(g, x0 - 34, (y0 + y1) / 2 + 12, 36, 20, C.yellow, 2); g.globalAlpha = 1; } },
+});
+</script></body></html>
