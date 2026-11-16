@@ -7,10 +7,11 @@
 // Stick-figure Explainer — portrait kit. Look and motion from the Lemo-Opuscar demo (MIT code): warm paper #F3F0EA, one ink #24242C,
 // mute #9C978C, one signal red #EB4A2A for "you" and the key number; a single line weight for every figure (round caps, each limb one
 // quadratic curve, round head); figures breathe and sway on damped noise, link hands, pop in with overshoot; Jost with tight tracking.
-import { W, H, SAFE, TAU, clamp, lerp, seg, eo, back, vnoise, at, SC, IMG, cover, block, text, captions, stdBody, boot, reg } from './kit.js';
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, back, vnoise, at, SC, IMG, cover, block, text, captions, stdBody, boot, reg, KIT } from './kit.js';
 
 const C = { paper: '#F3F0EA', ink: '#24242C', mute: '#9C978C', tint: '#E2DDD2', sig: '#EB4A2A', soft: '#F4C3B4' };
 const LW = 7;
+KIT.look = { fill: C.ink, stroke: null, shield: C.tint, weapon: C.ink, glow: '#ffd77a', glowMode: 'source-over' };
 const TH = {
   align: 'left', rise: 26, accent: C.sig,
   title: { family: 'Jost', weight: 600, size: 110, min: 44, lh: 1.08, ls: -.025, color: C.ink },
@@ -96,9 +97,9 @@ function draw(g, t) {
     const s2 = s.type === 'image' ? { ...s, type: 'headline' } : s;
     stdBody(g, t, s2, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: cardTop - 30 - top }, { ...TH, title: { ...TH.title, size: 76 }, num: { ...TH.num, size: 110 } });
   } else {
-    const split = s.type === 'list' ? 1000 : s.type === 'ayat' ? 900 : 860;
+    const split = s.type === 'custom' ? 1240 : s.type === 'list' ? 1000 : s.type === 'ayat' ? 900 : 860;
     stdBody(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: split - top }, TH);
-    stage(g, t, s, split + 20, 1240);
+    if (s.type !== 'custom') stage(g, t, s, split + 20, 1240);
   }
   g.restore();
   captions(g, t, { family: 'Jost', weight: 600, size: 64, ls: -.01, color: C.ink, accent: C.sig, pop: true,

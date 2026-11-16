@@ -8,6 +8,8 @@
 // Every text goes through block()/text(), which fit the text into its box (wrap, then shrink) and register its box;
 // lemo/render.mjs --layout reads window.TEXTS(t) and fails the pre-render QA on overflow, out-of-safe-area or overlaps.
 
+import * as FIG from './clash.js';
+
 export const W = 1080, H = 1920;
 export const SAFE = { x0: 84, x1: 960, y0: 210, y1: 1250 };
 export const CAP = { x0: 84, x1: 960, y0: 1330, y1: 1560 };
@@ -176,6 +178,10 @@ export async function boot({ fonts = [], draw, images = true }) {
   const faces = fonts.map(([fam, url, weight = '400', style = 'normal']) => new FontFace(fam, `url(${url})`, { weight, style }));
   for (const f of faces) { try { await f.load(); document.fonts.add(f); } catch (e) { console.warn('font missing ' + f.family); } }
   if (images) await Promise.all(SC.map(async s => { if (s.imageSrc) IMG[s.i] = await loadImg(s.imageSrc); }));
+  for (const s of SC) if (s.type === 'custom') {
+    if (!s.code) throw new Error(`scene ${s.id}: type "custom" needs "code": "custom/<file>.js"`);
+    CUSTOM[s.i] = await import('./' + s.code);
+  }
   const cv = document.getElementById('c'); cv.width = W; cv.height = H; const g = cv.getContext('2d');
   window.DUR = DUR;
   window.render = t => { TX = []; g.reset ? g.reset() : g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H); draw(g, clamp(t, 0, DUR - 1e-3)); };
@@ -189,6 +195,7 @@ export async function boot({ fonts = [], draw, images = true }) {
 //       align:'center'|'left', rise: px, rule(g,x,y,w,a) optional ornament, bullet(g,k,x,y,size,a) optional }
 // Each element fades/rises in on its own beat; every text is fitted into its share of the box.
 export function stdBody(g, t, s, b, th) {
+  if (s.type === 'custom') return custom(g, t, s, b, th);
   const lt = t - s.t0, al = th.align || 'center', R = th.rise ?? 40;
   const rv = d => () => { const u = eo(seg(lt, d, d + .45)); return { a: u, dy: (1 - u) * R }; };
   const T = (o, extra) => ({ ...o, ...extra });
@@ -231,3 +238,26 @@ export function stdBody(g, t, s, b, th) {
     if (hasSub && r) { rule(r.y1 + 26, .6); block(g, 'sub', s.sub, { x: b.x, y: r.y1 + 60, w: b.w, h: b.y + b.h - r.y1 - 60 }, T(th.body, { align: al, reveal: rv(.7) })); }
   }
 }
+
+// ---------------------------------------------------------------- custom scenes (per-video code, drawn inside the kit's look)
+// Storyboard: { "type": "custom", "code": "custom/<name>.js", ...any fields the code reads }. The file lives in output/custom/.
+// The module exports `default (g, c)` (called every frame) and optionally `prep(c)` (once, for offscreen textures).
+// The kit has already drawn its background, eyebrow and frame; it draws the captions after. c = {
+//   t, lt (scene time), p (0..1), d, s (the scene with its fields), box (the content area the kit gives: draw text inside it),
+//   full {x,y,w,h} (whole frame, for decor), W, H, SAFE, CAP, img (FLUX image or null), theme (the kit's fonts/colours: title, body,
+//   label, num, quote, accent…), look (the kit's figure look), K (all kit.js helpers: block, text, reg, fit, cover, eo, seg, lerp,
+//   mulberry, vnoise, mix…), FIG (clash.js: drawFigure, clashModel, drawFx, hexA) }
+// Every text MUST go through K.block / K.text (so the 9:16 layout check sees it); register big pictures with K.reg.
+export const CUSTOM = {};
+export const KIT = { look: null };
+const PREPPED = new Set();
+export function custom(g, t, s, box, th = {}) {
+  const m = CUSTOM[s.i]; if (!m) throw new Error(`custom scene ${s.id}: module not loaded`);
+  const look = KIT.look || { fill: f => f.color || (f.side > 0 ? (th.accent || '#333') : '#555'), stroke: null, glow: '#ffd77a' };
+  const c = { t, lt: t - s.t0, p: clamp((t - s.t0) / s.d), d: s.d, s, box, full: { x: 0, y: 0, w: W, h: H }, W, H, SAFE, CAP,
+    img: IMG[s.i] || null, theme: th, look, K: API, FIG };
+  if (m.prep && !PREPPED.has(s.i)) { PREPPED.add(s.i); m.prep(c); }
+  g.save(); m.default(g, c); g.restore();
+}
+export const API = { W, H, SAFE, CAP, TAU, clamp, lerp, seg, ss, eo, ei, eio, back, mulberry, hash, vnoise, mk, mix, cover, graded, duotone,
+  font, fit, block, text, reg, textWidth, countUp, parseNum, stdBody };

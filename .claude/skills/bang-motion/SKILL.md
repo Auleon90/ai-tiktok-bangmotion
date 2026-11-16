@@ -66,6 +66,7 @@ Built-in scene types (rendered automatically by modes 1 and 2):
 
 | `image` | full-screen AI illustration only; optional `headline`, `sub` overlay |
 | `list` | `headline`, `items: [string]` (3–4 short points) — Lemo native |
+| `custom` | Lemo native, ALL kits: an adegan no built-in type covers — `code: "custom/<name>.js"` + any fields the code reads (see Mode 4) |
 | `clash` | battle / two-sided clash with faceless figures — Lemo native ⚔ kits only: `headline`, `sub?`, `left`/`right`: `{label, count, color?, cavalry? (0–6)}`, `winner?` ("left"/"right": the other side routs at the end), `hero?`: `{side, prophet?, rider?}` |
 
 ### AI illustrations (Cloudflare FLUX — any theme, per scene where it fits)
@@ -309,7 +310,7 @@ Timeline inside the scene (fraction of its length), to place SFX on the action: 
 (`footsteps`/`riser`), lines meet at .46 (`sword_clash`, add another at .6), falls .52–.82 (`impact`), rout .82–1.
 Give a clash scene ≥ 7 s of VO so every phase reads.
 
-1. Storyboard: `"style": "<slug>"` (one of the six), built-in scene types only (`title headline counter quote ayat tribute list image`,
+1. Storyboard: `"style": "<slug>"` (one of the ★ kits), built-in scene types only (`title headline counter quote ayat tribute list image`,
    `clash` in ⚔ kits; `map` is not supported — use Remotion for maps). The kit's `image_style` is used for FLUX automatically unless the
    storyboard sets one. People appear only as the faceless figures of `clash` (and stick-explainer's stick figures).
 2. No page to write: the kit renders every scene type from `PROPS`. Keep on-screen text short (titles ≤ 6 words, list items ≤ 6 words);
@@ -318,6 +319,25 @@ Give a clash scene ≥ 7 s of VO so every phase reads.
    → composition check (`lemo/render.mjs layout`: text overflow, outside the 9:16 safe area x 84–960 / y 210–1250, captions outside the
    band y 1330–1560, overlapping texts or text over the photo) + `output/qa_prerender.jpg`. Blocking issues stop the render; shorten the text.
 4. Render: same command without `--check-only` (`--workers=6` on a free machine).
+
+**Custom scenes (`"type": "custom"`) — use them instead of patching kits.** When an adegan needs something no built-in type draws
+(a city mood, a caravan, a market, a process, a dialogue…), write `output/custom/<name>.js` for this video and reference it with
+`"code": "custom/<name>.js"`. The kit still draws its background, frame, eyebrow and captions; the module draws the content:
+
+```js
+export function prep(c) { /* once: build offscreen textures with c.K.mk */ }
+export default function (g, c) {   // every frame, deterministic (no Date/Math.random: use c.K.mulberry / c.K.hash)
+  // c.t, c.lt (scene time), c.p (0..1), c.d, c.s (scene fields), c.box (content area: put text inside), c.full, c.img (FLUX or null)
+  // c.theme = the kit's fonts/colours (title, body, label, num, quote, accent, align) → text matches the style automatically
+  // c.look  = the kit's figure look; c.FIG.drawFigure(g, {x, y, S, dir, pose: 'walk'|'run'|'hold'|'strike'|'command', ph, fall: 0, side}, c.t, c.look)
+  // c.K     = kit helpers: block, text, reg, fit, cover, eo, seg, lerp, mix, mulberry, hash, vnoise, TAU…
+  c.K.block(g, 'main', c.s.headline, { x: c.box.x, y: c.box.y, w: c.box.w, h: 200 }, { ...c.theme.title });
+}
+```
+Rules: every text through `c.K.block`/`c.K.text` (the layout check sees them), big pictures registered with `c.K.reg`, use `c.theme`
+colours/fonts so the scene stays in the kit's style, faceless figures only (content rules apply). Example: `examples/custom/kota-hujan.js`
+(city street in the rain: buildings, pedestrians with umbrellas, cars, rain). The pre-render layout check and runtime errors gate it
+like any scene; look at its still in `output/qa_prerender.jpg`. Copy a custom module that proves useful into `examples/custom/` for reuse.
 
 To add a kit: copy one in `lemo/kits/`, read the demo's code in `.lemo/lemo-opuscar/styles/<slug>/demo/` (setup.sh downloads it), keep the
 `kit.js` contract (`boot`, `block`/`text` for every text, `captions`, `reg` for photos), add it to `kits.json`, and run the layout check on

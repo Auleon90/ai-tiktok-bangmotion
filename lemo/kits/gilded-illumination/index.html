@@ -8,7 +8,7 @@
 // lapis/ultramarine ground with punched gold stars, a gold sun with wavy rays, verdigris and lilac spire rocks, vermilion and azure bands,
 // burnished gold that catches a moving glint, the subtitle written on a banderole (scroll ribbon) that unrolls.
 // Portrait adaptation: the miniature sits in a pointed-arch window (no figures: suitable for Qur'an/hadith and sirah), text below on vellum.
-import { W, H, SAFE, TAU, clamp, lerp, seg, eo, ss, back, mulberry, mk, at, SC, IMG, cover, graded, block, captions, capAt, stdBody, boot, reg, font, fit } from './kit.js';
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, ss, back, mulberry, mk, at, SC, IMG, cover, graded, block, captions, capAt, stdBody, boot, reg, font, fit, KIT } from './kit.js';
 import { clashModel, drawFigure, drawFx, clashText } from './clash.js';
 
 const VELL = '#efe2c4', INK = '#2a1a10', GALL = '#3b2416', LAPIS = '#1f3f9a', LAPIS_D = '#132a6e', ULTRA_D = '#141f66', VERM = '#c8321f', AZUR = '#3d7fa6',
@@ -24,6 +24,7 @@ const TH = {
   rule: (g, x, y, w, a) => { const cx = x + w / 2; g.globalAlpha = a; g.fillStyle = VERM; g.fillRect(cx - 150 * a, y - 1, 300 * a, 3); for (const d of [-1, 0, 1]) { g.save(); g.translate(cx + d * 170 * a, y); g.rotate(Math.PI / 4); g.fillStyle = d ? AZUR : OCHRE; g.fillRect(-8, -8, 16, 16); g.restore(); } g.globalAlpha = 1; },
   bullet: (g, k, x, y, s, a) => { g.save(); g.translate(x + s / 2, y + s / 2); g.scale(a, a); star(g, 0, 0, s * .42, 8, k % 2 ? AZUR : VERM); g.restore(); },
 };
+KIT.look = { fill: f => f.color || (f.side > 0 ? '#2f6b3a' : '#c8321f'), stroke: '#2a1a10', lw: 2.2, shield: '#d39a45', weapon: '#3b2416', glow: '#ffd77a', glowMode: 'lighter' };
 let SPK, STARS, WARM = {};
 function prep() {
   SPK = mk(256, 256); const x = SPK.getContext('2d'), r = mulberry(5);
@@ -83,6 +84,8 @@ function draw(g, t) {
   const { s } = at(t), lt = t - s.t0, img = WARM[s.i];
   g.fillStyle = VELL; g.fillRect(0, 0, W, H); g.fillStyle = g.createPattern(SPK, 'repeat'); g.fillRect(0, 0, W, H);
   border(g, t);
+  if (s.type === 'custom') { stdBody(g, t, s, { x: SAFE.x0 + 30, y: SAFE.y0 + 30, w: SAFE.x1 - SAFE.x0 - 60, h: SAFE.y1 - SAFE.y0 - 30 }, TH); }
+  else {
   // the arch window: the miniature, or the photo (warmed, like a painted panel), or — for ayat — the verse in gold on lapis
   const P = { x: 170, y: 225, w: 740, h: s.type === 'ayat' ? 540 : s.type === 'clash' ? 640 : 500 }, ap = eo(seg(lt, 0, .5));
   g.save(); arch(g, P.x, P.y, P.w, P.h); g.clip(); g.globalAlpha = ap;
@@ -105,6 +108,7 @@ function draw(g, t) {
     const s2 = s.type === 'image' ? { ...s, type: 'headline' } : s;
     if (s.eyebrow) block(g, 'eyebrow', s.eyebrow, { x: SAFE.x0, y: P.y + P.h + 26, w: SAFE.x1 - SAFE.x0, h: 44 }, { ...TH.label, align: 'center', reveal: () => ({ a: eo(seg(lt, .2, .6)) }) });
     stdBody(g, t, s2, { x: SAFE.x0 + 30, y: P.y + P.h + 84, w: SAFE.x1 - SAFE.x0 - 60, h: SAFE.y1 - P.y - P.h - 84 }, img ? { ...TH, title: { ...TH.title, size: 84 }, num: { ...TH.num, size: 130 }, quote: { ...TH.quote, size: 58 } } : { ...TH, title: { ...TH.title, size: 120 }, body: { ...TH.body, size: 56 } });
+  }
   }
   // a gilded medallion under the scroll: eight-point star, vermilion and azure rings (decor, below the safe area)
   { const cx = W / 2, cy = 1730, u = back(seg(lt, .1, .6), 1.4), R = 120 * u;

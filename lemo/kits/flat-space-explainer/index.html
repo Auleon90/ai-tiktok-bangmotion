@@ -7,10 +7,11 @@
 // Flat Space Explainer — portrait kit. Look and motion from the Lemo-Opuscar demo (MIT code): night #1D2052 with two lifted panels,
 // seeded twinkling stars, flat planets with a hard terminator shadow and one rim highlight, dashed orbits, a spiral of dots,
 // cream Jost headings, sun/coral/mint accents, the field-of-view HUD bar that counts its number up, zoom transitions between scenes.
-import { W, H, SAFE, TAU, clamp, lerp, seg, eo, eio, back, mulberry, mk, at, SC, IMG, cover, block, text, captions, stdBody, boot, reg, countUp } from './kit.js';
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, eio, back, mulberry, mk, at, SC, IMG, cover, block, text, captions, stdBody, boot, reg, countUp, KIT } from './kit.js';
 
 const C = { night: '#1D2052', p1: '#252A63', p2: '#30367C', blue: '#4D7CFE', blueD: '#3A5FD9', coral: '#FF6B5E', coralD: '#E14B45', cream: '#FFF4E2',
   creamD: '#F0DCC0', mint: '#3FD8AE', mintD: '#22B38C', mist: '#9298D4', sun: '#FFC84A', sunD: '#F2A12F' };
+KIT.look = { fill: f => f.color || (f.side > 0 ? '#4D7CFE' : '#FF6B5E'), stroke: '#FFF4E2', lw: 2, shield: '#FFC84A', weapon: '#FFF4E2', glow: '#FFC84A', glowMode: 'lighter' };
 const PLAN = [[C.sun, C.sunD], [C.coral, C.coralD], [C.mint, C.mintD], [C.blue, C.blueD]];
 const TH = {
   align: 'left', rise: 34, accent: C.sun,
@@ -67,9 +68,9 @@ function draw(g, t) {
     const s2 = s.type === 'image' ? { ...s, type: 'headline' } : s;
     stdBody(g, t, s2, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: cy - R - 40 - top }, { ...TH, title: { ...TH.title, size: 90 }, num: { ...TH.num, size: 120 } });
   } else {
-    const split = s.type === 'list' ? 1040 : s.type === 'counter' ? 1000 : 820;
+    const split = s.type === 'custom' ? 1190 : s.type === 'list' ? 1040 : s.type === 'counter' ? 1000 : 820;
     stdBody(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: split - top }, TH);
-    if (s.type !== 'list') motif(g, t, s, split + (1190 - split) / 2 + 10);
+    if (s.type !== 'list' && s.type !== 'custom') motif(g, t, s, split + (1190 - split) / 2 + 10);
   }
   g.restore();
   // field-of-view HUD (bottom of the safe area): scene index on a dial + bar

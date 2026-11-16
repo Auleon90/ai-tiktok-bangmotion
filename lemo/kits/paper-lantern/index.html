@@ -7,7 +7,7 @@
 // Paper Lantern — portrait kit. Look and motion from the Lemo-Opuscar demo (MIT code; its three.js paper stage is approximated in 2D):
 // a night of layered cut-paper sheets (ridges and fir lines) lit from behind, each sheet with fibre grain and a warm rim of light;
 // a backlit paper moon with a halo; glowing paper lanterns (#ffcd82) that drift up; Cormorant Garamond in warm cream; slow parallax.
-import { W, H, SAFE, TAU, clamp, lerp, seg, eo, ss, back, mulberry, vnoise, mk, at, SC, IMG, cover, duotone, block, captions, stdBody, boot, reg } from './kit.js';
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, ss, back, mulberry, vnoise, mk, at, SC, IMG, cover, duotone, block, captions, stdBody, boot, reg, KIT } from './kit.js';
 import { clashModel, drawFigure, drawFx, clashText } from './clash.js';
 
 const C = { sky0: '#0b1028', sky1: '#151d3c', sky2: '#2a3a78', cream: '#f7e6c8', gold: '#ffcd82', glow: '#ffbf6a', ink: '#22170f', red: '#b3302a' };
@@ -23,6 +23,7 @@ const TH = {
   bullet: (g, k, x, y, s, a) => lantern(g, x + s / 2, y + s * .55, s * .42 * a, 1),
 };
 
+KIT.look = { fill: '#0a1029', stroke: 'rgba(255,190,104,.85)', lw: 2.4, shield: '#121a3e', weapon: '#0a1029', glow: '#ffcd82', glowMode: 'lighter' };
 let GRAIN, SHEETS, LANT, DUO = {};
 function makeGrain(n, seed) {
   const c = mk(n, n), x = c.getContext('2d'), R = mulberry(seed), img = x.createImageData(n, n), d = img.data;
@@ -93,7 +94,7 @@ function draw(g, t) {
   const top = SAFE.y0 + 80;
   if (s.type === 'clash') clashText(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: 560 - top }, { ...TH, side: { family: 'Corm', weight: 500, italic: true, size: 46, min: 28, fixed: true, color: C.cream } }, 590);
   else if (img) { const s2 = s.type === 'image' ? { ...s, type: 'headline' } : s; stdBody(g, t, s2, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: 600 - top }, { ...TH, title: { ...TH.title, size: 92 }, num: { ...TH.num, size: 120 } }); }
-  else stdBody(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: (s.type === 'list' || s.type === 'counter' ? 1120 : 1000) - top }, TH);
+  else stdBody(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: (s.type === 'custom' ? 1240 : s.type === 'list' || s.type === 'counter' ? 1120 : 1000) - top }, TH);
   g.restore();
   captions(g, t, { family: 'Corm', weight: 500, italic: true, size: 72, color: C.cream, accent: C.gold, shadow: true,
     plate: (g, x0, y0, x1, y1, a) => { const gr = g.createLinearGradient(0, y0, 0, y1); gr.addColorStop(0, 'rgba(8,10,28,.0)'); gr.addColorStop(.5, `rgba(8,10,28,${.6 * a})`); gr.addColorStop(1, 'rgba(8,10,28,0)'); g.fillStyle = gr; g.fillRect(0, y0 - 30, W, y1 - y0 + 60); } });

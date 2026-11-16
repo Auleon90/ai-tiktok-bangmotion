@@ -8,7 +8,7 @@
 // paper #EDE4D0 with seeded fibre, ink #141210, one red #D52B1E; the -18° constructivist axis; red girder slams in on the beat;
 // archive photos (FLUX, graded to hard black-and-white) cut into slanted windows with flicker and flash frames;
 // Oswald numbers that slam in digit by digit; Space Mono tags on ink; steep red diagonal wipes between scenes.
-import { W, H, SAFE, TAU, clamp, lerp, seg, eo, eio, hash, mulberry, mk, at, SC, IMG, cover, graded, block, text, textWidth, captions, countUp, boot, reg, DUR } from './kit.js';
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, eio, hash, mulberry, mk, at, SC, IMG, cover, graded, block, text, textWidth, captions, countUp, boot, reg, stdBody, DUR } from './kit.js';
 
 const RED = '#D52B1E', INK = '#141210', PAPER = '#EDE4D0', TH = -18 * Math.PI / 180, FPS = 30;
 const OSW = { family: 'Osw', weight: 700 }, MONO = { family: 'Mono', weight: 700 };
@@ -59,6 +59,7 @@ function photoWindow(g, t, s, y0, y1) {
 function body(g, t, s, b) {
   const lt = t - s.t0, rv = (d, k = 0) => { const t0 = s.t0 + d + k * .07, o = 900 * slam(t, t0, .12); return { a: t >= t0 ? 1 : 0, dx: -o * Math.cos(TH), dy: -o * Math.sin(TH) }; };
   const type = s.type;
+  if (type === 'custom') return stdBody(g, t, s, b, { accent: RED, align: 'left', title: { ...OSW, size: 140, min: 44, upper: true, color: INK }, body: { family: 'Osw', weight: 500, size: 50, min: 28, color: INK }, label: { ...MONO, size: 30, min: 20, upper: true, color: RED }, num: { ...OSW, size: 240, color: RED }, quote: { family: 'Osw', weight: 500, size: 80, color: INK } });
   if (type === 'title' || type === 'tribute') {
     const main = s.title || s.name || '';
     block(g, 'title', main, { x: b.x, y: b.y, w: b.w, h: b.h * .78 }, { ...OSW, size: 220, min: 70, lh: .98, upper: true, color: INK, valign: 'bottom', reveal: k => rv(.35, k) });

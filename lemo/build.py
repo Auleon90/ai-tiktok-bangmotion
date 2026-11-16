@@ -27,6 +27,12 @@ def build(slug, data, out_dir):
     img = os.path.join(ROOT, "output", "img")
     if os.path.isdir(img):
         shutil.copytree(img, os.path.join(out_dir, "img"))
+    cust = os.path.join(ROOT, "output", "custom")
+    if os.path.isdir(cust):
+        shutil.copytree(cust, os.path.join(out_dir, "custom"))
+    for sc in data["scenes"]:
+        if sc.get("type") == "custom" and not os.path.isfile(os.path.join(out_dir, sc.get("code", "-"))):
+            sys.exit(f"scene {sc.get('id')}: custom code not found: output/{sc.get('code')}")
     open(os.path.join(out_dir, "props.js"), "w", encoding="utf-8").write("window.PROPS=" + json.dumps(data, ensure_ascii=False) + ";")
     return out_dir
 

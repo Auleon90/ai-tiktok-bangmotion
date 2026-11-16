@@ -2,7 +2,7 @@
 //   eyebrow · text block · (photo card | battle field | text only) · captions band
 // A kit gives its look (background, photo treatment, figure look, caption plate, post pass) and gets every scene type,
 // including "clash", laid out inside the 9:16 safe area with registered boxes for the layout check.
-import { W, H, SAFE, clamp, seg, eo, at, IMG, block, captions, stdBody, boot, reg } from './kit.js';
+import { W, H, SAFE, clamp, seg, eo, at, IMG, block, captions, stdBody, boot, reg, KIT } from './kit.js';
 import { clashModel, drawFigure, drawFx, clashText } from './clash.js';
 
 export const ZONE = { x0: SAFE.x0, x1: SAFE.x1, ground: 1215, S: 230 };
@@ -11,7 +11,7 @@ export const PHOTO = { x: SAFE.x0 + 6, y: 690, w: SAFE.x1 - SAFE.x0 - 12, h: 540
 // cfg: { fonts, prep(), bg(g,t,s,lt), photo(g,t,s,img,R,lt), th, look, fx, field(g,t,s,zone,lt), cap, post(g,t,s), enter: 'fade'|'rise'|'slide'|'zoom',
 //        textTop, photoRect }
 export function makeKit(cfg) {
-  let ready = false;
+  let ready = false; KIT.look = cfg.look || null;
   const draw = (g, t) => {
     if (!ready) { cfg.prep && cfg.prep(); ready = true; }
     const { s } = at(t), lt = t - s.t0, img = IMG[s.i], th = cfg.th, P = cfg.photoRect || PHOTO, top = cfg.textTop ?? SAFE.y0 + 70;
@@ -28,6 +28,8 @@ export function makeKit(cfg) {
       for (const f of m.figs) drawFigure(g, f, t, cfg.look);
       drawFx(g, m.fx, cfg.fx || {});
       clashText(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: 560 - top }, th, 590);
+    } else if (s.type === 'custom') {
+      stdBody(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: SAFE.y1 - 10 - top }, th);
     } else if (img) {
       cfg.photo(g, t, s, img, P, lt);
       reg('photo', '[photo]', { x0: P.x - 8, y0: P.y - 8, x1: P.x + P.w + 8, y1: P.y + P.h + 8 });
