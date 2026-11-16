@@ -203,9 +203,10 @@ export function stdBody(g, t, s, b, th) {
   if (type === 'title' || type === 'tribute') {
     let y = b.y; const main = s.title || s.name || '';
     if (s.arabic) { block(g, 'ar', s.arabic, { x: b.x, y, w: b.w, h: b.h * .22 }, T(th.arabic, { size: 90, min: 40, lh: 1.5, align: al === 'center' ? 'center' : 'right', valign: 'middle', reveal: rv(.1) })); y += b.h * .25; }
-    const r = block(g, 'title', main, { x: b.x, y, w: b.w, h: (b.y + b.h - y) * .66 }, T(th.title, { align: al, valign: 'bottom', reveal: rv(.25) }));
-    rule(r.y1 + 26, .6);
-    const sub = s.subtitle || s.note; if (sub) block(g, 'sub', sub, { x: b.x, y: r.y1 + 60, w: b.w, h: b.y + b.h - r.y1 - 60 }, T(th.body, { size: (th.body.size || 52), align: al, reveal: rv(.7) }));
+    const sub = s.subtitle || s.note, gap = Math.min(60, b.h * .1);
+    const r = block(g, 'title', main, { x: b.x, y, w: b.w, h: (b.y + b.h - y) * (sub ? .62 : .8) }, T(th.title, { align: al, valign: 'bottom', reveal: rv(.25) }));
+    rule(r.y1 + gap * .45, .6);
+    if (sub) block(g, 'sub', sub, { x: b.x, y: r.y1 + gap, w: b.w, h: b.y + b.h - r.y1 - gap }, T(th.body, { size: (th.body.size || 52), align: al, reveal: rv(.7) }));
   } else if (type === 'counter') {
     const it = s.items || [], n = Math.max(1, it.length), hd = s.headline ? b.h * .18 : 0, rowH = (b.h - hd) / n;
     if (s.headline) block(g, 'hd', s.headline, { x: b.x, y: b.y, w: b.w, h: hd - 20 }, T(th.label, { align: al, valign: 'bottom', reveal: rv(.1) }));
