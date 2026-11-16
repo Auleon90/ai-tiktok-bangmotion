@@ -178,8 +178,9 @@ def main():
         print(f"STEP  score (music={mood}, sfx={'on' if want_sfx else 'off'})")
         ms = lambda fr: round(fr / FPS * 1000)
         tprops = os.path.join(OUT, "timing_tmp.json")
-        json.dump({"totalMs": total_ms, "scenes": [{**x, "startMs": ms(x["startFrame"]), "durationMs": ms(x["durationFrames"])} for x in scenes]}, open(tprops, "w"))
-        run([audio_py, os.path.join(ROOT, "scripts", "score.py"), tprops, stems, mood, "sfx:on" if want_sfx else "sfx:off"])
+        json.dump({"totalMs": total_ms, **{k: sb[k] for k in ("title", "style", "music_seed", "instruments") if sb.get(k)}, "scenes": [{**x, "startMs": ms(x["startFrame"]), "durationMs": ms(x["durationFrames"])} for x in scenes]}, open(tprops, "w"))
+        out = run([audio_py, os.path.join(ROOT, "scripts", "score.py"), tprops, stems, mood, "sfx:on" if want_sfx else "sfx:off"])
+        print("".join(l + "\n" for l in out.splitlines() if "music:" in l or "sampler" in l or "WARN" in l), end="")
     elif mood != "none" or want_sfx:
         print("  (skip score: .venv-audio missing, run scripts/setup.sh)")
 

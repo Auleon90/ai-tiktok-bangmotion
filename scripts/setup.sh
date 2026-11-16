@@ -26,7 +26,7 @@ fi
 echo "→ Audio venv (music + SFX, audio/lemo)"
 if [ ! -x "$ROOT/.venv-audio/bin/python" ]; then
   python3 -m venv "$ROOT/.venv-audio"
-  "$ROOT/.venv-audio/bin/pip" install -q numpy scipy soundfile numba || echo "  WARN: audio venv failed (no music/SFX)"
+  "$ROOT/.venv-audio/bin/pip" install -q numpy scipy soundfile numba soxr || echo "  WARN: audio venv failed (no music/SFX)"
 fi
 
 echo "→ Lemo-Opuscar style library (.lemo/, not committed: CC BY-NC docs)"
@@ -34,10 +34,29 @@ LEMO="$ROOT/.lemo/lemo-opuscar"
 if [ ! -d "$LEMO/styles" ]; then
   mkdir -p "$ROOT/.lemo"
   git clone -q --depth 1 --filter=blob:none --sparse https://github.com/lemomo-ai/lemo-opuscar.git "$LEMO" \
-    && (cd "$LEMO" && git sparse-checkout set --no-cone '/styles/*/STYLE.md' '/styles/*/style.json' '/styles/*/poster.jpg' '/styles/*/demo/*.html' '/styles/*/demo/*.js' '/styles/*/demo/src/' '/LICENSE' '/DIRECTOR.md') \
+    && (cd "$LEMO" && git sparse-checkout set --no-cone '/styles/*/STYLE.md' '/styles/*/style.json' '/styles/*/poster.jpg' '/styles/*/demo/*.html' '/styles/*/demo/*.js' '/styles/*/demo/src/' '/LICENSE' '/DIRECTOR.md' '/core/audio/*.py' '/core/audio/INSTRUMENTS.md' '/tools/fetch.sh' '/tools/assets.json') \
     || echo "  WARN: style library download failed"
 fi
 [ -d "$LEMO/styles" ] && echo "  styles: $(ls "$LEMO/styles" | wc -l)"
+
+echo "→ Music samples (CC0: VCSL + VSCO 2 CE, ~700 MB, via Lemo-Opuscar fetch.sh; used by scripts/score.py)"
+"$ROOT/.venv-audio/bin/pip" install -q soxr 2>/dev/null || true
+if [ -d "$LEMO" ] && [ ! -f "$LEMO/core/audio/sampler.py" ]; then
+  (cd "$LEMO" && git sparse-checkout add '/core/audio/*.py' '/core/audio/INSTRUMENTS.md' '/tools/fetch.sh' '/tools/assets.json') || true
+fi
+for lib in vcsl vsco2ce; do
+  if [ -f "$LEMO/tools/fetch.sh" ] && [ ! -d "$LEMO/core/audio/instruments/$lib" ]; then
+    (cd "$LEMO" && sh tools/fetch.sh instruments $lib >/dev/null 2>&1) && echo "  samples: $lib" || echo "  WARN: $lib download failed (music falls back to synth)"
+  fi
+done
+
+echo "→ Kenney SFX recordings (CC0, ~30 MB, GitHub mirrors → .lemo/kenney; used by scripts/sfxlib.py)"
+for r in Boyquotes/kenney-impact-sounds-for-godot Boyquotes/kenney-sci-fi-sounds-for-godot Boyquotes/kenney-digital-audio-for-godot \
+         Boyquotes/kenney-rpg-audio-for-godot Calinou/kenney-ui-audio Calinou/kenney-interface-sounds; do
+  d="$ROOT/.lemo/kenney/$(basename "$r")"
+  [ -d "$d" ] || git clone -q --depth 1 "https://github.com/$r.git" "$d" 2>/dev/null || echo "  WARN: $r download failed (synth SFX used instead)"
+done
+echo "  kenney files: $(find "$ROOT/.lemo/kenney" \( -name '*.ogg' -o -name '*.wav' \) 2>/dev/null | wc -l)"
 
 echo "→ Lottie assets"
 [ -n "$(ls -A "$ROOT/assets/lottie" 2>/dev/null)" ] || python3 "$ROOT/scripts/make_lottie.py"
