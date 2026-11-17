@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="id">
+<!-- Kartun Kolase — 9:16 HyperFrames adaptation of starter-explainer-kartun.html from the Bang Motion skill
+     (MIT, Bang Tutorial, https://github.com/bangtutorial/bang-motion; see hyperframes/bang/LICENSE). Rig: BANG.collage.
+     Cream paper with grain and colour stains, flat cut-outs with a drop shadow, Bricolage bold + Caveat hand notes,
+     colour pills as highlighter, polaroid frame for photos. Without images, paper-cut shapes stand in. Images: scene imageSrc (read by bang.js). Placeholder: __TOTAL_S__ -->
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="assets/bm/bm.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="assets/props.js"></script>
+<script src="assets/bm/bm.js"></script>
+<script src="assets/bm/bang.js"></script>
+<style>
+@font-face{font-family:"Bric";font-weight:800;src:url("assets/fonts/lemo/bricolage-800.woff2")}
+@font-face{font-family:"Caveat";font-weight:700;src:url("assets/fonts/lemo/caveat-700.woff2")}
+@font-face{font-family:"Amiri";font-weight:700;src:url("assets/fonts/amiri-arabic-700-normal.woff2")}
+:root{--paper:#F4E9D3;--ink:#221E1B;--orange:#F26B1D;--teal:#1F9E95;--red:#D63B2F;--mustard:#F2B807}
+html,body{margin:0;background:#0a0a0a}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--paper);font-family:"Bric",system-ui,sans-serif;color:var(--ink)}
+#world{position:absolute;left:0;top:0;transform-origin:0 0}
+.paper{position:absolute;background:var(--paper)}
+.grain{position:absolute;opacity:.28;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .3 0 0 0 0 .2 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+.stain{position:absolute;background:radial-gradient(600px 400px at 300px 300px,rgba(242,107,29,.10),transparent 70%),radial-gradient(500px 380px at 1200px 1500px,rgba(31,158,149,.10),transparent 70%);background-size:1500px 1900px}
+.cut{position:absolute;opacity:0;filter:drop-shadow(0 30px 40px rgba(34,30,27,.30))}
+.cut img{display:block;width:100%;height:100%;object-fit:cover}
+.cut.pola{background:#fff;padding:22px 22px 90px;box-sizing:border-box}
+.shape{position:absolute;opacity:0;filter:drop-shadow(0 22px 26px rgba(34,30,27,.28))}
+.line{position:absolute;width:920px;font-weight:800;font-size:92px;line-height:1.04;letter-spacing:-.02em;color:var(--ink);opacity:0}
+.line.it{font-size:64px;line-height:1.12}
+.line.q{font-size:70px}
+.line.li{font-size:62px}
+.line.ar{font-family:"Amiri",serif;font-weight:700;font-size:92px;line-height:1.6;direction:rtl;text-align:center}
+.w{display:inline-block;white-space:nowrap;margin:0 .1em;opacity:0}
+.hl{position:relative;display:inline-block;padding:.02em .18em;border-radius:.18em;color:#fff}
+.hl i{position:absolute;inset:0;border-radius:inherit;transform:scaleX(0);transform-origin:0 50%;z-index:-1;background:var(--orange)}
+.hl.t i{background:var(--teal)} .hl.r i{background:var(--red)}
+.name{position:absolute;font-weight:800;font-size:34px;letter-spacing:.14em;color:var(--ink);opacity:0;white-space:nowrap}
+.hand{position:absolute;font-family:"Caveat",cursive;font-weight:700;font-size:60px;color:var(--teal);opacity:0;white-space:nowrap}
+.ghost{position:absolute;font-weight:800;font-size:300px;line-height:.85;letter-spacing:-.04em;color:rgba(34,30,27,.07);white-space:nowrap;opacity:0}
+.num{position:absolute;width:920px;text-align:center;font-weight:800;font-size:210px;line-height:1;color:#fff;opacity:0}
+.anno{position:absolute;overflow:visible;opacity:0}
+.anno *{fill:none;stroke:var(--red);stroke-width:7;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 62% at 50% 50%,transparent 55%,rgba(34,30,27,.18) 100%);z-index:40}
+.bm-word{color:var(--ink)!important;-webkit-text-stroke:0!important;text-shadow:0 0 16px rgba(244,233,211,.95),0 0 4px rgba(244,233,211,.95)!important;font-family:"Bric",sans-serif;font-weight:800}
+.bm-line{font-family:"Bric",sans-serif!important;font-weight:800!important;font-size:64px!important}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="root" data-start="0" data-duration="__TOTAL_S__" data-width="1080" data-height="1920">
+  <audio id="vo" src="assets/audio.mp3" data-start="0" data-duration="__TOTAL_S__"></audio>
+  <div id="world"><div class="paper"></div><div class="stain"></div><div class="grain"></div></div>
+  <div class="vig"></div>
+  <div id="caps" class="bm-captions"></div>
+</div>
+<script>
+(function () {
+  const { tl, fly, pop, floatN } = BANG;
+  const COL = ['#F26B1D', '#1F9E95', '#F2B807', '#D63B2F'];
+  // paper-cut shapes (flat, drop shadow) — the cut-outs when there is no picture
+  const SH = {
+    blob: c => `<svg viewBox="0 0 200 200"><path fill="${c}" d="M40 40 C80 0 150 10 175 60 C200 110 170 180 110 185 C50 190 5 150 15 100 C20 70 25 55 40 40Z"/></svg>`,
+    star: c => `<svg viewBox="0 0 200 200"><path fill="${c}" d="M100 8 L124 72 L192 76 L138 118 L158 186 L100 146 L42 186 L62 118 L8 76 L76 72Z"/></svg>`,
+    half: c => `<svg viewBox="0 0 200 110"><path fill="${c}" d="M0 105 A100 100 0 0 1 200 105Z"/></svg>`,
+    zig: c => `<svg viewBox="0 0 260 80"><path fill="none" stroke="${c}" stroke-width="22" stroke-linejoin="round" stroke-linecap="round" d="M15 60 L60 20 L105 60 L150 20 L195 60 L240 20"/></svg>`,
+    dot: c => `<svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="92" fill="${c}"/></svg>`,
+  };
+  const shape = (c, kind, col, x, y, w, at, rot) => { const e = c.put(`<div class="shape" style="width:${w}px">${SH[kind](col)}</div>`, x, y); fly(e, at, { y: 260, rotate: rot - 14, scale: .8 }, c.t1, { rot }); return e; };
+  BANG.collage({
+    capAccent: '#F26B1D', capText: '#221E1B', say: 'scale', hl: ['', 't', 'r'], upper: true, imageRing: false,
+    image: c => ({ x: 170, y: 300, w: 740, h: 640, cls: 'pola', rot: c.i % 2 ? 3 : -3 }),
+    title(c) { if (c.hasImg) return; const k = c.i;
+      shape(c, 'blob', COL[k % 4], 120, 930, 330, c.t0 + .3, -6); shape(c, 'star', COL[(k + 1) % 4], 560, 900, 300, c.t0 + .5, 8); shape(c, 'zig', COL[(k + 2) % 4], 330, 1170, 420, c.textAt + .8, -3); },
+    counter(c) { const n = c.counters[0]; if (!n) return; const d = c.put(`<div class="shape" style="width:440px">${SH.dot(COL[(c.i + 1) % 4])}</div>`, 320, n.y - 115); if (n.lab) { n.lab.style.top = (parseFloat(n.lab.style.top) + 120) + 'px'; n.lab.style.zIndex = 2; } tl.set(d, { zIndex: 0 }, 0); pop(d, c.textAt - .3); floatN(d, c.textAt + .3, c.t1, { y: -10, rot: 2 });
+      n.el.style.zIndex = 2; },
+    list(c) { c.items.forEach((it, k) => { const e = c.put(`<div class="shape" style="width:46px">${SH.dot(COL[k % 4])}</div>`, 30, it.y + 14); pop(e, it.at); }); },
+    quote(c) { shape(c, 'half', COL[c.i % 4], 640, c.hasImg ? 780 : 1060, 340, c.t0 + .3, 0); },
+    ayat(c) { shape(c, 'star', '#F2B807', 450, 620, 180, c.t0 + .4, 0); },
+  });
+  window.__timelines = window.__timelines || {}; window.__timelines["root"] = BANG.tl;
+})();
+</script>
+</body>
+</html>

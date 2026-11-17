@@ -1,33 +1,32 @@
 <!doctype html>
 <html lang="id">
-<!-- Vintage Sketch (Buku Sketsa Vintage) — adapted for bang-motion HyperFrames 9:16 from the Bang Motion skill's
-     starter-explainer-sketsa.html (MIT, Bang Tutorial, https://github.com/bangtutorial/bang-motion; see hyperframes/bang/LICENSE).
-     Same rig: a still WORLD bigger than the frame holding sepia engraving cut-outs; the CAMERA does the choreography (into → settle →
-     look → home, then still; text only after the zoom-out); assets fly in with a directional blur and keep floating; sentences say
-     word by word with a sweeping highlighter; annotations are drawn; a ghost year sits behind; push-through between scenes, no fades.
-     Data-driven: every storyboard scene becomes one area of the world; timings come from window.PROPS. Placeholder: __TOTAL_S__ -->
+<!-- Vintage Sketch (Buku Sketsa Vintage) — 9:16 HyperFrames adaptation of starter-explainer-sketsa.html from the Bang Motion skill
+     (MIT, Bang Tutorial, https://github.com/bangtutorial/bang-motion; see hyperframes/bang/LICENSE). Rig: BANG.collage (assets/bm/bang.js).
+     Paper + sepia engravings multiplied on it, Playfair/EB Garamond/Cinzel, ochre highlighter, rust drawn rings, ghost year.
+     Without images, drawn engraving ornaments stand in. Images: scene imageSrc (read by bang.js). Placeholder: __TOTAL_S__ -->
 <head>
 <meta charset="utf-8">
 <link rel="stylesheet" href="assets/bm/bm.css" />
 <script src="assets/lib/gsap.min.js"></script>
 <script src="assets/props.js"></script>
 <script src="assets/bm/bm.js"></script>
+<script src="assets/bm/bang.js"></script>
 <style>
 @font-face{font-family:"PF";font-weight:900;src:url("assets/fonts/lemo/playfair-900.woff2")}
-@font-face{font-family:"PF";font-weight:700;font-style:italic;src:url("assets/fonts/lemo/playfair-700i.woff2")}
 @font-face{font-family:"EBG";font-weight:500;src:url("assets/fonts/lemo/ebgaramond-500.woff2")}
 @font-face{font-family:"EBG";font-weight:500;font-style:italic;src:url("assets/fonts/lemo/ebgaramond-500i.woff2")}
 @font-face{font-family:"Cinzel";font-weight:600;src:url("assets/fonts/lemo/cinzel-600.woff2")}
+@font-face{font-family:"Amiri";font-weight:700;src:url("assets/fonts/amiri-arabic-700-normal.woff2")}
 :root{--ink:#2E2115;--ink2:#5B4634;--rust:#9A3B22;--gold:#B8862B;--paper:#EFE4CC}
 html,body{margin:0;background:#0a0a0a}
 #root{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--paper);font-family:"EBG",Georgia,serif;color:var(--ink)}
 #world{position:absolute;left:0;top:0;transform-origin:0 0}
-.paper{position:absolute;left:-1500px;top:-1500px;background:var(--paper);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .26 0 0 0 0 .14 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)'/%3E%3C/svg%3E")}
+.paper{position:absolute;background:var(--paper);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .26 0 0 0 0 .14 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)'/%3E%3C/svg%3E")}
 .cut{position:absolute;opacity:0;mix-blend-mode:multiply}
 .cut img{display:block;width:100%;height:100%;object-fit:cover;filter:sepia(.85) contrast(1.25) brightness(1.02) saturate(.8);border-radius:50%/42%}
-.orn{position:absolute;opacity:0}
-.line{position:absolute;left:0;width:920px;font-family:"PF",serif;font-weight:900;font-size:96px;line-height:1;letter-spacing:-.01em;color:var(--ink);opacity:0}
+.line{position:absolute;width:920px;font-family:"PF",serif;font-weight:900;font-size:96px;line-height:1;letter-spacing:-.01em;color:var(--ink);opacity:0}
 .line.it{font-family:"EBG",serif;font-style:italic;font-weight:500;font-size:64px;line-height:1.15;color:var(--ink2)}
+.line.q{font-size:72px}
 .line.ar{font-family:"Amiri",serif;font-weight:700;font-size:92px;line-height:1.6;direction:rtl;text-align:center}
 .w{display:inline-block;white-space:nowrap;margin:0 .1em;opacity:0}
 .hl{position:relative;display:inline-block;padding:0 .08em}
@@ -35,9 +34,11 @@ html,body{margin:0;background:#0a0a0a}
 .name{position:absolute;font-family:"Cinzel",serif;font-weight:600;font-size:34px;letter-spacing:.16em;color:var(--ink);opacity:0;white-space:nowrap}
 .hand{position:absolute;font-family:"EBG",serif;font-style:italic;font-size:52px;color:var(--rust);opacity:0;white-space:nowrap}
 .ghost{position:absolute;font-family:"PF",serif;font-weight:900;font-size:300px;line-height:.85;letter-spacing:-.04em;color:rgba(154,59,34,.2);white-space:nowrap;opacity:0}
-.num{position:absolute;left:0;width:920px;text-align:center;font-family:"PF",serif;font-weight:900;font-size:210px;line-height:1;color:var(--rust);opacity:0}
+.num{position:absolute;width:920px;text-align:center;font-family:"PF",serif;font-weight:900;font-size:210px;line-height:1;color:var(--rust);opacity:0}
 .anno{position:absolute;overflow:visible;opacity:0}
-.anno *{fill:none;stroke:var(--rust);stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.anno *{fill:none;stroke:var(--rust);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.orn *{stroke:var(--ink2);stroke-width:3}
+.qmark{position:absolute;font-family:"PF",serif;font-weight:900;font-size:420px;line-height:1;color:rgba(154,59,34,.14);opacity:0}
 .vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(75% 62% at 50% 45%,transparent 55%,rgba(60,40,20,.3) 100%);z-index:40}
 .bm-word{color:var(--ink)!important;-webkit-text-stroke:0!important;text-shadow:0 0 18px rgba(239,228,204,.95),0 0 4px rgba(239,228,204,.95)!important;font-family:"EBG",serif;font-style:italic;font-weight:500}
 .bm-line{font-family:"EBG",serif!important;font-weight:500!important;font-size:68px!important}
@@ -46,87 +47,24 @@ html,body{margin:0;background:#0a0a0a}
 <body>
 <div id="root" data-composition-id="root" data-start="0" data-duration="__TOTAL_S__" data-width="1080" data-height="1920">
   <audio id="vo" src="assets/audio.mp3" data-start="0" data-duration="__TOTAL_S__"></audio>
-  <div id="world"><div class="paper" id="paper"></div></div>
+  <div id="world"><div class="paper"></div></div>
   <div class="vig"></div>
   <div id="caps" class="bm-captions"></div>
 </div>
 <script>
 (function () {
-  const P = window.PROPS, T = P.totalMs / 1000, $ = s => document.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const tl = gsap.timeline({ paused: true }), world = $('#world');
-  const h = html => { const d = document.createElement('div'); d.innerHTML = html.trim(); return d.firstChild; };
-  const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;');
-  // the world: one area per scene, laid out on a zig-zag so the camera pushes through in different directions
-  const SW = 1500, area = i => ({ x: i * SW + (i % 2) * 0, y: (i % 2) * 700 });
-  $('#paper').style.width = (P.scenes.length * SW + 3000) + 'px'; $('#paper').style.height = '5000px';
-  const C = { x: 540, y: 960, z: 1 };
-  const applyCam = () => { world.style.transform = `translate(${540 - C.x * C.z}px,${960 - C.y * C.z}px) scale(${C.z})`; };
-  const cam = (at, x, y, z, dur, ease = 'sine.inOut') => tl.to(C, { x, y, z, duration: dur, ease, onUpdate: applyCam }, at);
-  // words: split a .line into spans (highlighted phrase in *stars* stays one span)
-  const sayable = (el, text) => { const parts = String(text).split(/(\*[^*]+\*)/); el.textContent = ''; parts.forEach(p => { if (!p) return;
-    if (/^\*.*\*$/.test(p)) { const s = document.createElement('span'); s.className = 'w'; s.innerHTML = `<span class="hl"><i></i>${esc(p.slice(1, -1))}</span>`; el.appendChild(s); }
-    else p.split(/\s+/).filter(Boolean).forEach(w => { const s = document.createElement('span'); s.className = 'w'; s.textContent = w; el.appendChild(s); }); }); };
-  const say = (el, at, { dur = .55, st = .08 } = {}) => { const ws = $$('.w', el); tl.set(el, { opacity: 1 }, at);
-    tl.fromTo(ws, { opacity: 0, yPercent: 60, scaleY: 1.25, filter: 'blur(10px)' }, { opacity: 1, yPercent: 0, scaleY: 1, filter: 'blur(0px)', duration: dur, ease: 'power4.out', stagger: st, immediateRender: false }, at);
-    $$('.hl i', el).forEach((hi, k) => tl.fromTo(hi, { scaleX: 0 }, { scaleX: 1, duration: .4, ease: 'power3.out', immediateRender: false }, at + st * ws.length + .2 + k * .2)); };
-  const label = (el, at) => tl.fromTo(el, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .4, ease: 'power3.out', immediateRender: false }, at);
-  const fly = (el, at, from, end) => { tl.fromTo(el, { opacity: 0, filter: 'blur(14px)', ...from }, { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1, filter: 'blur(0px)', duration: .9, ease: 'power4.out', immediateRender: false }, at);
-    const per = 1.6, n = Math.max(1, Math.floor((end - at - .9) / per)); tl.to(el, { y: -22, rotate: 1.2, scale: 1.02, duration: per, ease: 'sine.inOut', yoyo: true, repeat: n }, at + .9); };   // finite float (HyperFrames: no repeat:-1)
-  const draw = (el, at, dur = .8) => { const o = { v: 0 }; tl.set(el, { opacity: 1 }, at); tl.to(o, { v: 1, duration: dur, ease: 'power2.inOut', onUpdate() { el.style.clipPath = `inset(-300px ${(1 - o.v) * 100}% -300px -300px)`; } }, at); };
-  const roman = n => ['I', 'II', 'III', 'IV', 'V', 'VI'][n] || String(n + 1);
-
-  P.scenes.forEach((s, i) => {
-    const a = area(i), t0 = s.startMs / 1000, d = s.durationMs / 1000, t1 = t0 + d, cx = a.x + 540, cy = a.y + 960, put = (html, x, y, extra = '') => { const e = h(html); e.style.left = (a.x + x) + 'px'; e.style.top = (a.y + y) + 'px'; if (extra) e.style.cssText += extra; world.appendChild(e); return e; };
-    const ghostTxt = (String(s.eyebrow || '').match(/\b\d{3,4}\b/) || [''])[0];   // ghost only for a real year
-    const ghost = put(`<div class="ghost">${esc(ghostTxt)}</div>`, 60, 820);
-    const hasImg = !!s.imageSrc, T_ = s.type;
-    // the engraving (FLUX image graded to sepia, multiplied on the paper); without one, a drawn ornament stands in
-    let cut = null; if (hasImg) cut = put(`<div class="cut"><img src="assets/${esc(s.imageSrc)}"></div>`, 140, 290, 'width:800px;height:620px');
-    const ring = put(`<svg class="anno" viewBox="0 0 900 720" style="width:900px;height:720px"><path d="M70 380 C50 200 210 70 450 66 C690 62 850 200 830 380 C810 560 650 660 440 664 C230 668 90 560 70 380 Z M120 420 C130 600 300 690 470 690"/></svg>`, 90, 250);
-    const nm = s.eyebrow ? put(`<div class="name">${esc(String(s.eyebrow).toUpperCase())}</div>`, 80, 200) : null;
-    // camera: open close on the engraving (or the ghost), glide home, hold with a slow breath; push through to the next area
-    const enter = i === 0 ? 0 : t0;
-    if (i === 0) { tl.set(C, { x: cx - 40, y: cy - 330, z: 1.7, onUpdate: applyCam }, 0); }
-    cam(enter + .05, cx, cy, 1, 1.3, 'power2.inOut');
-    cam(enter + 1.4, cx, cy, 1.035, Math.max(.5, d - 2.3), 'sine.inOut');
-    const nx = P.scenes[i + 1]; if (nx) { const b = area(i + 1); cam(t1 - .9, (cx + b.x + 540) / 2, (cy + b.y + 960) / 2, 1.5, .9, 'power2.in'); }
-    tl.fromTo(ghost, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.2, ease: 'power2.out', immediateRender: false }, t0 + .15);
-    if (cut) fly(cut, t0 + .25, { y: 140, rotate: i % 2 ? 5 : -5, scale: .92 }, t1);
-    if (nm) label(nm, t0 + .5);
-    const textAt = t0 + 1.5;   // text only after the zoom-out is done
-    if (hasImg) draw(ring.querySelector('path').parentNode, t0 + 1.2, .9);
-    if (T_ === 'counter') {
-      const it = s.items || []; it.slice(0, 2).forEach((x, k) => { const nEl = put(`<div class="num"></div>`, 80, 860 + k * 330); const lab = x.label ? put(`<div class="hand">${esc(x.label)}</div>`, 80, 1090 + k * 330, 'width:920px;text-align:center') : null;
-        const o = { v: 0 }, target = parseFloat(String(x.value).replace(/\./g, '').replace(',', '.')) || 0, fmt = v => (x.prefix || '') + (isNaN(target) ? x.value : Math.round(v).toLocaleString('id-ID')) + (x.suffix || '');
-        tl.set(nEl, { opacity: 1 }, textAt + k * .5); nEl.textContent = fmt(0); tl.to(o, { v: target, duration: 1.1, ease: 'power2.out', onUpdate() { nEl.textContent = fmt(o.v); } }, textAt + k * .5); if (lab) label(lab, textAt + k * .5 + .5); });
-      if (!hasImg) { const r = ring; r.style.left = (a.x + 190) + 'px'; r.style.top = (a.y + 745) + 'px'; r.style.width = '700px'; r.style.height = '440px'; draw(r, textAt + .9, .9); }
-      if (s.headline) { const ln = put(`<div class="line it"></div>`, 80, 320 + (hasImg ? 620 : 0)); sayable(ln, s.headline); say(ln, t0 + .6); }
-      return;
-    }
-    if (T_ === 'list') {
-      const ln = put(`<div class="line"></div>`, 80, hasImg ? 930 : 380); sayable(ln, s.headline || ''); say(ln, t0 + .6);
-      (s.items || []).forEach((x, k) => { const it = put(`<div class="line it"></div>`, 80, (hasImg ? 1060 : 560) + k * 130); sayable(it, `${roman(k)}. ${x}`); say(it, textAt + k * .6, { st: .05 }); });
-      return;
-    }
-    if (T_ === 'ayat') {
-      const ar = put(`<div class="line ar"></div>`, 80, 360); ar.textContent = s.arabic || ''; tl.fromTo(ar, { opacity: 0, filter: 'blur(12px)' }, { opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'power2.out', immediateRender: false }, t0 + .6);
-      const tr = put(`<div class="line it"></div>`, 80, 720); sayable(tr, `“${s.translation || ''}”`); say(tr, textAt, { st: .05 });
-      if (s.ref) label(put(`<div class="name">${esc(s.ref)}</div>`, 80, 1060), textAt + 1);
-      if (hasImg) draw(ring, t0 + .9, .9); return;
-    }
-    if (T_ === 'quote') {
-      const q = put(`<div class="line it" style="font-size:72px"></div>`, 80, hasImg ? 950 : 420); sayable(q, `“${s.text || ''}”`); say(q, textAt, { st: .05 });
-      if (s.source) label(put(`<div class="hand">— ${esc(s.source)}</div>`, 120, 1200), textAt + 1); return;
-    }
-    // title / headline / tribute / image
-    const main = s.title || s.headline || s.name || '', ln = put(`<div class="line"></div>`, 80, hasImg ? 960 : 430);
-    sayable(ln, main); say(ln, textAt);
-    const sub = s.subtitle || s.sub || s.note; if (sub) label(put(`<div class="hand">${esc(sub)}</div>`, 100, hasImg ? 1190 : 760), textAt + 1);
+  const { tl, label } = BANG;
+  // engraving ornaments, drawn with the pen (viewBox 900x720, stretched to the box)
+  const ROSE = 'M450 120 L450 600 M210 360 L690 360 M450 120 L490 330 L450 360 L410 330 Z M450 600 L490 390 L450 360 L410 390 Z M300 210 L600 510 M600 210 L300 510 M450 160 C560 160 650 250 650 360 C650 470 560 560 450 560 C340 560 250 470 250 360 C250 250 340 160 450 160 Z M80 360 C160 300 200 420 260 360 M640 360 C700 300 740 420 820 360';
+  const FLOUR = 'M60 360 C200 240 320 480 450 360 C580 240 700 480 840 360 M450 360 C420 300 480 260 450 220 M450 360 C480 420 420 460 450 500';
+  BANG.collage({
+    capAccent: '#9A3B22', capText: '#2E2115',
+    title(c) { if (!c.hasImg) { const e = c.annot(c.yr ? 560 : 240, c.yr ? 860 : (c.s.subtitle ? 900 : 820), c.yr ? 420 : 600, c.yr ? 300 : 400, c.textAt + .8, ROSE); e.classList.add('orn'); } },
+    quote(c) { const m = c.put(`<div class="qmark">“</div>`, 40, c.hasImg ? 820 : 240); tl.fromTo(m, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out', immediateRender: false }, c.t0 + .4); },
+    list(c) { const last = c.items[c.items.length - 1]; if (last && last.y < 1100) { const e = c.annot(80, last.y + 120, 760, 110, last.at + .8, FLOUR); e.classList.add('orn'); } },
+    ayat(c) { if (!c.hasImg) { const e = c.annot(190, 640, 700, 110, c.t0 + 1.2, FLOUR); e.classList.add('orn'); } },
   });
-  tl.to({}, { duration: .01 }, T);
-  BM.captions(tl, document.getElementById('caps'), P.words, { accent: '#9A3B22', text: '#2E2115' });
-  applyCam();
-  window.__timelines = window.__timelines || {}; window.__timelines["root"] = tl;
+  window.__timelines = window.__timelines || {}; window.__timelines["root"] = BANG.tl;   // (also set inside bang.js; kept here for the lint)
 })();
 </script>
 </body>

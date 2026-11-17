@@ -1,0 +1,33 @@
+{
+  "_about": "Bang Motion styles (MIT, github.com/bangtutorial/bang-motion) adapted to data-driven 9:16 HyperFrames pages. Runtime: hyperframes/runtime/bang.js. Use: produce.py ... --engine=hyperframes --html=hyperframes/bang/<page>",
+  "vintage-sketch": {
+    "name": "Vintage Sketch (buku sketsa vintage)", "page": "vintage-sketch.hf.html", "rig": "collage",
+    "themes": ["sejarah dunia", "tokoh & penemuan", "sejarah Islam (tanpa sosok)", "kisah & hikmah", "inspirasi Qur'an & hadits"],
+    "images": "optional (sepia engraving)", "music": "warm"
+  },
+  "kartun-kolase": {
+    "name": "Kartun Kolase (kertas + potongan warna)", "page": "kartun-kolase.hf.html", "rig": "collage",
+    "themes": ["psikologi", "kebiasaan & perilaku", "inspirasi & motivasi hidup", "pengetahuan umum ringan"],
+    "images": "optional (polaroid)", "music": "playful"
+  },
+  "jurnalisme-visual": {
+    "name": "Jurnalisme Visual (hitam + highlighter kuning)", "page": "jurnalisme-visual.hf.html", "rig": "collage",
+    "themes": ["sejarah dunia", "peristiwa & fakta", "data & angka", "sains (fakta mengejutkan)"],
+    "images": "optional (documentary photo, dark gradient)", "music": "tense"
+  },
+  "katalog-putih": {
+    "name": "Katalog Putih (dokumen, stempel, grid)", "page": "katalog-putih.hf.html", "rig": "collage",
+    "themes": ["sains & cara kerja", "pengetahuan umum", "perbandingan & data", "benda & produk"],
+    "images": "optional (photo card)", "music": "calm"
+  },
+  "kartun-panggung": {
+    "name": "Kartun Panggung (panggung datar + siluet tanpa wajah)", "page": "kartun-panggung.hf.html", "rig": "stage",
+    "themes": ["proses & dampak", "pengetahuan umum anak", "kehidupan sehari-hari", "motivasi", "kisah (siluet, termasuk sirah dengan hero.prophet)"],
+    "images": "none", "music": "playful"
+  },
+  "explainer-aliran": {
+    "name": "Explainer Aliran (dunia mengalir + papan jalan)", "page": "explainer-aliran.hf.html", "rig": "flow",
+    "themes": ["perjalanan & urutan", "langkah-langkah", "sejarah sebagai perjalanan waktu", "pengetahuan umum"],
+    "images": "none", "music": "warm"
+  }
+}

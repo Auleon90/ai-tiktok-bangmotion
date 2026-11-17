@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="id">
+<!-- Katalog Putih — 9:16 HyperFrames adaptation of starter-explainer-katalog.html from the Bang Motion skill
+     (MIT, Bang Tutorial, https://github.com/bangtutorial/bang-motion; see hyperframes/bang/LICENSE). Rig: BANG.collage.
+     White page with a faint grid, cut-outs with a thin shadow, Archivo Black claims, Caveat scribbles, Inter wide labels,
+     yellow highlighter; evidence piles up per scene: document + slammed stamp, date block, sticky note, repeat grid for scale.
+     Images: scene imageSrc (read by bang.js). Placeholder: __TOTAL_S__ -->
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="assets/bm/bm.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="assets/props.js"></script>
+<script src="assets/bm/bm.js"></script>
+<script src="assets/bm/bang.js"></script>
+<style>
+@font-face{font-family:"Arch";font-weight:900;src:url("assets/fonts/lemo/archivo-900.woff2")}
+@font-face{font-family:"Caveat";font-weight:700;src:url("assets/fonts/lemo/caveat-700.woff2")}
+@font-face{font-family:"InterM";font-weight:500;src:url("assets/fonts/lemo/inter-500.woff2")}
+@font-face{font-family:"Plex";font-weight:400;src:url("assets/fonts/lemo/plexmono-400.woff2")}
+@font-face{font-family:"Amiri";font-weight:700;src:url("assets/fonts/amiri-arabic-700-normal.woff2")}
+:root{--ink:#141414;--mute:#7a7a7a;--red:#E1251B;--yel:#F7C500;--grid:rgba(20,20,20,.07)}
+html,body{margin:0;background:#0a0a0a}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden;background:#fff;font-family:"Arch",system-ui,sans-serif;color:var(--ink)}
+#world{position:absolute;left:0;top:0;transform-origin:0 0}
+.paper{position:absolute;background:#fff;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:120px 120px}
+.cut{position:absolute;opacity:0;filter:drop-shadow(0 24px 30px rgba(20,20,20,.18))}
+.cut img{display:block;width:100%;height:100%;object-fit:cover;border:16px solid #fff;box-sizing:border-box}
+.line{position:absolute;width:920px;font-weight:900;font-size:96px;line-height:1;letter-spacing:-.02em;color:var(--ink);opacity:0}
+.line.it{font-size:62px;line-height:1.1}
+.line.q{font-size:68px}
+.line.li{font-size:60px;width:820px}
+.line.ar{font-family:"Amiri",serif;font-weight:700;font-size:92px;line-height:1.6;direction:rtl;text-align:center}
+.w{display:inline-block;white-space:nowrap;margin:0 .1em;opacity:0}
+.hl{position:relative;display:inline-block;padding:0 .1em}
+.hl i{position:absolute;left:0;right:0;top:.55em;bottom:.02em;background:var(--yel);transform:scaleX(0);transform-origin:0 50%;z-index:-1}
+.name{position:absolute;font-family:"InterM",sans-serif;font-size:30px;letter-spacing:.2em;color:var(--ink);opacity:0;white-space:nowrap}
+.hand{position:absolute;font-family:"Caveat",cursive;font-weight:700;font-size:64px;color:var(--red);opacity:0;white-space:nowrap}
+.ghost{position:absolute;font-weight:900;font-size:320px;line-height:.85;letter-spacing:-.04em;color:rgba(20,20,20,.06);white-space:nowrap;opacity:0}
+.num{position:absolute;width:920px;text-align:center;font-weight:900;font-size:220px;line-height:1;color:var(--ink);opacity:0}
+.anno{position:absolute;overflow:visible;opacity:0}
+.anno *{fill:none;stroke:var(--ink);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.doc{position:absolute;width:470px;padding:24px 28px 26px;background:#fff;border:2px solid rgba(20,20,20,.3);box-shadow:0 30px 34px rgba(20,20,20,.16),0 6px 8px rgba(20,20,20,.14);opacity:0;box-sizing:border-box}
+.doc h6{margin:0 0 10px;font:500 20px/1.3 "InterM",sans-serif;letter-spacing:.18em;color:var(--mute)}
+.doc pre{margin:0;font:400 28px/1.45 "Plex",monospace;letter-spacing:.06em;white-space:pre-wrap;color:var(--ink)}
+.stamp{position:absolute;padding:4px 14px;border:5px solid var(--red);border-radius:6px;color:var(--red);font:900 34px/1.2 "Arch",sans-serif;letter-spacing:.08em;opacity:0;background:rgba(255,255,255,.7);white-space:nowrap}
+.stampblk{position:absolute;padding:10px 22px;background:var(--ink);color:#fff;font:400 38px/1.2 "Plex",monospace;letter-spacing:.08em;opacity:0;white-space:nowrap}
+.stampblk.y{background:var(--yel);color:var(--ink)}
+.pnote{position:absolute;width:360px;padding:20px 24px;background:#fffdf3;box-shadow:0 24px 30px rgba(20,20,20,.16),0 4px 6px rgba(20,20,20,.12);font:700 44px/1.1 "Caveat",cursive;color:var(--ink);opacity:0;box-sizing:border-box}
+.cell{position:absolute;width:58px;height:58px;border-radius:8px;background:rgba(20,20,20,.1);opacity:0}
+.cell.on{background:var(--ink)}
+.box{position:absolute;width:44px;height:44px;border:4px solid var(--ink);border-radius:6px;opacity:0;box-sizing:border-box}
+.vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(80% 70% at 50% 50%,transparent 60%,rgba(20,20,20,.08) 100%);z-index:40}
+.bm-word{color:var(--ink)!important;-webkit-text-stroke:0!important;text-shadow:0 0 14px #fff,0 0 4px #fff!important;font-family:"Arch",sans-serif;font-weight:900}
+.bm-line{font-family:"Arch",sans-serif!important;font-weight:900!important;font-size:60px!important}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="root" data-start="0" data-duration="__TOTAL_S__" data-width="1080" data-height="1920">
+  <audio id="vo" src="assets/audio.mp3" data-start="0" data-duration="__TOTAL_S__"></audio>
+  <div id="world"><div class="paper"></div></div>
+  <div class="vig"></div>
+  <div id="caps" class="bm-captions"></div>
+</div>
+<script>
+(function () {
+  const { tl, fly, slam, block, pop, draw, esc } = BANG;
+  const TICK = 'M120 380 L360 600 L800 120';
+  BANG.collage({
+    capAccent: '#E1251B', capText: '#141414', say: 'scale', hl: [''], upper: true, imageRing: false, ghostY: 780,
+    image: c => ({ x: 150, y: 290, w: 780, h: 600, rot: c.i % 2 ? 2 : -2 }),
+    title(c) { if (c.hasImg) return;
+      const doc = c.put(`<div class="doc"><h6>${esc(String(c.s.eyebrow || 'CATATAN').toUpperCase())}</h6><pre>${esc(c.s.subtitle || c.s.note || '')}</pre></div>`, 90, c.s.subtitle ? 900 : 870);
+      fly(doc, c.textAt + .6, { y: 300, rotate: 6, scale: .9 }, c.t1, { rot: -3 });
+      const st = c.put(`<div class="stamp">${c.yr || 'CATAT'}</div>`, 400, (c.s.subtitle ? 870 : 840)); tl.set(st, { rotate: -8 }, 0); slam(st, c.textAt + 1.5);
+      if (c.subEl) c.subEl.style.display = 'none';   // the subtitle lives on the document
+      const n = c.put(`<div class="pnote">ingat ini!</div>`, 620, 1060); fly(n, c.textAt + 1.9, { x: 300, rotate: 10 }, c.t1, { rot: 4 }); },
+    counter(c) { const n = c.counters[0]; if (!n || n.pct == null || c.hasImg) return;
+      // the scale: 20 cells, the share fills in
+      n.el.style.top = (parseFloat(n.el.style.top) - 60) + 'px'; const on = Math.round(Math.min(100, n.pct) / 5);
+      for (let k = 0; k < 20; k++) { const e = c.put(`<div class="cell ${k < on ? 'on' : ''}"></div>`, 220 + (k % 10) * 66, 1160 + Math.floor(k / 10) * 66); pop(e, c.textAt + .4 + k * .04); }
+      if (n.lab) n.lab.style.top = (parseFloat(n.lab.style.top) - 60) + 'px'; },
+    list(c) { c.items.forEach((it, k) => { const b = c.put(`<div class="box"></div>`, 84, it.y + 16); pop(b, it.at); const t = c.annot(86, it.y + 4, 60, 56, it.at + .5, TICK); }); },
+    marker: () => '', listIndent: 160,
+    quote(c) { const st = c.put(`<div class="stampblk y">${esc(c.s.eyebrow || 'KUTIPAN')}</div>`, 80, c.hasImg ? 880 : 330); block(st, c.t0 + .7); st.textContent = 'KUTIPAN'; },
+  });
+  window.__timelines = window.__timelines || {}; window.__timelines["root"] = BANG.tl;
+})();
+</script>
+</body>
+</html>

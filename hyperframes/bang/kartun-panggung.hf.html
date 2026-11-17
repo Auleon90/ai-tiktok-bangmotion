@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="id">
+<!-- Kartun Panggung — 9:16 HyperFrames adaptation of starter-explainer-panggung.html + references/kartun-panggung.md from the
+     Bang Motion skill (MIT, Bang Tutorial, https://github.com/bangtutorial/bang-motion; see hyperframes/bang/LICENSE). Rig: BANG.stage.
+     One bright flat stage per scene, camera 1.08–1.4 (never wide), stuff keeps moving (clouds, sun, grass, birds, sparkles),
+     cut with a 96/72 px slide + blur. Repo rule: figures are FACELESS silhouettes on a joint rig (no raster heads, no faces),
+     so the style is safe for Islamic content too; "hero": {"prophet": true} = glow over the head, hands raised only.
+     Text is diegetic (on the board) + word captions. No FLUX images in this style. Placeholder: __TOTAL_S__ -->
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="assets/bm/bm.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="assets/props.js"></script>
+<script src="assets/bm/bm.js"></script>
+<script src="assets/bm/bang.js"></script>
+<style>
+@font-face{font-family:"Fred";font-weight:700;src:url("assets/fonts/lemo/fredoka-700.woff2")}
+@font-face{font-family:"Fred";font-weight:500;src:url("assets/fonts/lemo/fredoka-500.woff2")}
+@font-face{font-family:"Amiri";font-weight:700;src:url("assets/fonts/amiri-arabic-700-normal.woff2")}
+html,body{margin:0;background:#1D303C}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden;background:#F4EFE0;font-family:"Fred",system-ui,sans-serif;color:#22343F}
+#world{position:absolute;inset:0}
+.stage{position:absolute;left:0;top:0;width:1080px;height:1920px;transform-origin:0 0;overflow:hidden}
+.stsvg{position:absolute;left:0;top:0}
+.board{position:absolute;border-radius:36px;box-shadow:0 18px 0 rgba(34,52,63,.18);opacity:0}
+.tag{position:absolute;padding:8px 22px;border-radius:999px;color:#fff;font-weight:700;font-size:30px;letter-spacing:.12em;opacity:0;white-space:nowrap}
+.bline{position:absolute;width:760px;font-weight:700;font-size:84px;line-height:1.05;color:#22343F;opacity:0}
+.bline.sm{font-size:58px}
+.bline.it{font-weight:500;font-size:60px;line-height:1.15}
+.bline.it.sm{font-size:50px}
+.bsub{position:absolute;width:760px;font-weight:500;font-size:44px;line-height:1.15;color:#237C80;opacity:0}
+.bnum{position:absolute;width:860px;text-align:center;font-weight:700;font-size:200px;line-height:1;opacity:0}
+.brow{position:absolute;display:flex;align-items:center;gap:22px;font-weight:700;font-size:52px;color:#22343F;opacity:0;white-space:nowrap}
+.brow b{display:grid;place-items:center;width:64px;height:64px;border-radius:50%;color:#fff;font-size:42px}
+.bar{position:absolute;width:860px;font-family:"Amiri",serif;font-weight:700;font-size:80px;line-height:1.55;direction:rtl;text-align:center;color:#22343F;opacity:0}
+.w{display:inline-block;white-space:nowrap;margin:0 .1em;opacity:0}
+.hl{position:relative;display:inline-block;padding:0 .14em;border-radius:.2em;color:#fff}
+.hl i{position:absolute;inset:0;border-radius:inherit;background:#E0714F;transform:scaleX(0);transform-origin:0 50%;z-index:-1}
+.hl.t i{background:#237C80}
+.bm-word{color:#fff!important;-webkit-text-stroke:0!important;text-shadow:0 4px 0 #22343F,0 0 12px rgba(34,52,63,.9)!important;font-family:"Fred",sans-serif;font-weight:700}
+.bm-line{font-family:"Fred",sans-serif!important;font-weight:700!important;font-size:66px!important}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="root" data-start="0" data-duration="__TOTAL_S__" data-width="1080" data-height="1920">
+  <audio id="vo" src="assets/audio.mp3" data-start="0" data-duration="__TOTAL_S__"></audio>
+  <div id="world"></div>
+  <div id="caps" class="bm-captions"></div>
+</div>
+<script>
+(function () {
+  // palettes from references/kartun-panggung.md (flat, no texture): pale sky gradients, earth, cream, navy, teal, mint, gold, coral
+  const PAL = [
+    { sky: ['#BFDDE3', '#F6EFDD'], sun: '#F4BC52', hill: '#8DD3C3', ground: '#E6D5AC', edge: '#C9B47F', board: '#FFF3DC', post: '#345867', accent: '#E0714F', ink: '#345867', fig: ['#345867', '#2B4A57', '#237C80', '#1D6669'] },
+    { sky: ['#EDB095', '#F8D8AD'], sun: '#FFF3DC', hill: '#D88560', ground: '#E6D5AC', edge: '#C98B5F', board: '#FFF3DC', post: '#345867', accent: '#237C80', ink: '#345867', fig: ['#345867', '#2B4A57', '#E0714F', '#B85A3E'] },
+    { sky: ['#CDE7D8', '#F6EFDD'], sun: '#F4BC52', hill: '#237C80', ground: '#D88560', edge: '#B86C4B', board: '#FFF3DC', post: '#22343F', accent: '#F4BC52', ink: '#22343F', fig: ['#22343F', '#1A2830', '#345867', '#2B4A57'] },
+  ];
+  BANG.stage({ palettes: PAL, capAccent: '#F4BC52', capText: '#FFFFFF', hl: ['', 't'] });
+  window.__timelines = window.__timelines || {}; window.__timelines["root"] = BANG.tl;
+})();
+</script>
+</body>
+</html>

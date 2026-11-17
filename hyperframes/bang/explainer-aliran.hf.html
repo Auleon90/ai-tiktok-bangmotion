@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="id">
+<!-- Explainer (mode aliran) — 9:16 HyperFrames adaptation of starter-explainer.html from the Bang Motion skill
+     (MIT, Bang Tutorial, https://github.com/bangtutorial/bang-motion; see hyperframes/bang/LICENSE). Rig: BANG.flow.
+     The world keeps flowing past in parallax strips driven by one distance D(t); one hero (a faceless rider on a cart) never
+     leaves the frame; each scene is a signpost that rolls in and stops; camera never freezes. Unbounded + Plus Jakarta Sans.
+     No FLUX images in this style. Placeholder: __TOTAL_S__ -->
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="assets/bm/bm.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="assets/props.js"></script>
+<script src="assets/bm/bm.js"></script>
+<script src="assets/bm/bang.js"></script>
+<style>
+@font-face{font-family:"Unb";font-weight:900;src:url("assets/fonts/lemo/unbounded-900.woff2")}
+@font-face{font-family:"PJS";font-weight:800;src:url("assets/fonts/lemo/jakarta-800.woff2")}
+@font-face{font-family:"Amiri";font-weight:700;src:url("assets/fonts/amiri-arabic-700-normal.woff2")}
+:root{--sky:#cfe0f5;--sky2:#f5efe3;--ink:#1c2a4a;--accent:#d7262c}
+html,body{margin:0;background:#0a0f1e}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden;background:linear-gradient(180deg,var(--sky),var(--sky2) 55%);font-family:"PJS",system-ui,sans-serif;color:var(--ink)}
+#sky{position:absolute;inset:0}
+.strip{position:absolute;left:0;width:1080px;background-repeat:repeat-x}
+.far{top:620px;height:520px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='520'%3E%3Cpath d='M0 300 C150 160 300 200 420 260 C560 120 760 140 880 250 C1000 180 1120 220 1200 300 L1200 520 L0 520Z' fill='%23a7bedf'/%3E%3C/svg%3E")}
+.mid{top:820px;height:440px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='440'%3E%3Cpath d='M0 200 C200 90 380 120 450 180 C560 80 760 100 900 200 L900 440 L0 440Z' fill='%239cc27e'/%3E%3Ccircle cx='160' cy='170' r='46' fill='%237fb06a'/%3E%3Crect x='154' y='170' width='12' height='60' fill='%236a5a40'/%3E%3Ccircle cx='640' cy='150' r='38' fill='%237fb06a'/%3E%3Crect x='635' y='150' width='10' height='50' fill='%236a5a40'/%3E%3C/svg%3E")}
+.near{top:1080px;height:200px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='200'%3E%3Cpath d='M0 120 C120 60 220 80 330 110 C450 50 580 70 700 120 L700 200 L0 200Z' fill='%23cfe19c'/%3E%3Ccircle cx='90' cy='120' r='34' fill='%237fb06a'/%3E%3Ccircle cx='130' cy='128' r='26' fill='%2391bd70'/%3E%3Ccircle cx='520' cy='110' r='30' fill='%237fb06a'/%3E%3C/svg%3E")}
+.road{top:1255px;height:700px;background-color:#3b4660;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='700'%3E%3Crect width='300' height='14' fill='%23e6d5ac'/%3E%3Crect x='40' y='400' width='140' height='16' rx='8' fill='%23f5efe3'/%3E%3C/svg%3E")}
+#world{position:absolute;left:0;top:0;width:1px;height:1920px}
+.sign{position:absolute;top:240px;width:900px;height:640px;border-radius:34px;background:#fff;border:8px solid var(--ink);box-sizing:border-box;transform-origin:50% 1010px}
+.sign::before,.sign::after{content:"";position:absolute;top:632px;width:28px;height:390px;background:var(--ink)}
+.sign::before{left:200px}.sign::after{right:200px}
+.kick{position:absolute;font-weight:800;font-size:34px;letter-spacing:.18em;color:var(--accent);opacity:0;white-space:nowrap}
+.fline{position:absolute;width:790px;font-family:"Unb",sans-serif;font-weight:900;font-size:72px;line-height:1.08;color:var(--ink);opacity:0}
+.fline.sm{font-size:48px}
+.fline.it{font-family:"PJS",sans-serif;font-weight:800;font-size:56px;line-height:1.18}
+.fline.it.sm{font-size:46px}
+.fsub{position:absolute;width:790px;font-weight:800;font-size:40px;line-height:1.2;color:#4a5a7a;opacity:0}
+.fnum{position:absolute;width:884px;text-align:center;font-family:"Unb",sans-serif;font-weight:900;font-size:190px;line-height:1;color:var(--accent);opacity:0}
+.frow{position:absolute;display:flex;align-items:center;gap:20px;font-weight:800;font-size:52px;opacity:0;white-space:nowrap}
+.frow b{display:grid;place-items:center;width:64px;height:64px;border-radius:14px;background:var(--accent);color:#fff;font-family:"Unb",sans-serif;font-size:34px}
+
+.fara{position:absolute;width:884px;font-family:"Amiri",serif;font-weight:700;font-size:76px;line-height:1.55;direction:rtl;text-align:center;opacity:0}
+.w{display:inline-block;white-space:nowrap;margin:0 .1em;opacity:0}
+.hl{position:relative;display:inline-block;padding:0 .12em;color:#fff}
+.hl i{position:absolute;inset:0;background:var(--accent);transform:scaleX(0);transform-origin:0 50%;z-index:-1;border-radius:.12em}
+#hero{position:absolute;left:250px;top:1050px;width:300px;height:230px}
+.wheel{transform-box:fill-box;transform-origin:50% 50%}
+#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(90% 90% at 50% 50%,transparent 60%,rgba(10,15,30,.28));z-index:40}
+.bm-word{color:#fff!important;-webkit-text-stroke:0!important;text-shadow:0 0 14px rgba(28,42,74,.95),0 0 4px rgba(28,42,74,.95)!important;font-family:"PJS",sans-serif;font-weight:800}
+.bm-line{font-family:"PJS",sans-serif!important;font-weight:800!important;font-size:64px!important}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="root" data-start="0" data-duration="__TOTAL_S__" data-width="1080" data-height="1920">
+  <audio id="vo" src="assets/audio.mp3" data-start="0" data-duration="__TOTAL_S__"></audio>
+  <div id="sky"></div>
+  <div id="world"></div>
+  <svg id="hero" viewBox="0 0 300 230">
+    <!-- the hero: a faceless rider on a little cart (no face, plain disc head) -->
+    <rect x="30" y="120" width="240" height="60" rx="18" fill="#d7262c"/>
+    <rect x="50" y="100" width="70" height="30" rx="8" fill="#1c2a4a"/>
+    <rect x="128" y="40" width="44" height="90" rx="20" fill="#1c2a4a"/>
+    <circle cx="150" cy="22" r="22" fill="#2b3d63"/>
+    <rect x="160" y="60" width="70" height="14" rx="7" fill="#1c2a4a"/>
+    <g class="wheel"><circle cx="80" cy="190" r="34" fill="#1c2a4a"/><circle cx="80" cy="190" r="12" fill="#f5efe3"/><rect x="77" y="160" width="6" height="60" fill="#f5efe3"/></g>
+    <g class="wheel"><circle cx="225" cy="190" r="34" fill="#1c2a4a"/><circle cx="225" cy="190" r="12" fill="#f5efe3"/><rect x="222" y="160" width="6" height="60" fill="#f5efe3"/></g>
+  </svg>
+  <div id="vig"></div>
+  <div id="caps" class="bm-captions"></div>
+</div>
+<script>
+(function () {
+  BANG.flow({ capAccent: '#d7262c', capText: '#ffffff', hl: [''] });
+  window.__timelines = window.__timelines || {}; window.__timelines["root"] = BANG.tl;
+})();
+</script>
+</body>
+</html>

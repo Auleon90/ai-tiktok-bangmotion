@@ -129,8 +129,9 @@ Perkiraan durasi: ~Xs · Gambar AI: N dari M scene
 ### Sound (all modes)
 
 `scripts/score.py` (run automatically by `produce.py` with `.venv-audio`) writes an original score and timed SFX from the scene timings,
-using `audio/lemo/` (sfx.py + pluck.py, MIT, vendored from Lemo-Opuscar). The mixer compresses the voice, ducks the bed (ambience + music)
-under it, adds SFX and masters to −14 LUFS.
+using `audio/lemo/` (sfx.py + pluck.py, MIT, vendored from Lemo-Opuscar). The mixer compresses the voice, holds the backsound
+(music + ambience) at a steady **35 % of the VO loudness** (measured EBU R128, every mode, owner's rule — no extra ducking), adds SFX and
+masters to −14 LUFS. `produce.py` prints `backsound at 35% of VO`.
 
 The score is **different for every video**: a seed from the title (or `"music_seed"`) picks key, tempo, chord progression,
 arpeggio patterns and the instrument palette from the mood's options; the Lemo `style` steers the palette (engraving → harpsichord +
@@ -225,6 +226,18 @@ AskUserQuestion allows max 4 options, so ask in two steps.
 3. `Remotion + Lottie` — "Kualitas tertinggi: peta animasi, grain film, efek Lottie. ±20 menit."
 4. `Lemo native / Manim…` — "Lemo native: tampilan persis gaya Opuscar (6 gaya). Atau Manim untuk sains/matematika."
 
+If Q1 = option 2 (HyperFrames), **Q1b** — "Mode 1: gaya dari mana?", header "Gaya" (skip if the user already said):
+1. `Auto Bang Motion` — "AI memilih 1 dari 6 gaya Bang Motion. Tanpa gambar Cloudflare, tanpa gaya Opuscar, tanpa scene action/custom."
+2. `Auto Lemo-Opuscar` — "AI memilih 1 dari 99 gaya Opuscar; gambar FLUX, scene action & custom ditentukan AI."
+3. `Auto campuran` — "AI memilih koleksi yang paling cocok (Opuscar atau Bang Motion), lalu gayanya."
+4. `Tulis bebas` — the user writes what they want (style, FLUX images yes/no, Opuscar custom yes/no, backsound yes/no, anything).
+   Follow it literally; ask nothing else unless it contradicts the content rules (Islamic image rules, no Prophet ﷺ images).
+In the auto options, say in one line which style was picked and why (topic + tone of the storyboard), then go on to QA/render.
+**Bang Motion auto** = `hyperframes/bang/styles.json` themes; storyboard gets NO `image_prompt` (strip any), `"style": "bang:<slug>"`.
+**Opuscar auto** = the "Visual styles" rules above (Lemo style + FLUX images + `action`/`custom` scenes where they help).
+**Campuran** = Bang Motion when the video is text/number/argument driven (facts, psychology, explainers, steps, data);
+Opuscar when it is visual/atmospheric (places, nature, history scenes, stories that need pictures).
+
 If Q1 = option 4, **Q2** — "Pilih yang mana?", header "Mode":
 - `Lemo native: <slug>` — "Kode demo Opuscar, komposisi 9:16 asli. ±1 menit render per 60 s."
 - `Manim` — "Animasi sains/matematika ala 3Blue1Brown. ±1 menit."
@@ -257,14 +270,25 @@ Engine: `hyperframes/` (npm `hyperframes` 0.8.218, GSAP, lottie-web). Renders by
    Extract a frame per scene (`ffmpeg -ss <t> -i output/final.mp4 -frames:v 1 ...`), look at them, fix overlaps.
 4. Final: same command without `--draft` (~2 min for 60 s).
 
-**Bang Motion styles (MIT, `hyperframes/bang/`, from github.com/bangtutorial/bang-motion)** — an alternative to a Lemo style for mode 1.
-- Ready, data-driven 9:16 page: `hyperframes/bang/vintage-sketch.hf.html` (Vintage sketch: paper, world + camera push-through,
-  words said with a highlighter `*kata*`, drawn ring on images/numbers, ghost year when the eyebrow holds a year, Cinzel labels).
-  Use it directly: `--html=hyperframes/bang/vintage-sketch.hf.html` (scene types: title, counter, list, quote, ayat, tribute; FLUX images optional). Example: `examples/watt-vintage-sketch.storyboard.json`.
-- Other starters (`hyperframes/bang/starters/`: kartun-panggung, jurnalisme visual, katalog putih, kartun kolase, explainer, opener)
-  are 16:9 references: adapt per video into `output/hf_index.html` following `hyperframes/bang/references/*.md` — 9:16 safe area,
-  local fonts in `assets/fonts/`, no network, finite repeats, one timeline at `__timelines["root"]`, `window.PROPS`, `BM.captions`.
-  Cartoon stage draws characters with faces: NOT for Islamic content (use silhouettes / Lemo native clash instead).
+**Bang Motion styles (MIT, `hyperframes/bang/`, from github.com/bangtutorial/bang-motion)** — 6 ready, data-driven 9:16 pages on
+`hyperframes/runtime/bang.js` (registry + themes: `hyperframes/bang/styles.json`). Use directly, no copy needed:
+`python3 scripts/produce.py output/storyboard.json output/final.mp4 --engine=hyperframes --html=hyperframes/bang/<page>`
+
+| slug | look | rig | images |
+|---|---|---|---|
+| vintage-sketch | paper, sepia engraving, ochre highlighter, drawn rings/rose, ghost year | collage (camera push-through) | optional |
+| kartun-kolase | cream paper, colour cut-outs with shadow, colour pills, Caveat notes | collage | optional (polaroid) |
+| jurnalisme-visual | black + grain, Barlow uppercase, yellow highlighter, timeline ruler, data bar | collage | optional (dark gradient) |
+| katalog-putih | white grid, document + slammed stamp, sticky note, 20-cell scale, checklist | collage | optional (photo card) |
+| kartun-panggung | flat bright stage per scene, faceless silhouettes on joint rigs, signboard, meter | stage (cut + slide) | none |
+| explainer-aliran | parallax world flowing past, hero cart, signposts per scene | flow | none |
+
+Scene types: title, counter (1 item; `%` suffix fills bars/cells/meter), list (≤4–5), quote, ayat. `*kata*` = highlight.
+Figures are faceless silhouettes (owner rule), so every Bang style is allowed for Islamic content; in kartun-panggung a scene may set
+`"hero": {"prophet": true}` (glow over head, hands raised only). The starter `starter-opener.html` (Three.js promo toolkit) is
+kept as reference only — the first title scene of each style is the opener. Starters/references (16:9 originals) stay in
+`hyperframes/bang/starters/` and `references/`. With "Auto Bang Motion" do NOT generate FLUX images (images stay optional in "Tulis bebas").
+
 
 ## Mode 2 — Remotion + Lottie
 

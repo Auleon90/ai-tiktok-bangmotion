@@ -13,7 +13,7 @@ Storyboard format: see .claude/skills/bang-motion/SKILL.md.
 Each scene needs "vo" (spoken text). Optional per scene: "pad_before_ms", "gap_after_ms".
 Top level optional: "theme" {..colors}, "ambience": "wind" | "none" (default "wind").
 """
-import hashlib, json, os, shutil, subprocess, sys
+import hashlib, json, math, os, re, shutil, subprocess, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -197,16 +197,27 @@ def main():
     elif mood != "none" or want_sfx:
         print("  (skip score: .venv-audio missing, run scripts/setup.sh)")
 
-    # mix: voice (compressed) over a bed (ambience + music) ducked by the voice, plus sfx; master to -14 LUFS
+    # mix: voice (compressed) over a bed (ambience + music) held at 35% of the voice's loudness, plus sfx; master to -14 LUFS
+    def lufs(path, af=""):
+        r = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", path, "-af", (af + "," if af else "") + "ebur128", "-f", "null", "-"], capture_output=True, text=True).stderr
+        m = re.findall(r"I:\s+(-?[\d.]+) LUFS", r)
+        return float(m[-1]) if m and float(m[-1]) > -70 else None
+    BED_RATIO = 0.35   # backsound = 35% of the VO (amplitude), every mode
+    vo_lufs = lufs(voice_wav, "acompressor=threshold=0.1:ratio=3:attack=5:release=120")
+    def bed_gain(path, pre=1.0):
+        m = lufs(path)
+        if vo_lufs is None or m is None: return pre * BED_RATIO
+        return pre * 10 ** ((vo_lufs + 20 * math.log10(BED_RATIO) - m) / 20)
     ins, chains, bed = ["-i", voice_wav], [], []
     chains.append("[0:a]aformat=sample_rates=48000:channel_layouts=stereo,acompressor=threshold=0.1:ratio=3:attack=5:release=120,asplit=2[vo][key]")
     if sb.get("ambience", "wind") == "wind":
-        chains.append(f"anoisesrc=color=brown:amplitude=0.6:duration={dur}:sample_rate=48000,lowpass=f=900,highpass=f=80,tremolo=f=0.15:d=0.6,volume=0.22,aformat=channel_layouts=stereo[wind]")
+        chains.append(f"anoisesrc=color=brown:amplitude=0.6:duration={dur}:sample_rate=48000,lowpass=f=900,highpass=f=80,tremolo=f=0.15:d=0.6,volume=0.08,aformat=channel_layouts=stereo[wind]")
         bed.append("[wind]")
     n = 1
     if os.path.exists(os.path.join(stems, "music.wav")):
         ins += ["-i", os.path.join(stems, "music.wav")]
-        chains.append(f"[{n}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume=1.1[mus]")
+        chains.append(f"[{n}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume={bed_gain(os.path.join(stems, 'music.wav')):.4f}[mus]")
+        print(f"  backsound at {int(BED_RATIO*100)}% of VO (VO {vo_lufs} LUFS)")
         bed.append("[mus]"); n += 1
     sfx_lbl = None
     if os.path.exists(os.path.join(stems, "sfx.wav")):
@@ -217,7 +228,7 @@ def main():
     if bed:
         mixbed = "".join(bed) + (f"amix=inputs={len(bed)}:normalize=0[bed0]" if len(bed) > 1 else "anull[bed0]")
         chains.append(mixbed)
-        chains.append("[bed0][key]sidechaincompress=threshold=0.03:ratio=8:attack=30:release=500[bed]")
+        chains.append("[bed0]anull[bed]"); chains.append("[key]anullsink")   # no ducking: the bed stays at a steady 35%
         parts.append("[bed]")
     else:
         chains.append("[key]anullsink")

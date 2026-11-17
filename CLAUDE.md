@@ -16,7 +16,9 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
 
 1. Ide → storyboard (`output/storyboard.json`) → minta approval (Lanjutkan / Revisi).
 2. SETELAH approve: WAJIB tanya mode render via AskUserQuestion (kecuali user sudah menyebut modenya):
-   1. **HyperFrames + GSAP + Lottie** (`hyperframes/`) — render per frame, ±2 menit
+   1. **HyperFrames + GSAP + Lottie** (`hyperframes/`) — render per frame, ±2 menit. Lalu tanya sub-pilihan gaya:
+      Auto Bang Motion (6 gaya `hyperframes/bang/`, tanpa gambar Cloudflare/Opuscar/action/custom) · Auto Lemo-Opuscar ·
+      Auto campuran · Tulis bebas (user menentukan gaya, gambar, custom, backsound, dll.)
    2. **Remotion + Lottie** (`remotion/`) — kualitas tertinggi, ±20 menit
    3. **Manim** (`manim/`, `.venv-manim`) — sains/matematika, ±1 menit
    4. **Lemo native** (`lemo/`) — kode demo Lemo-Opuscar diadaptasi ke 9:16, 11 gaya (`python3 scripts/styles.py native`; memphis-diorama untuk aktivitas penduduk; tilt-shift & brick-toy dinonaktifkan: 3D terlalu berat), ±1 menit.
@@ -32,9 +34,9 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
    Batasan GAMBAR AI: tanpa wajah manusia untuk konten Islami, tanpa teks Arab dari AI, tidak pernah menggambar Nabi ﷺ/sahabat dengan AI;
    Manim tidak mendukung gambar.
    Kuota Cloudflare HANYA untuk gambar — jangan dipakai untuk QA atau hal lain.
-4. Audio: musik orisinal (`music`: warm/epic/tense/calm/playful/sacred/none) + SFX otomatis dari `scripts/score.py`
+4. Audio (semua mode): backsound (musik + ambience) SELALU 35% dari loudness VO; musik orisinal (`music`: warm/epic/tense/calm/playful/sacred/none) + SFX otomatis dari `scripts/score.py`
    (modul `audio/lemo/`, MIT dari Lemo-Opuscar). Sirah → `sacred` atau `none`.
-5. Mode 1 WAJIB memakai salah satu dari 99 gaya Lemo-Opuscar (usulkan di storyboard; template polos hanya jika user minta; halaman bergaya wajib menampilkan gambar FLUX) (`scripts/styles.py`, diunduh ke `.lemo/` — JANGAN commit STYLE.md, lisensi CC BY-NC).
+5. Mode 1 WAJIB memakai salah satu gaya: 99 gaya Lemo-Opuscar ATAU 6 gaya Bang Motion (`hyperframes/bang/styles.json`, MIT, tanpa gambar wajib) — sesuai sub-pilihan mode 1. Untuk Opuscar (usulkan di storyboard; template polos hanya jika user minta; halaman bergaya wajib menampilkan gambar FLUX) (`scripts/styles.py`, diunduh ke `.lemo/` — JANGAN commit STYLE.md, lisensi CC BY-NC).
 6. QA lokal & gratis SEBELUM render: jalankan dulu `produce.py ... --check-only` (VO + `hyperframes check` / cek komposisi 9:16 Lemo native / still per scene Remotion
    → `output/qa_precheck.md`, `output/qa_prerender.jpg`). Render otomatis DIHENTIKAN kalau ada masalah nyata; tumpukan yang disengaja
    masuk `"qa_allow"` di storyboard. Setelah render: QA file akhir (`output/qa_report.md`, `output/qa_sheet.jpg`). Baca sebelum kirim.
