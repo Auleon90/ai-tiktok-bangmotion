@@ -151,5 +151,17 @@
     "clash": true,
     "photos": false,
     "action": true
+  },
+  "memphis-diorama": {
+    "name": "Memphis Diorama",
+    "themes": [
+      "aktivitas penduduk",
+      "kehidupan desa/kota/pasar/pelabuhan",
+      "pengetahuan umum tentang tempat",
+      "sejarah sosial"
+    ],
+    "image_style": "",
+    "music": "warm",
+    "photos": false
   }
 }

@@ -1,0 +1,67 @@
+{
+ "title": "Sehari di Desa",
+ "scenes": [
+  {
+   "id": 1,
+   "type": "title",
+   "eyebrow": "Desa Sukamaju · 06.30",
+   "title": "Sehari di Desa",
+   "subtitle": "Pagi dimulai di tepi sungai",
+   "place": "village",
+   "vo": "Pukul setengah tujuh pagi, desa kecil di tepi sungai mulai bangun."
+  },
+  {
+   "id": 2,
+   "type": "counter",
+   "eyebrow": "Pasar pagi",
+   "place": "market",
+   "items": [
+    {
+     "value": "120",
+     "label": "pedagang"
+    },
+    {
+     "value": "3",
+     "suffix": " jam",
+     "label": "pasar buka"
+    }
+   ],
+   "vo": "Di pasar pagi, seratus dua puluh pedagang berjualan hanya tiga jam."
+  },
+  {
+   "id": 3,
+   "type": "list",
+   "eyebrow": "Ladang",
+   "place": "farm",
+   "headline": "Musim panen",
+   "items": [
+    "Padi dijemur",
+    "Jerami ditumpuk",
+    "Gabah ke lumbung"
+   ],
+   "vo": "Di ladang, padi dijemur, jerami ditumpuk, lalu gabah dibawa ke lumbung."
+  },
+  {
+   "id": 4,
+   "type": "headline",
+   "eyebrow": "Pelabuhan",
+   "place": "harbor",
+   "headline": "Perahu pulang",
+   "sub": "Hasil laut tiba sore hari",
+   "time": "dusk",
+   "vo": "Sore hari, perahu nelayan pulang membawa hasil laut."
+  },
+  {
+   "id": 5,
+   "type": "quote",
+   "eyebrow": "Malam",
+   "place": "mosque",
+   "time": "night",
+   "text": "Lampu masjid menyala satu per satu.",
+   "source": "Desa Sukamaju",
+   "vo": "Malam tiba, dan lampu masjid menyala satu per satu."
+  }
+ ],
+ "style": "memphis-diorama",
+ "music": "warm"
+}
