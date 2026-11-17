@@ -5,7 +5,7 @@
 // Text in the picture is paper: cut strips that grow from an anchor edge, or (for an ayat) letters cut out of a dark sheet so the light
 // burns through them; subtitles are a quiet warm serif on the darkest band. The demo renders the stack in three.js; here it is
 // composited in 2D (the motif and paper-finish code below is the demo's own Canvas2D code — MIT, Lemomo (LemoLab)).
-import { W, H, SAFE, TAU, clamp, lerp, seg, eo, ss, at, SC, IMG, block, text, capAt, stdBody, boot, reg, fit, font, cover, KIT, countUp } from './kit.js';
+import { W, H, SAFE, TAU, clamp, lerp, seg, eo, ss, at, SC, IMG, block, text, capAt, stdBody, boot, reg, fit, font, cover, duotone, KIT, countUp } from './kit.js';
 import { clashModel, drawFigure, drawFx, clashText } from './clash.js';
 
 // ---------------------------------------------------------------- demo code (paper.js / world.js / lib.js), Canvas2D parts
@@ -118,6 +118,17 @@ function strip(g, x, y, w, h, u, fill = '#efe0bf') {
   g.fillStyle = 'rgba(255,236,200,.5)'; g.fillRect(x, y, ww, 3); g.fillStyle = 'rgba(0,0,0,.18)'; g.fillRect(x, y + h - 4, ww, 4);
   return { x, y, w, h, clip: (fn) => { g.save(); g.beginPath(); g.rect(x, y, ww, h); g.clip(); fn(); g.restore(); } };
 }
+const GATE = {}; let FRONT = null;
+function gateSheet(Ld, cx, cy, r, seed) {   // a full-width cut sheet: a soft ridge on top, a round hole, paper finish, a lit cut edge
+  const c = cv(W, H), x = c.getContext('2d'), R = mulberry(seed + 5), top = cy - r - 70;
+  x.fillStyle = Ld.L[2]; x.beginPath(); x.moveTo(0, H); x.lineTo(0, top + 60);
+  for (let px = 0; px <= W; px += 12) { const d = Math.min(1, Math.abs(px - cx) / (r + 280)); x.lineTo(px, top + (1 - Math.cos(d * Math.PI)) * .5 * (2 * r + 60) + 10 * Math.sin(px * .03 + seed)); }   // a mound rising to the hole
+  x.lineTo(W, H); x.closePath(); x.fill();
+  x.globalCompositeOperation = 'destination-out'; x.beginPath(); x.arc(cx, cy, r, 0, TAU); x.fill(); x.globalCompositeOperation = 'source-over';
+  finish(c, { rim: .5, under: .3 });
+  x.save(); x.strokeStyle = Ld.light; x.lineWidth = 5; x.shadowColor = Ld.light; x.shadowBlur = 26; x.globalAlpha = .9; x.beginPath(); x.arc(cx, cy, r + 1, 0, TAU); x.stroke(); x.restore();
+  return c;
+}
 function seal(g, x, y, s, col) { g.fillStyle = col; g.fillRect(x, y, s, s); g.strokeStyle = 'rgba(255,230,210,.8)'; g.lineWidth = 3; g.strokeRect(x + 6, y + 6, s - 12, s - 12); }
 const TH = {
   align: 'center', rise: 0, accent: '#c8321f',
@@ -144,7 +155,7 @@ function draw(g, t) {
   if (Ld.moon) { g.save(); g.shadowColor = Ld.light; g.shadowBlur = 60 * on; g.fillStyle = '#fff3d6'; g.beginPath(); g.arc(mx, my, 92, 0, TAU); g.fill(); g.fillStyle = Ld.sky[0]; g.beginPath(); g.arc(mx + 38, my - 18, 82, 0, TAU); g.fill(); g.restore(); }   // a crescent cut
   // sheets back → front: each casts a soft shadow onto what is behind it, then is drawn lit; windows burn on its glow pass
   layers.forEach(L => {
-    const par = (L.k + 1) / layers.length, ox = -120 + travel * par + drift * par, oy = 0;
+    const par = (L.k + 1) / layers.length, ox = -120 + travel * par + drift * par, oy = 0; if (L.k === 4) FRONT = { c: L.lit, ox, dz };
     g.drawImage(L.shadow, ox + 10, oy + 26, LW, H);
     g.drawImage(L.lit, ox, oy);
     if (L.k === 2) { g.save(); g.globalCompositeOperation = 'lighter'; g.globalAlpha = on * flick; g.shadowColor = Ld.light; g.shadowBlur = 24; g.filter = 'none';
@@ -177,10 +188,16 @@ function content(g, t, s, lt, img, Ld) {
   }
   if (T === 'clash') { const st = strip(g, X, top + 90, Wd, 330, seg(lt, .2, .8)); if (st) clashText(g, t, s, { x: X + 40, y: top + 110, w: Wd - 80, h: 200 }, TH, top + 330); return; }
   if (img) {   // the photo as a lit window cut in a sheet (a round moon gate), duotoned to the ladder
-    const cx = W / 2, cy = 945, r = 250, u = seg(lt, .3, 1.1);
-    g.save(); g.fillStyle = '#0e0a08'; g.globalAlpha = eo(u); g.fillRect(SAFE.x0, cy - r - 30, SAFE.x1 - SAFE.x0, 2 * r + 60); g.beginPath(); g.arc(cx, cy, r * eo(u), 0, TAU); g.clip();
-    g.filter = 'sepia(.5) saturate(.8) brightness(1.05)'; cover(g, img, cx - r, cy - r, 2 * r, 2 * r, 1.04 + lt * .01); g.filter = 'none'; g.globalCompositeOperation = 'soft-light'; g.fillStyle = Ld.light; g.fillRect(cx - r, cy - r, 2 * r, 2 * r); g.restore();
-    reg('photo', '[photo]', { x0: SAFE.x0, y0: cy - r - 30, x1: SAFE.x1, y1: cy + r + 30 });
+    // no rectangle: a new paper sheet rises into the stack with a round hole cut in it; the photo is the lit scene behind the hole,
+    // toned to this stack's ladder (dark front tone -> light), the hole's cut edge catches the warm backlight
+    const cx = W / 2, cy = 945, r = 250, u = eo(seg(lt, .2, 1)), lift = (1 - u) * 260;
+    if (!GATE[s.i]) GATE[s.i] = { photo: duotone(img, Ld.L[4], Ld.light, 600, 600, 1.15), sheet: gateSheet(Ld, cx, cy, r, s.i) };
+    const G = GATE[s.i];
+    g.save(); g.beginPath(); g.arc(cx, cy + lift, r, 0, TAU); g.clip(); g.drawImage(G.photo, cx - r - 20, cy - r - 20 + lift - lt * 6, 2 * r + 40, 2 * r + 40);
+    const ring = g.createRadialGradient(cx, cy + lift, r * .72, cx, cy + lift, r); ring.addColorStop(0, 'rgba(0,0,0,0)'); ring.addColorStop(1, 'rgba(0,0,0,.45)'); g.fillStyle = ring; g.fillRect(cx - r, cy - r + lift, 2 * r, 2 * r); g.restore();
+    g.drawImage(G.sheet, 0, lift);
+    if (FRONT) { g.save(); g.translate(W / 2, 960); g.scale(FRONT.dz, FRONT.dz); g.translate(-W / 2, -960); g.drawImage(FRONT.c, FRONT.ox, 0); g.restore(); }   // the front sheet stays in front
+    reg('photo', '[photo]', { x0: cx - r - 12, y0: cy - r - 12, x1: cx + r + 12, y1: cy + r + 12 });
     const st = strip(g, X, top + 80, Wd, 300, seg(lt, .2, .8)); const s2 = T === 'image' ? { ...s, type: 'headline' } : s;
     if (st) stdBody(g, t, s2, { x: X + 40, y: top + 100, w: Wd - 80, h: 260 }, { ...TH, title: { ...TH.title, size: 58, min: 36 }, body: { ...TH.body, size: 40 } });
     return;
