@@ -89,7 +89,8 @@
     ],
     "image_style": "toy brick diorama photograph, plastic bricks, studio lighting, shallow depth of field, no text, no letters",
     "music": "playful",
-    "clash": true
+    "clash": true,
+    "disabled": "too heavy for this server (3D); code kept in lemo/kits/brick-toy, not offered"
   },
   "tilt-shift": {
     "name": "Tilt-shift Miniature (hybrid: demo 3D engine stills)",
@@ -102,7 +103,8 @@
     "image_style": "tilt-shift miniature photograph, aerial view, saturated colours, dusk lights, shallow focus band, no text, no letters",
     "music": "epic",
     "clash": true,
-    "prerender": true
+    "prerender": true,
+    "disabled": "too heavy for this server (3D); code kept in lemo/kits/tilt-shift, not offered"
   },
   "urban-sketch": {
     "name": "Urban Sketch",

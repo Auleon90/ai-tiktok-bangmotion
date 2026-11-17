@@ -28,7 +28,7 @@ def load():
     return out
 
 
-NATIVE = json.load(open(os.path.join(ROOT, "lemo", "kits", "kits.json")))
+NATIVE = {k: v for k, v in json.load(open(os.path.join(ROOT, "lemo", "kits", "kits.json"))).items() if not v.get("disabled")}
 
 
 def row(d):

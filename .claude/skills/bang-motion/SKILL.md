@@ -283,7 +283,7 @@ Engine: `lemo/` — portrait kits whose drawing code, palettes, fonts and motion
 (MIT, see `lemo/LICENSE-lemo-opuscar-MIT.txt`). Each kit is designed natively for 1080×1920 (not a crop of the 16:9 demo) and draws every
 frame with `window.render(t)` on one canvas; `lemo/render.mjs` renders it frame by frame (4 workers, ~35 s per 15 s of video).
 
-Kits (`python3 scripts/styles.py native`, manifest `lemo/kits/kits.json`; ⚔ = has the battle scene `clash`):
+Kits (tilt-shift and brick-toy are disabled: too heavy without a GPU; their code stays in `lemo/kits/` but they are not offered) (`python3 scripts/styles.py native`, manifest `lemo/kits/kits.json`; ⚔ = has the battle scene `clash`):
 
 | slug | look | use for |
 |---|---|---|
@@ -294,15 +294,13 @@ Kits (`python3 scripts/styles.py native`, manifest `lemo/kits/kits.json`; ⚔ = 
 | ⚔ `paper-lantern` | a backlit paper-cut shadow box: 5 cut sheets in a value ladder (`"ladder"`: night/dusk/winter/desert/green), pulp glowing near the light, burning windows and moon, soft inter-sheet shadows, slow dolly + parallax, front-sheet wipes; text on paper strips, ayat cut out of a dark sheet so the light burns through; battle = jointed silhouettes on the near ridge | motivasi, renungan, Qur'an/hadits, sirah |
 | ⚔ `gilded-illumination` | the demo's own painted world full-screen (lapis sky, gold sun, spires, river, castles, gold-leaf glints, red/blue border); text on vellum plaques, photos in a gold roundel, banderole captions | Qur'an/hadits, sejarah Islam, sirah |
 | ⚔ `paper-popup` | a pop-up book on a lamp-lit desk; each scene is a spread (one hue family, `"spread"`: meadow/market/desert/sea/night/sketch); the demo's cut-paper cards pop up back→front and fold before a page turn; text lives in the paper world (sign on strings, typing bubble, pull-tab slats, hanging tags, scroll); cream/brown subtitles. Keep on-screen text short | kisah, dongeng, sejarah ringan |
-| ⚔ `brick-toy` | grey studio sweep, glossy studded bricks that drop and snap, navy caption pill | pengetahuan umum, cara kerja benda |
-| ⚔ `tilt-shift` | HYBRID: the demo's own three.js town (engine/) pre-rendered as 2 stills per scene (same camera, town clock advanced = the time-lapse jump; ±10 s per scene on this server), animated in 2D: smooth camera glide, time-lapse clock `×24 TIME-LAPSE`, text as the place's signage (green road sign, platform board with amber digits, cream notice), subtitles on a sign panel with a traffic light. Optional per scene `"view"`: a demo moment (e.g. 11.5 intersection, 21 jam, 36 wide, 16 train, 3.2 dawn) | kota, suasana kota, sistem & logistik |
 | ⚔ `urban-sketch` | fineliner that draws itself, off-register washes, skyline, Caveat | tempat & kota, psikologi sehari-hari |
 | ⚔ `colored-pencil` | one pencil drawing on toothed paper: a cutaway (sky wash, trees, grass line, soil horizons, stones, roots, a buried pipe) drawn with four pencil layers, a boiling graphite contour, colour drawn in by a ragged front, the camera sinking per scene, magnifier-circle transitions; titles pencilled on the sky, cream tags, subtitles on a cream slip | sains alam, biologi, ayat tentang alam |
 | ⚔ `watercolor` | wet washes with dark edges, misty greens, handwritten notes | alam, renungan, inspirasi hidup |
 
 The 3D demos (paper-popup, paper-lantern, brick-toy, tilt-shift, colored-pencil) are three.js films. This server has no GPU (software WebGL:
 ~1 s per 1080×1920 frame, ~25 min per 60 s), so with the 1–3 min budget: paper-popup, paper-lantern and colored-pencil are rebuilt in 2D
-from their concepts (demo Canvas2D art reused where it exists); tilt-shift and brick-toy will use 3D stills pre-rendered by the demo engine
+from their concepts (demo Canvas2D art reused where it exists); tilt-shift (hybrid, 3D stills) and brick-toy were tried and are disabled for now (too slow here); they could use 3D stills pre-rendered by the demo engine
 with 2D motion on top (in progress).
 
 Battle scene `clash` (⚔ kits): two sides march in, trade arrow volleys, charge, meet with sparks and dust, some figures fall (more on the

@@ -19,9 +19,9 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
    1. **HyperFrames + GSAP + Lottie** (`hyperframes/`) — render per frame, ±2 menit
    2. **Remotion + Lottie** (`remotion/`) — kualitas tertinggi, ±20 menit
    3. **Manim** (`manim/`, `.venv-manim`) — sains/matematika, ±1 menit
-   4. **Lemo native** (`lemo/`) — kode demo Lemo-Opuscar diadaptasi ke 9:16, 12 gaya (`python3 scripts/styles.py native`), ±1 menit.
-      Adegan perang/kericuhan dua kubu: scene `clash` (gaya bertanda ⚔: paper-lantern, gilded-illumination, paper-popup, brick-toy,
-      tilt-shift, urban-sketch, colored-pencil, watercolor). Adegan lain yang tidak ada tipenya: scene `custom` (kode per video di
+   4. **Lemo native** (`lemo/`) — kode demo Lemo-Opuscar diadaptasi ke 9:16, 10 gaya (`python3 scripts/styles.py native`; tilt-shift & brick-toy dinonaktifkan: 3D terlalu berat), ±1 menit.
+      Adegan perang/kericuhan dua kubu: scene `clash` (gaya bertanda ⚔: paper-lantern, gilded-illumination, paper-popup,
+      urban-sketch, colored-pencil, watercolor). Adegan lain yang tidak ada tipenya: scene `custom` (kode per video di
       `output/custom/<nama>.js`, tetap memakai gaya kit) — JANGAN menambal kit untuk kebutuhan satu video.
    5. **Auto** — Claude memilih sesuai topik & storyboard (aturan di skill)
 3. Gambar AI (Cloudflare FLUX) untuk TEMA APA PUN: nilai tiap scene — kalau adegannya punya sesuatu yang bisa dilihat

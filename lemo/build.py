@@ -11,8 +11,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KITS = os.path.join(ROOT, "lemo", "kits")
 
 
-def manifest():
-    return json.load(open(os.path.join(KITS, "kits.json")))
+def manifest(all_kits=False):
+    m = json.load(open(os.path.join(KITS, "kits.json")))
+    return m if all_kits else {k: v for k, v in m.items() if not v.get("disabled")}
 
 
 def build(slug, data, out_dir):
