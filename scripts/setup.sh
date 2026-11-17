@@ -15,6 +15,11 @@ echo "→ HyperFrames + GSAP + lottie-web (mode 1)"
 
 echo "→ three.js for Lemo-native 3D engines (tilt-shift, brick-toy)"
 [ -d "$ROOT/lemo/node_modules/three" ] || (cd "$ROOT/lemo" && npm install --no-audit --no-fund --silent)
+# Playwright + headless Chromium for the Lemo renderer: preinstalled in the cloud container (never reinstall there);
+# on a laptop they are installed into lemo/ the first time
+if ! (cd "$ROOT/lemo" && node -e "require('playwright')" >/dev/null 2>&1); then
+  (cd "$ROOT/lemo" && npm install --no-save --no-audit --no-fund --silent playwright && npx playwright install chromium) || echo "  WARN: playwright install failed"
+fi
 
 echo "→ Manim venv (mode 3)"
 if [ ! -x "$ROOT/.venv-manim/bin/manim" ]; then

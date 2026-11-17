@@ -16,6 +16,14 @@ Top level optional: "theme" {..colors}, "ambience": "wind" | "none" (default "wi
 import hashlib, json, os, shutil, subprocess, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# local use (laptop / IDE): read keys from a .env file at the repo root if present (KEY=value per line); real env vars win
+_env = os.path.join(ROOT, ".env")
+if os.path.exists(_env):
+    for _ln in open(_env, encoding="utf-8"):
+        _ln = _ln.strip()
+        if _ln and not _ln.startswith("#") and "=" in _ln:
+            _k, _v = _ln.split("=", 1); os.environ.setdefault(_k.strip(), _v.strip().strip('"').strip("'"))
 OUT = os.path.join(ROOT, "output")
 VO_DIR = os.path.join(OUT, "vo")
 REMOTION = os.path.join(ROOT, "remotion")
