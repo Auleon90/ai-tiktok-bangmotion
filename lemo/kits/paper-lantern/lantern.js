@@ -7,6 +7,7 @@
 // composited in 2D (the motif and paper-finish code below is the demo's own Canvas2D code — MIT, Lemomo (LemoLab)).
 import { W, H, SAFE, TAU, clamp, lerp, seg, eo, ss, at, SC, IMG, block, text, capAt, stdBody, boot, reg, fit, font, cover, duotone, KIT, countUp } from './kit.js';
 import { clashModel, drawFigure, drawFx, clashText } from './clash.js';
+import { actionModel, drawActors, actionText } from './action.js';
 
 // ---------------------------------------------------------------- demo code (paper.js / world.js / lib.js), Canvas2D parts
 function mulberry(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
@@ -185,6 +186,15 @@ function content(g, t, s, lt, img, Ld) {
     if (u > .8) { g.save(); g.shadowColor = Ld.light; g.shadowBlur = 30; block(g, 'ar', s.arabic, { x: X + 40, y: y + 30, w: Wd - 80, h: h - 60 }, { family: 'Amiri', weight: 700, size: 104, min: 44, lh: 1.6, color: '#ffd89a', align: 'center', valign: 'middle' }); g.restore(); }
     const st = strip(g, X, y + h + 40, Wd, 330, seg(lt, 1, 1.6)); if (st) stdBody(g, t, { ...s, type: 'quote', text: s.translation, source: s.ref }, { x: X + 40, y: y + h + 70, w: Wd - 80, h: 270 }, TH);
     return;
+  }
+  if (T === 'action') {
+    const m = actionModel(s, t, { x0: SAFE.x0, x1: SAFE.x1, ground: 1200, top: 760, S: 150 }), lift = (1 - eo(seg(lt, .1, .9))) * 220;
+    g.save(); g.translate(0, lift); g.save(); g.translate(8, 22); g.filter = 'blur(8px)'; g.fillStyle = 'rgba(0,0,0,.4)'; g.fill(m.T.path); g.restore();
+    g.fillStyle = Ld.L[3]; g.fill(m.T.path); g.save(); g.clip(m.T.path); g.globalAlpha = .5; g.fillStyle = g.createPattern(GRAIN, 'repeat'); g.fillRect(0, 0, W, H); g.restore();
+    g.strokeStyle = Ld.light; g.lineWidth = 4; g.shadowColor = Ld.light; g.shadowBlur = 16; g.stroke(m.T.path); g.restore();
+    drawActors(g, t, m, KIT.look, { dotRing: Ld.light });
+    if (FRONT) { g.save(); g.translate(W / 2, 960); g.scale(FRONT.dz, FRONT.dz); g.translate(-W / 2, -960); g.drawImage(FRONT.c, FRONT.ox, 0); g.restore(); }
+    const st = strip(g, X, top + 80, Wd, 300, seg(lt, .2, .8)); if (st) actionText(g, t, s, { x: X + 40, y: top + 110, w: Wd - 80, h: 240 }, TH, m); return;
   }
   if (T === 'clash') { const st = strip(g, X, top + 90, Wd, 330, seg(lt, .2, .8)); if (st) clashText(g, t, s, { x: X + 40, y: top + 110, w: Wd - 80, h: 200 }, TH, top + 330); return; }
   if (img) {   // the photo as a lit window cut in a sheet (a round moon gate), duotoned to the ladder

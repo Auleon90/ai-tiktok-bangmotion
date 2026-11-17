@@ -66,6 +66,7 @@ makeKit({
     const note = ((window.PROPS.title || '') + ' · ' + String(s.id).padStart(2, '0')).slice(0, 34), u = seg(lt, .2, 1);
     g.save(); g.beginPath(); g.rect(SAFE.x1 - 360, SAFE.y0, 360 * u, 60); g.clip(); block(g, 'note', note, { x: SAFE.x1 - 360, y: SAFE.y0 + 4, w: 360, h: 46 }, { family: 'Reenie', size: 44, min: 26, color: C.ink2, align: 'right', layer: 6 }); g.restore();
   },
+  terrain(g, path, lt) { g.save(); g.translate(8, 6); g.fillStyle = hexA(C.leaf, .38); g.fill(path); g.restore(); g.save(); g.setLineDash([2400 * eo(seg(lt, 0, 1.2)), 4000]); g.strokeStyle = C.ink; g.lineWidth = 2.6; g.stroke(path); g.restore(); },
   field(g, t, s, Z, lt) { const p = eo(seg(lt, 0, 1)); washRect(g, -20, Z.ground - 30, W + 40, 70, C.sand, .45 * p, 5); inkLine(g, wob(seg2(0, Z.ground + 4, W, Z.ground, 30), 5, 11), 2.6, C.ink, p); },
   // each figure: a loose wash off the line, then the ink outline
   look: { fill: f => hexA(f.color || (f.side > 0 ? C.sky : C.rose), .55), stroke: C.ink, lw: 2.6, shield: hexA(C.sand, .7), weapon: C.ink, glow: '#ffd77a', glowMode: 'source-over' },

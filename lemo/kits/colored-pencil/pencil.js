@@ -7,6 +7,7 @@
 // (a pencilled circle) is the transition; one cream label tag per shot; titles pencilled on the sky; subtitles on a cream slip.
 import { W, H, SAFE, TAU, clamp, lerp, seg, eo, ss, at, SC, IMG, block, text, capAt, stdBody, boot, reg, fit, font, cover, KIT, countUp, mulberry, vnoise } from './kit.js';
 import { clashModel, drawFigure, drawFx, clashText } from './clash.js';
+import { actionModel, drawActors, actionText } from './action.js';
 
 const C = { paper: '#F8F4EA', grass: '#8DAA45', grassD: '#5E8A3A', sky: '#B3D4E6', litter: '#4D3018', top: '#66402A', sub: '#BD763B', weath: '#B38C5C', rock: '#7d8a99',
   struct: '#DCB990', white: '#FCFAF0', sepia: '#33241C', amber: '#d9a441', cobalt: '#3f6fb5', red: '#c8553d' };
@@ -78,7 +79,7 @@ function build() {
   FAR = mk(W, 900); const f = FAR.getContext('2d'); for (let i = 0; i < 3; i++) { const p = band(560 + i * 90, 900, 40 + i, 60 - i * 15); pencilSurface(f, p.p, [0, 400, W, 500], ['#a9c4a0', '#8fb07f', '#7a9a68'][i], { ang: -.6, seed: 140 + i, acc: .08, shade: .3 }); }
 }
 // ---------------------------------------------------------------- camera and reveal
-const camTop = s => { const T = s.type; if (T === 'title' || T === 'headline' || T === 'tribute' || s.i === 0) return 0; if (T === 'clash' || T === 'image') return 280; return [520, 820, 1080, 760][s.i % 4]; };   // sink by scene
+const camTop = s => { const T = s.type; if (T === 'title' || T === 'headline' || T === 'tribute' || T === 'action' || s.i === 0) return 0; if (T === 'clash' || T === 'image') return 280; return [520, 820, 1080, 760][s.i % 4]; };   // sink by scene
 function camAt(t) { const { s } = at(t), lt = t - s.t0, prev = SC[s.i - 1]; const y1 = camTop(s), y0 = prev ? camTop(prev) : y1; return lerp(y0, y1, ss(seg(lt, 0, 1.4))); }
 const seenTo = i => Math.max(0, ...SC.slice(0, i).map(s => camTop(s) + H));   // how deep earlier scenes have already drawn the world
 function draw(g, t) {
@@ -92,6 +93,7 @@ function draw(g, t) {
   g.save(); const p = new Path2D(); p.rect(0, 0, W, done); p.moveTo(-50, done); for (let y = done; y < cy + H + 40; y += 30) p.lineTo(front + Math.sin(y * .05) * 40 + (vnoise(y * .02, 7) - .5) * 90, y); p.lineTo(-50, cy + H + 40); p.closePath(); g.clip(p);
   g.drawImage(WC, 0, 0); g.restore();
   g.drawImage(CONTOURS[Math.floor(t * 12) % 3], 0, 0);   // only the contour boils (3 drawings, on twos)
+  if (s.type === 'action') { const m = actionModel(s, t, { x0: SAFE.x0, x1: SAFE.x1, ground: GROUND - 90, top: 760, S: 150 }); g.fillStyle = hatchPattern(C.grass); g.fill(m.T.path); g.strokeStyle = C.sepia; g.lineWidth = 2.4; g.stroke(m.T.path); drawActors(g, t, m, KIT.look); window.__AM = m; }
   if (s.type === 'clash') { const m = clashModel(s, t, { x0: SAFE.x0, x1: SAFE.x1, ground: GROUND - 10, S: 200 }); for (const f of m.figs) drawFigure(g, f, t, KIT.look); drawFx(g, m.fx, { dust: '#cfb894', arrow: C.sepia, spark: C.amber }); }
   g.restore();
   content(g, t, s, lt, img, cy);
@@ -136,6 +138,7 @@ function content(g, t, s, lt, img, cy) {
   if (T === 'title' || T === 'tribute' || T === 'headline') {   // titles are written in pencil on the sky, with a hand-drawn underline
     const end = wipeText(by, 520, .3, 1.2); stdBody(g, t, s, { x: X, y: by, w: Wd, h: 520 }, TH); end(); return;
   }
+  if (T === 'action') { const end = wipeText(by, 330, .3, 1); actionText(g, t, s, { x: X, y: by, w: Wd, h: 280 }, TH, window.__AM); end(); return; }
   if (T === 'clash') { const end = wipeText(by, 330, .3, 1); clashText(g, t, s, { x: X, y: by, w: Wd, h: 230 }, TH, by + 260); end(); return; }
   if (T === 'ayat') { const end = wipeText(by, 760, .2, 1.4); tag(g, X - 10, by - 10, Wd + 20, 780, seg(lt, .1, .5)); stdBody(g, t, s, { x: X + 50, y: by + 20, w: Wd - 80, h: 720 }, TH); end(); return; }
   // other text: a cream paper slip pinned in the frame (one per shot), pencil on it

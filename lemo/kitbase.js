@@ -4,6 +4,7 @@
 // including "clash", laid out inside the 9:16 safe area with registered boxes for the layout check.
 import { W, H, SAFE, clamp, seg, eo, at, IMG, block, captions, stdBody, boot, reg, KIT } from './kit.js';
 import { clashModel, drawFigure, drawFx, clashText } from './clash.js';
+import { actionModel, drawActors, actionText } from './action.js';
 
 export const ZONE = { x0: SAFE.x0, x1: SAFE.x1, ground: 1215, S: 230 };
 export const PHOTO = { x: SAFE.x0 + 6, y: 690, w: SAFE.x1 - SAFE.x0 - 12, h: 540 };
@@ -28,6 +29,11 @@ export function makeKit(cfg) {
       for (const f of m.figs) drawFigure(g, f, t, cfg.look);
       drawFx(g, m.fx, cfg.fx || {});
       clashText(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: 560 - top }, th, 590);
+    } else if (s.type === 'action') {
+      const m = actionModel(s, t, { x0: SAFE.x0, x1: SAFE.x1, ground: 1150, top: 700, S: 150 });
+      cfg.terrain ? cfg.terrain(g, m.T.path, lt) : (g.fillStyle = 'rgba(0,0,0,.08)', g.fill(m.T.path));
+      drawActors(g, t, m, cfg.look, cfg.actors || {});
+      actionText(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: 380 - top + SAFE.y0 }, th, m);
     } else if (s.type === 'custom') {
       stdBody(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: SAFE.y1 - 10 - top }, th);
     } else if (img) {

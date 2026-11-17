@@ -1,0 +1,13 @@
+{"title":"Perang Uhud","style":"paper-lantern","ladder":"night","music":"sacred","scenes":[
+{"id":1,"type":"title","eyebrow":"Sirah","title":"Satu Kelalaian","subtitle":"yang mengubah segalanya","vo":"Perang Uhud, tahun ketiga Hijriah. Satu kelalaian mengubah segalanya."},
+{"id":2,"type":"action","eyebrow":"Pesan Rasulullah","headline":"Jangan tinggalkan bukit","sub":"Lima puluh pemanah di Jabal Rumat",
+ "terrain":{"hill":"left","label":"Jabal Rumat"},
+ "groups":[{"label":"Pemanah","count":12,"color":"#3f8f5a","from":"hilltop","to":"hilltop","mode":"dots"}],
+ "vo":"Lima puluh pemanah ditempatkan di Jabal Rumat, dengan pesan tegas: jangan tinggalkan bukit ini, apa pun yang terjadi."},
+{"id":3,"type":"action","eyebrow":"Titik balik","headline":"Pemanah turun dari bukit","sub":"Tergoda harta rampasan",
+ "terrain":{"hill":"left","label":"Jabal Rumat"},
+ "groups":[{"label":"Pemanah","count":12,"color":"#3f8f5a","from":"hilltop","to":"plain","start":0.15,"end":0.7,"mode":"dots"},
+           {"label":"Pasukan berkuda Quraisy","count":8,"color":"#a8342a","from":"offL","to":"hillside","start":0.6,"end":1,"mode":"figures","run":true}],
+ "sfx":[{"name":"footsteps","at":0.2},{"name":"riser","at":0.55}],
+ "vo":"Melihat musuh mundur, sebagian besar pemanah turun, tergoda harta rampasan. Saat itulah pasukan berkuda Quraisy memutar dari belakang bukit."}
+]}

@@ -22,7 +22,7 @@ def build(slug, data, out_dir):
         sys.exit(f"no Lemo-native kit for '{slug}'. Kits: {', '.join(manifest())}")
     shutil.rmtree(out_dir, ignore_errors=True)
     shutil.copytree(src, out_dir)
-    for js in ("kit.js", "clash.js", "kitbase.js"):
+    for js in ("kit.js", "clash.js", "kitbase.js", "action.js"):
         shutil.copy(os.path.join(ROOT, "lemo", js), out_dir)
     shutil.copytree(os.path.join(ROOT, "assets", "fonts"), os.path.join(out_dir, "fonts"))
     img = os.path.join(ROOT, "output", "img")

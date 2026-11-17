@@ -67,6 +67,7 @@ Built-in scene types (rendered automatically by modes 1 and 2):
 | `image` | full-screen AI illustration only; optional `headline`, `sub` overlay |
 | `list` | `headline`, `items: [string]` (3–4 short points) — Lemo native |
 | `custom` | Lemo native, ALL kits: an adegan no built-in type covers — `code: "custom/<name>.js"` + any fields the code reads (see Mode 4) |
+| `action` | a moment acted out on a field — landscape kits (paper-popup, paper-lantern, colored-pencil, urban-sketch, watercolor): `headline`, `sub?`, `terrain: {hill: left/right/none, label?}`, `groups: [{label, count, color, from, to, start, end, mode: figures/dots, run?, banner?}]` (places: hilltop, hillside, hillfoot, plain, plainL, plainR, center, offL, offR), `hero?` like clash. Use it instead of AI photos in those kits |
 | `clash` | battle / two-sided clash with faceless figures — Lemo native ⚔ kits only: `headline`, `sub?`, `left`/`right`: `{label, count, color?, cavalry? (0–6)}`, `winner?` ("left"/"right": the other side routs at the end), `hero?`: `{side, prophet?, rider?}` |
 
 ### AI illustrations (Cloudflare FLUX — any theme, per scene where it fits)
@@ -302,6 +303,12 @@ The 3D demos (paper-popup, paper-lantern, brick-toy, tilt-shift, colored-pencil)
 ~1 s per 1080×1920 frame, ~25 min per 60 s), so with the 1–3 min budget: paper-popup, paper-lantern and colored-pencil are rebuilt in 2D
 from their concepts (demo Canvas2D art reused where it exists); tilt-shift (hybrid, 3D stills) and brick-toy were tried and are disabled for now (too slow here); they could use 3D stills pre-rendered by the demo engine
 with 2D motion on top (in progress).
+
+Landscape kits (paper-popup, paper-lantern, colored-pencil, urban-sketch, watercolor) do NOT take AI photos (`image` is refused by
+produce.py: a photo pasted into a paper box / pencil plate / sketchbook reads as a cut-out). Tell the story by acting it out: `action`
+(terrain + groups of faceless figures or coordinate dots moving between places, e.g. the archers coming down Jabal Rumat at Uhud as dots
+with trails, then the cavalry riding round the hill as figures), `clash` for fights, `custom` for anything else. Photos remain fine in
+kino-montage, newsreel, gilded-illumination, flat-space-explainer and stick-explainer.
 
 Battle scene `clash` (⚔ kits): two sides march in, trade arrow volleys, charge, meet with sparks and dust, some figures fall (more on the
 losing side) and, with `winner`, the loser routs. Figure counts follow the ratio of `count` (6–14 drawn per side), `cavalry` adds riders,

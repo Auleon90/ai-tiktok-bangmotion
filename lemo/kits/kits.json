@@ -53,7 +53,9 @@
     ],
     "image_style": "cut paper diorama at night, layered paper silhouettes, warm lantern glow, deep blue and gold, no people, no text, no letters",
     "music": "calm",
-    "clash": true
+    "clash": true,
+    "photos": false,
+    "action": true
   },
   "gilded-illumination": {
     "name": "Gilded Illumination",
@@ -77,7 +79,9 @@
     ],
     "image_style": "paper cut-out pop-up book illustration, bright flat colours, white paper edges, soft shadows, no text, no letters",
     "music": "playful",
-    "clash": true
+    "clash": true,
+    "photos": false,
+    "action": true
   },
   "brick-toy": {
     "name": "Brick Toy",
@@ -116,7 +120,9 @@
     ],
     "image_style": "urban sketch, ink pen lines with loose watercolour washes, sketchbook page, no text, no letters",
     "music": "warm",
-    "clash": true
+    "clash": true,
+    "photos": false,
+    "action": true
   },
   "colored-pencil": {
     "name": "Colored-Pencil Science Illustration",
@@ -128,7 +134,9 @@
     ],
     "image_style": "coloured pencil scientific illustration, visible hatching strokes, cream paper, soft colours, no text, no letters",
     "music": "calm",
-    "clash": true
+    "clash": true,
+    "photos": false,
+    "action": true
   },
   "watercolor": {
     "name": "Watercolor",
@@ -140,6 +148,8 @@
     ],
     "image_style": "loose watercolour painting, wet washes, soft edges, misty greens, cold-press paper texture, no text, no letters",
     "music": "calm",
-    "clash": true
+    "clash": true,
+    "photos": false,
+    "action": true
   }
 }

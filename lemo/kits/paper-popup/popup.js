@@ -6,6 +6,7 @@
 // dark-brown outline. The 3D book, lamp and macro lens of the demo are drawn in 2D: perspective page, cut-out shadows, lens blur.
 import { W, H, SAFE, TAU, clamp, lerp, seg, eo, ss, at, SC, IMG, block, text, capAt, stdBody, boot, reg, fit, font, cover, KIT, countUp } from './kit.js';
 import { clashModel, drawFigure, drawFx, clashText } from './clash.js';
+import { actionModel, drawActors, actionText } from './action.js';
 import * as A from './demo/art.js';
 import { paperFill, cv, INK, GRAIN } from './demo/paper.js';
 import { back, spring, mulberry } from './demo/lib.js';
@@ -200,6 +201,15 @@ function content(g, t, s, lt, img, fold) {
     if (u > .9) block(g, 'ar', s.arabic, { x: cx - 400, y: y + 40, w: 800, h: h - 80 }, { family: 'Amiri', weight: 700, size: 100, min: 44, lh: 1.6, color: '#4a2c16', align: 'center', valign: 'middle' });
     const r = hang(g, 1.2, lt, cx, y + h + 60, 860, 400, (g, w, h) => board(g, w, h, '#ffffff'));
     if (r) stdBody(g, t, { ...s, type: 'quote', text: s.translation, source: s.ref }, { x: cx - 380, y: y + h + 100, w: 760, h: 320 }, TH);
+  } else if (T === 'action') {
+    eyebrow(SAFE.y0); const y = SAFE.y0 + 80, P = SPREADS[spreadOf(s)];
+    const r = hang(g, .2, lt, cx, y, 860, 300, (g, w, h) => board(g, w, h));
+    const m = actionModel(s, t, { x0: SAFE.x0, x1: SAFE.x1, ground: 1185, top: 760, S: 150 }), u = clamp(back(seg(lt, .2, .7), 1.8));
+    g.save(); g.translate(0, 1185); g.scale(1, u); g.translate(0, -1185); g.save(); g.lineJoin = 'round'; g.shadowColor = 'rgba(40,24,10,.3)'; g.shadowBlur = 14; g.shadowOffsetY = 8; g.strokeStyle = '#fffdf7'; g.lineWidth = 18; g.stroke(m.T.path); g.restore();
+    g.fillStyle = P.hill2[0]; g.fill(m.T.path); g.strokeStyle = BROWN; g.lineWidth = 4; g.stroke(m.T.path); g.restore();
+    for (const f of m.figs) { g.save(); g.shadowColor = 'rgba(40,24,10,.3)'; g.shadowBlur = 8; g.shadowOffsetY = 5; drawFigure(g, f, t, KIT.look); g.restore(); }
+    drawActors(g, t, { ...m, figs: [] }, KIT.look, { dotRing: '#fffdf7' });
+    if (r) actionText(g, t, s, { x: cx - 380, y: y + 30, w: 760, h: 230 }, TH, m);
   } else if (T === 'clash') {
     // two rows of cut-paper figures on the page; the headline sign hangs above
     eyebrow(SAFE.y0); const y = SAFE.y0 + 80;

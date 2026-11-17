@@ -135,6 +135,9 @@ def main():
         if slug not in kits:
             sys.exit(f"--engine=lemo needs a storyboard \"style\" with a Lemo-native kit: {', '.join(kits)} (got {slug!r})")
         kit = (slug, kits[slug])
+        if kits[slug].get("photos") is False and any(x.get("image") for x in sb["scenes"]):
+            sys.exit(f"style '{slug}' is a landscape kit: AI photos are not used here (they read as pasted). Act the moment out with a "
+                     f"\"action\" scene (terrain + moving figures or dots), \"clash\" or \"custom\" instead.")
         if any(x.get("type") == "clash" for x in sb["scenes"]) and not kits[slug].get("clash"):
             sys.exit(f"style '{slug}' has no battle scene: use one of {', '.join(k for k in kits if kits[k].get('clash'))} for \"clash\" scenes")
         if "image_style" not in sb:
