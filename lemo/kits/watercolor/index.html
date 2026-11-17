@@ -72,7 +72,7 @@ makeKit({
     x.drawImage(m, 0, 0);
     g.save(); g.globalAlpha = u; g.globalCompositeOperation = 'multiply'; g.drawImage(c, R.x, R.y); g.restore();
   },
-  terrain(g, path, lt) { g.save(); g.clip(path); const u = eo(seg(lt, 0, 1)); for (let k = 0; k < 14; k++) { const y = 700 + k * 40; stroke(g, -60, y, (W + 120) * u - 60, y + 10, 70, k % 2 ? C.green : C.sage, .4, 400 + k); } g.restore(); },
+  terrain(g, path, lt, kind = 'ground') { const cols = { ground: [C.green, C.sage], water: [C.blue, '#7fb2d0'], dark: [C.deep, C.ink], structure: [C.ochre, C.rust] }[kind]; g.save(); g.clip(path); const u = eo(seg(lt, 0, 1)); for (let k = 0; k < 22; k++) { const y = 520 + k * 40; stroke(g, -60, y, (W + 120) * u - 60, y + 10, 70, cols[k % 2], kind === 'dark' ? .7 : .45, 400 + k + kind.length * 31); } g.restore(); },
   field(g, t, s, Z, lt) { const u = eo(seg(lt, 0, .8)); g.save(); g.globalAlpha = u; for (let x = -60; x < W + 100; x += 150) wash(g, x, Z.ground + 20, 170, 60, C.sage, 700 + x, .5); g.restore(); },
   look: { fill: f => hexA(f.color || (f.side > 0 ? C.blue : C.rust), .78), shield: hexA(C.ochre, .8), weapon: C.ink, stroke: null, glow: '#ffd77a', glowMode: 'source-over' },
   fx: { dust: '#cdb68c', arrow: C.ink, spark: C.ochre },

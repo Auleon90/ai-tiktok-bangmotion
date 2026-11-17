@@ -1,0 +1,126 @@
+{
+ "title": "Contoh scene action: hijrah, Musa, Khandaq",
+ "scenes": [
+  {
+   "id": 1,
+   "type": "action",
+   "eyebrow": "Hijrah",
+   "headline": "Makkah ke Madinah",
+   "sub": "Singgah tiga malam di Gua Tsur",
+   "terrain": {
+    "kind": "dunes",
+    "features": [
+     {
+      "type": "city",
+      "at": 0.1,
+      "name": "makkah",
+      "label": "Makkah",
+      "size": 3
+     },
+     {
+      "type": "cave",
+      "at": 0.5,
+      "name": "tsur",
+      "label": "Gua Tsur"
+     },
+     {
+      "type": "city",
+      "at": 0.9,
+      "name": "madinah",
+      "label": "Madinah",
+      "size": 4
+     }
+    ]
+   },
+   "groups": [
+    {
+     "label": "Rombongan",
+     "count": 3,
+     "color": "#2f6b3a",
+     "from": "makkah",
+     "via": [
+      "tsur"
+     ],
+     "to": "madinah",
+     "start": 0.05,
+     "end": 0.95,
+     "route": true,
+     "mode": "figures"
+    }
+   ],
+   "vo": "Dari Makkah, Rasulullah dan Abu Bakar berangkat diam-diam, singgah tiga malam di Gua Tsur, lalu melanjutkan perjalanan ke Madinah."
+  },
+  {
+   "id": 2,
+   "type": "action",
+   "eyebrow": "Kisah Musa",
+   "headline": "Laut terbelah",
+   "terrain": {
+    "kind": "plain",
+    "features": [
+     {
+      "type": "sea",
+      "at": 0.4,
+      "side": "right",
+      "split": [
+       0.15,
+       0.45
+      ],
+      "name": "laut",
+      "label": "Laut Merah"
+     }
+    ]
+   },
+   "groups": [
+    {
+     "label": "Bani Israil",
+     "count": 14,
+     "color": "#3f6fb5",
+     "from": "plainL",
+     "to": "laut",
+     "start": 0.4,
+     "end": 0.95,
+     "mode": "dots"
+    }
+   ],
+   "vo": "Laut terbelah, dan Bani Israil menyeberang di jalan kering di antara dua dinding air, sementara Firaun mengejar dari belakang."
+  },
+  {
+   "id": 3,
+   "type": "action",
+   "eyebrow": "Khandaq",
+   "headline": "Parit di depan Madinah",
+   "terrain": {
+    "kind": "plain",
+    "features": [
+     {
+      "type": "trench",
+      "at": 0.5,
+      "label": "Parit"
+     }
+    ]
+   },
+   "groups": [
+    {
+     "label": "Muslimin",
+     "count": 10,
+     "color": "#2f6b3a",
+     "act": "rows",
+     "at": "plainL",
+     "mode": "figures"
+    },
+    {
+     "label": "Ahzab",
+     "count": 14,
+     "color": "#8a2a1e",
+     "act": "gather",
+     "to": "plainR",
+     "mode": "dots"
+    }
+   ],
+   "vo": "Kaum muslimin bertahan di balik parit, sementara pasukan sekutu berkumpul di seberang tanpa bisa menyeberang."
+  }
+ ],
+ "style": "watercolor",
+ "music": "sacred"
+}

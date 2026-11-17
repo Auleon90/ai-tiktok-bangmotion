@@ -206,7 +206,8 @@ function content(g, t, s, lt, img, fold) {
     const r = hang(g, .2, lt, cx, y, 860, 300, (g, w, h) => board(g, w, h));
     const m = actionModel(s, t, { x0: SAFE.x0, x1: SAFE.x1, ground: 1185, top: 760, S: 150 }), u = clamp(back(seg(lt, .2, .7), 1.8));
     g.save(); g.translate(0, 1185); g.scale(1, u); g.translate(0, -1185); g.save(); g.lineJoin = 'round'; g.shadowColor = 'rgba(40,24,10,.3)'; g.shadowBlur = 14; g.shadowOffsetY = 8; g.strokeStyle = '#fffdf7'; g.lineWidth = 18; g.stroke(m.T.path); g.restore();
-    g.fillStyle = P.hill2[0]; g.fill(m.T.path); g.strokeStyle = BROWN; g.lineWidth = 4; g.stroke(m.T.path); g.restore();
+    for (const L of m.T.layers) { const col = { ground: P.hill2[0], water: '#7fc3e0', dark: '#3a2a24', structure: '#fff1d6' }[L.kind]; if (L.kind !== 'ground') { g.save(); g.lineJoin = 'round'; g.strokeStyle = '#fffdf7'; g.lineWidth = 12; g.stroke(L.path); g.restore(); } g.fillStyle = col; g.fill(L.path); g.strokeStyle = BROWN; g.lineWidth = 4; g.stroke(L.path); }
+    g.restore();
     for (const f of m.figs) { g.save(); g.shadowColor = 'rgba(40,24,10,.3)'; g.shadowBlur = 8; g.shadowOffsetY = 5; drawFigure(g, f, t, KIT.look); g.restore(); }
     drawActors(g, t, { ...m, figs: [] }, KIT.look, { dotRing: '#fffdf7' });
     if (r) actionText(g, t, s, { x: cx - 380, y: y + 30, w: 760, h: 230 }, TH, m);

@@ -93,7 +93,7 @@ function draw(g, t) {
   g.save(); const p = new Path2D(); p.rect(0, 0, W, done); p.moveTo(-50, done); for (let y = done; y < cy + H + 40; y += 30) p.lineTo(front + Math.sin(y * .05) * 40 + (vnoise(y * .02, 7) - .5) * 90, y); p.lineTo(-50, cy + H + 40); p.closePath(); g.clip(p);
   g.drawImage(WC, 0, 0); g.restore();
   g.drawImage(CONTOURS[Math.floor(t * 12) % 3], 0, 0);   // only the contour boils (3 drawings, on twos)
-  if (s.type === 'action') { const m = actionModel(s, t, { x0: SAFE.x0, x1: SAFE.x1, ground: GROUND - 90, top: 760, S: 150 }); g.fillStyle = hatchPattern(C.grass); g.fill(m.T.path); g.strokeStyle = C.sepia; g.lineWidth = 2.4; g.stroke(m.T.path); drawActors(g, t, m, KIT.look); window.__AM = m; }
+  if (s.type === 'action') { const m = actionModel(s, t, { x0: SAFE.x0, x1: SAFE.x1, ground: GROUND - 90, top: 760, S: 150 }); for (const L of m.T.layers) { g.fillStyle = hatchPattern({ ground: C.grass, water: C.cobalt, dark: C.sepia, structure: C.struct }[L.kind]); g.fill(L.path); g.strokeStyle = C.sepia; g.lineWidth = 2.4; g.stroke(L.path); } drawActors(g, t, m, KIT.look); window.__AM = m; }
   if (s.type === 'clash') { const m = clashModel(s, t, { x0: SAFE.x0, x1: SAFE.x1, ground: GROUND - 10, S: 200 }); for (const f of m.figs) drawFigure(g, f, t, KIT.look); drawFx(g, m.fx, { dust: '#cfb894', arrow: C.sepia, spark: C.amber }); }
   g.restore();
   content(g, t, s, lt, img, cy);

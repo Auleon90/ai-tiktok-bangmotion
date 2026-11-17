@@ -31,7 +31,7 @@ export function makeKit(cfg) {
       clashText(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: 560 - top }, th, 590);
     } else if (s.type === 'action') {
       const m = actionModel(s, t, { x0: SAFE.x0, x1: SAFE.x1, ground: 1150, top: 700, S: 150 });
-      cfg.terrain ? cfg.terrain(g, m.T.path, lt) : (g.fillStyle = 'rgba(0,0,0,.08)', g.fill(m.T.path));
+      for (const L of m.T.layers) cfg.terrain ? cfg.terrain(g, L.path, lt, L.kind) : (g.fillStyle = 'rgba(0,0,0,.1)', g.fill(L.path));
       drawActors(g, t, m, cfg.look, cfg.actors || {});
       actionText(g, t, s, { x: SAFE.x0, y: top, w: SAFE.x1 - SAFE.x0, h: 380 - top + SAFE.y0 }, th, m);
     } else if (s.type === 'custom') {

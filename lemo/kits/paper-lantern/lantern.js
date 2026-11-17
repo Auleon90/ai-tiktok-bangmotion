@@ -190,8 +190,9 @@ function content(g, t, s, lt, img, Ld) {
   if (T === 'action') {
     const m = actionModel(s, t, { x0: SAFE.x0, x1: SAFE.x1, ground: 1200, top: 760, S: 150 }), lift = (1 - eo(seg(lt, .1, .9))) * 220;
     g.save(); g.translate(0, lift); g.save(); g.translate(8, 22); g.filter = 'blur(8px)'; g.fillStyle = 'rgba(0,0,0,.4)'; g.fill(m.T.path); g.restore();
-    g.fillStyle = Ld.L[3]; g.fill(m.T.path); g.save(); g.clip(m.T.path); g.globalAlpha = .5; g.fillStyle = g.createPattern(GRAIN, 'repeat'); g.fillRect(0, 0, W, H); g.restore();
-    g.strokeStyle = Ld.light; g.lineWidth = 4; g.shadowColor = Ld.light; g.shadowBlur = 16; g.stroke(m.T.path); g.restore();
+    for (const L of m.T.layers) { g.save(); g.fillStyle = { ground: Ld.L[3], water: Ld.L[1], dark: '#05060c', structure: Ld.L[2] }[L.kind]; g.fill(L.path); g.clip(L.path); g.globalAlpha = .5; g.fillStyle = g.createPattern(GRAIN, 'repeat'); g.fillRect(0, 0, W, H); g.restore();
+      g.save(); g.strokeStyle = Ld.light; g.lineWidth = L.kind === 'dark' ? 2 : 4; g.shadowColor = Ld.light; g.shadowBlur = 16; g.stroke(L.path); g.restore(); }
+    g.restore();
     drawActors(g, t, m, KIT.look, { dotRing: Ld.light });
     if (FRONT) { g.save(); g.translate(W / 2, 960); g.scale(FRONT.dz, FRONT.dz); g.translate(-W / 2, -960); g.drawImage(FRONT.c, FRONT.ox, 0); g.restore(); }
     const st = strip(g, X, top + 80, Wd, 300, seg(lt, .2, .8)); if (st) actionText(g, t, s, { x: X + 40, y: top + 110, w: Wd - 80, h: 240 }, TH, m); return;
