@@ -257,6 +257,15 @@ Engine: `hyperframes/` (npm `hyperframes` 0.8.218, GSAP, lottie-web). Renders by
    Extract a frame per scene (`ffmpeg -ss <t> -i output/final.mp4 -frames:v 1 ...`), look at them, fix overlaps.
 4. Final: same command without `--draft` (~2 min for 60 s).
 
+**Bang Motion styles (MIT, `hyperframes/bang/`, from github.com/bangtutorial/bang-motion)** — an alternative to a Lemo style for mode 1.
+- Ready, data-driven 9:16 page: `hyperframes/bang/vintage-sketch.hf.html` (Vintage sketch: paper, world + camera push-through,
+  words said with a highlighter `*kata*`, drawn ring on images/numbers, ghost year when the eyebrow holds a year, Cinzel labels).
+  Use it directly: `--html=hyperframes/bang/vintage-sketch.hf.html` (scene types: title, counter, list, quote, ayat, tribute; FLUX images optional). Example: `examples/watt-vintage-sketch.storyboard.json`.
+- Other starters (`hyperframes/bang/starters/`: kartun-panggung, jurnalisme visual, katalog putih, kartun kolase, explainer, opener)
+  are 16:9 references: adapt per video into `output/hf_index.html` following `hyperframes/bang/references/*.md` — 9:16 safe area,
+  local fonts in `assets/fonts/`, no network, finite repeats, one timeline at `__timelines["root"]`, `window.PROPS`, `BM.captions`.
+  Cartoon stage draws characters with faces: NOT for Islamic content (use silhouettes / Lemo native clash instead).
+
 ## Mode 2 — Remotion + Lottie
 
 Engine: `remotion/` (Remotion 4, `@remotion/lottie`). Built-in scene types only — no per-video code needed.

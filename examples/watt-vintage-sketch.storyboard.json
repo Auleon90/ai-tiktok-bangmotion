@@ -1,0 +1,6 @@
+{"title":"Mesin Uap James Watt","music":"warm","scenes":[
+{"id":1,"type":"title","eyebrow":"Bab III · 1769","title":"Mesin yang *mengubah* abad","subtitle":"uap mengangkat segalanya","vo":"Tahun seribu tujuh ratus enam puluh sembilan, sebuah mesin mengubah abad."},
+{"id":2,"type":"counter","eyebrow":"Efisiensi","headline":"Batu bara jauh lebih hemat","items":[{"value":"75","suffix":"%","label":"lebih sedikit batu bara"}],"vo":"Mesin Watt memakai tujuh puluh lima persen lebih sedikit batu bara."},
+{"id":3,"type":"quote","eyebrow":"Kata Boulton","text":"Saya menjual apa yang diinginkan dunia: tenaga.","source":"Matthew Boulton","vo":"Rekannya berkata, saya menjual apa yang diinginkan dunia, yaitu tenaga."},
+{"id":4,"type":"list","eyebrow":"Dampak","headline":"Lalu datanglah","items":["Pabrik","Kereta api","Kota modern"],"vo":"Lalu datanglah pabrik, kereta api, dan kota modern."}
+]}
