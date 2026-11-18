@@ -101,14 +101,17 @@
      focus{at, zoom}, headline?. Drawn in the page's style (S.map: ink, hill, hillLine, label font, dot radius). */
   BANG.map = function (c, S, cam) {
     const s = c.s, M = Object.assign({ ink: '#2E2115', hill: 'rgba(154,59,34,.10)', line: '#5B4634', font: 'serif', label: '#2E2115', r: 9, labelSize: 30, arrow: '#9A3B22', water: null }, S.map || {});
-    const X0 = 110, Y0 = s.headline ? 370 : 300, SC = .86, R = rng(c.i * 13 + 5), at0 = c.t0 + .35, d = c.d;
+    const X0 = 110, Y0 = s.headline ? 410 : 300, SC = .86, R = rng(c.i * 13 + 5), at0 = c.t0 + .35, d = c.d;
     const svg = c.put(`<svg class="bmap" viewBox="0 0 1000 1000" style="position:absolute;width:860px;height:860px;overflow:visible"></svg>`, X0, Y0);
-    const el = (tag, attrs, parent = svg) => svgEl(tag, attrs, parent);
+    // everything on the sheet is clipped to its rounded frame, so moving units never spill past the border
+    const cid = 'mclip' + c.i, defs = svgEl('defs', {}, svg), cp = svgEl('clipPath', { id: cid }, defs); svgEl('rect', { x: 0, y: 0, width: 1000, height: 1000, rx: 22 }, cp);
+    const sheet = svgEl('g', { 'clip-path': `url(#${cid})` }, svg);
+    const el = (tag, attrs, parent = sheet) => svgEl(tag, attrs, parent);
     const T = f => c.t0 + f * d;
     if (s.headline) { const ln = c.put(`<div class="line it"></div>`, 80, 280); sayable(ln, s.headline); say(ln, c.t0 + .5); }
     // frame: a drawn border + compass tick, so the map reads as a sheet laid on the page
-    const fr = el('rect', { x: 0, y: 0, width: 1000, height: 1000, fill: 'none', stroke: M.line, 'stroke-width': 3, 'stroke-dasharray': '4000', 'stroke-dashoffset': '4000', opacity: .55 });
-    tl.to(fr, { attr: { 'stroke-dashoffset': 0 }, duration: 1.2, ease: 'power2.inOut' }, at0);
+    const fr = svgEl('rect', { x: 1.5, y: 1.5, width: 997, height: 997, rx: 22, fill: 'none', stroke: M.line, 'stroke-width': 3, opacity: 0 }, svg);
+    tl.fromTo(fr, { opacity: 0 }, { opacity: .5, duration: .6, ease: 'power2.out', immediateRender: false }, at0);
     // hills: three wobbly contour rings each, drawn with the pen, then a label
     (s.hills || []).forEach((hl, k) => { const [hx, hy] = hl.at, r = hl.r || 120, g = el('g', {});
       [1, .66, .33].forEach((f, j) => { const pts = []; for (let a = 0; a <= 24; a++) { const ang = a / 24 * Math.PI * 2, rr = r * f * (1 + .09 * Math.sin(ang * 3 + k * 2 + j) + .05 * Math.sin(ang * 5 + k)); pts.push([hx + Math.cos(ang) * rr, hy + Math.sin(ang) * rr * .82]); }
