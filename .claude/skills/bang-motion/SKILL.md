@@ -226,7 +226,7 @@ AskUserQuestion allows max 4 options, so ask in two steps.
 3. `Remotion + Lottie` — "Kualitas tertinggi: peta animasi, grain film, efek Lottie. ±20 menit."
 4. `Lemo native / Manim…` — "Lemo native: tampilan persis gaya Opuscar (6 gaya). Atau Manim untuk sains/matematika."
 
-If Q1 = option 2 (HyperFrames), **Q1b** — "Mode 1: gaya dari mana?", header "Gaya" (skip if the user already said):
+If Q1 = option 2 (HyperFrames) OR Q1 = option 1 and Auto picked HyperFrames, **Q1b** — "Mode 1: gaya dari mana?", header "Gaya" (skip only if the user already named the style source):
 1. `Auto Bang Motion` — "AI memilih 1 dari 6 gaya Bang Motion. Tanpa gambar Cloudflare, tanpa gaya Opuscar, tanpa scene action/custom."
 2. `Auto Lemo-Opuscar` — "AI memilih 1 dari 99 gaya Opuscar; gambar FLUX, scene action & custom ditentukan AI."
 3. `Auto campuran` — "AI memilih koleksi yang paling cocok (Opuscar atau Bang Motion), lalu gayanya."
