@@ -66,7 +66,7 @@
       const sh = hasImg ? 560 : 0;   // text drops below the image when there is one
       if (T_ === 'counter') {
         if (s.headline) { const ln = put(`<div class="line it"></div>`, 80, 320 + (hasImg ? 600 : 0)); sayable(ln, s.headline); say(ln, t0 + .6); }
-        const items = (s.items || []).slice(0, 2), ny = hasImg ? 1010 : 860;
+        const items = (s.items || []).slice(0, 2), ny = hasImg ? 1010 : (items.length > 1 ? 560 : 860);
         ctx.counters = items.map((x, k) => { const nEl = put(`<div class="num"></div>`, 80, ny + k * 300); const r = counterTo(nEl, x, textAt + k * .5);
           const lab = x.label ? put(`<div class="hand">${esc(x.label)}</div>`, 80, ny + 225 + k * 300, 'width:920px;text-align:center') : null; if (lab) label(lab, textAt + k * .5 + .5); return { ...r, el: nEl, lab, y: ny + k * 300, x }; });
         S.counter ? S.counter(ctx) : (items.length === 1 && !hasImg && annot(190, ny - 115, 700, 440, textAt + .9));
