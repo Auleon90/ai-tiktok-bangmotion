@@ -66,7 +66,7 @@ html,body{margin:0;background:#0a0a0a}
   const { tl, fly, slam, block, pop, draw, esc } = BANG;
   const TICK = 'M120 380 L360 600 L800 120';
   BANG.collage({
-    capAccent: '#E1251B', capText: '#141414', say: 'scale', hl: [''], upper: true, imageRing: false, ghostY: 780,
+    capAccent: '#E1251B', capText: '#141414', map: { ink: '#141414', hill: 'rgba(20,20,20,.05)', line: '#141414', font: 'Arch', label: '#141414', arrow: '#E1251B', halo: '#ffffff', labelSize: 30 }, say: 'scale', hl: [''], upper: true, imageRing: false, ghostY: 780,
     image: c => ({ x: 150, y: 290, w: 780, h: 600, rot: c.i % 2 ? 2 : -2 }),
     title(c) { if (c.hasImg) return;
       const doc = c.put(`<div class="doc"><h6>${esc(String(c.s.eyebrow || 'CATATAN').toUpperCase())}</h6><pre>${esc(c.s.subtitle || c.s.note || '')}</pre></div>`, 90, c.s.subtitle ? 900 : 870);

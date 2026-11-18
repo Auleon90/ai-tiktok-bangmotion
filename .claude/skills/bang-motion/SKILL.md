@@ -247,7 +247,7 @@ AskUserQuestion allows max 4 options, so ask in two steps.
 3. `Remotion + Lottie` — "Kualitas tertinggi: peta animasi, grain film, efek Lottie. ±20 menit."
 4. `Lemo native / Manim…` — "Lemo native: tampilan persis gaya Opuscar (6 gaya). Atau Manim untuk sains/matematika."
 
-If Q1 = option 2 (HyperFrames), **Q1b** — "Mode 1: gaya dari mana?", header "Gaya" (skip if the user already said):
+If Q1 = option 2 (HyperFrames) OR Q1 = option 1 and Auto picked HyperFrames, **Q1b** — "Mode 1: gaya dari mana?", header "Gaya" (skip only if the user already named the style source):
 1. `Auto Bang Motion` — "AI memilih 1 dari 6 gaya Bang Motion. Tanpa gambar Cloudflare, tanpa gaya Opuscar, tanpa scene action/custom."
 2. `Auto Lemo-Opuscar` — "AI memilih 1 dari 99 gaya Opuscar; gambar FLUX, scene action & custom ditentukan AI."
 3. `Auto campuran` — "AI memilih koleksi yang paling cocok (Opuscar atau Bang Motion), lalu gayanya."
@@ -304,7 +304,12 @@ Engine: `hyperframes/` (npm `hyperframes` 0.8.218, GSAP, lottie-web). Renders by
 | kartun-panggung | flat bright stage per scene, faceless silhouettes on joint rigs, signboard, meter | stage (cut + slide) | none |
 | explainer-aliran | parallax world flowing past, hero cart, signposts per scene | flow | none |
 
-Scene types: title, counter (1 item; `%` suffix fills bars/cells/meter), list (≤4–5), quote, ayat. `*kata*` = highlight.
+Scene types: title, counter (1–2 items; `%` suffix fills bars/cells/meter), list (≤4–5), quote, ayat, **map**. `*kata*` = highlight.
+**map** (4 collage styles: vintage-sketch, kartun-kolase, jurnalisme-visual, katalog-putih — NOT panggung/aliran): same fields as the
+Remotion map (coords 0–1000, y down): `headline?`, `hills[{label, at, r, color?}]` drawn as contour rings, `units[{label?, color, dots,
+from, to?, moveAt:[f0,f1], spread?}]` = dot groups that march, `arrows[{path, color?, at?}]` drawn along the route, `pulse{at, label?, atFrac?}`,
+`focus{at, zoom≤1.18}`. Use it for battles, migrations, routes, spread — whenever movement explains better than text
+(example: `examples/uhud.vintage-sketch.storyboard.json`, scenes 2, 4–6). Keep units above y≈900 (captions sit below the sheet).
 Figures are faceless silhouettes (owner rule), so every Bang style is allowed for Islamic content; in kartun-panggung a scene may set
 `"hero": {"prophet": true}` (glow over head, hands raised only). The starter `starter-opener.html` (Three.js promo toolkit) is
 kept as reference only — the first title scene of each style is the opener. Starters/references (16:9 originals) stay in

@@ -64,9 +64,10 @@
       cam((i ? t0 : 0) + .05, cx, cy, 1, 1.3, 'power2.inOut'); cam((i ? t0 : 0) + 1.4, cx, cy, 1.035, Math.max(.5, d - 2.3));
       if (P.scenes[i + 1]) { const b = area(i + 1); cam(t1 - .9, (cx + b.x + 540) / 2, (cy + b.y + 960) / 2, 1.5, .9, 'power2.in'); }
       const sh = hasImg ? 560 : 0;   // text drops below the image when there is one
+      if (T_ === 'map') { BANG.map(ctx, S, { cam, C, applyCam }); S.mapScene && S.mapScene(ctx); S.decor && S.decor(ctx); return; }
       if (T_ === 'counter') {
         if (s.headline) { const ln = put(`<div class="line it"></div>`, 80, 320 + (hasImg ? 600 : 0)); sayable(ln, s.headline); say(ln, t0 + .6); }
-        const items = (s.items || []).slice(0, 2), ny = hasImg ? 1010 : 860;
+        const items = (s.items || []).slice(0, 2), ny = hasImg ? 1010 : (items.length > 1 ? 560 : 860);
         ctx.counters = items.map((x, k) => { const nEl = put(`<div class="num"></div>`, 80, ny + k * 300); const r = counterTo(nEl, x, textAt + k * .5);
           const lab = x.label ? put(`<div class="hand">${esc(x.label)}</div>`, 80, ny + 225 + k * 300, 'width:920px;text-align:center') : null; if (lab) label(lab, textAt + k * .5 + .5); return { ...r, el: nEl, lab, y: ny + k * 300, x }; });
         S.counter ? S.counter(ctx) : (items.length === 1 && !hasImg && annot(190, ny - 115, 700, 440, textAt + .9));
@@ -92,6 +93,57 @@
       S.decor && S.decor(ctx);
     });
     finish(S); applyCam();
+  };
+
+  /* ============================== MAP (collage rig) ==============================
+     Same fields as the Remotion map: coords 0–1000 (y down). hills[{label, at, r, color?}], units[{label?, color, dots, from, to?,
+     moveAt:[f0,f1] (fractions of the scene), spread?}], arrows[{path:[[x,y]..], color?, at?}], pulse{at, label?, atFrac?},
+     focus{at, zoom}, headline?. Drawn in the page's style (S.map: ink, hill, hillLine, label font, dot radius). */
+  BANG.map = function (c, S, cam) {
+    const s = c.s, M = Object.assign({ ink: '#2E2115', hill: 'rgba(154,59,34,.10)', line: '#5B4634', font: 'serif', label: '#2E2115', r: 9, labelSize: 30, arrow: '#9A3B22', water: null }, S.map || {});
+    const X0 = 110, Y0 = s.headline ? 410 : 300, SC = .86, R = rng(c.i * 13 + 5), at0 = c.t0 + .35, d = c.d;
+    const svg = c.put(`<svg class="bmap" viewBox="0 0 1000 1000" style="position:absolute;width:860px;height:860px;overflow:visible"></svg>`, X0, Y0);
+    // everything on the sheet is clipped to its rounded frame, so moving units never spill past the border
+    const cid = 'mclip' + c.i, defs = svgEl('defs', {}, svg), cp = svgEl('clipPath', { id: cid }, defs); svgEl('rect', { x: 0, y: 0, width: 1000, height: 1000, rx: 22 }, cp);
+    const sheet = svgEl('g', { 'clip-path': `url(#${cid})` }, svg);
+    const el = (tag, attrs, parent = sheet) => svgEl(tag, attrs, parent);
+    const T = f => c.t0 + f * d;
+    if (s.headline) { const ln = c.put(`<div class="line it"></div>`, 80, 280); sayable(ln, s.headline); say(ln, c.t0 + .5); }
+    // frame: a drawn border + compass tick, so the map reads as a sheet laid on the page
+    const fr = svgEl('rect', { x: 1.5, y: 1.5, width: 997, height: 997, rx: 22, fill: 'none', stroke: M.line, 'stroke-width': 3, opacity: 0 }, svg);
+    tl.fromTo(fr, { opacity: 0 }, { opacity: .5, duration: .6, ease: 'power2.out', immediateRender: false }, at0);
+    // hills: three wobbly contour rings each, drawn with the pen, then a label
+    (s.hills || []).forEach((hl, k) => { const [hx, hy] = hl.at, r = hl.r || 120, g = el('g', {});
+      [1, .66, .33].forEach((f, j) => { const pts = []; for (let a = 0; a <= 24; a++) { const ang = a / 24 * Math.PI * 2, rr = r * f * (1 + .09 * Math.sin(ang * 3 + k * 2 + j) + .05 * Math.sin(ang * 5 + k)); pts.push([hx + Math.cos(ang) * rr, hy + Math.sin(ang) * rr * .82]); }
+        const dd = 'M' + pts.map(p => p.map(v => v.toFixed(1)).join(' ')).join(' L') + 'Z', len = 2 * Math.PI * r * f * 1.1;
+        const p = el('path', { d: dd, fill: j === 0 ? (hl.color ? hl.color + '33' : M.hill) : 'none', stroke: hl.color || M.line, 'stroke-width': j === 0 ? 3.5 : 2.2, 'stroke-dasharray': len, 'stroke-dashoffset': len, 'stroke-linejoin': 'round' }, g);
+        tl.to(p, { attr: { 'stroke-dashoffset': 0 }, duration: .9, ease: 'power2.inOut' }, at0 + .2 + k * .3 + j * .15); });
+      if (hl.label) { const tx = el('text', { x: hx, y: hy + r * .82 + 40, 'text-anchor': 'middle', fill: M.label, 'font-family': M.font, 'font-size': M.labelSize, opacity: 0 }, g); tx.textContent = hl.label; tl.to(tx, { opacity: 1, duration: .4 }, at0 + .9 + k * .3); } });
+    // arrows: drawn along the path, with a head
+    (s.arrows || []).forEach((ar, k) => { const P = ar.path || []; if (P.length < 2) return; let dd = `M${P[0][0]} ${P[0][1]}`;
+      for (let q = 1; q < P.length; q++) { const [x0, y0] = P[q - 1], [x1, y1] = P[q]; dd += q < P.length - 1 ? ` Q${x1} ${y1} ${(x1 + P[q + 1][0]) / 2} ${(y1 + P[q + 1][1]) / 2}` : ` L${x1} ${y1}`; }
+      let len = 0; for (let q = 1; q < P.length; q++) len += Math.hypot(P[q][0] - P[q - 1][0], P[q][1] - P[q - 1][1]);
+      const col = ar.color || M.arrow, path = el('path', { d: dd, fill: 'none', stroke: col, 'stroke-width': 9, 'stroke-linecap': 'round', 'stroke-dasharray': len * 1.05, 'stroke-dashoffset': len * 1.05, opacity: .9 });
+      const [ax, ay] = P[P.length - 1], [bx, by] = P[P.length - 2], ang = Math.atan2(ay - by, ax - bx) * 180 / Math.PI;
+      const head = el('path', { d: 'M0 0 L-34 -18 L-26 0 L-34 18 Z', fill: col, transform: `translate(${ax} ${ay}) rotate(${ang})`, opacity: 0 });
+      const ta = T(ar.at ?? .3); tl.to(path, { attr: { 'stroke-dashoffset': 0 }, duration: 1.2, ease: 'power2.inOut' }, ta); tl.to(head, { opacity: 1, duration: .2 }, ta + 1.1); });
+    // units: seeded dot clouds that march from → to during moveAt
+    (s.units || []).forEach((u, k) => { const n = Math.min(80, u.dots || 12), sp = u.spread || 80, [fx, fy] = u.from, to = u.to || u.from, [m0, m1] = u.moveAt || [.2, .7];
+      const g = el('g', {}), offs = []; for (let q = 0; q < n; q++) { const a = R() * Math.PI * 2, rr = Math.sqrt(R()) * sp; offs.push([Math.cos(a) * rr, Math.sin(a) * rr * .7]); }
+      offs.forEach(([ox, oy], q) => { const dot = el('circle', { cx: fx + ox, cy: fy + oy, r: M.r, fill: u.color || M.ink, stroke: M.dotStroke || 'none', 'stroke-width': 2, opacity: 0 }, g);
+        tl.to(dot, { opacity: 1, duration: .25 }, at0 + .6 + k * .2 + q * .008);
+        if (u.to) tl.to(dot, { attr: { cx: to[0] + ox, cy: to[1] + oy }, duration: Math.max(.4, (m1 - m0) * d), ease: 'power1.inOut' }, T(m0) + (q % 7) * .03); });
+      if (u.label) { const lb = el('text', { x: fx, y: fy - sp * .7 - 22, 'text-anchor': 'middle', fill: u.color || M.label, 'font-family': M.font, 'font-size': M.labelSize, 'font-weight': 700, stroke: M.halo || 'none', 'stroke-width': 8, 'paint-order': 'stroke', opacity: 0 }, g); lb.textContent = u.label;
+        tl.to(lb, { opacity: 1, duration: .4 }, at0 + .9 + k * .2); if (u.to) tl.to(lb, { attr: { x: to[0], y: to[1] - sp * .7 - 22 }, duration: Math.max(.4, (m1 - m0) * d), ease: 'power1.inOut' }, T(m0)); } });
+    // pulse: a ring that keeps calling attention to one spot (finite repeats) + a label block
+    if (s.pulse) { const [px, py] = s.pulse.at, ta = T(s.pulse.atFrac ?? .3), n = Math.max(1, Math.floor((c.t1 - ta) / 1.1));
+      const ring = el('circle', { cx: px, cy: py, r: 20, fill: 'none', stroke: M.arrow, 'stroke-width': 6, opacity: 0 });
+      tl.fromTo(ring, { attr: { r: 20 }, opacity: .95 }, { attr: { r: 120 }, opacity: 0, duration: 1.1, ease: 'power2.out', repeat: n - 1, immediateRender: false }, ta);
+      if (s.pulse.label) { const tx = el('text', { x: px, y: py - 70, 'text-anchor': 'middle', fill: M.arrow, 'font-family': M.font, 'font-size': M.labelSize + 6, 'font-weight': 700, stroke: M.halo || 'none', 'stroke-width': 8, 'paint-order': 'stroke', opacity: 0 }); tx.textContent = s.pulse.label; tl.to(tx, { opacity: 1, duration: .3 }, ta + .2); } }
+    // camera: after the sheet is drawn, lean in on the focus point, then ease back before the push-through
+    if (s.focus) { const [fx, fy] = s.focus.at, z = Math.min(1.18, s.focus.zoom || 1.15), wx = c.a.x + X0 + fx * SC, wy = c.a.y + Y0 + fy * SC;
+      const cx = c.a.x + 540 + Math.max(-40, Math.min(40, (wx - c.a.x - 540) * .2)), cy = c.a.y + 960 + Math.max(-120, (wy - c.a.y - 960) * .45);
+      cam.cam(c.t0 + 1.6, cx, cy, z, Math.min(1.6, Math.max(.6, d * .3)), 'sine.inOut'); cam.cam(c.t1 - 1.9, c.a.x + 540, c.a.y + 960, 1, .9, 'sine.inOut'); }
   };
 
   /* ============================== STAGE RIG (kartun panggung) ============================== */

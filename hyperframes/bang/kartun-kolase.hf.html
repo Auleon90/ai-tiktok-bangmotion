@@ -67,7 +67,7 @@ html,body{margin:0;background:#0a0a0a}
   };
   const shape = (c, kind, col, x, y, w, at, rot) => { const e = c.put(`<div class="shape" style="width:${w}px">${SH[kind](col)}</div>`, x, y); fly(e, at, { y: 260, rotate: rot - 14, scale: .8 }, c.t1, { rot }); return e; };
   BANG.collage({
-    capAccent: '#F26B1D', capText: '#221E1B', say: 'scale', hl: ['', 't', 'r'], upper: true, imageRing: false,
+    capAccent: '#F26B1D', capText: '#221E1B', map: { ink: '#221E1B', hill: 'rgba(31,158,149,.14)', line: '#221E1B', font: 'Bric', label: '#221E1B', arrow: '#D63B2F', halo: '#F4E9D3', r: 11, labelSize: 32 }, say: 'scale', hl: ['', 't', 'r'], upper: true, imageRing: false,
     image: c => ({ x: 170, y: 300, w: 740, h: 640, cls: 'pola', rot: c.i % 2 ? 3 : -3 }),
     title(c) { if (c.hasImg) return; const k = c.i;
       shape(c, 'blob', COL[k % 4], 120, 930, 330, c.t0 + .3, -6); shape(c, 'star', COL[(k + 1) % 4], 560, 900, 300, c.t0 + .5, 8); shape(c, 'zig', COL[(k + 2) % 4], 330, 1170, 420, c.textAt + .8, -3); },
