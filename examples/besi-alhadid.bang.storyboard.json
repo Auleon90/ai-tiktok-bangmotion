@@ -1,0 +1,27 @@
+{
+  "title": "Besi yang Turun dari Langit",
+  "style": "bang:jurnalisme-visual",
+  "music": "tense",
+  "sfx": true,
+  "ambience": "none",
+  "scenes": [
+    {"id": 1, "type": "title", "eyebrow": "Fakta Sains", "title": "Besi di darahmu *lebih tua* dari Bumi", "subtitle": "dan Al-Qur'an menyebut asalnya",
+     "vo": "Besi di dalam darahmu, ternyata lebih tua dari Bumi. Dan Al-Qur'an, sudah menyebut dari mana asalnya."},
+    {"id": 2, "type": "counter", "eyebrow": "Di tubuhmu", "headline": "Cukup untuk sebatang paku kecil", "items": [{"value": "4", "suffix": " gram", "label": "besi dalam tubuh orang dewasa"}],
+     "vo": "Tubuh orang dewasa menyimpan sekitar empat gram besi. Tanpanya, darahmu tidak bisa membawa oksigen."},
+    {"id": 3, "type": "title", "eyebrow": "Asal-usul", "title": "Lahir di jantung *bintang raksasa*", "subtitle": "suhu miliaran derajat",
+     "vo": "Tapi besi tidak terbentuk di Bumi. Ia lahir di jantung bintang raksasa, pada suhu miliaran derajat."},
+    {"id": 4, "type": "title", "eyebrow": "Supernova", "title": "Disebar oleh *ledakan* bintang", "subtitle": "baru setelah bintang itu mati",
+     "vo": "Besi adalah titik akhir bintang. Saat bintang itu runtuh dan meledak, besinya tersebar ke seluruh alam semesta."},
+    {"id": 5, "type": "counter", "eyebrow": "Planet kita", "headline": "Sebagian jatuh membentuk Bumi", "items": [{"value": "32", "suffix": "%", "label": "massa Bumi adalah besi"}],
+     "vo": "Sebagian besi itu ikut membentuk Bumi. Kini, sekitar tiga puluh dua persen massa Bumi adalah besi."},
+    {"id": 6, "type": "ayat", "arabic": "وَأَنزَلْنَا الْحَدِيدَ فِيهِ بَأْسٌ شَدِيدٌ وَمَنَافِعُ لِلنَّاسِ", "translation": "Dan Kami turunkan besi, padanya kekuatan yang hebat dan manfaat bagi manusia.", "ref": "QS. Al-Hadid: 25",
+     "vo": "Empat belas abad lalu, Allah berfirman: Dan Kami turunkan besi, padanya kekuatan yang hebat, dan manfaat bagi manusia."},
+    {"id": 7, "type": "quote", "eyebrow": "Pelajaran", "text": "Mukmin yang kuat lebih baik dan lebih dicintai Allah daripada mukmin yang lemah.", "source": "HR. Muslim",
+     "vo": "Besi ditempa oleh tekanan dan ledakan. Begitu juga kita. Nabi bersabda, mukmin yang kuat lebih baik dan lebih dicintai Allah."},
+    {"id": 8, "type": "list", "eyebrow": "Jadilah seperti besi", "headline": "Kuat seperti besi", "items": ["Tahan di bawah tekanan", "Bermanfaat bagi orang lain", "Terus mau ditempa"],
+     "vo": "Jadi, tahanlah tekanan. Jadilah bermanfaat. Dan teruslah mau ditempa."},
+    {"id": 9, "type": "title", "eyebrow": "Bagian 2", "title": "Ada yang *lebih aneh* lagi", "subtitle": "ikuti, jangan sampai terlewat",
+     "vo": "Tapi besi bukan satu-satunya. Ada yang juga disebut turun dari langit, dan sains menemukan jejaknya di asteroid. Ikuti, supaya tidak terlewat bagian dua."}
+  ]
+}

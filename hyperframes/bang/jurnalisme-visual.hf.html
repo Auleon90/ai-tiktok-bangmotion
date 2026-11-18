@@ -38,7 +38,7 @@ html,body{margin:0;background:#0a0a0a}
 .name{position:absolute;font-family:"Plex",monospace;font-size:30px;letter-spacing:.12em;color:var(--ink);padding:10px 16px;background:rgba(11,11,12,.72);border-left:5px solid var(--yel);opacity:0;white-space:nowrap}
 .hand{position:absolute;font-weight:700;font-size:52px;letter-spacing:.04em;color:var(--yel);opacity:0;white-space:nowrap;text-transform:uppercase}
 .ghost{position:absolute;font-weight:800;font-size:330px;line-height:.85;letter-spacing:-.02em;color:transparent;-webkit-text-stroke:3px rgba(245,242,234,.22);white-space:nowrap;opacity:0}
-.num{position:absolute;width:920px;text-align:center;font-weight:800;font-size:240px;line-height:1;color:var(--yel);opacity:0}
+.num{position:absolute;width:920px;text-align:center;font-weight:800;font-size:200px;line-height:1;color:var(--yel);opacity:0}
 .anno{position:absolute;overflow:visible;opacity:0}
 .anno *{fill:none;stroke:var(--yel);stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:18 16;vector-effect:non-scaling-stroke}
 .rule{position:absolute;height:6px;background:var(--ink);opacity:0}
@@ -72,7 +72,7 @@ html,body{margin:0;background:#0a0a0a}
     capAccent: '#FFD400', capText: '#F5F2EA', say: 'rise', hl: ['', 'r'], ghostY: 760, imageRing: true,
     image: c => ({ x: 0, y: 260, w: 1080, h: 660 }),
     ring: 'M60 360 C60 180 250 70 450 70 C650 70 840 180 840 360 C840 540 650 650 450 650 C250 650 60 540 60 360 Z',
-    title(c) { if (c.hasImg) return; ruler(c, 1130, c.textAt + .6); const tag = c.put(`<div class="mono">SUMBER · ARSIP · ${String(c.i + 1).padStart(2, '0')}</div>`, 80, 1250); label(tag, c.textAt + 1.4); },
+    title(c) { if (c.hasImg) return; ruler(c, 1130, c.textAt + .6); },
     counter(c) { const n = c.counters[0]; if (!n || n.pct == null) return; const y = n.y + 300;
       const bg = c.put(`<div class="bar bg"></div>`, 80, y); grow(bg, c.textAt, 920, .4);
       const b = c.put(`<div class="bar"></div>`, 80, y); grow(b, c.textAt, 920 * Math.min(100, n.pct) / 100, 1.1);
