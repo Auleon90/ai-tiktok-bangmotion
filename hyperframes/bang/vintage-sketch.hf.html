@@ -59,7 +59,7 @@ html,body{margin:0;background:#0a0a0a}
   const ROSE = 'M450 120 L450 600 M210 360 L690 360 M450 120 L490 330 L450 360 L410 330 Z M450 600 L490 390 L450 360 L410 390 Z M300 210 L600 510 M600 210 L300 510 M450 160 C560 160 650 250 650 360 C650 470 560 560 450 560 C340 560 250 470 250 360 C250 250 340 160 450 160 Z M80 360 C160 300 200 420 260 360 M640 360 C700 300 740 420 820 360';
   const FLOUR = 'M60 360 C200 240 320 480 450 360 C580 240 700 480 840 360 M450 360 C420 300 480 260 450 220 M450 360 C480 420 420 460 450 500';
   BANG.collage({
-    capAccent: '#9A3B22', capText: '#2E2115',
+    capAccent: '#9A3B22', capText: '#2E2115', map: { ink: '#2E2115', hill: 'rgba(91,70,52,.10)', line: '#5B4634', font: 'EBG', label: '#2E2115', arrow: '#9A3B22', halo: '#EFE4CC', labelSize: 34 },
     title(c) { if (!c.hasImg) { const e = c.annot(c.yr ? 560 : 240, c.yr ? 860 : (c.s.subtitle ? 900 : 820), c.yr ? 420 : 600, c.yr ? 300 : 400, c.textAt + .8, ROSE); e.classList.add('orn'); } },
     quote(c) { const m = c.put(`<div class="qmark">“</div>`, 40, c.hasImg ? 820 : 240); tl.fromTo(m, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out', immediateRender: false }, c.t0 + .4); },
     list(c) { const last = c.items[c.items.length - 1]; if (last && last.y < 1100) { const e = c.annot(80, last.y + 120, 760, 110, last.at + .8, FLOUR); e.classList.add('orn'); } },

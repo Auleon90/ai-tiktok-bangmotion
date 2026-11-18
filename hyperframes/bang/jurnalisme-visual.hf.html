@@ -69,7 +69,7 @@ html,body{margin:0;background:#0a0a0a}
     for (let k = 0; k < 7; k++) { const t = c.put(`<div class="tick"></div>`, 80 + k * 150, y - 14); tl.fromTo(t, { opacity: 0, scaleY: 0 }, { opacity: 1, scaleY: 1, duration: .25, immediateRender: false }, at + .1 + k * .1); }
     if (c.yr) { const m = c.put(`<div class="alert" style="background:#FFD400;color:#111">${c.yr}</div>`, 470, y + 40); block(m, at + .9); } };
   BANG.collage({
-    capAccent: '#FFD400', capText: '#F5F2EA', say: 'rise', hl: ['', 'r'], ghostY: 760, imageRing: true,
+    capAccent: '#FFD400', capText: '#F5F2EA', map: { ink: '#F5F2EA', hill: 'rgba(245,242,234,.06)', line: 'rgba(245,242,234,.7)', font: 'BC', label: '#F5F2EA', arrow: '#E8402F', halo: '#0B0B0C', labelSize: 36 }, say: 'rise', hl: ['', 'r'], ghostY: 760, imageRing: true,
     image: c => ({ x: 0, y: 260, w: 1080, h: 660 }),
     ring: 'M60 360 C60 180 250 70 450 70 C650 70 840 180 840 360 C840 540 650 650 450 650 C250 650 60 540 60 360 Z',
     title(c) { if (c.hasImg) return; ruler(c, 1130, c.textAt + .6); },
