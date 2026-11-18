@@ -32,6 +32,27 @@ Never stop at an HTML page, an Artifact or a raw render without audio: the resul
 
 ---
 
+## Channel formula (@valsyz7 — from Metricool data, Nov 2026)
+
+Applies to every video unless the user asks otherwise. Re-check weekly with the Metricool connector (TikTok `posts` metrics:
+views, likes, comments, shares) and update this section and `content/topics_used.md` when the data says so.
+
+- **Niche:** gratitude for the blessings of Allah that we forget ("nikmat yang sering kita lupa"). Science/facts are only the
+  PROOF of a blessing, never the centre (pure fact videos stalled at ~200–300 views; the 37k-view hit was a "jangan sampai" reflection).
+- **Unique topic:** read `content/topics_used.md` first; propose 3 new topics, never repeat a used blessing/fact/ayat with the same angle.
+  After delivery, add a row (date, topic, hook, ayat, style; views filled in later).
+- **Hook — score 3 candidates in the approval summary**, each a different pattern:
+  "Jangan sampai…" · harga nikmat ("Kalau X harus dibayar…") · pertanyaan debat · fakta yang menampar.
+  Score 1–5 on: relatable ("ini aku"), loss/stakes, ≤ 12 words / ±3 s spoken, reason to send it to someone. Use the highest in scene 1
+  and say why in one line; the user may pick another.
+- **Hook on frame 0:** scene 1's hook text is fully visible from the first frame (no word-by-word entrance, no fade-in from black);
+  motion starts after. In HyperFrames pages set the scene-1 words/stage to their end state at t=0.
+- **Duration:** 40–60 s (≤ 30 s for one strong line); never over 70 s. 5–7 scenes, a new visual every 3–5 s.
+- **Ending:** a share CTA ("Kirim ke orang yang…"), not "follow untuk part 2"; the last line should lead back into the hook (loop).
+- **Caption:** 2–4 sentences + 3–5 relevant hashtags; no names of other people/preachers, no "Upload Method" lines, no repeated #fyp.
+- Vary the visual style from the previous video (see the style column in `content/topics_used.md`).
+- Daily prompt to reuse: `content/daily_prompt.md`.
+
 ## Storyboard format (shared by all modes)
 
 ```json
