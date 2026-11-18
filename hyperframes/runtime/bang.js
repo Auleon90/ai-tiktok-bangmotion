@@ -22,6 +22,7 @@
     else p.split(/\s+/).filter(Boolean).forEach(w => { const s = document.createElement('span'); s.className = 'w'; s.textContent = w; el.appendChild(s); }); }); };
   let sayMode = 'rise';
   const say = (el, at, { dur = .55, st = .08 } = {}) => { const ws = $$('.w', el); tl.set(el, { opacity: 1 }, at);
+    if (at <= 0.01) { tl.set(ws, { opacity: 1 }, 0); $$('.hl i', el).forEach(hi => tl.set(hi, { scaleX: 1 }, 0)); return; }   // channel rule: hook fully visible on frame 0
     if (sayMode === 'scale') tl.fromTo(ws, { opacity: 0, scale: .7, rotate: -3, filter: 'blur(8px)' }, { opacity: 1, scale: 1, rotate: 0, filter: 'blur(0px)', duration: dur, ease: 'back.out(1.6)', stagger: st, immediateRender: false }, at);
     else tl.fromTo(ws, { opacity: 0, yPercent: 60, scaleY: 1.25, filter: 'blur(10px)' }, { opacity: 1, yPercent: 0, scaleY: 1, filter: 'blur(0px)', duration: dur, ease: 'power4.out', stagger: st, immediateRender: false }, at);
     $$('.hl i', el).forEach((hi, k) => tl.fromTo(hi, { scaleX: 0 }, { scaleX: 1, duration: .4, ease: 'power3.out', immediateRender: false }, at + st * ws.length + .2 + k * .2)); };
@@ -51,7 +52,7 @@
     P.scenes.forEach((s, i) => {
       const a = area(i), t0 = s.startMs / 1000, d = s.durationMs / 1000, t1 = t0 + d, cx = a.x + 540, cy = a.y + 960;
       const put = (html, x, y, extra = '') => { const e = h(html); e.style.left = (a.x + x) + 'px'; e.style.top = (a.y + y) + 'px'; if (extra) e.style.cssText += extra; world.appendChild(e); return e; };
-      const hasImg = !!s.imageSrc && S.images !== false, T_ = s.type, textAt = t0 + 1.5, yr = yearOf(s);
+      const hasImg = !!s.imageSrc && S.images !== false, T_ = s.type, textAt = i === 0 ? 0 : t0 + 1.5, yr = yearOf(s);
       const annot = (x, y, w, hh, at, d2 = ring) => { const e = put(`<svg class="anno" viewBox="0 0 900 720" preserveAspectRatio="none" style="width:${w}px;height:${hh}px"><path d="${d2}"/></svg>`, x, y); draw(e, at, .9); return e; };
       const ctx = { s, i, a, t0, t1, d, textAt, put, hasImg, yr, annot, n: P.scenes.length };
       if (yr && S.ghost !== false) { const g = put(`<div class="ghost">${esc(yr)}</div>`, S.ghostX ?? 60, S.ghostY ?? 820); tl.fromTo(g, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.2, ease: 'power2.out', immediateRender: false }, t0 + .15); }
@@ -60,7 +61,7 @@
         fly(cut, t0 + .25, { y: 140, rotate: i % 2 ? 5 : -5, scale: .92 }, t1, { rot: im.rot || 0 }); if (S.imageRing !== false) annot(im.x - 50, im.y - 40, im.w + 100, im.h + 100, t0 + 1.2); }
       if (s.eyebrow) label(put(`<div class="name">${esc(S.upper === false ? s.eyebrow : String(s.eyebrow).toUpperCase())}</div>`, 80, 200), t0 + .5);
       // camera: open close, glide home, breathe; push through to the next area
-      if (i === 0) tl.set(C, { x: cx - 40, y: cy - 330, z: 1.7, onUpdate: applyCam }, 0);
+      if (i === 0) tl.set(C, { x: cx, y: cy, z: 1, onUpdate: applyCam }, 0);   // hook readable on frame 0
       cam((i ? t0 : 0) + .05, cx, cy, 1, 1.3, 'power2.inOut'); cam((i ? t0 : 0) + 1.4, cx, cy, 1.035, Math.max(.5, d - 2.3));
       if (P.scenes[i + 1]) { const b = area(i + 1); cam(t1 - .9, (cx + b.x + 540) / 2, (cy + b.y + 960) / 2, 1.5, .9, 'power2.in'); }
       const sh = hasImg ? 560 : 0;   // text drops below the image when there is one

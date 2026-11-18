@@ -9,6 +9,7 @@ Kolom: tanggal · topik/nikmat · hook · ayat/hadits · gaya · views (isi dari
 
 | Tanggal | Topik | Hook | Ayat/Hadits | Gaya | Views |
 |---|---|---|---|---|---|
+| 2026-11-18 | Nikmat menelan / seteguk air (54 s, belum diunggah) | "Jangan sampai seteguk air jadi hal paling sulit dalam hidupmu" | QS. Al-Waqi'ah 70 | bang:katalog-putih (HF, tanpa backsound) | – |
 | 2026-11-18 | Sidik jari (belum diunggah, 88 s, perlu versi syukur ≤60 s) | "Ada pesan rahasia di ujung jarimu" | QS. Al-Qiyamah 3–4; HR. Muslim 2564 | microscope (HF) | – |
 
 ## Riwayat akun sebelum pipeline (dari Metricool, Jun–Nov 2026)
