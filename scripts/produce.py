@@ -204,7 +204,7 @@ def main():
         m = re.findall(r"I:\s+(-?[\d.]+) LUFS", r)
         return float(m[-1]) if m and float(m[-1]) > -70 else None
     BED_RATIO = 0.35   # backsound = 35% of the VO (amplitude), every mode
-    AMB_RATIO = float(sb.get("ambience_level", 0.35))   # ambience alone: same 35% rule unless the storyboard asks for less
+    AMB_RATIO = float(sb.get("ambience_level", 0.6))   # ambience alone: 60% of the VO (owner: 35% was too quiet)
     vo_lufs = lufs(voice_wav, "acompressor=threshold=0.1:ratio=3:attack=5:release=120")
     def bed_gain(path, pre=1.0):
         m = lufs(path)

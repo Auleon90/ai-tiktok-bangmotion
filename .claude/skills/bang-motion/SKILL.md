@@ -170,8 +170,8 @@ off only when asked. Approval summary line: `🎵 Musik: none · 🌬️ Ambienc
 (api, Ibrahim, battles), `space` (galaksi, langit, 3D globe/galaxy). `"auto"` picks one per scene from its words (and its 3D preset) and
 crossfades 0.8 s between scenes; set a scene's `"ambience"` to override (or `"none"`), or the top-level one to force a single bed.
 Pick deliberately while writing the storyboard: a change of ambience on a cut is a retention cue (a new place = a new sound), so match it
-to what the scene shows and keep `room` for text/argument scenes. Level: the bed sits at 35 % of the VO loudness (`"ambience_level"` to lower it,
-e.g. 0.25 if the user finds it busy). Preview: `python3 scripts/ambience.py preview [names]` → `output/ambience_preview/*.wav`.
+to what the scene shows and keep `room` for text/argument scenes. Level: the bed sits at 60 % of the VO loudness (owner, Nov 2026: 35 % was too quiet; `"ambience_level"` overrides it,
+e.g. 0.45 if the user finds it busy, 0.75 for more). Preview: `python3 scripts/ambience.py preview [names]` → `output/ambience_preview/*.wav`.
 
 `scripts/score.py` (run automatically by `produce.py` with `.venv-audio`) writes an original score and timed SFX from the scene timings,
 using `audio/lemo/` (sfx.py + pluck.py, MIT, vendored from Lemo-Opuscar). The mixer compresses the voice, holds the backsound
