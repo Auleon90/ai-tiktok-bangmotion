@@ -12,7 +12,7 @@ catat juga durasi, rata-rata waktu tonton, completion rate, share)
 |---|---|---|---|---|---|
 | 2026-11-19 | Nikmat ginjal (180 L cairan darah disaring/hari, vs cuci darah) | "Jangan sampai kamu harus cuci darah dulu, baru sadar nikmat ginjalmu." | QS. Adz-Dzariyat 21 | bang:katalog-putih (HF), tanpa backsound | 166 (52 s, tonton rata² 13,1 s, selesai 3,0%, 0 share) |
 | 2026-11-19 | Nikmat tidur (tidur = "mati" sejenak, doa bangun tidur) | "Jangan sampai Allah mencabut nikmat tidurmu, baru kamu sadar betapa mahalnya." | QS. An-Naba 9; HR. Bukhari 6312 | paper-lantern (Lemo native) | belum diunggah |
-| 2026-11-19 | Kesulitan → doa → pertolongan (Yunus, Ayyub, Musa, Ibrahim) — versi 63 s dari video referensi 169 s | "Jangan sampai kamu mengira, titik terendahmu adalah akhir ceritamu." | QS. Al-Anbiya 69, 83, 87–88; Asy-Syu'ara 62; Al-Insyirah 5; HR. Bukhari 4563 | paper-lantern (Lemo native) + custom garis-doa, tanpa backsound | belum diunggah |
+| 2026-11-19 | Kesulitan → doa → pertolongan (Yunus, Ayyub, Musa, Ibrahim) — versi 63 s dari video referensi 169 s | "Jangan sampai kamu mengira, titik terendahmu adalah akhir ceritamu." | QS. Al-Anbiya 69, 83, 87–88; Asy-Syu'ara 62; Al-Insyirah 5; HR. Bukhari 4563 | paper-lantern (Lemo native) + custom garis-doa, tanpa backsound | belum diunggah (versi 39 s siap: Yunus + Ibrahim, ambience auto) |
 | 2026-11-18 | Sidik jari (belum diunggah, 88 s, perlu versi syukur ≤60 s) | "Ada pesan rahasia di ujung jarimu" | QS. Al-Qiyamah 3–4; HR. Muslim 2564 | microscope (HF) | 195 (88 s, tonton rata² 14,7 s, selesai 3,1%, 0 share) |
 
 ## Riwayat akun sebelum pipeline (dari Metricool, Jun–Nov 2026)

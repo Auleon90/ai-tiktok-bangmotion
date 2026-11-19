@@ -1,0 +1,91 @@
+{
+ "title": "Titik Terendah Bukan Akhir (40s)",
+ "style": "paper-lantern",
+ "music": "none",
+ "ambience": "auto",
+ "sfx": true,
+ "scenes": [
+  {
+   "id": 1,
+   "type": "custom",
+   "code": "custom/garis-doa.js",
+   "curve": "fall",
+   "ladder": "night",
+   "headline": "Titik terendahmu bukan akhir ceritamu",
+   "vo": "Jangan sampai kamu mengira, titik terendahmu adalah akhir ceritamu."
+  },
+  {
+   "id": 2,
+   "type": "custom",
+   "ladder": "night",
+   "eyebrow": "1/2 · NABI YUNUS",
+   "arabic": "لَا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ الظَّالِمِينَ",
+   "translation": "Tiada Tuhan selain Engkau. Sungguh aku telah zalim.",
+   "ref": "QS. Al-Anbiya: 87",
+   "vo": "Nabi Yunus ditelan ikan, dalam gelap yang berlapis. Ia hanya berdoa: tiada Tuhan selain Engkau.",
+   "code": "custom/garis-doa.js",
+   "curve": "story",
+   "name": "Nabi Yunus",
+   "context": "Perut ikan · gelap berlapis",
+   "fx": "dark",
+   "beats": {
+    "bottom": "gelap",
+    "doa": "berdoa"
+   },
+   "saved": "Diselamatkan"
+  },
+  {
+   "id": 3,
+   "type": "custom",
+   "ladder": "desert",
+   "eyebrow": "2/2 · NABI IBRAHIM",
+   "arabic": "يَا نَارُ كُونِي بَرْدًا وَسَلَامًا عَلَىٰ إِبْرَاهِيمَ",
+   "translation": "Wahai api, jadilah dingin dan keselamatan bagi Ibrahim.",
+   "ref": "QS. Al-Anbiya: 69",
+   "vo": "Nabi Ibrahim dilempar ke dalam api. Ucapannya cuma: cukuplah Allah bagiku. Lalu api diperintah: dinginlah.",
+   "code": "custom/garis-doa.js",
+   "curve": "story",
+   "name": "Nabi Ibrahim",
+   "context": "Dilempar ke api",
+   "fx": "fire",
+   "beats": {
+    "bottom": "api",
+    "doa": "cukuplah",
+    "rise": "dinginlah"
+   },
+   "saved": "Api jadi dingin"
+  },
+  {
+   "id": 4,
+   "type": "custom",
+   "code": "custom/garis-doa.js",
+   "curve": "pattern",
+   "ladder": "night",
+   "vo": "Polanya selalu sama. Jatuh, berdoa, lalu Allah mengangkat. Begitulah Kami menyelamatkan orang beriman.",
+   "arabic": "وَكَذَٰلِكَ نُنجِي الْمُؤْمِنِينَ",
+   "ref": "QS. Al-Anbiya: 88",
+   "beats": {
+    "fall": "jatuh",
+    "doa": "berdoa",
+    "rise": "mengangkat",
+    "multi": "begitulah"
+   },
+   "labels": [
+    "YUNUS",
+    "IBRAHIM"
+   ]
+  },
+  {
+   "id": 5,
+   "type": "custom",
+   "ladder": "green",
+   "eyebrow": "UNTUKMU",
+   "arabic": "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا",
+   "translation": "Maka sesungguhnya bersama kesulitan ada kemudahan.",
+   "ref": "QS. Al-Insyirah: 5",
+   "vo": "Bersama kesulitan, ada kemudahan. Kirim ke orang yang sedang di titik terendahnya, supaya ia tahu, ini bukan akhir ceritanya.",
+   "code": "custom/garis-doa.js",
+   "curve": "end"
+  }
+ ]
+}
