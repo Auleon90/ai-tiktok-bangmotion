@@ -9,6 +9,7 @@ Kolom: tanggal · topik/nikmat · hook · ayat/hadits · gaya · views (isi dari
 
 | Tanggal | Topik | Hook | Ayat/Hadits | Gaya | Views |
 |---|---|---|---|---|---|
+| 2026-11-19 | Kamu tidak sedang diam (bumi 107.000 km/jam, 330 miliar sel/hari) — untuk yang merasa stuck | "Kamu merasa hidupmu diam? Detik ini kamu melaju 107 ribu km/jam." | QS. An-Naml 88 | flat-space-explainer (Lemo native) | – |
 | 2026-11-19 | Nikmat tidur (tidur = "mati" sejenak, doa bangun tidur) | "Jangan sampai Allah mencabut nikmat tidurmu, baru kamu sadar betapa mahalnya." | QS. An-Naba 9; HR. Bukhari 6312 | paper-lantern (Lemo native) | – |
 | 2026-11-18 | Sidik jari (belum diunggah, 88 s, perlu versi syukur ≤60 s) | "Ada pesan rahasia di ujung jarimu" | QS. Al-Qiyamah 3–4; HR. Muslim 2564 | microscope (HF) | – |
 
