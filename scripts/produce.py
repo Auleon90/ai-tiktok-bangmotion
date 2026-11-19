@@ -11,7 +11,7 @@ rendered frame by frame (window.render(t)) and muxed with the mixed audio.
 
 Storyboard format: see .claude/skills/bang-motion/SKILL.md.
 Each scene needs "vo" (spoken text). Optional per scene: "pad_before_ms", "gap_after_ms".
-Top level optional: "theme" {..colors}, "ambience": "wind" | "none" (default "wind").
+Top level optional: "theme" {..colors}, "ambience": "wind" | "none" (default "none": no backsound unless the user asks).
 """
 import hashlib, json, math, os, re, shutil, subprocess, sys
 
@@ -182,8 +182,8 @@ def main():
     dur = total_ms / 1000
 
     # score + sfx (audio/lemo via .venv-audio); optional per storyboard: "music": mood|"none", "sfx": true|false
-    mood = sb.get("music", "warm")
-    want_sfx = sb.get("sfx", True)
+    mood = sb.get("music", "none")      # owner rule: no backsound by default (music, ambience, SFX all off)
+    want_sfx = sb.get("sfx", False)
     audio_py = os.path.join(ROOT, ".venv-audio", "bin", "python")
     stems = os.path.join(OUT, "stems")
     shutil.rmtree(stems, ignore_errors=True)
@@ -210,7 +210,7 @@ def main():
         return pre * 10 ** ((vo_lufs + 20 * math.log10(BED_RATIO) - m) / 20)
     ins, chains, bed = ["-i", voice_wav], [], []
     chains.append("[0:a]aformat=sample_rates=48000:channel_layouts=stereo,acompressor=threshold=0.1:ratio=3:attack=5:release=120,asplit=2[vo][key]")
-    if sb.get("ambience", "wind") == "wind":
+    if sb.get("ambience", "none") == "wind":
         chains.append(f"anoisesrc=color=brown:amplitude=0.6:duration={dur}:sample_rate=48000,lowpass=f=900,highpass=f=80,tremolo=f=0.15:d=0.6,volume=0.08,aformat=channel_layouts=stereo[wind]")
         bed.append("[wind]")
     n = 1

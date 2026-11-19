@@ -160,6 +160,11 @@ Perkiraan durasi: ~Xs · Gambar AI: N dari M scene
 
 ### Sound (all modes)
 
+**Default = NO backsound (owner rule, Nov 2026: the backsound was noisy and unpleasant).** Every storyboard sets
+`"music": "none", "ambience": "none", "sfx": false` and the video carries only the Cartesia VO (`produce.py` defaults are the same).
+Add music, ambience or SFX ONLY when the user explicitly asks for it in that request (or via "Tulis bebas"); then the rules below apply.
+The approval summary always shows `🎵 Musik: none · 🔊 SFX: off` unless the user asked otherwise.
+
 `scripts/score.py` (run automatically by `produce.py` with `.venv-audio`) writes an original score and timed SFX from the scene timings,
 using `audio/lemo/` (sfx.py + pluck.py, MIT, vendored from Lemo-Opuscar). The mixer compresses the voice, holds the backsound
 (music + ambience) at a steady **35 % of the VO loudness** (measured EBU R128, every mode, owner's rule — no extra ducking), adds SFX and
@@ -186,7 +191,7 @@ heartbeat, riser (tension before a reveal), magic, swoosh, ding, pop. Use them w
 `.venv-audio/bin/python scripts/score.py preview explosion,thunder` → `output/sfx_preview/*.wav` (`preview list` names all).
 Not available (needs real recordings): crowds, animal calls, engines, speech.
 
-Pick `music` by tone: `sacred` for sirah/Islamic content (drone + soft pulse, no melodic instruments — many viewers prefer no music;
+When the user asks for music, pick `music` by tone: `sacred` for sirah/Islamic content (drone + soft pulse, no melodic instruments — many viewers prefer no music;
 offer `"none"` if unsure), `epic` for history/battles, `tense` for mystery, `warm` for fables/stories, `calm` for reflections and math,
 `playful` for light facts/tips. State the choice in the approval summary (🎵 line) so the user can change it.
 
