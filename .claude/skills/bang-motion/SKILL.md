@@ -32,24 +32,35 @@ Never stop at an HTML page, an Artifact or a raw render without audio: the resul
 
 ---
 
-## Channel formula (@valsyz7 — from Metricool data, Nov 2026)
+## Channel formula (@valsyz7 — Supermetrics TikTok Organic + Metricool data, Nov 2026; full analysis: `content/strategi.md`)
 
-Applies to every video unless the user asks otherwise. Re-check weekly with the Metricool connector (TikTok `posts` metrics:
-views, likes, comments, shares) and update this section and `content/topics_used.md` when the data says so.
+Applies to every video unless the user asks otherwise. Re-check weekly with Supermetrics (`TIKBA`, report `videos`: views, average_view_time,
+video_completion_rate, shares, duration) or Metricool, and update this section, `content/strategi.md` and `content/topics_used.md`.
+Data (121 videos): viewers leave at 10–15 s even on the 46k hit; completion is 1–5 % at 50–100 s but 25 % at 43 s with one message;
+shares drive reach (hit: 1,123 shares) and come from loss/"ini aku" reflections, not from facts.
 
 - **Niche:** gratitude for the blessings of Allah that we forget ("nikmat yang sering kita lupa"). Science/facts are only the
   PROOF of a blessing, never the centre (pure fact videos stalled at ~200–300 views; the 37k-view hit was a "jangan sampai" reflection).
 - **Unique topic:** read `content/topics_used.md` first; propose 3 new topics, never repeat a used blessing/fact/ayat with the same angle.
   After delivery, add a row (date, topic, hook, ayat, style; views filled in later).
 - **Hook — score 3 candidates in the approval summary**, each a different pattern:
-  "Jangan sampai…" · harga nikmat ("Kalau X harus dibayar…") · pertanyaan debat · fakta yang menampar.
+  "Jangan sampai…" (loss) · harga nikmat ("Kalau X harus dibayar…") · celah penasaran with a specific number + promised answer
+  ("Ada satu doa … isinya cuma 9 kata") · tuduhan lembut ("Kamu mungkin sudah 3 kali melewatkan nikmat ini hari ini"). Never open with a
+  greeting, the channel name, "tahukah kamu" or context: start with the stakes. ≤ 8 words on screen.
   Score 1–5 on: relatable ("ini aku"), loss/stakes, ≤ 12 words / ±3 s spoken, reason to send it to someone. Use the highest in scene 1
   and say why in one line; the user may pick another.
 - **Hook on frame 0:** scene 1's hook text is fully visible from the first frame (no word-by-word entrance, no fade-in from black);
-  motion starts after. In HyperFrames pages set the scene-1 words/stage to their end state at t=0.
-- **Duration:** 40–60 s (≤ 30 s for one strong line); never over 70 s. 5–7 scenes, a new visual every 3–5 s.
-- **Ending:** a share CTA ("Kirim ke orang yang…"), not "follow untuk part 2"; the last line should lead back into the hook (loop).
-- **Caption:** 2–4 sentences + 3–5 relevant hashtags; no names of other people/preachers, no "Upload Method" lines, no repeated #fyp.
+  motion is ALREADY moving at frame 0 (a line falling, a zoom, a 3D object turning) and VO starts within 0.2 s.
+  In HyperFrames pages set the scene-1 words/stage to their end state at t=0.
+- **Duration:** 30–45 s, ONE message, one blessing (≤ 25 s for one strong line); never over 55 s. If the idea has 4 stories, use 2 or make a
+  series. 4–6 scenes, a new visual every 2–3 s, synced to the spoken words (`K.WORDS` in Lemo custom scenes, word beats in HyperFrames).
+- **Retention:** an open loop in the hook paid off at ~70 % of the video; one repeated pattern the viewer learns and anticipates
+  (e.g. jatuh → berdoa → diangkat with a step bar); one big contrast number drawn large; no noisy backsound (`music: none` unless asked).
+- **Ending:** a share CTA aimed at ONE specific person ("Kirim ke orang yang sedang di titik terendahnya" / "…yang sering lupa minum"),
+  never "follow untuk part 2"; the last line leads back into the hook so the video loops. Comment prompts only now and then, and meaningful
+  ("tulis nama orang yang kamu ingat"), not "MAU"/"AAMIIN" every time.
+- **Caption:** 1–3 sentences that ADD to the VO (first one an "ini aku" question) + 3–5 niche hashtags (#nikmatallah #syukur #renunganislami
+  + 1–2 topical); one spelling of the handle or none; no names of other people/preachers, no "Upload Method" lines, no repeated #fyp.
 - Vary the visual style from the previous video (see the style column in `content/topics_used.md`).
 - Daily prompt to reuse: `content/daily_prompt.md`.
 
