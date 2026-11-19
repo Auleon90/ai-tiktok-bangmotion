@@ -247,7 +247,7 @@ export function stdBody(g, t, s, b, th) {
 //   t, lt (scene time), p (0..1), d, s (the scene with its fields), box (the content area the kit gives: draw text inside it),
 //   full {x,y,w,h} (whole frame, for decor), W, H, SAFE, CAP, img (FLUX image or null), theme (the kit's fonts/colours: title, body,
 //   label, num, quote, accent…), look (the kit's figure look), K (all kit.js helpers: block, text, reg, fit, cover, eo, seg, lerp,
-//   mulberry, vnoise, mix…), FIG (clash.js: drawFigure, clashModel, drawFx, hexA) }
+//   mulberry, vnoise, mix…; K.WORDS = spoken words [{text, t0, t1}] in seconds, to sync a scene to the voice-over), FIG (clash.js: drawFigure, clashModel, drawFx, hexA) }
 // Every text MUST go through K.block / K.text (so the 9:16 layout check sees it); register big pictures with K.reg.
 export const CUSTOM = {};
 export const KIT = { look: null };
@@ -261,7 +261,7 @@ export function custom(g, t, s, box, th = {}) {
   g.save(); m.default(g, c); g.restore();
 }
 export const API = { W, H, SAFE, CAP, TAU, clamp, lerp, seg, ss, eo, ei, eio, back, mulberry, hash, vnoise, mk, mix, cover, graded, duotone,
-  font, fit, block, text, reg, textWidth, countUp, parseNum, stdBody };
+  font, fit, block, text, reg, textWidth, countUp, parseNum, stdBody, WORDS };
 
 // bottom-left subtitles with no box (stick-explainer, flat-space, urban-sketch, colored-pencil style): an optional accent bar at the
 // margin, an optional halo (shadow in the page colour) so they read over the drawing; words appear as they are spoken
