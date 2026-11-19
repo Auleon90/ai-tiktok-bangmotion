@@ -46,7 +46,7 @@ Ulangi analisis ini tiap minggu dengan query yang sama dan perbarui angka di baw
 
 ### Caption & posting
 - Caption 1–3 kalimat yang menambah, bukan mengulang VO; kalimat pertama = pertanyaan "ini aku".
-- 3–5 hashtag niche: #nikmatallah #syukur #renunganislami + 1–2 topik. Satu ejaan handle saja (#valsyz7) atau tidak sama sekali.
+- 3–5 hashtag niche: #nikmatallah #syukur #renunganislami + 1–2 topik, lalu SELALU tutup dengan `#creatorsearchinsights #videofypシ゚` (aturan pemilik). Satu ejaan handle saja (#valsyz7) atau tidak sama sekali.
 - Tanpa nama ustadz/tokoh lain, tanpa #fyp berulang, tanpa "Upload Method".
 - Konsisten niche: "nikmat Allah yang sering kita lupa". Drama berseri & produk ke akun lain (atau hentikan).
 - Unggah 1 video/hari di jam yang sama; cek jam terbaik dari data mingguan.

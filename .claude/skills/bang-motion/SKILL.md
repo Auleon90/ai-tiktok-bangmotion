@@ -60,7 +60,8 @@ shares drive reach (hit: 1,123 shares) and come from loss/"ini aku" reflections,
   never "follow untuk part 2"; the last line leads back into the hook so the video loops. Comment prompts only now and then, and meaningful
   ("tulis nama orang yang kamu ingat"), not "MAU"/"AAMIIN" every time.
 - **Caption:** 1–3 sentences that ADD to the VO (first one an "ini aku" question) + 3–5 niche hashtags (#nikmatallah #syukur #renunganislami
-  + 1–2 topical); one spelling of the handle or none; no names of other people/preachers, no "Upload Method" lines, no repeated #fyp.
+  + 1–2 topical) and ALWAYS end with the two owner hashtags `#creatorsearchinsights #videofypシ゚` (exact spelling);
+  one spelling of the handle or none; no names of other people/preachers, no "Upload Method" lines, no repeated #fyp.
 - Vary the visual style from the previous video (see the style column in `content/topics_used.md`).
 - Daily prompt to reuse: `content/daily_prompt.md`.
 
