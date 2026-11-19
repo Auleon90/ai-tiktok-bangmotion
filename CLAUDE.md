@@ -40,7 +40,10 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
 6. QA lokal & gratis SEBELUM render: jalankan dulu `produce.py ... --check-only` (VO + `hyperframes check` / cek komposisi 9:16 Lemo native / still per scene Remotion
    → `output/qa_precheck.md`, `output/qa_prerender.jpg`). Render otomatis DIHENTIKAN kalau ada masalah nyata; tumpukan yang disengaja
    masuk `"qa_allow"` di storyboard. Setelah render: QA file akhir (`output/qa_report.md`, `output/qa_sheet.jpg`). Baca sebelum kirim.
-7. Semua mode berakhir di `output/final.mp4` dengan VO Cartesia — tidak pernah berhenti di halaman HTML.
+7. Animasi 3D (three.js, `lib3d/bm3d.js`, panduan skill `threejs-*` dari cloudai-x/threejs-skills): 1–2 scene 🧊 per video bila kedalaman membantu
+   (kosmos, bumi, perjalanan, benda berputar, data). Mode 1 HyperFrames: field `"three": {"preset": ...}` di scene mana pun; mode 4 Lemo native:
+   scene `custom` dengan `"code": "lib3d/lemo-scene.js"`; mode Auto memilihnya sesuai topik. Preset: terrain, globe, crystal, galaxy, bars, water.
+8. Semua mode berakhir di `output/final.mp4` dengan VO Cartesia — tidak pernah berhenti di halaman HTML.
 
 Detail lengkap: `.claude/skills/bang-motion/SKILL.md`. Semua mode dijalankan lewat `scripts/produce.py`.
 Contoh: `examples/uhud.storyboard.json` (sirah, mode 1/2), `examples/angsa-emas.storyboard.json` (fabel + gambar AI), `examples/kopi-riso.storyboard.json` + `examples/kopi-riso.hf.html` (gaya Risograph), `examples/pythagoras.storyboard.json` + `examples/pythagoras_manim.py` (mode 3), `examples/insyirah.lemo.storyboard.json` (mode 4).

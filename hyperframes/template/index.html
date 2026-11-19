@@ -14,6 +14,8 @@
 <script src="assets/props.js"></script>
 <script src="assets/lottie.js"></script>
 <script src="assets/bm/bm.js"></script>
+<!-- 3D layers (scene field "three"): lib3d/bm3d.js, drawn from the timeline, frame by frame -->
+<script type="module">import * as m from "./assets/lib3d/bm3d.js"; window.BM3D = m;</script>
 <style>
   :root { --sky-top:#0d0a17; --sky-mid:#2a1730; --horizon:#b8582f; --ground:#1c120e; --text:#f6efe2; --accent:#e9b552; --muted:#b9a88f; }
   html, body { margin:0; background:#000; }
@@ -29,6 +31,8 @@
   .orn { width:520px; height:2px; background:var(--accent); margin:28px 0; transform-origin:center; }
   .num { font-family:"Playfair Display",serif; font-weight:800; font-variant-numeric:tabular-nums; }
   .bg-img { position:absolute; inset:0; overflow:hidden; }
+  .bg-3d { position:absolute; inset:0; overflow:hidden; } .bg-3d canvas { position:absolute; inset:0; width:100%; height:100%; }
+  .bg-3d .shade { position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,rgba(0,0,0,.05) 30%,rgba(0,0,0,.1) 55%,rgba(0,0,0,.7) 72%,rgba(0,0,0,.9) 100%); }
   .bg-img img { position:absolute; height:100%; left:50%; top:0; margin-left:-960px; width:1920px; object-fit:cover; }
   .bg-img .shade { position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,rgba(0,0,0,0) 25%,rgba(0,0,0,0) 55%,rgba(0,0,0,.75) 72%,rgba(0,0,0,.9) 100%); }
   .scene.has-text .bg-img .shade { background:linear-gradient(180deg,rgba(0,0,0,.45) 0%,rgba(0,0,0,.5) 30%,rgba(0,0,0,.5) 60%,rgba(0,0,0,.8) 72%,rgba(0,0,0,.92) 100%); }
@@ -212,6 +216,14 @@
       const bg = el.appendChild(h(`<div class="bg-img"><img src="assets/${s.imageSrc}" /><div class="shade"></div></div>`));
       const img = bg.querySelector("img"), dir = s.id % 2 ? -1 : 1;
       tl.fromTo(img, { scale: 1.18, x: -30 * dir }, { scale: 1.04, x: 30 * dir, duration: w.dur + 0.4, ease: "none" }, w.start);
+    }
+    if (s.three) {   // a deterministic three.js scene behind the scene's content (see lib3d/bm3d.js for presets)
+      el.classList.add("has-img", "has-text", "has-3d");
+      const bg = el.appendChild(h(`<div class="bg-3d"><canvas width="540" height="960"></canvas><div class="shade"></div></div>`));
+      const cv = bg.querySelector("canvas"), st = { inst: null }, d3 = w.dur + 0.4, t0 = w.start;
+      tl.fromTo({ v: 0 }, { v: 0 }, { v: 1, duration: d3, ease: "none", onUpdate() {
+        if (!window.BM3D) return; st.inst = st.inst || window.BM3D.create({ seed: s.id, ...s.three }, { canvas: cv, w: 540, h: 960, alpha: true });
+        st.inst.render(tl.time() - t0, d3); } }, t0);
     }
     if (s.eyebrow) { const eb = el.appendChild(h(`<div class="eyebrow">${s.eyebrow}</div>`)); tl.fromTo(eb, { clipPath: "inset(0 50% 0 50%)" }, { clipPath: "inset(0 0% 0 0%)", duration: 0.6, ease: "expo.out" }, w.start + 0.05); }
     (B[s.type] || B.headline)(s, el, w.start);

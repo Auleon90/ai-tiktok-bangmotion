@@ -314,6 +314,12 @@ def build_hyperframes(html_path, props, audio, total_ms):
     shutil.copy(os.path.join(hfmods, "lottie-web", "build", "player", "lottie.min.js"), os.path.join(a, "lib"))
     shutil.copytree(os.path.join(ROOT, "assets", "fonts"), os.path.join(a, "fonts"))
     shutil.copytree(os.path.join(ROOT, "hyperframes", "runtime"), os.path.join(a, "bm"))
+    if True:   # 3D scene layers (lib3d/bm3d.js + three.js), always shipped: the template imports it
+        three = os.path.join(ROOT, "lemo", "node_modules", "three", "build", "three.module.min.js")
+        if not os.path.isfile(three):
+            sys.exit("three.js missing: run bash scripts/setup.sh (npm install in lemo/)")
+        shutil.copytree(os.path.join(ROOT, "lib3d"), os.path.join(a, "lib3d"))
+        shutil.copy(three, os.path.join(a, "lib3d"))
     shutil.copy(audio, os.path.join(a, "audio.mp3"))
     shutil.copytree(os.path.join(OUT, "img"), os.path.join(a, "img"))
     data = timing_data(props, total_ms)

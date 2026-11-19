@@ -11,6 +11,15 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KITS = os.path.join(ROOT, "lemo", "kits")
 
 
+def copy_lib3d(dst):
+    """lib3d/ (bm3d.js + adapters) and three.module.min.js, next to each other (bm3d imports './three.module.min.js')."""
+    three = os.path.join(ROOT, "lemo", "node_modules", "three", "build", "three.module.min.js")
+    if not os.path.isfile(three):
+        sys.exit("three.js missing: run bash scripts/setup.sh (npm install in lemo/)")
+    shutil.copytree(os.path.join(ROOT, "lib3d"), dst, dirs_exist_ok=True)
+    shutil.copy(three, dst)
+
+
 def manifest(all_kits=False):
     m = json.load(open(os.path.join(KITS, "kits.json")))
     return m if all_kits else {k: v for k, v in m.items() if not v.get("disabled")}
@@ -33,6 +42,8 @@ def build(slug, data, out_dir):
         if not os.path.isdir(os.path.join(nm, "three")):
             sys.exit("three.js missing: run bash scripts/setup.sh (npm install in lemo/)")
         os.symlink(nm, os.path.join(out_dir, "node_modules"))
+    if any((sc.get("code") or "").startswith("lib3d/") for sc in data["scenes"]):   # 3D scenes (lib3d/bm3d.js + three.js)
+        copy_lib3d(os.path.join(out_dir, "lib3d"))
     cust = os.path.join(ROOT, "output", "custom")
     if os.path.isdir(cust):
         shutil.copytree(cust, os.path.join(out_dir, "custom"))

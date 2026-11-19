@@ -137,7 +137,7 @@ Approval summary format:
 ```
 📋 STORYBOARD — [title]
 ━━━━━━━━━━━━━━━━━━━━━━━━
-Scene 1 [type]: [eyebrow]            (🖼️ if it uses an AI image, 🔊 name if it has scene SFX)
+Scene 1 [type]: [eyebrow]            (🖼️ if it uses an AI image, 🧊 preset if it has a 3D scene, 🔊 name if it has scene SFX)
   🎬 Visual: [what is shown]
   🎙️ VO: "[vo]"
 ...
@@ -178,6 +178,34 @@ Not available (needs real recordings): crowds, animal calls, engines, speech.
 Pick `music` by tone: `sacred` for sirah/Islamic content (drone + soft pulse, no melodic instruments — many viewers prefer no music;
 offer `"none"` if unsure), `epic` for history/battles, `tense` for mystery, `warm` for fables/stories, `calm` for reflections and math,
 `playful` for light facts/tips. State the choice in the approval summary (🎵 line) so the user can change it.
+
+### 3D scenes (three.js — `lib3d/bm3d.js`, modes 1 & 4 and Auto)
+
+Guides: the 13 `threejs-*` skills in `.claude/skills/` (MIT, github.com/cloudai-x/threejs-skills) — read `threejs-fundamentals`,
+`threejs-geometry`, `threejs-materials`, `threejs-lighting` (and `threejs-shaders` for glow) before adding a preset or a per-video 3D scene.
+Engine: `lib3d/bm3d.js` = deterministic three.js scenes (pure function of time, seeded, no rAF/clock), rendered at 540×960 and scaled up
+because the server has no GPU (software WebGL, 1–20 ms per frame). Presets:
+
+| preset | shows | use for |
+|---|---|---|
+| `terrain` | low-poly night hills in fog, a glowing path dipping into the valley and rising, a light beam at the lowest point | perjalanan hidup, ujian → doa → pertolongan |
+| `globe` | dotted planet, atmosphere rim, orbit ring, travelling points | bumi, sains, skala, persebaran |
+| `crystal` | faceted gem turning in rim light, ring of dust | nilai/harga nikmat, renungan abstrak |
+| `galaxy` | 6k-star spiral, camera drifting through | kosmos, QS Adz-Dzariyat 47, skala |
+| `bars` | 3D columns rising to `values` (numbers stay drawn by the page) | data, perbandingan |
+| `water` | low-poly sea swell under a moon path | air, laut, hujan, kisah Musa |
+
+Options: `accent`, `bg` (null = transparent), `fog`, `seed`, `speed`, `progress` (terrain path 0–1), `values`/`colors` (bars).
+- **HyperFrames (mode 1):** add `"three": {"preset": "globe", ...}` to ANY scene → a 3D layer behind its content with a readability shade
+  (template `.bg-3d`; produce.py ships `lib3d/` + three.js into `assets/lib3d/`). Custom Opuscar pages: copy the template's `.bg-3d` block
+  and the `<script type="module">` that sets `window.BM3D`.
+- **Lemo native (mode 4, every kit):** `{"type": "custom", "code": "lib3d/lemo-scene.js", "three": {...}, "as": "headline", ...fields of that type}`
+  → the 3D plays in a framed window at the top of the kit's content box and the kit draws the text below in its own style
+  (`"area": "full"` = full-frame behind a shade). build.py copies `lib3d/` when a scene uses it.
+- **When to use (Auto and any mode):** 1–2 scenes per video where depth helps (cosmos, earth, a journey, a turning object, a 3D comparison);
+  never for ayat/quote scenes and never for figures (no 3D people; content rules apply). Mark them 🧊 in the approval summary.
+  Not in Manim or Remotion. A new preset goes into `bm3d.js` (keep it deterministic and light: low-poly, ≤ 6k points, fog instead of post-processing);
+  a one-off 3D scene goes into `output/custom/<name>.js` importing `../lib3d/bm3d.js`'s `THREE`.
 
 ### Visual styles (Lemo-Opuscar library, mode 1)
 
@@ -272,6 +300,7 @@ If Q1 = option 4, **Q2** — "Pilih yang mana?", header "Mode":
 | Kinetic typography, listicles, tips, facts, motivation, news, promo — most general content | **1 HyperFrames** |
 | Topic fits a ★ native kit and the user wants the Opuscar look (sejarah dunia, sains, psikologi, motivasi, Qur'an/hadits, sejarah Islam) | **4 Lemo native** |
 | User says it's a draft / test / "cepat" | **4 Lemo native** (fastest full-quality render) |
+| Topic gains from depth (kosmos, bumi, perjalanan, benda berputar, data 3D) | **1 HyperFrames** or **4 Lemo native** with 1–2 🧊 3D scenes (`three`, see "3D scenes") |
 
 When torn between 1 and 2, prefer **1 HyperFrames** (similar look, ~10× faster).
 
