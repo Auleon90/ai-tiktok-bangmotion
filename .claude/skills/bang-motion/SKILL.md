@@ -49,7 +49,8 @@ views, likes, comments, shares) and update this section and `content/topics_used
   motion starts after. In HyperFrames pages set the scene-1 words/stage to their end state at t=0.
 - **Duration:** 40–60 s (≤ 30 s for one strong line); never over 70 s. 5–7 scenes, a new visual every 3–5 s.
 - **Ending:** a share CTA ("Kirim ke orang yang…"), not "follow untuk part 2"; the last line should lead back into the hook (loop).
-- **Caption:** 2–4 sentences + 3–5 relevant hashtags; no names of other people/preachers, no "Upload Method" lines, no repeated #fyp.
+- **Caption:** 2–4 sentences + 3–5 relevant hashtags, then ALWAYS end with these two (owner request): `#creatorsearchinsights #videofypシ゚`.
+  No names of other people/preachers, no "Upload Method" lines, no other #fyp variants.
 - Vary the visual style from the previous video (see the style column in `content/topics_used.md`).
 - Daily prompt to reuse: `content/daily_prompt.md`.
 
