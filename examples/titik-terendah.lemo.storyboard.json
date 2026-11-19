@@ -1,0 +1,79 @@
+{
+ "title": "Titik Terendah Bukan Akhir",
+ "style": "paper-lantern",
+ "music": "none",
+ "ambience": "none",
+ "sfx": false,
+ "scenes": [
+  {
+   "id": 1,
+   "type": "custom",
+   "code": "custom/garis-doa.js",
+   "curve": "fall",
+   "ladder": "night",
+   "headline": "Titik terendahmu bukan akhir ceritamu",
+   "vo": "Jangan sampai kamu mengira, titik terendahmu adalah akhir ceritamu."
+  },
+  {
+   "id": 2,
+   "type": "ayat",
+   "ladder": "night",
+   "eyebrow": "1/4 · NABI YUNUS",
+   "arabic": "لَا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ الظَّالِمِينَ",
+   "translation": "Tiada Tuhan selain Engkau. Sungguh aku telah zalim.",
+   "ref": "QS. Al-Anbiya: 87",
+   "vo": "Nabi Yunus ditelan ikan, dalam gelap yang berlapis. Ia hanya berdoa: tiada Tuhan selain Engkau."
+  },
+  {
+   "id": 3,
+   "type": "ayat",
+   "ladder": "dusk",
+   "eyebrow": "2/4 · NABI AYYUB",
+   "arabic": "أَنِّي مَسَّنِيَ الضُّرُّ وَأَنتَ أَرْحَمُ الرَّاحِمِينَ",
+   "translation": "Aku ditimpa kesusahan, dan Engkau Yang Maha Penyayang.",
+   "ref": "QS. Al-Anbiya: 83",
+   "vo": "Nabi Ayyub sakit bertahun-tahun, harta dan keluarganya hilang. Doanya pendek: aku ditimpa kesusahan, dan Engkau Maha Penyayang."
+  },
+  {
+   "id": 4,
+   "type": "ayat",
+   "ladder": "winter",
+   "eyebrow": "3/4 · NABI MUSA",
+   "arabic": "كَلَّا إِنَّ مَعِيَ رَبِّي سَيَهْدِينِ",
+   "translation": "Sekali-kali tidak! Tuhanku bersamaku, Dia menunjukiku.",
+   "ref": "QS. Asy-Syu'ara: 62",
+   "vo": "Nabi Musa terjepit. Di depan laut, di belakang pasukan Firaun. Ia berkata: sekali-kali tidak, Tuhanku bersamaku."
+  },
+  {
+   "id": 5,
+   "type": "ayat",
+   "ladder": "desert",
+   "eyebrow": "4/4 · NABI IBRAHIM",
+   "arabic": "يَا نَارُ كُونِي بَرْدًا وَسَلَامًا عَلَىٰ إِبْرَاهِيمَ",
+   "translation": "Wahai api, jadilah dingin dan keselamatan bagi Ibrahim.",
+   "ref": "QS. Al-Anbiya: 69",
+   "vo": "Nabi Ibrahim dilempar ke dalam api. Ucapannya cuma: cukuplah Allah bagiku. Lalu api diperintah: dinginlah."
+  },
+  {
+   "id": 6,
+   "type": "custom",
+   "code": "custom/garis-doa.js",
+   "curve": "pattern",
+   "ladder": "night",
+   "headline": "Jatuh · berdoa · diangkat",
+   "vo": "Polanya selalu sama. Jatuh, berdoa, lalu Allah mengangkat. Setelah kisah Yunus, Allah berfirman: begitulah Kami menyelamatkan orang beriman. Itu janji untukmu juga.",
+   "arabic": "وَكَذَٰلِكَ نُنجِي الْمُؤْمِنِينَ",
+   "ref": "QS. Al-Anbiya: 88"
+  },
+  {
+   "id": 7,
+   "type": "ayat",
+   "ladder": "green",
+   "eyebrow": "UNTUKMU",
+   "arabic": "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا",
+   "translation": "Maka sesungguhnya bersama kesulitan ada kemudahan.",
+   "ref": "QS. Al-Insyirah: 5",
+   "vo": "Bersama kesulitan, ada kemudahan. Kirim ke orang yang sedang di titik terendahnya, supaya ia tahu, ini bukan akhir ceritanya."
+  }
+ ]
+}
