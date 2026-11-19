@@ -160,10 +160,10 @@ Perkiraan durasi: ~Xs · Gambar AI: N dari M scene
 
 ### Sound (all modes)
 
-**Default = NO backsound (owner rule, Nov 2026: the backsound was noisy and unpleasant).** Every storyboard sets
-`"music": "none", "ambience": "none", "sfx": false` and the video carries only the Cartesia VO (`produce.py` defaults are the same).
-Add music, ambience or SFX ONLY when the user explicitly asks for it in that request (or via "Tulis bebas"); then the rules below apply.
-The approval summary always shows `🎵 Musik: none · 🔊 SFX: off` unless the user asked otherwise.
+**Default = NO backsound, SFX ON (owner rule, Nov 2026: the backsound was noisy and unpleasant).** Every storyboard sets
+`"music": "none", "ambience": "none", "sfx": true`: the Cartesia VO plus the SFX (built-in cut whooshes/hits/ding + scene SFX where the
+picture shows an event); `produce.py` defaults are the same. Add music or ambience ONLY when the user explicitly asks for it in that request
+(or via "Tulis bebas"); turn SFX off only when asked. The approval summary always shows `🎵 Musik: none · 🔊 SFX: on` unless the user asked otherwise.
 
 `scripts/score.py` (run automatically by `produce.py` with `.venv-audio`) writes an original score and timed SFX from the scene timings,
 using `audio/lemo/` (sfx.py + pluck.py, MIT, vendored from Lemo-Opuscar). The mixer compresses the voice, holds the backsound

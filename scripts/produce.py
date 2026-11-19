@@ -182,8 +182,8 @@ def main():
     dur = total_ms / 1000
 
     # score + sfx (audio/lemo via .venv-audio); optional per storyboard: "music": mood|"none", "sfx": true|false
-    mood = sb.get("music", "none")      # owner rule: no backsound by default (music, ambience, SFX all off)
-    want_sfx = sb.get("sfx", False)
+    mood = sb.get("music", "none")      # owner rule: no backsound by default (music + ambience off); SFX stay on
+    want_sfx = sb.get("sfx", True)
     audio_py = os.path.join(ROOT, ".venv-audio", "bin", "python")
     stems = os.path.join(OUT, "stems")
     shutil.rmtree(stems, ignore_errors=True)

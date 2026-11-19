@@ -34,8 +34,8 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
    Batasan GAMBAR AI: tanpa wajah manusia untuk konten Islami, tanpa teks Arab dari AI, tidak pernah menggambar Nabi ﷺ/sahabat dengan AI;
    Manim tidak mendukung gambar.
    Kuota Cloudflare HANYA untuk gambar — jangan dipakai untuk QA atau hal lain.
-4. Audio (semua mode): DEFAULT TANPA BACKSOUND — storyboard selalu `"music": "none", "ambience": "none", "sfx": false`, video hanya berisi VO Cartesia
-   (keputusan pemilik: backsound berisik). Musik/ambience/SFX hanya kalau user memintanya di request itu; bila diminta: backsound (musik + ambience) 35% dari loudness VO; musik orisinal (`music`: warm/epic/tense/calm/playful/sacred/none) + SFX otomatis dari `scripts/score.py`
+4. Audio (semua mode): DEFAULT TANPA BACKSOUND, SFX TETAP ON — storyboard selalu `"music": "none", "ambience": "none", "sfx": true`: VO Cartesia + SFX
+   (keputusan pemilik: backsound berisik). Musik/ambience hanya kalau user memintanya di request itu; SFX dimatikan hanya kalau diminta; bila diminta: backsound (musik + ambience) 35% dari loudness VO; musik orisinal (`music`: warm/epic/tense/calm/playful/sacred/none) + SFX otomatis dari `scripts/score.py`
    (modul `audio/lemo/`, MIT dari Lemo-Opuscar). Sirah → `sacred` atau `none`.
 5. Mode 1 WAJIB memakai salah satu gaya: 99 gaya Lemo-Opuscar ATAU 6 gaya Bang Motion (`hyperframes/bang/styles.json`, MIT, tanpa gambar wajib) — sesuai sub-pilihan mode 1. Untuk Opuscar (usulkan di storyboard; template polos hanya jika user minta; halaman bergaya wajib menampilkan gambar FLUX) (`scripts/styles.py`, diunduh ke `.lemo/` — JANGAN commit STYLE.md, lisensi CC BY-NC).
 6. QA lokal & gratis SEBELUM render: jalankan dulu `produce.py ... --check-only` (VO + `hyperframes check` / cek komposisi 9:16 Lemo native / still per scene Remotion
