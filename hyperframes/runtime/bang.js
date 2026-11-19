@@ -48,7 +48,15 @@
     const C = { x: 540, y: 960, z: 1 }, applyCam = () => { world.style.transform = `translate(${540 - C.x * C.z}px,${960 - C.y * C.z}px) scale(${C.z})`; };
     const cam = (at, x, y, z, dur, ease = 'sine.inOut') => tl.to(C, { x, y, z, duration: dur, ease, onUpdate: applyCam }, at);
     const ring = S.ring || 'M70 380 C50 200 210 70 450 66 C690 62 850 200 830 380 C810 560 650 660 440 664 C230 668 90 560 70 380 Z M120 420 C130 600 300 690 470 690';
+    // Channel formula: scene 1's hook is fully visible on frame 0 (entrances of scene 1 collapse to t=0, camera starts home).
+    const hook0 = S.hookFrame0 !== false && P.hookFrame0 !== false, raw = { to: tl.to, fromTo: tl.fromTo, from: tl.from, set: tl.set };
+    const snap = on => ['to', 'fromTo', 'from', 'set'].forEach(k => { tl[k] = on ? function (tg, ...r) {
+      if (tg === C) return raw[k].call(tl, tg, ...r);
+      const v = r[k === 'fromTo' ? 1 : 0]; if (v && typeof v === 'object') { v.duration = 0; if (v.stagger !== undefined) v.stagger = 0; }
+      const at = r[k === 'fromTo' ? 2 : 1]; if (typeof at === 'number' && at < 3) r[k === 'fromTo' ? 2 : 1] = 0;
+      return raw[k].call(tl, tg, ...r); } : raw[k]; });
     P.scenes.forEach((s, i) => {
+      snap(hook0 && i === 0);
       const a = area(i), t0 = s.startMs / 1000, d = s.durationMs / 1000, t1 = t0 + d, cx = a.x + 540, cy = a.y + 960;
       const put = (html, x, y, extra = '') => { const e = h(html); e.style.left = (a.x + x) + 'px'; e.style.top = (a.y + y) + 'px'; if (extra) e.style.cssText += extra; world.appendChild(e); return e; };
       const hasImg = !!s.imageSrc && S.images !== false, T_ = s.type, textAt = t0 + 1.5, yr = yearOf(s);
@@ -60,7 +68,8 @@
         fly(cut, t0 + .25, { y: 140, rotate: i % 2 ? 5 : -5, scale: .92 }, t1, { rot: im.rot || 0 }); if (S.imageRing !== false) annot(im.x - 50, im.y - 40, im.w + 100, im.h + 100, t0 + 1.2); }
       if (s.eyebrow) label(put(`<div class="name">${esc(S.upper === false ? s.eyebrow : String(s.eyebrow).toUpperCase())}</div>`, 80, 200), t0 + .5);
       // camera: open close, glide home, breathe; push through to the next area
-      if (i === 0) tl.set(C, { x: cx - 40, y: cy - 330, z: 1.7, onUpdate: applyCam }, 0);
+      if (i === 0 && !hook0) tl.set(C, { x: cx - 40, y: cy - 330, z: 1.7, onUpdate: applyCam }, 0);
+      if (i === 0 && hook0) tl.set(C, { x: cx, y: cy, z: 1, onUpdate: applyCam }, 0);
       cam((i ? t0 : 0) + .05, cx, cy, 1, 1.3, 'power2.inOut'); cam((i ? t0 : 0) + 1.4, cx, cy, 1.035, Math.max(.5, d - 2.3));
       if (P.scenes[i + 1]) { const b = area(i + 1); cam(t1 - .9, (cx + b.x + 540) / 2, (cy + b.y + 960) / 2, 1.5, .9, 'power2.in'); }
       const sh = hasImg ? 560 : 0;   // text drops below the image when there is one
@@ -92,7 +101,7 @@
       }
       S.decor && S.decor(ctx);
     });
-    finish(S); applyCam();
+    snap(false); finish(S); applyCam();
   };
 
   /* ============================== MAP (collage rig) ==============================

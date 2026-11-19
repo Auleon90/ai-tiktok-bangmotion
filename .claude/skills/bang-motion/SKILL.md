@@ -53,6 +53,21 @@ views, likes, comments, shares) and update this section and `content/topics_used
 - Vary the visual style from the previous video (see the style column in `content/topics_used.md`).
 - Daily prompt to reuse: `content/daily_prompt.md`.
 
+### Growth plan (from 2026-11-19: Metricool 76 posts + TikTok search bulletin)
+
+- **Shares drive views.** Every hit had many shares (39k views ↔ 886 shares); 0–5 shares ≈ 200 views. Design each video around
+  "I must send this to someone": the hook names a feeling, the ending is "Kirim ke orang yang…".
+- **Two formats, alternate ~2:1, one post a day:**
+  - **A — Quote renungan, 15–30 s, 2–4 scenes:** one striking "Jangan sampai…" / harga-nikmat line in big kinetic type, one ayat
+    (or hadith), the share CTA. Matches rising searches ("quotes", "quote kata kata", "video kata-kata", "Islam quotes", "Renungan").
+    Fits Bang Motion collage styles (jurnalisme-visual, katalog-putih, vintage-sketch) or Lemo paper-lantern; no AI images needed.
+  - **B — Syukur + one science fact, 40–60 s** (the rules above). Fact = proof only; never a pure fact video.
+- **Search words:** put one searched phrase in on-screen text early (eyebrow, e.g. "KATA-KATA RENUNGAN") and in the first caption
+  sentence ("renungan", "quotes islami", "kata-kata"). Hashtags e.g. #quotesislami #renungan #katakatarenungan #bersyukur #nikmatallah.
+- **Post time:** Metricool best time (`getBestTimeToPostByNetwork`, tiktok, Asia/Jakarta); currently 10:00, 12:00 or 18:00 WIB.
+- **Weekly review:** pull Metricool `posts` (views, shares, comments) and note in `content/topics_used.md` which format/hook won;
+  do more of the format with the highest shares per view.
+
 ## Storyboard format (shared by all modes)
 
 ```json
