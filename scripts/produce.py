@@ -11,7 +11,8 @@ rendered frame by frame (window.render(t)) and muxed with the mixed audio.
 
 Storyboard format: see .claude/skills/bang-motion/SKILL.md.
 Each scene needs "vo" (spoken text). Optional per scene: "pad_before_ms", "gap_after_ms".
-Top level optional: "theme" {..colors}, "ambience": "wind" | "none" (default "none": no backsound unless the user asks).
+Top level optional: "theme" {..colors}, "ambience": "auto" (default) | "none" | room/wind/rain/sea/night/fire/space
+(scripts/ambience.py; a scene may set its own "ambience"), "ambience_level" (0.35 = 35% of the VO).
 """
 import hashlib, json, math, os, re, shutil, subprocess, sys
 
@@ -182,7 +183,7 @@ def main():
     dur = total_ms / 1000
 
     # score + sfx (audio/lemo via .venv-audio); optional per storyboard: "music": mood|"none", "sfx": true|false
-    mood = sb.get("music", "none")      # owner rule: no backsound by default (music + ambience off); SFX stay on
+    mood = sb.get("music", "none")      # owner rule: no music by default; ambience (auto) and SFX stay on
     want_sfx = sb.get("sfx", True)
     audio_py = os.path.join(ROOT, ".venv-audio", "bin", "python")
     stems = os.path.join(OUT, "stems")
@@ -203,6 +204,7 @@ def main():
         m = re.findall(r"I:\s+(-?[\d.]+) LUFS", r)
         return float(m[-1]) if m and float(m[-1]) > -70 else None
     BED_RATIO = 0.35   # backsound = 35% of the VO (amplitude), every mode
+    AMB_RATIO = float(sb.get("ambience_level", 0.35))   # ambience alone: same 35% rule unless the storyboard asks for less
     vo_lufs = lufs(voice_wav, "acompressor=threshold=0.1:ratio=3:attack=5:release=120")
     def bed_gain(path, pre=1.0):
         m = lufs(path)
@@ -210,10 +212,16 @@ def main():
         return pre * 10 ** ((vo_lufs + 20 * math.log10(BED_RATIO) - m) / 20)
     ins, chains, bed = ["-i", voice_wav], [], []
     chains.append("[0:a]aformat=sample_rates=48000:channel_layouts=stereo,acompressor=threshold=0.1:ratio=3:attack=5:release=120,asplit=2[vo][key]")
-    if sb.get("ambience", "none") == "wind":
-        chains.append(f"anoisesrc=color=brown:amplitude=0.6:duration={dur}:sample_rate=48000,lowpass=f=900,highpass=f=80,tremolo=f=0.15:d=0.6,volume=0.08,aformat=channel_layouts=stereo[wind]")
-        bed.append("[wind]")
     n = 1
+    # ambience bed (scripts/ambience.py): "auto" by default — one toneless texture per scene from its words, crossfaded
+    sys.path.insert(0, os.path.join(ROOT, "scripts")); import ambience as AMB
+    amb_wav = os.path.join(OUT, "stems_amb", "ambience.wav")
+    amb_plan = AMB.build(sb, scenes, FPS, dur, amb_wav)
+    if amb_plan:
+        print("  ambience: " + " · ".join(f"{a} {t0:.0f}-{t1:.0f}s" for a, t0, t1 in amb_plan))
+        ins += ["-i", amb_wav]
+        chains.append(f"[{n}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume={bed_gain(amb_wav, AMB_RATIO / BED_RATIO):.4f}[amb]")
+        bed.append("[amb]"); n += 1
     if os.path.exists(os.path.join(stems, "music.wav")):
         ins += ["-i", os.path.join(stems, "music.wav")]
         chains.append(f"[{n}:a]aformat=sample_rates=48000:channel_layouts=stereo,volume={bed_gain(os.path.join(stems, 'music.wav')):.4f}[mus]")

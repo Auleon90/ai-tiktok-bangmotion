@@ -160,10 +160,18 @@ Perkiraan durasi: ~Xs · Gambar AI: N dari M scene
 
 ### Sound (all modes)
 
-**Default = NO backsound, SFX ON (owner rule, Nov 2026: the backsound was noisy and unpleasant).** Every storyboard sets
-`"music": "none", "ambience": "none", "sfx": true`: the Cartesia VO plus the SFX (built-in cut whooshes/hits/ding + scene SFX where the
-picture shows an event); `produce.py` defaults are the same. Add music or ambience ONLY when the user explicitly asks for it in that request
-(or via "Tulis bebas"); turn SFX off only when asked. The approval summary always shows `🎵 Musik: none · 🔊 SFX: on` unless the user asked otherwise.
+**Default = NO music, ambience AUTO, SFX ON (owner rule, Nov 2026: music was noisy; ambience keeps the silence alive for retention).**
+Every storyboard sets `"music": "none", "ambience": "auto", "sfx": true` (the `produce.py` defaults): Cartesia VO + a toneless ambience bed
++ SFX (built-in cut whooshes/hits/ding + scene SFX where the picture shows an event). Add music ONLY when the user asks; turn ambience or SFX
+off only when asked. Approval summary line: `🎵 Musik: none · 🌬️ Ambience: <per-scene plan> · 🔊 SFX: on`.
+
+**Ambience (`scripts/ambience.py`, synthesised with ffmpeg, no files):** `room` (soft warm air, the fallback so there is never dead silence),
+`wind` (desert, hills, journeys), `rain` (hujan, petrichor), `sea` (laut, air, Musa, Yunus), `night` (malam, tidur, crickets), `fire`
+(api, Ibrahim, battles), `space` (galaksi, langit, 3D globe/galaxy). `"auto"` picks one per scene from its words (and its 3D preset) and
+crossfades 0.8 s between scenes; set a scene's `"ambience"` to override (or `"none"`), or the top-level one to force a single bed.
+Pick deliberately while writing the storyboard: a change of ambience on a cut is a retention cue (a new place = a new sound), so match it
+to what the scene shows and keep `room` for text/argument scenes. Level: the bed sits at 35 % of the VO loudness (`"ambience_level"` to lower it,
+e.g. 0.25 if the user finds it busy). Preview: `python3 scripts/ambience.py preview [names]` → `output/ambience_preview/*.wav`.
 
 `scripts/score.py` (run automatically by `produce.py` with `.venv-audio`) writes an original score and timed SFX from the scene timings,
 using `audio/lemo/` (sfx.py + pluck.py, MIT, vendored from Lemo-Opuscar). The mixer compresses the voice, holds the backsound
