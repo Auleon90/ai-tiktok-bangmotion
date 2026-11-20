@@ -76,3 +76,7 @@ Output MP4 disimpan di `output/` (folder ini di-gitignore).
 dan tulis VO secara imersif (bercerita, "bayangkan…", detail tempat & suasana) supaya penonton seolah masuk ke dalam ceritanya.
 Visual harus menarik, BUKAN hanya teks: hampir setiap scene punya gambar/ilustrasi (FLUX), adegan yang diperagakan (`action`/`clash`/`custom`),
 3D, atau peta; scene teks murni maksimal 1 (selain ayat, yang tetap kaligrafi kode di atas gambar/latar bergerak).
+**Visual orisinal, bukan template (aturan pemilik, 2026-11-20):** pemilik tidak puas dengan gaya template (Lemo kit, Bang Motion, template HyperFrames)
+yang terasa kaku. Untuk video berikutnya, rancang visual sendiri per video: halaman HyperFrames custom (`output/hf_index.html`, SVG/Canvas + GSAP)
+dengan ilustrasi adegan buatan kode, motif visual berulang, gerak kamera, dan transisi yang dirancang khusus untuk ceritanya. Gaya/kit hanya
+boleh jadi referensi, bukan dipakai mentah.
