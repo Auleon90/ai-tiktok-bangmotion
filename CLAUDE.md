@@ -71,3 +71,8 @@ Gambar AI (FLUX) tetap tanpa Nabi ﷺ/sahabat dan tanpa wajah untuk konten Islam
 Ketika user mengetik `/bang-motion`, SELALU gunakan skill `.claude/skills/bang-motion/SKILL.md` dari repo ini — JANGAN gunakan `anthropic-skills:tiktok-motion-generator`.
 
 Output MP4 disimpan di `output/` (folder ini di-gitignore).
+
+**Gaya cerita & visual (aturan pemilik, 2026-11-20, berlaku untuk SEMUA video berikutnya):** ikuti versi cerita yang POPULER/dikenal luas
+dan tulis VO secara imersif (bercerita, "bayangkan…", detail tempat & suasana) supaya penonton seolah masuk ke dalam ceritanya.
+Visual harus menarik, BUKAN hanya teks: hampir setiap scene punya gambar/ilustrasi (FLUX), adegan yang diperagakan (`action`/`clash`/`custom`),
+3D, atau peta; scene teks murni maksimal 1 (selain ayat, yang tetap kaligrafi kode di atas gambar/latar bergerak).
