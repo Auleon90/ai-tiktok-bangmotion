@@ -376,8 +376,8 @@ Engine: `hyperframes/` (npm `hyperframes` 0.8.218, GSAP, lottie-web). Renders by
 
 **Dive explainer (kartun-cutaway page, preset `dive`, `hyperframes/runtime/explain-dive.js`)** — outside → inside for ANY subject (body → heart →
 vessels, mountain → soil → groundwater, building → floors → rooms, leaf → cell → chloroplast). One scene = one level: its `image` (FLUX, flat
-cartoon cutaway, no text, subject centred) fills the frame; the camera pushes (`cam`), a torn X-ray hole (`xray` {at,x,y,size,grow}) opens on the
-NEXT scene's picture and grows to fill the screen, so the next level starts where the hole ended. Code overlays: `labels` (pinned to picture
+cartoon cutaway, no text, subject centred) fills the frame; the camera pushes (`cam`), a magnifying glass (`xray` {at,x,y,size,grow,shape: "lens" default | "torn"}) flies in toward the viewer, magnifies the
+NEXT scene's picture and comes toward the viewer until it fills the screen, so the next level starts where the hole ended. Code overlays: `labels` (pinned to picture
 coords, pill on screen), `flows` (particles along a path: blood cells, water), `pulses`, `rain`, `card` (ayat/fact, Arabic drawn by code).
 Workflow: run `--check-only` first to generate the images, LOOK at them, then place labels/flows (picture coords: x = -420 + u·1920, y = v·1920
 for image fraction u,v; visible u ≈ .22–.78) and keep pills above y 1330. Islamic content: no faces/people in images (body = anatomical

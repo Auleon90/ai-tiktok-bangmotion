@@ -6,7 +6,7 @@
    (blood cells, water drops), pulses, rain, a text card (ayat/fact). All motion = f(scene time).
    Scene "diagram": {preset:"dive",
      cam:[[f,x,y,z],...]     camera keys in screen-at-zoom-1 coords (default slow push to 1.08 at the centre)
-     xray:{at:.55, x, y, size:520, grow:.8}   hole into the next level (x,y = where on screen; grow = when it starts to fill)
+     xray:{at:.55, x, y, size:520, grow:.8, shape:'lens'|'torn'}  magnifying glass (default) or torn hole into the next level (x,y = where on screen; grow = when it starts to fill)
      labels:[{text, x, y, lx, ly, at, color}]  point (x,y) on the picture, pill at (lx,ly) on screen
      flows:[{path:[[x,y],..], color, n, r, speed, at}]   particles moving along a path (picture coords)
      pulses:[{x, y, r, color, rate, at}]       rings that keep calling attention
@@ -55,7 +55,26 @@
       card = { g, at: c.at ?? .2 }; }
     // X-ray hole into the next level (screen space)
     let X = null;
-    if (sp.xray) { const xr = sp.xray, size = xr.size || 520, pts = jagged(xr.x ?? 540, xr.y ?? 900, size / 2, size / 2, 31 + i);
+    if (sp.xray && (sp.xray.shape || 'lens') === 'lens') {
+      // magnifying glass: flies in from the viewer's side, magnifies the next level, then comes toward the viewer until it fills the screen
+      const xr = sp.xray, R0 = (xr.size || 520) / 2, cx = xr.x ?? 540, cy = xr.y ?? 900;
+      const cp = el('clipPath', { id: 'dv' + i }, defs), clipC = el('circle', { cx, cy, r: R0 }, cp);
+      const hole = el('g', { opacity: 0 }, B.layer);
+      const shadow = el('circle', { cx: cx + 18, cy: cy + 30, r: R0 + 16, fill: 'rgba(0,0,0,.35)' }, hole);
+      const ins = el('g', { 'clip-path': `url(#dv${i})` }, hole), mag = el('g', {}, ins); picture(mag, next.imageSrc, xr.bg);
+      el('circle', { cx, cy, r: R0, fill: 'none', stroke: 'rgba(0,0,0,.35)', 'stroke-width': 40 }, ins);              // inner vignette
+      const deco = el('g', {}, hole), a = Math.PI / 4, hx = cx + Math.cos(a) * (R0 + 6), hy = cy + Math.sin(a) * (R0 + 6);
+      const handle = el('g', { transform: `rotate(45 ${hx} ${hy})` }, deco);
+      el('rect', { x: hx - 6, y: hy - 30, width: 70, height: 60, rx: 10, fill: '#aeb6c0', stroke: INK, 'stroke-width': 6 }, handle);
+      el('rect', { x: hx + 60, y: hy - 27, width: 260, height: 54, rx: 27, fill: '#7a4a2a', stroke: INK, 'stroke-width': 6 }, handle);
+      el('rect', { x: hx + 80, y: hy - 18, width: 200, height: 10, rx: 5, fill: '#a86a3e' }, handle);
+      el('circle', { cx, cy, r: R0 + 14, fill: 'none', stroke: INK, 'stroke-width': 36 }, deco);
+      el('circle', { cx, cy, r: R0 + 14, fill: 'none', stroke: '#c9d0d8', 'stroke-width': 18 }, deco);
+      el('circle', { cx, cy, r: R0 + 4, fill: 'none', stroke: '#ffffff', 'stroke-width': 4, opacity: .7 }, deco);
+      el('path', { d: `M${cx - R0 * .72} ${cy - R0 * .2} A${R0 * .75} ${R0 * .75} 0 0 1 ${cx - R0 * .2} ${cy - R0 * .72}`, fill: 'none', stroke: '#ffffff', 'stroke-width': 18, 'stroke-linecap': 'round', opacity: .55 }, deco);
+      const far = Math.max(...[[0, 0], [1080, 0], [0, 1920], [1080, 1920]].map(([u, v]) => Math.hypot(u - cx, v - cy)));
+      X = { lens: true, xr, hole, clipC, shadow, deco, mag, cx, cy, maxS: far / R0 * 1.15 };
+    } else if (sp.xray) { const xr = sp.xray, size = xr.size || 520, pts = jagged(xr.x ?? 540, xr.y ?? 900, size / 2, size / 2, 31 + i);
       const cp = el('clipPath', { id: 'dv' + i }, defs), poly = el('polygon', { points: pts }, cp);
       const hole = el('g', { opacity: 0 }, B.layer), shadow = el('polygon', { points: pts, fill: 'rgba(0,0,0,.4)' }, hole);
       const ins = el('g', { 'clip-path': `url(#dv${i})` }, hole); picture(ins, next.imageSrc, xr.bg);
@@ -77,7 +96,16 @@
         ln.setAttribute('d', `M${sx} ${sy} L${lx} ${ly}`); dot.setAttribute('cx', sx); dot.setAttribute('cy', sy); pl.setAttribute('transform', `translate(${lx} ${ly}) scale(${.8 + a * .2})`);
         const hide = X && lt > (X.xr.grow ?? .8) * d ? 1 - clamp((lt - (X.xr.grow ?? .8) * d) / .3) : 1; [ln, dot, pl].forEach(e => e.setAttribute('opacity', a * hide)); });
       if (card) { const a = clamp((lt - card.at * d) / .4); card.g.setAttribute('opacity', a); card.g.setAttribute('transform', `translate(0 ${(1 - a) * 40})`); }
-      if (X) { const ta = (X.xr.at ?? .55) * d, tg = (X.xr.grow ?? .8) * d, o = clamp((lt - ta) / .5), g = clamp((lt - tg) / Math.max(.4, d - tg - .05));
+      if (X && X.lens) { const ta = (X.xr.at ?? .55) * d, tg = (X.xr.grow ?? .8) * d, o = clamp((lt - ta) / .8), g = ease(clamp((lt - tg) / Math.max(.5, d - tg - .05)));
+        const back = p => 1 + 2.2 * Math.pow(p - 1, 3) + 1.2 * Math.pow(p - 1, 2);             // ease-out-back
+        const e = lt < ta ? 0 : back(o), sIn = lerp(2.2, 1, e), px = lerp(X.cx + 760, X.cx, e), py = lerp(X.cy + 1100, X.cy, e);
+        const sc = sIn * (1 + g * (X.maxS - 1)), tr = `translate(${px.toFixed(1)} ${py.toFixed(1)}) scale(${sc.toFixed(4)}) translate(${-X.cx} ${-X.cy})`;
+        X.hole.setAttribute('opacity', lt >= ta ? 1 : 0);
+        [X.clipC, X.shadow, X.deco].forEach(n => n.setAttribute('transform', tr));
+        X.deco.setAttribute('opacity', 1 - clamp((g - .55) / .35)); X.shadow.setAttribute('opacity', 1 - g);
+        const m = lerp(1.7, 1, g), mx = lerp(px, X.cx, 0);                                          // magnification inside the glass → 1 at the end
+        X.mag.setAttribute('transform', `translate(${X.cx} ${X.cy}) scale(${m.toFixed(4)}) translate(${-X.cx} ${-X.cy})`); }
+      else if (X) { const ta = (X.xr.at ?? .55) * d, tg = (X.xr.grow ?? .8) * d, o = clamp((lt - ta) / .5), g = clamp((lt - tg) / Math.max(.4, d - tg - .05));
         const sc = lt < ta ? 0 : (1 - Math.pow(1 - o, 3)) * (1 + Math.sin(o * Math.PI) * .06) + ease(g) * (X.maxS - 1);
         X.hole.setAttribute('opacity', lt >= ta ? 1 : 0);
         const tr = `translate(${X.cx} ${X.cy}) scale(${Math.max(.001, sc).toFixed(4)}) translate(${-X.cx} ${-X.cy})`;
