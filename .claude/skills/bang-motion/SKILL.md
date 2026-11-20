@@ -49,6 +49,11 @@ shares drive reach (hit: 1,123 shares) and come from loss/"ini aku" reflections,
   greeting, the channel name, "tahukah kamu" or context: start with the stakes. ≤ 8 words on screen.
   Score 1–5 on: relatable ("ini aku"), loss/stakes, ≤ 12 words / ±3 s spoken, reason to send it to someone. Use the highest in scene 1
   and say why in one line; the user may pick another.
+- **Hook rotation (owner rule — viewers get bored of one opener):** read the "Pola hook" of the last 5 rows in `content/topics_used.md`.
+  The chosen pattern must differ from the previous video's, and no pattern more than 2× in the last 5 (so "Jangan sampai…" at most
+  2 of 5). Patterns to rotate: jangan-sampai · harga-nikmat · instruksi ("Pejamkan matamu 5 detik. Sekarang.") · debat ("Lebih berat
+  mana: …?") · fakta-menampar · celah-penasaran · tuduhan-lembut · sudut-orang-lain · pengakuan ("Aku baru sadar … saat …") ·
+  larangan-terbalik ("Jangan bersyukur dulu sebelum video ini selesai"). Record the pattern slug in the log row.
 - **Hook on frame 0:** scene 1's hook text is fully visible from the first frame (no word-by-word entrance, no fade-in from black);
   motion is ALREADY moving at frame 0 (a line falling, a zoom, a 3D object turning) and VO starts within 0.2 s.
   In HyperFrames pages set the scene-1 words/stage to their end state at t=0.
