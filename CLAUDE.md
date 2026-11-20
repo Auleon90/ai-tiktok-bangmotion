@@ -65,6 +65,9 @@ Gambar AI (FLUX) tetap tanpa Nabi ﷺ/sahabat dan tanpa wajah untuk konten Islam
 
 ## Penting
 
+**Audio @valsyz7 (aturan pemilik, 2026-11-20): TANPA musik BGM** — selalu `"music": "none"`, hanya ambience (`"ambience": "wind"`) + SFX, untuk semua video berikutnya kecuali pemilik minta musik.
+
+
 Ketika user mengetik `/bang-motion`, SELALU gunakan skill `.claude/skills/bang-motion/SKILL.md` dari repo ini — JANGAN gunakan `anthropic-skills:tiktok-motion-generator`.
 
 Output MP4 disimpan di `output/` (folder ini di-gitignore).
