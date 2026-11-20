@@ -1,0 +1,336 @@
+{
+ "title": "Lebih Dekat dari Urat Leher",
+ "music": "none",
+ "ambience": "auto",
+ "sfx": true,
+ "style": "bang:kartun-cutaway",
+ "image_style": "flat vector cartoon medical illustration, bold clean shapes, soft shading, dark navy background, centered composition, no face, no facial features, no text, no letters",
+ "scenes": [
+  {
+   "id": 1,
+   "type": "diagram",
+   "headline": "Ada yang bekerja *tanpa henti* di dadamu.",
+   "image": "a human upper body seen from behind as a translucent blue silhouette, a glowing red heart visible inside the chest, back of the head only",
+   "diagram": {
+    "preset": "dive",
+    "cam": [
+     [
+      0,
+      540,
+      960,
+      1
+     ],
+     [
+      0.6,
+      540,
+      1000,
+      1.3
+     ],
+     [
+      1,
+      540,
+      1000,
+      1.35
+     ]
+    ],
+    "xray": {
+     "at": 0.55,
+     "x": 540,
+     "y": 980,
+     "size": 440,
+     "grow": 0.78
+    },
+    "pulses": [
+     {
+      "x": 540,
+      "y": 1018,
+      "r": 80,
+      "rate": 1.2,
+      "color": "#ff6b6b"
+     }
+    ]
+   },
+   "sfx": [
+    {
+     "name": "heartbeat",
+     "at": 0.05
+    },
+    {
+     "name": "swoosh",
+     "at": 0.55
+    }
+   ],
+   "vo": "Saat kamu menonton ini, ada yang bekerja tanpa henti di dadamu. Ayo kita bongkar."
+  },
+  {
+   "id": 2,
+   "type": "diagram",
+   "image": "anatomical cutaway of the inside of a human chest: ribcage, two pink lungs, a big red heart in the center with blood vessels",
+   "diagram": {
+    "preset": "dive",
+    "xray": {
+     "at": 0.7,
+     "x": 540,
+     "y": 900,
+     "size": 420,
+     "grow": 0.84
+    },
+    "labels": [
+     {
+      "text": "Jantung",
+      "x": 560,
+      "y": 900,
+      "lx": 820,
+      "ly": 600
+     },
+     {
+      "text": "Paru-paru",
+      "x": 330,
+      "y": 1000,
+      "lx": 260,
+      "ly": 1290
+     }
+    ],
+    "pulses": [
+     {
+      "x": 540,
+      "y": 900,
+      "r": 170,
+      "rate": 1.2,
+      "color": "#ff6b6b"
+     }
+    ]
+   },
+   "sfx": [
+    {
+     "name": "heartbeat",
+     "at": 0.1
+    }
+   ],
+   "vo": "Jantungmu berdetak sekitar seratus ribu kali sehari, memompa ribuan liter darah, tanpa pernah sekali pun libur."
+  },
+  {
+   "id": 3,
+   "type": "diagram",
+   "image": "inside a red blood vessel like a tunnel, many round red blood cells flowing through it, perspective view",
+   "diagram": {
+    "preset": "dive",
+    "labels": [
+     {
+      "text": "Sel darah merah",
+      "x": 580,
+      "y": 600,
+      "lx": 700,
+      "ly": 420
+     },
+     {
+      "text": "Dinding pembuluh",
+      "x": 110,
+      "y": 980,
+      "lx": 330,
+      "ly": 1290,
+      "at": 0.3
+     }
+    ],
+    "flows": [
+     {
+      "path": [
+       [
+        970,
+        960
+       ],
+       [
+        955,
+        1071
+       ],
+       [
+        912,
+        1175
+       ],
+       [
+        844,
+        1264
+       ],
+       [
+        755,
+        1332
+       ],
+       [
+        651,
+        1375
+       ],
+       [
+        540,
+        1390
+       ],
+       [
+        429,
+        1375
+       ],
+       [
+        325,
+        1332
+       ],
+       [
+        236,
+        1264
+       ],
+       [
+        168,
+        1175
+       ],
+       [
+        125,
+        1071
+       ],
+       [
+        110,
+        960
+       ],
+       [
+        125,
+        849
+       ],
+       [
+        168,
+        745
+       ],
+       [
+        236,
+        656
+       ],
+       [
+        325,
+        588
+       ],
+       [
+        429,
+        545
+       ],
+       [
+        540,
+        530
+       ],
+       [
+        651,
+        545
+       ],
+       [
+        755,
+        588
+       ],
+       [
+        844,
+        656
+       ],
+       [
+        912,
+        745
+       ],
+       [
+        955,
+        849
+       ],
+       [
+        970,
+        960
+       ]
+      ],
+      "color": "#e8323c",
+      "n": 16,
+      "r": 20,
+      "speed": 0.12
+     }
+    ]
+   },
+   "vo": "Darah itu mengalir lewat pembuluh yang kalau disambung, panjangnya bisa sekitar seratus ribu kilometer. Lebih dari dua kali keliling bumi."
+  },
+  {
+   "id": 4,
+   "type": "diagram",
+   "image": "side view of a human neck and shoulders as a translucent blue silhouette with a glowing red vein along the neck, back of the head only",
+   "diagram": {
+    "preset": "dive",
+    "card": {
+     "title": "QS. Qaf: 16",
+     "arabic": "وَنَحْنُ أَقْرَبُ إِلَيْهِ مِنْ حَبْلِ ٱلْوَرِيدِ",
+     "text": "Dan Kami lebih dekat kepadanya daripada urat lehernya.",
+     "at": 0.15,
+     "y": 240
+    },
+    "cam": [
+     [
+      0,
+      520,
+      1000,
+      1
+     ],
+     [
+      1,
+      500,
+      1050,
+      1.1
+     ]
+    ],
+    "pulses": [
+     {
+      "x": 463,
+      "y": 1130,
+      "r": 60,
+      "rate": 1,
+      "color": "#ff6b6b",
+      "at": 0.4
+     }
+    ]
+   },
+   "vo": "Lalu Allah berfirman: Dan Kami lebih dekat kepadanya, daripada urat lehernya sendiri."
+  },
+  {
+   "id": 5,
+   "type": "diagram",
+   "image": "side view of a human neck and shoulders as a translucent blue silhouette with a glowing red vein along the neck, back of the head only",
+   "diagram": {
+    "preset": "dive",
+    "cam": [
+     [
+      0,
+      500,
+      1050,
+      1.1
+     ],
+     [
+      1,
+      470,
+      1120,
+      1.4
+     ]
+    ],
+    "pulses": [
+     {
+      "x": 463,
+      "y": 1130,
+      "r": 60,
+      "rate": 1,
+      "color": "#ff6b6b"
+     }
+    ],
+    "labels": [
+     {
+      "text": "Urat leher",
+      "x": 463,
+      "y": 1050,
+      "lx": 760,
+      "ly": 800
+     }
+    ]
+   },
+   "sfx": [
+    {
+     "name": "ding",
+     "at": 0.75
+    }
+   ],
+   "vo": "Urat yang sedekat itu saja tak pernah kamu rasakan. Kirim ke orang yang sedang merasa sendirian."
+  }
+ ]
+}
