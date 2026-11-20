@@ -368,6 +368,15 @@ Engine: `hyperframes/` (npm `hyperframes` 0.8.218, GSAP, lottie-web). Renders by
 | sketsa-diagram | Excalidraw-like: dot grid, hachure pastel fills, camera pans across one canvas, sticky-note subtitle | explain | none |
 | kartun-cutaway | full-frame flat cartoon street + scooter (faceless helmeted rider), camera keys zoom in, torn X-ray window into the tank (preset `street`, `hyperframes/runtime/explain-cutaway.js`; example `examples/bensin-sedikit.storyboard.json`) | explain | none |
 
+**Dive explainer (kartun-cutaway page, preset `dive`, `hyperframes/runtime/explain-dive.js`)** — outside → inside for ANY subject (body → heart →
+vessels, mountain → soil → groundwater, building → floors → rooms, leaf → cell → chloroplast). One scene = one level: its `image` (FLUX, flat
+cartoon cutaway, no text, subject centred) fills the frame; the camera pushes (`cam`), a torn X-ray hole (`xray` {at,x,y,size,grow}) opens on the
+NEXT scene's picture and grows to fill the screen, so the next level starts where the hole ended. Code overlays: `labels` (pinned to picture
+coords, pill on screen), `flows` (particles along a path: blood cells, water), `pulses`, `rain`, `card` (ayat/fact, Arabic drawn by code).
+Workflow: run `--check-only` first to generate the images, LOOK at them, then place labels/flows (picture coords: x = -420 + u·1920, y = v·1920
+for image fraction u,v; visible u ≈ .22–.78) and keep pills above y 1330. Islamic content: no faces/people in images (body = anatomical
+cutaway or silhouette, no face). Example: `examples/air-tanah.dive.storyboard.json`.
+
 **Explain rig (papan-tulis, infografik-flat, sketsa-diagram; runtime `hyperframes/runtime/explain.js` + vendored `rough.js`, MIT)** —
 for "cara kerja / kenapa" videos. Scene `"type": "diagram"` with `headline` (`*kata*` highlight) and `"diagram"`: a preset or generic
 `parts` ([{shape: rect|circle|ellipse|poly|line|arrow|text, role, at, …}] in a 1000×936 box, content above y≈880). The same storyboard

@@ -1,0 +1,343 @@
+{
+ "title": "Perjalanan Air Tanah",
+ "music": "none",
+ "ambience": "auto",
+ "sfx": true,
+ "style": "bang:kartun-cutaway",
+ "image_style": "flat vector cartoon illustration, bold clean shapes, bright friendly colors, soft shading, centered composition, no people, no text, no letters",
+ "scenes": [
+  {
+   "id": 1,
+   "type": "diagram",
+   "headline": "Air yang kamu minum mungkin sudah *ratusan tahun* di bawah tanah.",
+   "image": "a tall green mountain with forest, a small village at its foot, grey rain clouds above, wide view",
+   "diagram": {
+    "preset": "dive",
+    "rain": {
+     "n": 50,
+     "from": 0,
+     "to": 1100
+    },
+    "cam": [
+     [
+      0,
+      540,
+      960,
+      1
+     ],
+     [
+      0.6,
+      540,
+      1150,
+      1.25
+     ],
+     [
+      1,
+      540,
+      1150,
+      1.3
+     ]
+    ],
+    "xray": {
+     "at": 0.55,
+     "x": 540,
+     "y": 1050,
+     "size": 460,
+     "grow": 0.78
+    }
+   },
+   "sfx": [
+    {
+     "name": "rain",
+     "at": 0,
+     "gain": 0.5
+    },
+    {
+     "name": "swoosh",
+     "at": 0.55
+    }
+   ],
+   "vo": "Air yang kamu minum hari ini, bisa jadi sudah ratusan tahun tersimpan di bawah tanah. Ayo kita bongkar gunungnya."
+  },
+  {
+   "id": 2,
+   "type": "diagram",
+   "image": "side view cross-section cutaway of the ground under green grass: dark brown topsoil with roots, lighter brown subsoil, grey rock layer at the bottom, horizontal bands",
+   "diagram": {
+    "preset": "dive",
+    "labels": [
+     {
+      "text": "Tanah atas",
+      "x": 444,
+      "y": 576,
+      "lx": 300,
+      "ly": 420
+     },
+     {
+      "text": "Tanah bawah",
+      "x": 640,
+      "y": 1150,
+      "lx": 800,
+      "ly": 980
+     },
+     {
+      "text": "Batuan",
+      "x": 820,
+      "y": 1500,
+      "lx": 860,
+      "ly": 1300,
+      "at": 0.3
+     }
+    ],
+    "flows": [
+     {
+      "path": [
+       [
+        330,
+        260
+       ],
+       [
+        340,
+        1150
+       ]
+      ],
+      "color": "#5ec8ff",
+      "n": 6,
+      "r": 12,
+      "speed": 0.22
+     },
+     {
+      "path": [
+       [
+        520,
+        260
+       ],
+       [
+        530,
+        1150
+       ]
+      ],
+      "color": "#5ec8ff",
+      "n": 6,
+      "r": 12,
+      "speed": 0.22
+     },
+     {
+      "path": [
+       [
+        720,
+        260
+       ],
+       [
+        730,
+        1150
+       ]
+      ],
+      "color": "#5ec8ff",
+      "n": 6,
+      "r": 12,
+      "speed": 0.22
+     }
+    ],
+    "xray": {
+     "at": 0.62,
+     "x": 540,
+     "y": 1250,
+     "size": 460,
+     "grow": 0.8
+    }
+   },
+   "sfx": [
+    {
+     "name": "swoosh",
+     "at": 0.62
+    }
+   ],
+   "vo": "Air hujan meresap pelan, lapis demi lapis. Tanah atas yang gembur, lalu tanah bawah yang lebih padat."
+  },
+  {
+   "id": 3,
+   "type": "diagram",
+   "image": "side view cross-section cutaway of an underground aquifer: a thick layer of sand and round gravel soaked with blue water, between solid grey rock layers above and below, horizontal bands",
+   "diagram": {
+    "preset": "dive",
+    "labels": [
+     {
+      "text": "Akuifer",
+      "x": 400,
+      "y": 1150,
+      "lx": 260,
+      "ly": 1310
+     },
+     {
+      "text": "Air tanah",
+      "x": 620,
+      "y": 930,
+      "lx": 800,
+      "ly": 720
+     },
+     {
+      "text": "Batuan kedap",
+      "x": 540,
+      "y": 300,
+      "lx": 540,
+      "ly": 520,
+      "at": 0.35
+     }
+    ],
+    "flows": [
+     {
+      "path": [
+       [
+        180,
+        950
+       ],
+       [
+        900,
+        950
+       ]
+      ],
+      "color": "#bfe8ff",
+      "n": 8,
+      "r": 11,
+      "speed": 0.05
+     },
+     {
+      "path": [
+       [
+        180,
+        1030
+       ],
+       [
+        900,
+        1030
+       ]
+      ],
+      "color": "#bfe8ff",
+      "n": 8,
+      "r": 11,
+      "speed": 0.05
+     },
+     {
+      "path": [
+       [
+        180,
+        1110
+       ],
+       [
+        900,
+        1110
+       ]
+      ],
+      "color": "#bfe8ff",
+      "n": 8,
+      "r": 11,
+      "speed": 0.05
+     }
+    ],
+    "xray": {
+     "at": 0.7,
+     "x": 540,
+     "y": 900,
+     "size": 460,
+     "grow": 0.84
+    }
+   },
+   "vo": "Di bawahnya ada akuifer, lapisan pasir dan kerikil yang jenuh air. Air tanah mengalir di sini sangat pelan, kadang hanya beberapa sentimeter sehari."
+  },
+  {
+   "id": 4,
+   "type": "diagram",
+   "image": "a clear spring of water flowing out from between mossy rocks at the foot of a green hill, a small clear stream, sunny day",
+   "diagram": {
+    "preset": "dive",
+    "labels": [
+     {
+      "text": "Mata air",
+      "x": 735,
+      "y": 1000,
+      "lx": 760,
+      "ly": 760
+     }
+    ],
+    "flows": [
+     {
+      "path": [
+       [
+        728,
+        960
+       ],
+       [
+        736,
+        1150
+       ],
+       [
+        690,
+        1360
+       ]
+      ],
+      "color": "#e8f7ff",
+      "n": 12,
+      "r": 10,
+      "speed": 0.5
+     }
+    ]
+   },
+   "vo": "Puluhan, ratusan, bahkan ribuan tahun bisa berlalu, sebelum air itu muncul lagi sebagai mata air, atau kita timba lewat sumur."
+  },
+  {
+   "id": 5,
+   "type": "diagram",
+   "image": "a glass of clear water on a wooden table beside an open window with a green mountain view, soft morning light",
+   "diagram": {
+    "preset": "dive",
+    "card": {
+     "title": "QS. Az-Zumar: 21",
+     "arabic": "أَنزَلَ مِنَ ٱلسَّمَآءِ مَآءً فَسَلَكَهُۥ يَنَٰبِيعَ فِى ٱلْأَرْضِ",
+     "text": "Dia menurunkan air dari langit, lalu mengalirkannya menjadi sumber-sumber air di bumi.",
+     "at": 0.1,
+     "y": 260
+    }
+   },
+   "vo": "Allah berfirman: Dia menurunkan air dari langit, lalu mengalirkannya menjadi sumber-sumber air di bumi."
+  },
+  {
+   "id": 6,
+   "type": "diagram",
+   "image": "a glass of clear water on a wooden table beside an open window with a green mountain view, soft morning light",
+   "diagram": {
+    "preset": "dive",
+    "cam": [
+     [
+      0,
+      540,
+      960,
+      1.05
+     ],
+     [
+      1,
+      540,
+      900,
+      1.2
+     ]
+    ],
+    "pulses": [
+     {
+      "x": 540,
+      "y": 1000,
+      "r": 120,
+      "rate": 0.8,
+      "at": 0.2
+     }
+    ]
+   },
+   "sfx": [
+    {
+     "name": "ding",
+     "at": 0.7
+    }
+   ],
+   "vo": "Jadi setiap teguk air adalah perjalanan panjang yang Allah atur. Kirim ke orang yang masih suka buang-buang air."
+  }
+ ]
+}
