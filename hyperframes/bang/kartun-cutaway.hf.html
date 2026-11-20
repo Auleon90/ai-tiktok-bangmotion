@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="id">
+<!-- Kartun Cutaway — explainer style for Bang Motion (runtime: hyperframes/runtime/explain.js; hand-drawn shapes by rough.js, MIT).
+     Same storyboard fields as every Bang page + scene "diagram" (presets motor, fuelflow, cylinder, cycle4 or generic parts).
+     Placeholder: __TOTAL_S__ -->
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="assets/bm/bm.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="assets/props.js"></script>
+<script src="assets/bm/bm.js"></script>
+<script src="assets/bm/rough.js"></script>
+<script src="assets/bm/explain.js"></script>
+<script src="assets/bm/explain-cutaway.js"></script>
+<style>
+@font-face{font-family:"Caveat";font-weight:700;src:url("assets/fonts/lemo/caveat-700.woff2")}
+@font-face{font-family:"Caveat";font-weight:600;src:url("assets/fonts/lemo/caveat-600.woff2")}
+@font-face{font-family:"Jakarta";font-weight:800;src:url("assets/fonts/lemo/jakarta-800.woff2")}
+@font-face{font-family:"Fredoka";font-weight:500;src:url("assets/fonts/lemo/fredoka-500.woff2")}
+@font-face{font-family:"Fredoka";font-weight:700;src:url("assets/fonts/lemo/fredoka-700.woff2")}
+@font-face{font-family:"Bricolage";font-weight:800;src:url("assets/fonts/lemo/bricolage-800.woff2")}
+@font-face{font-family:"Amiri";font-weight:700;src:url("assets/fonts/amiri-arabic-700-normal.woff2")}
+html,body{margin:0;background:#000}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden}
+#world{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.scn{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.scn-in{position:absolute;inset:0}
+.eb{position:absolute;left:70px;top:120px;white-space:nowrap}
+.hd{position:absolute;left:70px;top:178px;width:940px;line-height:1.06}
+.w{display:inline-block;margin:0 .12em 0 0;position:relative}
+.hl{position:relative}.hl b{position:relative;z-index:1;font-weight:inherit}
+.hl i{position:absolute;z-index:0;transform-origin:0 50%}
+.sub{position:absolute;left:70px;top:1240px;width:940px;opacity:0}
+.panel{position:absolute;left:40px;top:382px;width:1000px;height:936px;overflow:visible}
+#root{background:#9fd6ee}
+.panel{left:0;top:0;width:1080px;height:1920px}
+.eb{display:none}
+.hd{top:150px;text-align:center;font:800 78px/1.08 "Jakarta",sans-serif;color:#fff;-webkit-text-stroke:14px #1c232e;paint-order:stroke fill;text-transform:uppercase;z-index:5}
+.scn:not(:first-child) .hd{display:none}
+.hd .w{margin-right:.3em}
+.hl b{color:#ffd23f}
+.hl i{display:none}
+.bm-captions{top:1400px}
+.bm-line{font-family:"Jakarta",sans-serif!important;font-weight:800!important;font-size:72px!important;text-transform:uppercase}
+.bm-word{-webkit-text-stroke:14px #1c232e!important;paint-order:stroke fill;text-shadow:0 6px 0 rgba(0,0,0,.25)!important}
+</style></head><body>
+<div id="root" data-composition-id="root" data-start="0" data-duration="__TOTAL_S__" data-width="1080" data-height="1920">
+  <audio id="vo" src="assets/audio.mp3" data-start="0" data-duration="__TOTAL_S__"></audio>
+  <div id="world"></div>
+  <div id="caps" class="bm-captions"></div>
+</div>
+<script>
+EXPLAIN.run({
+  rough: null, full: true, enter: 'pop', stagger: .07, trans: 'cut', breath: 1,
+  say: { from: { opacity: 0, y: 30 }, to: { opacity: 1, y: 0, duration: .35 }, stagger: .06 },
+  label: { font: 'Fredoka', size: 40, weight: 700, color: '#ffffff' },
+  col: { paper: '#9fd6ee', ink: '#1c232e', mute: '#ffffff', accent: '#ffd23f', accentText: '#ffd23f' },
+  cap: { accent: '#ffd23f', text: '#ffffff' },
+});
+window.__timelines = window.__timelines || {}; window.__timelines["root"] = EXPLAIN.tl;
+</script></body></html>

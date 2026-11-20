@@ -366,6 +366,7 @@ Engine: `hyperframes/` (npm `hyperframes` 0.8.218, GSAP, lottie-web). Renders by
 | papan-tulis | whiteboard, marker lines that draw themselves (rough.js), red marker underline, Caveat | explain | none |
 | infografik-flat | navy, flat bright vectors with soft shadow, shapes pop in, slide cuts, Jakarta/Fredoka | explain | none |
 | sketsa-diagram | Excalidraw-like: dot grid, hachure pastel fills, camera pans across one canvas, sticky-note subtitle | explain | none |
+| kartun-cutaway | full-frame flat cartoon street + scooter (faceless helmeted rider), camera keys zoom in, torn X-ray window into the tank (preset `street`, `hyperframes/runtime/explain-cutaway.js`; example `examples/bensin-sedikit.storyboard.json`) | explain | none |
 
 **Explain rig (papan-tulis, infografik-flat, sketsa-diagram; runtime `hyperframes/runtime/explain.js` + vendored `rough.js`, MIT)** —
 for "cara kerja / kenapa" videos. Scene `"type": "diagram"` with `headline` (`*kata*` highlight) and `"diagram"`: a preset or generic

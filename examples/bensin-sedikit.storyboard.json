@@ -1,0 +1,31 @@
+{
+  "title": "Jangan Biarkan Bensin Tinggal Sedikit",
+  "music": "none",
+  "ambience": "auto",
+  "sfx": true,
+  "style": "bang:kartun-cutaway",
+  "scenes": [
+    {"id": 1, "type": "diagram", "headline": "Bensin tinggal *1 bar*? Bahaya!",
+     "diagram": {"preset": "street", "ride": true, "icon": "gauge-low", "cam": [[0, 560, 980, 1.05], [1, 540, 1000, 1]]},
+     "sfx": [{"name": "engine", "at": 0, "gain": 0.6}],
+     "vo": "Sering jalan dengan bensin tinggal satu bar? Ini yang terjadi di dalam tangkimu."},
+    {"id": 2, "type": "diagram",
+     "diagram": {"preset": "street", "cam": [[0, 540, 1000, 1], [0.4, 470, 1040, 2.7], [1, 470, 1040, 2.75]], "xray": {"at": 0.38, "fuel": [0.8, 0.8], "labels": true}},
+     "sfx": [{"name": "swoosh", "at": 0.36}],
+     "vo": "Di dalam tangki motor injeksi ada pompa bensin. Pompa ini terendam bensin, dan bensin itulah yang ikut mendinginkannya."},
+    {"id": 3, "type": "diagram",
+     "diagram": {"preset": "street", "cam": [[0, 470, 1040, 2.75]], "xray": {"at": 0, "fuel": [0.8, 0.1], "heat": true}},
+     "vo": "Kalau bensin tinggal sedikit, pompa tidak terendam lagi. Ia bekerja lebih panas dari seharusnya."},
+    {"id": 4, "type": "diagram",
+     "diagram": {"preset": "street", "cam": [[0, 470, 1040, 2.75]], "xray": {"at": 0, "fuel": [0.1, 0.1], "sediment": 22, "suck": true}},
+     "vo": "Bensin yang tersisa di dasar tangki juga membawa kotoran dan endapan, yang ikut tersedot ke saringan pompa."},
+    {"id": 5, "type": "diagram",
+     "diagram": {"preset": "street", "sputter": true, "icon": "warn", "cam": [[0, 470, 1040, 2.75], [0.3, 540, 1000, 1.05], [1, 540, 1000, 1]]},
+     "sfx": [{"name": "error", "at": 0.35}],
+     "vo": "Lama-lama saringan mampet, tarikan jadi berat, dan pompa bensin bisa lebih cepat rusak."},
+    {"id": 6, "type": "diagram",
+     "diagram": {"preset": "street", "ride": true, "icon": "gauge-full", "cam": [[0, 540, 1000, 1]]},
+     "sfx": [{"name": "ding", "at": 0.5}],
+     "vo": "Biasakan isi bensin sebelum tinggal satu bar. Kirim ke temanmu yang selalu nunggu indikator kedip."}
+  ]
+}

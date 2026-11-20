@@ -115,5 +115,17 @@
     ],
     "images": "none",
     "music": "none"
+  },
+  "kartun-cutaway": {
+    "name": "Kartun Cutaway (jalanan kartun flat, kamera zoom, jendela x-ray robek ke dalam benda)",
+    "page": "kartun-cutaway.hf.html",
+    "rig": "explain",
+    "themes": [
+      "cara kerja kendaraan & alat",
+      "apa yang terjadi di dalam benda",
+      "kebiasaan sehari-hari + akibatnya"
+    ],
+    "images": "none",
+    "music": "none"
   }
 }

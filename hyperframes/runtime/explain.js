@@ -58,7 +58,7 @@
       const sub = s.subtitle || s.sub; if (sub) { const e = html(`<div class="sub">${esc(sub)}</div>`); inner.appendChild(e); tl.fromTo(e, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .4, immediateRender: false }, t0 + 1.2); }
 
       // ---- panel
-      const svg = el('svg', { viewBox: '0 0 1000 936', class: 'panel' }); inner.appendChild(svg);
+      const svg = el('svg', { viewBox: K.full ? '0 0 1080 1920' : '0 0 1000 936', class: 'panel' }); inner.appendChild(svg);
       const layer = el('g', {}, svg);
       const rc = K.rough ? rough.svg(svg) : null;
       let seed = i * 997 + 11; const enters = [], ups = [];
@@ -128,10 +128,12 @@
       // ---- motion driver: one tween, all machine motion = f(local time)
       if (ups.length) { const st = { lt: 0 }; ups.forEach(f => f(0)); tl.fromTo(st, { lt: 0 }, { lt: d + .5, duration: d + .5, ease: 'none', immediateRender: false, onUpdate: () => ups.forEach(f => f(st.lt)) }, t0); }
       // ---- slow breath on the panel
-      tl.fromTo(svg, { scale: 1, transformOrigin: '50% 40%' }, { scale: K.breath ?? 1.03, duration: d, ease: 'sine.inOut', immediateRender: false }, t0);
+      if ((K.breath ?? 1.03) !== 1) tl.fromTo(svg, { scale: 1, transformOrigin: '50% 40%' }, { scale: K.breath ?? 1.03, duration: d, ease: 'sine.inOut', immediateRender: false }, t0);
 
       // ---- transitions
-      if (K.trans === 'pan') {
+      if (K.trans === 'cut') {
+        sc.style.visibility = i ? 'hidden' : 'visible'; if (i) tl.set(sc, { visibility: 'visible' }, t0 - .01); if (P.scenes[i + 1]) tl.set(sc, { visibility: 'hidden' }, t1 + .02);
+      } else if (K.trans === 'pan') {
         if (i === 0) tl.set(world, { x: 0 }, 0); else tl.to(world, { x: -i * 1180, duration: .75, ease: 'power3.inOut' }, t0 - .4);
       } else {
         sc.style.visibility = i ? 'hidden' : 'visible';
