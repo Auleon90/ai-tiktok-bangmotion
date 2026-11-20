@@ -1,0 +1,289 @@
+{
+ "title": "Pabrik di Dalam Daun",
+ "music": "none",
+ "ambience": "auto",
+ "sfx": true,
+ "style": "bang:kartun-cutaway",
+ "image_style": "flat vector cartoon science illustration, bold clean shapes, bright friendly colors, soft shading, centered composition, no people, no text, no letters",
+ "scenes": [
+  {
+   "id": 1,
+   "type": "diagram",
+   "headline": "Di setiap daun ada *jutaan pabrik* kecil.",
+   "image": "a big leafy green tree standing alone in a sunny meadow, blue sky, sun rays, full tree visible",
+   "diagram": {
+    "preset": "dive",
+    "xray": {
+     "at": 0.55,
+     "x": 560,
+     "y": 720,
+     "size": 480,
+     "grow": 0.78
+    }
+   },
+   "sfx": [
+    {
+     "name": "swoosh",
+     "at": 0.55
+    }
+   ],
+   "vo": "Di setiap helai daun, ada jutaan pabrik kecil yang membuatmu bisa bernapas. Kita intip dengan lup."
+  },
+  {
+   "id": 2,
+   "type": "diagram",
+   "image": "close-up of a single bright green leaf with visible veins, sunlight shining on it, simple soft background",
+   "diagram": {
+    "preset": "dive",
+    "xray": {
+     "at": 0.68,
+     "x": 440,
+     "y": 560,
+     "size": 460,
+     "grow": 0.84
+    },
+    "labels": [
+     {
+      "text": "Tulang daun",
+      "x": 578,
+      "y": 960,
+      "lx": 820,
+      "ly": 1180
+     },
+     {
+      "text": "Cahaya",
+      "x": 800,
+      "y": 300,
+      "lx": 880,
+      "ly": 200,
+      "at": 0.1
+     },
+     {
+      "text": "CO2",
+      "x": 950,
+      "y": 790,
+      "lx": 960,
+      "ly": 640,
+      "at": 0.25
+     },
+     {
+      "text": "Air",
+      "x": 640,
+      "y": 1000,
+      "lx": 640,
+      "ly": 1300,
+      "at": 0.4
+     }
+    ],
+    "flows": [
+     {
+      "path": [
+       [
+        1050,
+        80
+       ],
+       [
+        470,
+        560
+       ]
+      ],
+      "color": "#ffe14d",
+      "n": 8,
+      "r": 12,
+      "speed": 0.4
+     },
+     {
+      "path": [
+       [
+        1100,
+        820
+       ],
+       [
+        560,
+        700
+       ]
+      ],
+      "color": "#9aa3ad",
+      "n": 8,
+      "r": 13,
+      "speed": 0.3,
+      "at": 0.25
+     },
+     {
+      "path": [
+       [
+        694,
+        1190
+       ],
+       [
+        560,
+        700
+       ],
+       [
+        420,
+        380
+       ]
+      ],
+      "color": "#5ec8ff",
+      "n": 10,
+      "r": 11,
+      "speed": 0.25,
+      "at": 0.4
+     }
+    ]
+   },
+   "vo": "Daun menyerap cahaya matahari, mengambil karbon dioksida dari udara, dan air yang naik dari akar."
+  },
+  {
+   "id": 3,
+   "type": "diagram",
+   "image": "magnified green leaf tissue made of many boxy compartments with thin walls, each compartment full of small round green beads",
+   "diagram": {
+    "preset": "dive",
+    "xray": {
+     "at": 0.66,
+     "x": 540,
+     "y": 960,
+     "size": 440,
+     "grow": 0.84
+    },
+    "labels": [
+     {
+      "text": "Sel daun",
+      "x": 540,
+      "y": 400,
+      "lx": 800,
+      "ly": 300
+     },
+     {
+      "text": "Kloroplas",
+      "x": 620,
+      "y": 900,
+      "lx": 830,
+      "ly": 1260,
+      "at": 0.3
+     }
+    ]
+   },
+   "vo": "Setiap sel daun berisi puluhan kloroplas, butiran hijau yang menyimpan klorofil."
+  },
+  {
+   "id": 4,
+   "type": "diagram",
+   "image": "cutaway of a single chloroplast: a large green oval with stacks of flat green discs inside, soft light background",
+   "diagram": {
+    "preset": "dive",
+    "labels": [
+     {
+      "text": "Kloroplas",
+      "x": 847,
+      "y": 768,
+      "lx": 830,
+      "ly": 500
+     },
+     {
+      "text": "Klorofil",
+      "x": 540,
+      "y": 900,
+      "lx": 280,
+      "ly": 1260,
+      "at": 0.3
+     },
+     {
+      "text": "O2",
+      "x": 980,
+      "y": 380,
+      "lx": 980,
+      "ly": 240,
+      "at": 0.5
+     }
+    ],
+    "flows": [
+     {
+      "path": [
+       [
+        60,
+        180
+       ],
+       [
+        480,
+        800
+       ]
+      ],
+      "color": "#ffe14d",
+      "n": 8,
+      "r": 12,
+      "speed": 0.4
+     },
+     {
+      "path": [
+       [
+        720,
+        860
+       ],
+       [
+        900,
+        560
+       ],
+       [
+        1040,
+        260
+       ]
+      ],
+      "color": "#ffffff",
+      "n": 8,
+      "r": 15,
+      "speed": 0.3,
+      "at": 0.45
+     }
+    ]
+   },
+   "vo": "Di sinilah cahaya diubah menjadi gula untuk tumbuhan, dan sisanya dilepas sebagai oksigen. Oksigen yang kamu hirup sekarang."
+  },
+  {
+   "id": 5,
+   "type": "diagram",
+   "image": "a big leafy green tree standing alone in a sunny meadow, blue sky, sun rays, full tree visible",
+   "diagram": {
+    "preset": "dive",
+    "card": {
+     "title": "QS. Al-An'am: 99",
+     "arabic": "فَأَخْرَجْنَا مِنْهُ خَضِرًا",
+     "text": "Lalu Kami keluarkan darinya tumbuh-tumbuhan yang menghijau.",
+     "at": 0.12,
+     "y": 250
+    }
+   },
+   "vo": "Allah berfirman: lalu Kami keluarkan darinya, tumbuh-tumbuhan yang menghijau."
+  },
+  {
+   "id": 6,
+   "type": "diagram",
+   "image": "a big leafy green tree standing alone in a sunny meadow, blue sky, sun rays, full tree visible",
+   "diagram": {
+    "preset": "dive",
+    "cam": [
+     [
+      0,
+      540,
+      960,
+      1.05
+     ],
+     [
+      1,
+      540,
+      820,
+      1.25
+     ]
+    ]
+   },
+   "sfx": [
+    {
+     "name": "ding",
+     "at": 0.75
+    }
+   ],
+   "vo": "Satu tarikan napasmu dimulai dari daun yang tak pernah kamu perhatikan. Kirim ke orang yang paling suka berkebun."
+  }
+ ]
+}
