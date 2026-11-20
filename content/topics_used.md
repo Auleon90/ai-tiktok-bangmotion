@@ -10,7 +10,7 @@ catat juga durasi, rata-rata waktu tonton, completion rate, share)
 
 | Tanggal | Topik | Hook | Ayat/Hadits | Gaya | Views |
 |---|---|---|---|---|---|
-| 2026-11-20 | Qalb = jantung (hadits mudhghah lengkap; qalb vs kabid; Ibnu Manzhur, Ibnu Qayyim, Al-Ghazali; shadr·qalb·fu'ad) | "Jangan sampai jantungmu sehat, tapi qalbumu yang sakit." | HR. Bukhari 52 & Muslim 1599; QS. Al-Mulk 13 | hologram-hud (HF + 3D three.js buatan kode, tanpa FLUX, 126 s), tanpa BGM | – |
+| 2026-11-20 | Qalb = jantung → syukur (hadits mudhghah; qalb vs kabid; Ibnu Manzhur, Ibnu Qayyim, Al-Ghazali; 3 rukun syukur Madarij 2/246) | "Jangan sampai jantungmu terus berdetak untukmu, tapi qalbumu tak pernah bersyukur." | HR. Bukhari 52 & Muslim 1599; QS. Al-Mulk 23 | hologram-hud (HF, HUD 2D + jantung SVG, tanpa FLUX/3D, 80 s), tanpa BGM | – |
 | 2026-11-19 | Nikmat ginjal (180 L cairan darah disaring/hari, vs cuci darah) | "Jangan sampai kamu harus cuci darah dulu, baru sadar nikmat ginjalmu." | QS. Adz-Dzariyat 21 | bang:katalog-putih (HF), tanpa backsound | 166 (52 s, tonton rata² 13,1 s, selesai 3,0%, 0 share) |
 | 2026-11-19 | Nikmat tidur (tidur = "mati" sejenak, doa bangun tidur) | "Jangan sampai Allah mencabut nikmat tidurmu, baru kamu sadar betapa mahalnya." | QS. An-Naba 9; HR. Bukhari 6312 | paper-lantern (Lemo native) | belum diunggah |
 | 2026-11-19 | Kesulitan → doa → pertolongan (Yunus, Ayyub, Musa, Ibrahim) — versi 63 s dari video referensi 169 s | "Jangan sampai kamu mengira, titik terendahmu adalah akhir ceritamu." | QS. Al-Anbiya 69, 83, 87–88; Asy-Syu'ara 62; Al-Insyirah 5; HR. Bukhari 4563 | paper-lantern (Lemo native) + custom garis-doa, tanpa backsound | belum diunggah (versi 39 s siap: Yunus + Ibrahim, ambience auto) |
