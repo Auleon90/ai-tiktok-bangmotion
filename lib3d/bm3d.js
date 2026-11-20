@@ -112,6 +112,69 @@ const PRESETS = {
     const gal = new THREE.Points(g, new THREE.PointsMaterial({ size: .16, vertexColors: true, map: glowSprite(), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false })); S.add(gal);
     return (lt, d, cam) => { gal.rotation.y = lt * .06 * (o.speed || 1); const u = ease(lt / d); cam.position.set(0, 6 - u * 3.5, 11 - u * 5); cam.lookAt(0, 0, 0); };
   },
+
+  // heart: a beating hologram heart (extruded heart shape + vessels), wireframe + additive glow.
+  // o.split (cyan | gold halves: organ vs spirit), o.organs (kabid/liver on the body's right), o.ribs (rib cage rings),
+  // o.bpm (default 72), o.y (screen offset), o.zoom (camera distance factor)
+  heart(S, o, R) {
+    const hue = col(o.hue || '#5fe3ff'), acc = col(o.accent || '#ffc861');
+    const sh = new THREE.Shape(); sh.moveTo(0, -1.25);
+    sh.bezierCurveTo(-.35, -.8, -1.35, -.35, -1.25, .35); sh.bezierCurveTo(-1.15, 1.05, -.3, 1.15, 0, .6);
+    sh.bezierCurveTo(.3, 1.15, 1.15, 1.05, 1.25, .35); sh.bezierCurveTo(1.35, -.35, .35, -.8, 0, -1.25);
+    const geo = new THREE.ExtrudeGeometry(sh, { depth: .55, bevelEnabled: true, bevelThickness: .45, bevelSize: .3, bevelSegments: 8, curveSegments: 28 });
+    geo.center(); geo.rotateZ(-.32);
+    const grp = new THREE.Group(); S.add(grp);
+    const half = (c, side) => {
+      const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: .16, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
+        clippingPlanes: side ? [new THREE.Plane(new THREE.Vector3(side, 0, 0), 0)] : [] }));
+      const w = new THREE.LineSegments(new THREE.WireframeGeometry(geo), new THREE.LineBasicMaterial({ color: c, transparent: true, opacity: .22, blending: THREE.AdditiveBlending, depthWrite: false,
+        clippingPlanes: m.material.clippingPlanes }));
+      const e = new THREE.LineSegments(new THREE.EdgesGeometry(geo, 25), new THREE.LineBasicMaterial({ color: c, transparent: true, opacity: .6, clippingPlanes: m.material.clippingPlanes }));
+      grp.add(m, w, e);
+    };
+    if (o.split) { half(hue, -1); half(acc, 1); } else half(o.gold ? acc : hue, 0);
+    // vessels: aorta arch + two trunks
+    const tube = (pts, r, c) => grp.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map(p => new THREE.Vector3(...p))), 40, r, 10),
+      new THREE.MeshBasicMaterial({ color: c, wireframe: true, transparent: true, opacity: .55, blending: THREE.AdditiveBlending, depthWrite: false })));
+    tube([[.15, .7, 0], [.25, 1.5, 0], [-.25, 1.85, 0], [-.75, 1.55, 0], [-.85, .9, -.1]], .09, o.vessels ? acc : hue);
+    tube([[-.35, .7, .1], [-.5, 1.5, .25], [-.45, 2.0, .3]], .07, hue);
+    tube([[.55, .6, -.1], [.9, 1.3, -.2], [1.25, 1.5, -.2]], .07, hue);
+    if (o.organs) {   // kabid: a wedge on the body's right = viewer's left, low
+      const ls = new THREE.Shape(); ls.moveTo(-3.6, -1.6); ls.bezierCurveTo(-3.9, -.6, -2.6, -.4, -1.2, -.9); ls.bezierCurveTo(-.9, -1.4, -1.6, -2.2, -2.6, -2.3); ls.bezierCurveTo(-3.2, -2.3, -3.5, -2, -3.6, -1.6);
+      const lg = new THREE.ExtrudeGeometry(ls, { depth: .5, bevelEnabled: true, bevelThickness: .3, bevelSize: .2, bevelSegments: 4 }); lg.translate(0, 0, -.5);
+      const liver = new THREE.Group();
+      liver.add(new THREE.LineSegments(new THREE.EdgesGeometry(lg, 20), new THREE.LineBasicMaterial({ color: col('#ff8a6b'), transparent: true, opacity: .8 })));
+      liver.add(new THREE.Mesh(lg, new THREE.MeshBasicMaterial({ color: col('#ff8a6b'), transparent: true, opacity: .1, blending: THREE.AdditiveBlending, depthWrite: false })));
+      S.add(liver); grp.position.x = .9;
+    }
+    const ribs = [];
+    if (o.ribs) for (let k = 0; k < 7; k++) {
+      const r = new THREE.Mesh(new THREE.TorusGeometry(2.6 - Math.abs(k - 2.5) * .12, .03, 6, 80, Math.PI * 1.55), new THREE.MeshBasicMaterial({ color: hue, transparent: true, opacity: .28 }));
+      r.rotation.set(Math.PI / 2 + .25, 0, Math.PI * .72); r.scale.set(1, .62, 1); r.position.y = 2.2 - k * .7; S.add(r); ribs.push(r);
+    }
+    const dust = points(R, 900, () => { const a = R() * 6.28, rr = 2.2 + R() * 2.2; return [Math.cos(a) * rr, (R() - .5) * 6, Math.sin(a) * rr]; }, o.gold ? '#ffc861' : '#5fe3ff', .05); S.add(dust);
+    const bpm = o.bpm || 72;
+    return (lt, d, cam) => {
+      const ph = (lt * bpm / 60) % 1, beat = Math.exp(-ph * 9) * .09 + Math.exp(-Math.max(0, ph - .18) * 10) * (ph > .18 ? .05 : 0);
+      grp.scale.setScalar(1 + beat); grp.rotation.y = Math.sin(lt * .35) * .5 + (o.spin ? lt * .3 : 0);
+      dust.rotation.y = lt * .05; const z = (o.zoom || 1) * (12 - ease(lt / d) * 1.6);
+      cam.position.set(Math.sin(lt * .12) * 1.2, .6, z); cam.lookAt(0, o.y ?? -.2, 0);
+    };
+  },
+  // layers: three nested shells (shadr outer, qalb, fu'ad core) that open one after another
+  layers(S, o, R) {
+    const cs = [col('#5fe3ff'), col('#9fd8ff'), col(o.accent || '#ffc861')], rs = [2.6, 1.75, .9];
+    const shells = rs.map((r, k) => { const g = new THREE.IcosahedronGeometry(r, k === 2 ? 2 : 3);
+      const m = new THREE.LineSegments(new THREE.WireframeGeometry(g), new THREE.LineBasicMaterial({ color: cs[k], transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
+      const f = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: cs[k], transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })); m.add(f); S.add(m); return { m, f }; });
+    const dust = points(R, 700, () => { const a = R() * 6.28, rr = 3 + R() * 2; return [Math.cos(a) * rr, (R() - .5) * 5, Math.sin(a) * rr]; }, '#5fe3ff', .05); S.add(dust);
+    const step = o.step || 2.4;
+    return (lt, d, cam) => {
+      shells.forEach((s, k) => { const u = ease((lt - .3 - k * step) / 1), on = lt > .3 + (k + 1) * step + .2 && k < 2 ? .35 : 1;
+        s.m.material.opacity = u * .55 * on; s.f.material.opacity = u * (k === 2 ? .35 : .05); s.m.rotation.set(lt * .1 * (k + 1), lt * .15 * (k % 2 ? -1 : 1), 0); });
+      dust.rotation.y = -lt * .04; cam.position.set(0, .8, 9 - ease(lt / d) * 2.2); cam.lookAt(0, 0, 0);
+    };
+  },
   bars(S, o, R) {
     const vals = (o.values && o.values.length ? o.values : [3, 5, 8]).map(Number), mx = Math.max(...vals) || 1, acc = col(o.accent || '#ffcd82');
     const colsC = (o.colors || []).map(col);
@@ -158,7 +221,7 @@ export function create(o = {}, { w = 540, h = 960, alpha = true, canvas } = {}) 
   const make = PRESETS[o.preset] || PRESETS.crystal;
   const R = mulberry((o.seed ?? 7) * 9301 + 49297);
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha, preserveDrawingBuffer: true, powerPreference: 'low-power' });
-  renderer.setPixelRatio(1); renderer.setSize(w, h, false); renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.setPixelRatio(1); renderer.localClippingEnabled = true; renderer.setSize(w, h, false); renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping;
   const S = new THREE.Scene(); if (o.bg) S.background = col(o.bg);
   const cam = new THREE.PerspectiveCamera(o.fov || 50, w / h, .1, 200);
   const step = make(S, o, R);
