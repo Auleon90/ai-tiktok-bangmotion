@@ -34,3 +34,4 @@ Sudah dipakai, hasil biasa (±200–350 views) — hindari sudut yang sama:
 - i'tidal, Nabi Musa di istana Firaun, usaha tidak mengkhianati hasil, husnudzon
 - membandingkan hidup, validasi & barang mahal, berbakti orang tua, doa ilmu & rezeki
 - mikro drama "Memaafkan Bukan Berarti Harus Kembali" (ep. 1–3)
+| 2026-11-20 | Sholah Athiyah: Allah mitra bisnis | Ia menulis nama Allah di kontrak bisnisnya | instruksi (Bayangkan…) | QS. Al-Baqarah 245, QS. Fathir 29 | custom SVG 'lentera emas' | — |
