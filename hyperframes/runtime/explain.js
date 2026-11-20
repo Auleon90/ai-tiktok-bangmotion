@@ -262,7 +262,7 @@
     B.shape('line', { pts: [[-160, -18], [160, -18]] }, 'ink', { parent: pis.inner, noEnter: true, sw: 4 }); B.shape('line', { pts: [[-160, 2], [160, 2]] }, 'ink', { parent: pis.inner, noEnter: true, sw: 4 });
     const flame = B.shape('rect', { x: XL, y: TOP, w: XR - XL, h: 100 }, 'fire', { noEnter: true, plain: true }); flame.outer.style.opacity = 0;
     const spark = B.shape('poly', { pts: star(500, 245, 70, 22, 9) }, 'spark', { noEnter: true, sw: 3 }); spark.outer.style.opacity = 0;
-    const push = B.shape('arrow', { pts: [[880, 270], [880, 600]] }, 'fire', { noEnter: true, sw: 14 }); push.outer.style.opacity = 0;
+    const push = B.shape('arrow', { pts: [[955, 270], [955, 600]] }, 'fire', { noEnter: true, sw: 14 }); push.outer.style.opacity = 0;
     const flowIn = B.shape('arrow', { pts: [[80, 168], [330, 168]] }, 'air', { noEnter: true, sw: 10 }); flowIn.outer.style.opacity = 0;
     const flowOut = B.shape('arrow', { pts: [[670, 168], [930, 168]] }, 'gas', { noEnter: true, sw: 10 }); flowOut.outer.style.opacity = 0;
     const note = sp.note ? B.text(500, 925 - 40, sp.note, { size: 44, weight: 800, role: 'accentText', at: .7, halo: B.C.paper }) : null;
