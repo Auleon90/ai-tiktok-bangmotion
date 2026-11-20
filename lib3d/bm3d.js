@@ -129,16 +129,16 @@ const PRESETS = {
         clippingPlanes: side ? [new THREE.Plane(new THREE.Vector3(side, 0, 0), 0)] : [] }));
       const w = new THREE.LineSegments(new THREE.WireframeGeometry(geo), new THREE.LineBasicMaterial({ color: c, transparent: true, opacity: .22, blending: THREE.AdditiveBlending, depthWrite: false,
         clippingPlanes: m.material.clippingPlanes }));
-      const e = new THREE.LineSegments(new THREE.EdgesGeometry(geo, 25), new THREE.LineBasicMaterial({ color: c, transparent: true, opacity: .9, clippingPlanes: m.material.clippingPlanes }));
+      const e = new THREE.LineSegments(new THREE.EdgesGeometry(geo, 25), new THREE.LineBasicMaterial({ color: c, transparent: true, opacity: .6, clippingPlanes: m.material.clippingPlanes }));
       grp.add(m, w, e);
     };
     if (o.split) { half(hue, -1); half(acc, 1); } else half(o.gold ? acc : hue, 0);
     // vessels: aorta arch + two trunks
     const tube = (pts, r, c) => grp.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map(p => new THREE.Vector3(...p))), 40, r, 10),
       new THREE.MeshBasicMaterial({ color: c, wireframe: true, transparent: true, opacity: .55, blending: THREE.AdditiveBlending, depthWrite: false })));
-    tube([[.15, .7, 0], [.25, 1.6, 0], [-.3, 2.1, 0], [-.9, 1.7, 0], [-1.0, .9, -.1]], .2, o.vessels ? acc : hue);
-    tube([[-.35, .7, .1], [-.5, 1.5, .25], [-.45, 2.3, .3]], .14, hue);
-    tube([[.55, .6, -.1], [.9, 1.3, -.2], [1.4, 1.7, -.2]], .13, hue);
+    tube([[.15, .7, 0], [.25, 1.5, 0], [-.25, 1.85, 0], [-.75, 1.55, 0], [-.85, .9, -.1]], .09, o.vessels ? acc : hue);
+    tube([[-.35, .7, .1], [-.5, 1.5, .25], [-.45, 2.0, .3]], .07, hue);
+    tube([[.55, .6, -.1], [.9, 1.3, -.2], [1.25, 1.5, -.2]], .07, hue);
     if (o.organs) {   // kabid: a wedge on the body's right = viewer's left, low
       const ls = new THREE.Shape(); ls.moveTo(-3.6, -1.6); ls.bezierCurveTo(-3.9, -.6, -2.6, -.4, -1.2, -.9); ls.bezierCurveTo(-.9, -1.4, -1.6, -2.2, -2.6, -2.3); ls.bezierCurveTo(-3.2, -2.3, -3.5, -2, -3.6, -1.6);
       const lg = new THREE.ExtrudeGeometry(ls, { depth: .5, bevelEnabled: true, bevelThickness: .3, bevelSize: .2, bevelSegments: 4 }); lg.translate(0, 0, -.5);
@@ -157,7 +157,7 @@ const PRESETS = {
     return (lt, d, cam) => {
       const ph = (lt * bpm / 60) % 1, beat = Math.exp(-ph * 9) * .09 + Math.exp(-Math.max(0, ph - .18) * 10) * (ph > .18 ? .05 : 0);
       grp.scale.setScalar(1 + beat); grp.rotation.y = Math.sin(lt * .35) * .5 + (o.spin ? lt * .3 : 0);
-      dust.rotation.y = lt * .05; const z = (o.zoom || 1) * (8.4 - ease(lt / d) * 1.4);
+      dust.rotation.y = lt * .05; const z = (o.zoom || 1) * (12 - ease(lt / d) * 1.6);
       cam.position.set(Math.sin(lt * .12) * 1.2, .6, z); cam.lookAt(0, o.y ?? -.2, 0);
     };
   },
