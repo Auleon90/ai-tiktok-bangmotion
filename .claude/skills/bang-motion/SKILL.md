@@ -314,6 +314,11 @@ If Q1 = option 2 (HyperFrames) OR Q1 = option 1 and Auto picked HyperFrames, **Q
    Follow it literally; ask nothing else unless it contradicts the content rules (Islamic image rules, no Prophet ﷺ images).
 In the auto options, say in one line which style was picked and why (topic + tone of the storyboard), then go on to QA/render.
 **Bang Motion auto** = `hyperframes/bang/styles.json` themes; storyboard gets NO `image_prompt` (strip any), `"style": "bang:<slug>"`.
+**Explain styles in Auto (all sub-options, incl. Auto Bang Motion):** when the topic explains HOW something works or what is INSIDE it, pick:
+`kartun-cutaway` preset `dive` for outside → inside levels (body → heart → vessels, mountain → soil → groundwater, building → rooms,
+leaf → cell → chloroplast; uses 3–6 FLUX images, the only Bang exception to "no images"), `kartun-cutaway` preset `street` for vehicles/fuel,
+`infografik-flat` for a machine/process with moving parts, `papan-tulis` for a step-by-step "why", `sketsa-diagram` for a flow of logic.
+Say which one and why in the Auto option line.
 **Opuscar auto** = the "Visual styles" rules above (Lemo style + FLUX images + `action`/`custom` scenes where they help).
 **Campuran** = Bang Motion when the video is text/number/argument driven (facts, psychology, explainers, steps, data);
 Opuscar when it is visual/atmospheric (places, nature, history scenes, stories that need pictures).
@@ -328,6 +333,7 @@ If Q1 = option 4, **Q2** — "Pilih yang mana?", header "Mode":
 |---|---|
 | Math, physics, chemistry, formulas, graphs, geometry, algorithms | **3 Manim** |
 | History / sirah with maps, troop movement, cinematic storytelling, final upload where quality matters most | **2 Remotion + Lottie** |
+| "Cara kerja / apa yang terjadi di dalam" — a mechanism, process or object opened up (engine, body organ, soil/water, building, leaf/cell) | **1 HyperFrames, explain styles** (below) |
 | Kinetic typography, listicles, tips, facts, motivation, news, promo — most general content | **1 HyperFrames** |
 | Topic fits a ★ native kit and the user wants the Opuscar look (sejarah dunia, sains, psikologi, motivasi, Qur'an/hadits, sejarah Islam) | **4 Lemo native** |
 | User says it's a draft / test / "cepat" | **4 Lemo native** (fastest full-quality render) |
