@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="id">
+<!-- Papan Tulis — explainer style for Bang Motion (runtime: hyperframes/runtime/explain.js; hand-drawn shapes by rough.js, MIT).
+     Same storyboard fields as every Bang page + scene "diagram" (presets motor, fuelflow, cylinder, cycle4 or generic parts).
+     Placeholder: __TOTAL_S__ -->
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="assets/bm/bm.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="assets/props.js"></script>
+<script src="assets/bm/bm.js"></script>
+<script src="assets/bm/rough.js"></script>
+<script src="assets/bm/explain.js"></script>
+<style>
+@font-face{font-family:"Caveat";font-weight:700;src:url("assets/fonts/lemo/caveat-700.woff2")}
+@font-face{font-family:"Caveat";font-weight:600;src:url("assets/fonts/lemo/caveat-600.woff2")}
+@font-face{font-family:"Jakarta";font-weight:800;src:url("assets/fonts/lemo/jakarta-800.woff2")}
+@font-face{font-family:"Fredoka";font-weight:500;src:url("assets/fonts/lemo/fredoka-500.woff2")}
+@font-face{font-family:"Fredoka";font-weight:700;src:url("assets/fonts/lemo/fredoka-700.woff2")}
+@font-face{font-family:"Bricolage";font-weight:800;src:url("assets/fonts/lemo/bricolage-800.woff2")}
+@font-face{font-family:"Amiri";font-weight:700;src:url("assets/fonts/amiri-arabic-700-normal.woff2")}
+html,body{margin:0;background:#000}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden}
+#world{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.scn{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.scn-in{position:absolute;inset:0}
+.eb{position:absolute;left:70px;top:120px;white-space:nowrap}
+.hd{position:absolute;left:70px;top:178px;width:940px;line-height:1.06}
+.w{display:inline-block;margin:0 .12em 0 0;position:relative}
+.hl{position:relative}.hl b{position:relative;z-index:1;font-weight:inherit}
+.hl i{position:absolute;z-index:0;transform-origin:0 50%}
+.sub{position:absolute;left:70px;top:1240px;width:940px;opacity:0}
+.panel{position:absolute;left:40px;top:382px;width:1000px;height:936px;overflow:visible}
+#root{background:#f4f3ee}
+.board{position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 35%,#fbfbf7 0%,#eeede6 100%)}
+.board:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(40,60,90,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(40,60,90,.045) 1px,transparent 1px);background-size:60px 60px}
+.frame{position:absolute;inset:0;border:22px solid #c9ccd1;box-shadow:inset 0 0 0 3px #aeb2b8;pointer-events:none;z-index:40}
+.eb{font:700 44px "Caveat",cursive;color:#1f5fbf;letter-spacing:.02em}
+.hd{font:700 92px/1 "Caveat",cursive;color:#1b1b1b}
+.hl i{left:-4px;right:-4px;bottom:2px;height:14px;background:#e0322a;border-radius:8px;transform:rotate(-1.5deg) scaleX(0);opacity:.9}
+.sub{font:600 52px "Caveat",cursive;color:#e0322a}
+.bm-line{font-family:"Caveat",cursive!important;font-weight:700!important;font-size:84px!important}
+.bm-word{-webkit-text-stroke:0!important;text-shadow:0 0 12px #fff,0 0 4px #fff!important}
+</style></head><body>
+<div id="root" data-composition-id="root" data-start="0" data-duration="__TOTAL_S__" data-width="1080" data-height="1920">
+  <audio id="vo" src="assets/audio.mp3" data-start="0" data-duration="__TOTAL_S__"></audio>
+  <div class="board"></div><div id="world"></div><div class="frame"></div>
+  <div id="caps" class="bm-captions"></div>
+</div>
+<script>
+EXPLAIN.run({
+  rough: { roughness: 1.7, bowing: 1.3, strokeWidth: 5, fillStyle: 'hachure', hachureGap: 13, fillWeight: 3 },
+  enter: 'draw', drawDur: .5, stagger: .16, trans: 'erase', breath: 1.025,
+  say: { from: { opacity: 0, x: -14 }, to: { opacity: 1, x: 0, duration: .25, ease: 'power1.out' }, stagger: .09 },
+  label: { font: 'Caveat', size: 44, weight: 700, color: '#1b1b1b' },
+  col: { paper: '#f8f8f3', ink: '#1b1b1b', mute: '#5d6470', accent: '#e0322a', accentText: '#e0322a', hl: '#f2c200',
+    fuel: '#e9a400', air: '#1f6fd6', airText: '#1f5fbf', fire: '#ff5a1f', gas: '#7d838c', spark: '#ffd31a', mix: '#9fb9e6',
+    metal: '#8d96a3', metal2: '#5f6873', port: '#c3c8cf', plug: '#3a3f46', tire: '#1b1b1b', body: '#1f6fd6', seat: '#3a3f46',
+    card: '#d8dbe0', airSoft: '#a9c6f0', fireSoft: '#ffb08f', gasSoft: '#c4c8ce', hubText: '#1b1b1b', tireW: 9, numFont: 'Caveat' },
+  cap: { accent: '#e0322a', text: '#1b1b1b' },
+});
+window.__timelines = window.__timelines || {}; window.__timelines["root"] = EXPLAIN.tl;
+</script></body></html>

@@ -1,0 +1,94 @@
+{
+ "title": "Kenapa Motor Bisa Jalan",
+ "music": "none",
+ "ambience": "auto",
+ "sfx": true,
+ "style": "bang:papan-tulis",
+ "scenes": [
+  {
+   "id": 1,
+   "type": "diagram",
+   "eyebrow": "Kenapa motor bisa jalan?",
+   "headline": "Motormu meledak *50 kali* per detik.",
+   "diagram": {
+    "preset": "motor",
+    "focus": "ruang bakar"
+   },
+   "vo": "Setiap kamu tarik gas, mesin motormu bisa meledak sampai lima puluh kali per detik. Kok bisa?"
+  },
+  {
+   "id": 2,
+   "type": "diagram",
+   "eyebrow": "Bahan bakar",
+   "headline": "Bensin + *udara*",
+   "diagram": {
+    "preset": "fuelflow"
+   },
+   "vo": "Bensin dari tangki dikabutkan injektor, lalu dicampur udara, kira-kira satu banding empat belas."
+  },
+  {
+   "id": 3,
+   "type": "diagram",
+   "eyebrow": "Langkah 1",
+   "headline": "*Hisap*",
+   "diagram": {
+    "preset": "cylinder",
+    "stroke": "intake"
+   },
+   "vo": "Langkah satu, hisap. Piston turun, katup masuk terbuka, campuran tersedot ke silinder."
+  },
+  {
+   "id": 4,
+   "type": "diagram",
+   "eyebrow": "Langkah 2",
+   "headline": "*Kompresi*",
+   "diagram": {
+    "preset": "cylinder",
+    "stroke": "compression",
+    "note": "±10× lebih padat"
+   },
+   "vo": "Langkah dua, kompresi. Katup tertutup, piston naik, memadatkan campuran sampai sepuluh kali."
+  },
+  {
+   "id": 5,
+   "type": "diagram",
+   "eyebrow": "Langkah 3",
+   "headline": "*Usaha* — DUAR!",
+   "diagram": {
+    "preset": "cylinder",
+    "stroke": "power"
+   },
+   "sfx": [
+    {
+     "name": "boom",
+     "at": 0.2
+    }
+   ],
+   "vo": "Langkah tiga, usaha. Busi memercik, campuran meledak, dan piston terdorong kuat ke bawah. Inilah tenaga yang memutar roda."
+  },
+  {
+   "id": 6,
+   "type": "diagram",
+   "eyebrow": "Langkah 4",
+   "headline": "*Buang*",
+   "diagram": {
+    "preset": "cylinder",
+    "stroke": "exhaust"
+   },
+   "vo": "Langkah empat, buang. Katup buang terbuka, gas sisa didorong keluar lewat knalpot."
+  },
+  {
+   "id": 7,
+   "type": "diagram",
+   "eyebrow": "Ringkasnya",
+   "headline": "4 langkah = *1 ledakan*",
+   "diagram": {
+    "preset": "cycle4",
+    "active": "cycle",
+    "hub": "50×",
+    "hub2": "per detik"
+   },
+   "vo": "Empat langkah, satu ledakan. Di enam ribu RPM, itu terjadi lima puluh kali per detik. Kirim ke temanmu yang suka ngegas."
+  }
+ ]
+}

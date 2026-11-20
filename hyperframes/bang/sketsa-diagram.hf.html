@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="id">
+<!-- Sketsa Diagram — explainer style for Bang Motion (runtime: hyperframes/runtime/explain.js; hand-drawn shapes by rough.js, MIT).
+     Same storyboard fields as every Bang page + scene "diagram" (presets motor, fuelflow, cylinder, cycle4 or generic parts).
+     Placeholder: __TOTAL_S__ -->
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="assets/bm/bm.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="assets/props.js"></script>
+<script src="assets/bm/bm.js"></script>
+<script src="assets/bm/rough.js"></script>
+<script src="assets/bm/explain.js"></script>
+<style>
+@font-face{font-family:"Caveat";font-weight:700;src:url("assets/fonts/lemo/caveat-700.woff2")}
+@font-face{font-family:"Caveat";font-weight:600;src:url("assets/fonts/lemo/caveat-600.woff2")}
+@font-face{font-family:"Jakarta";font-weight:800;src:url("assets/fonts/lemo/jakarta-800.woff2")}
+@font-face{font-family:"Fredoka";font-weight:500;src:url("assets/fonts/lemo/fredoka-500.woff2")}
+@font-face{font-family:"Fredoka";font-weight:700;src:url("assets/fonts/lemo/fredoka-700.woff2")}
+@font-face{font-family:"Bricolage";font-weight:800;src:url("assets/fonts/lemo/bricolage-800.woff2")}
+@font-face{font-family:"Amiri";font-weight:700;src:url("assets/fonts/amiri-arabic-700-normal.woff2")}
+html,body{margin:0;background:#000}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden}
+#world{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.scn{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.scn-in{position:absolute;inset:0}
+.eb{position:absolute;left:70px;top:120px;white-space:nowrap}
+.hd{position:absolute;left:70px;top:178px;width:940px;line-height:1.06}
+.w{display:inline-block;margin:0 .12em 0 0;position:relative}
+.hl{position:relative}.hl b{position:relative;z-index:1;font-weight:inherit}
+.hl i{position:absolute;z-index:0;transform-origin:0 50%}
+.sub{position:absolute;left:70px;top:1240px;width:940px;opacity:0}
+.panel{position:absolute;left:40px;top:382px;width:1000px;height:936px;overflow:visible}
+#root{background:#ffffff}
+.dots{position:absolute;inset:0;background-image:radial-gradient(#d5d7de 2.2px,transparent 2.4px);background-size:42px 42px}
+.eb{font:600 40px "Caveat",cursive;color:#1971c2;background:#e7f1fd;border:3px solid #1971c2;border-radius:12px;padding:2px 18px}
+.hd{font:800 82px/1.05 "Bricolage",sans-serif;color:#1e1e1e;letter-spacing:-.01em}
+.hl i{left:-6px;right:-6px;top:.42em;bottom:.02em;background:#ffec99;border-radius:6px;transform:scaleX(0) rotate(-1deg)}
+.sub{font:600 50px "Caveat",cursive;color:#1e1e1e;background:#fff3bf;padding:10px 24px;width:auto;box-shadow:0 10px 18px rgba(0,0,0,.12);transform:rotate(-2deg)}
+.bm-line{font-family:"Bricolage",sans-serif!important;font-weight:800!important;font-size:66px!important}
+.bm-word{-webkit-text-stroke:0!important;text-shadow:0 0 14px #fff,0 0 5px #fff,0 0 2px #fff!important}
+</style></head><body>
+<div id="root" data-composition-id="root" data-start="0" data-duration="__TOTAL_S__" data-width="1080" data-height="1920">
+  <audio id="vo" src="assets/audio.mp3" data-start="0" data-duration="__TOTAL_S__"></audio>
+  <div class="dots"></div><div id="world"></div>
+  <div id="caps" class="bm-captions"></div>
+</div>
+<script>
+EXPLAIN.run({
+  rough: { roughness: 1, bowing: .8, strokeWidth: 3.5, fillStyle: 'hachure', hachureGap: 9, fillWeight: 2.2 },
+  enter: 'draw', drawDur: .35, stagger: .08, trans: 'pan', breath: 1.02,
+  say: { from: { opacity: 0, y: 18 }, to: { opacity: 1, y: 0, duration: .3, ease: 'power2.out' }, stagger: .06 },
+  label: { font: 'Caveat', size: 44, weight: 600, color: '#1e1e1e' },
+  col: { paper: '#ffffff', ink: '#1e1e1e', mute: '#495057', accent: '#e03131', accentText: '#c92a2a', hl: '#ffec99',
+    fuel: '#f59f00', air: '#1971c2', airText: '#1971c2', fire: '#f76707', gas: '#868e96', spark: '#fcc419', mix: '#a5d8ff',
+    metal: '#ced4da', metal2: '#adb5bd', port: '#e9ecef', plug: '#495057', tire: '#343a40', body: '#b2f2bb', seat: '#495057',
+    card: '#fff9db', airSoft: '#d0ebff', fireSoft: '#ffd8a8', gasSoft: '#e9ecef', hubText: '#1e1e1e', tireW: 6, numFont: 'Bricolage' },
+  cap: { accent: '#e03131', text: '#1e1e1e' },
+});
+window.__timelines = window.__timelines || {}; window.__timelines["root"] = EXPLAIN.tl;
+</script></body></html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="id">
+<!-- Infografik Flat — explainer style for Bang Motion (runtime: hyperframes/runtime/explain.js; hand-drawn shapes by rough.js, MIT).
+     Same storyboard fields as every Bang page + scene "diagram" (presets motor, fuelflow, cylinder, cycle4 or generic parts).
+     Placeholder: __TOTAL_S__ -->
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="assets/bm/bm.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="assets/props.js"></script>
+<script src="assets/bm/bm.js"></script>
+<script src="assets/bm/rough.js"></script>
+<script src="assets/bm/explain.js"></script>
+<style>
+@font-face{font-family:"Caveat";font-weight:700;src:url("assets/fonts/lemo/caveat-700.woff2")}
+@font-face{font-family:"Caveat";font-weight:600;src:url("assets/fonts/lemo/caveat-600.woff2")}
+@font-face{font-family:"Jakarta";font-weight:800;src:url("assets/fonts/lemo/jakarta-800.woff2")}
+@font-face{font-family:"Fredoka";font-weight:500;src:url("assets/fonts/lemo/fredoka-500.woff2")}
+@font-face{font-family:"Fredoka";font-weight:700;src:url("assets/fonts/lemo/fredoka-700.woff2")}
+@font-face{font-family:"Bricolage";font-weight:800;src:url("assets/fonts/lemo/bricolage-800.woff2")}
+@font-face{font-family:"Amiri";font-weight:700;src:url("assets/fonts/amiri-arabic-700-normal.woff2")}
+html,body{margin:0;background:#000}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden}
+#world{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.scn{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.scn-in{position:absolute;inset:0}
+.eb{position:absolute;left:70px;top:120px;white-space:nowrap}
+.hd{position:absolute;left:70px;top:178px;width:940px;line-height:1.06}
+.w{display:inline-block;margin:0 .12em 0 0;position:relative}
+.hl{position:relative}.hl b{position:relative;z-index:1;font-weight:inherit}
+.hl i{position:absolute;z-index:0;transform-origin:0 50%}
+.sub{position:absolute;left:70px;top:1240px;width:940px;opacity:0}
+.panel{position:absolute;left:40px;top:382px;width:1000px;height:936px;overflow:visible}
+#root{background:#10213f}
+.sky{position:absolute;inset:0;background:radial-gradient(90% 60% at 50% 30%,#1d3a6b 0%,#10213f 70%,#0b1730 100%)}
+#bgfx{position:absolute;inset:0}
+#bgfx div{position:absolute;border-radius:50%;filter:blur(2px)}
+.eb{font:700 34px "Fredoka",sans-serif;color:#10213f;background:#ffc93c;padding:8px 22px;border-radius:40px;letter-spacing:.06em}
+.hd{font:800 84px/1.04 "Jakarta",sans-serif;color:#fff;letter-spacing:-.01em}
+.hl b{color:#10213f;padding:0 .14em}
+.hl i{left:0;right:0;top:.08em;bottom:-.02em;background:#ffc93c;border-radius:18px}
+.sub{font:500 46px "Fredoka",sans-serif;color:#9fc3ff}
+.bm-line{font-family:"Jakarta",sans-serif!important;font-weight:800!important;font-size:70px!important}
+.bm-word{-webkit-text-stroke:8px rgba(8,18,40,.9)!important}
+</style></head><body>
+<div id="root" data-composition-id="root" data-start="0" data-duration="__TOTAL_S__" data-width="1080" data-height="1920">
+  <audio id="vo" src="assets/audio.mp3" data-start="0" data-duration="__TOTAL_S__"></audio>
+  <div class="sky"></div><div id="bgfx"></div><div id="world"></div>
+  <div id="caps" class="bm-captions"></div>
+</div>
+<script>
+(function () {
+  const svgns = 'http://www.w3.org/2000/svg';
+  // soft drop shadow for every filled shape
+  const s = document.createElementNS(svgns, 'svg'); s.setAttribute('width', 0); s.setAttribute('height', 0); s.style.position = 'absolute';
+  s.innerHTML = '<filter id="shade" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="10" stdDeviation="9" flood-color="#050d1f" flood-opacity=".45"/></filter>';
+  document.getElementById('root').appendChild(s);
+  EXPLAIN.run({
+    rough: null, radius: 22, shade: true,
+    enter: 'pop', stagger: .07, trans: 'slide', breath: 1.04,
+    say: { from: { opacity: 0, y: 40 }, to: { opacity: 1, y: 0, duration: .45, ease: 'back.out(1.6)' }, stagger: .07 },
+    label: { font: 'Fredoka', size: 44, weight: 700, color: '#ffffff' },
+    col: { paper: '#10213f', ink: '#0b1730', mute: '#9fc3ff', accent: '#ffc93c', accentText: '#ffc93c', hl: '#fff3b0',
+      fuel: '#ffc93c', air: '#5ec8ff', airText: '#5ec8ff', fire: '#ff6b35', gas: '#9aa7bd', spark: '#fff6c9', mix: '#28518f',
+      metal: '#5b7bb0', metal2: '#3f5d8f', port: '#2c4a7c', plug: '#e8edf5', tire: '#0b1730', body: '#ff6b6b', seat: '#22324f',
+      card: '#1d3a6b', airSoft: '#1f5f8f', fireSoft: '#a8462a', gasSoft: '#3d4b63', hubText: '#10213f', tireW: 0, numFont: 'Jakarta' },
+    cap: { accent: '#ffc93c', text: '#ffffff' },
+    ambient(tl, T) { const fx = document.getElementById('bgfx'), R = EXPLAIN.rng(5);
+      for (let k = 0; k < 9; k++) { const d = document.createElement('div'), z = 40 + R() * 140; Object.assign(d.style, { width: z + 'px', height: z + 'px', left: R() * 1000 + 'px', top: 200 + R() * 1500 + 'px', background: ['#1f4b8a', '#24508f', '#2b5ea3'][k % 3], opacity: .55 }); fx.appendChild(d);
+        tl.fromTo(d, { y: 0, x: 0 }, { y: -120 - R() * 200, x: (R() - .5) * 120, duration: T, ease: 'none', immediateRender: false }, 0); } },
+  });
+})();
+window.__timelines = window.__timelines || {}; window.__timelines["root"] = EXPLAIN.tl;
+</script></body></html>

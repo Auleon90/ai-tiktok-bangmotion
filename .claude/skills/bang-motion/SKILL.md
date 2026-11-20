@@ -363,6 +363,16 @@ Engine: `hyperframes/` (npm `hyperframes` 0.8.218, GSAP, lottie-web). Renders by
 | katalog-putih | white grid, document + slammed stamp, sticky note, 20-cell scale, checklist | collage | optional (photo card) |
 | kartun-panggung | flat bright stage per scene, faceless silhouettes on joint rigs, signboard, meter | stage (cut + slide) | none |
 | explainer-aliran | parallax world flowing past, hero cart, signposts per scene | flow | none |
+| papan-tulis | whiteboard, marker lines that draw themselves (rough.js), red marker underline, Caveat | explain | none |
+| infografik-flat | navy, flat bright vectors with soft shadow, shapes pop in, slide cuts, Jakarta/Fredoka | explain | none |
+| sketsa-diagram | Excalidraw-like: dot grid, hachure pastel fills, camera pans across one canvas, sticky-note subtitle | explain | none |
+
+**Explain rig (papan-tulis, infografik-flat, sketsa-diagram; runtime `hyperframes/runtime/explain.js` + vendored `rough.js`, MIT)** —
+for "cara kerja / kenapa" videos. Scene `"type": "diagram"` with `headline` (`*kata*` highlight) and `"diagram"`: a preset or generic
+`parts` ([{shape: rect|circle|ellipse|poly|line|arrow|text, role, at, …}] in a 1000×936 box, content above y≈880). The same storyboard
+renders in all three skins. Presets: `motor` (side view, `focus` label, bursts in the engine), `fuelflow` (tank → injector + air → mix, `ratio`),
+`cylinder` (slider-crank cross-section, `stroke`: intake|compression|power|exhaust|cycle, `note`), `cycle4` (4 cards in a loop, `active`,
+`hub`, `hub2`). Add new presets to `EXPLAIN.presets` (motion = pure function of scene time via `B.update`). Example: `examples/mesin-4tak.storyboard.json`.
 
 Scene types: title, counter (1–2 items; `%` suffix fills bars/cells/meter), list (≤4–5), quote, ayat, **map**. `*kata*` = highlight.
 **map** (4 collage styles: vintage-sketch, kartun-kolase, jurnalisme-visual, katalog-putih — NOT panggung/aliran): same fields as the
