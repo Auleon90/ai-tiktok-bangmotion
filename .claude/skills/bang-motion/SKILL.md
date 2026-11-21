@@ -68,6 +68,11 @@ shares drive reach (hit: 1,123 shares) and come from loss/"ini aku" reflections,
   + 1–2 topical) and ALWAYS end with the two owner hashtags `#creatorsearchinsights #videofypシ゚` (exact spelling);
   one spelling of the handle or none; no names of other people/preachers, no "Upload Method" lines, no repeated #fyp.
 - **Audio (owner rule, 2026-11-20): NO background music** — always `"music": "none"`, keep ambience (`"ambience": "wind"`) + SFX. Applies to every future video unless the owner asks for music.
+- **Explainer, not "gaya tempel" (owner rule, 2026-11-21):** when the video explains a meaning, an analogy (perumpamaan) or a
+  "kenapa/cara kerja", use an explainer style where the idea is DRAWN and moves: Bang `papan-tulis` (default), `infografik-flat`,
+  `sketsa-diagram`, `kartun-cutaway` (dive), or Lemo `stick-explainer`. Do NOT use the pasted look (a 3D/photo window stuck on a
+  card with text under it, e.g. watercolor + `lib3d/lemo-scene.js` windows). Draw each analogy as a diagram (`"type": "diagram"`
+  with `parts`), e.g. 1 kesulitan → 2 kemudahan as branching circles. 3D only when it fills the scene, never as a pasted window.
 - Vary the visual style from the previous video (see the style column in `content/topics_used.md`).
 - Daily prompt to reuse: `content/daily_prompt.md`.
 
