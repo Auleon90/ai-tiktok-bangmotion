@@ -171,7 +171,7 @@
     B.update(lt => { const v = target * ease(clamp((lt - .6) / 1.2)); tx.textContent = (it.prefix || '') + (Number.isInteger(target) ? Math.round(v).toLocaleString('id-ID') : v.toFixed(1).replace('.', ',')) + (it.suffix || ''); });
     if (it.label) B.text(500, 540, it.label, { size: 46 }); }
   function list(B, s) { (s.items || []).slice(0, 4).forEach((x, k) => { B.shape('circle', { cx: 120, cy: 120 + k * 170, r: 44 }, 'accent'); B.text(120, 136 + k * 170, String(k + 1), { size: 48, weight: 800, fill: '#fff' }); B.text(200, 136 + k * 170, x, { size: 50, anchor: 'start' }); }); }
-  function quote(B, s) { B.text(500, 300, (s.text || s.translation || '').replace(/(.{1,26})(\s|$)/g, '$1\n').trim(), { size: 54 }); if (s.source || s.ref) B.text(500, 760, '— ' + (s.source || s.ref), { size: 40, role: 'mute' }); }
+  function quote(B, s) { if (s.arabic) s.arabic.split(/\s*۝\s*/).forEach((ln, k) => B.text(500, 110 + k * 130, ln, { size: 64, font: 'Amiri', role: 'accentText' })); B.text(500, s.arabic ? 420 : 300, (s.text || s.translation || '').replace(/(.{1,26})(\s|$)/g, '$1\n').trim(), { size: 54 }); if (s.source || s.ref) B.text(500, 760, '— ' + (s.source || s.ref), { size: 40, role: 'mute' }); }
 
   // ================= PRESETS (engine explainer) =================
   /* motor — side view of a motorcycle; the engine gets a pulse ring + label, then tiny bursts (the explosions) */
