@@ -122,9 +122,19 @@ export default function (g, c) {
   const B = s.beats || {};
 
   // ---------------------------------------------------------------- the hook: you are falling
-  if (s.curve === 'fall') {
-    strip(g, X, top, Wd, 230);
-    K.block(g, 'main', s.headline, { x: X + 40, y: top + 24, w: Wd - 80, h: 182 }, { ...th.title, size: 84, min: 44, align: 'center', valign: 'middle' });
+  if (s.curve === 'fall' || s.curve === 'reply') {
+    if (s.curve === 'reply') {   // a reply to a viewer's comment: the comment sticker is fully readable on frame 0
+      const bh = 168; g.save(); g.shadowColor = 'rgba(0,0,0,.45)'; g.shadowBlur = 26; g.shadowOffsetY = 10; g.fillStyle = '#fbf6ec';
+      g.beginPath(); g.roundRect(X, top, Wd, bh, 28); g.fill(); g.restore();
+      g.fillStyle = '#c9b48f'; g.beginPath(); g.arc(X + 60, top + 58, 30, 0, Math.PI * 2); g.fill();
+      K.block(g, 'who', s.who || 'Membalas komentar penonton', { x: X + 108, y: top + 30, w: Wd - 140, h: 40 }, { ...th.label, size: 28, min: 18, color: '#8a6a44' });
+      K.block(g, 'comment', s.comment, { x: X + 108, y: top + 72, w: Wd - 140, h: 76 }, { ...th.title, size: 56, min: 32, color: '#20140c', valign: 'middle' });
+      strip(g, X + 60, top + bh + 26, Wd - 120, 110);
+      K.block(g, 'main', s.headline, { x: X + 90, y: top + bh + 38, w: Wd - 180, h: 86 }, { ...th.title, size: 62, min: 36, align: 'center', valign: 'middle' });
+    } else {
+      strip(g, X, top, Wd, 230);
+      K.block(g, 'main', s.headline, { x: X + 40, y: top + 24, w: Wd - 80, h: 182 }, { ...th.title, size: 84, min: 44, align: 'center', valign: 'middle' });
+    }
     const yTop = 600, yLow = 1060, pts = vPath(X - 30, X + Wd + 30, yTop, yLow, 120);
     const tb = beat(c, B.bottom || 'terendah', d * .55), p = .5 * K.eo(K.clamp(.25 + .75 * lt / tb));   // already falling on frame 0
     const head = at(pts, p), low = K.seg(lt, tb - .2, tb + .3);
@@ -197,12 +207,12 @@ export default function (g, c) {
   const tb = beat(c, B.bottom, d * .3), td = beat(c, B.doa, d * .45), tr = B.rise ? beat(c, B.rise, d * .78) : Math.max(td + 2.2, d * .74);
   const A = arc(c, .1, tb, tr), low = K.seg(lt, tb - .3, tb + .2), doa = K.seg(lt, td - .1, td + .3);
   // the doa card: appears when the doa is spoken (before that, only the dark slot waits)
-  const ya = top + 66, ah = 250, ua = K.eo(K.seg(lt, .05, .5));
-  verse(g, c, 'ar', s.arabic, { x: X + 30, y: ya + 22, w: Wd - 60, h: ah - 44 }, K.seg(lt, .2, .7), doa, 76);
-  const ys = ya + ah + 18, sh = 160, us = K.seg(lt, .4, .9);
+  const ya = top + 66, ah = s.arabic ? 250 : 0, ua = K.eo(K.seg(lt, .05, .5));
+  if (s.arabic) verse(g, c, 'ar', s.arabic, { x: X + 30, y: ya + 22, w: Wd - 60, h: ah - 44 }, K.seg(lt, .2, .7), doa, 76);
+  const ys = ya + ah + 18, sh = s.arabic ? 160 : 230, us = K.seg(lt, .4, .9);
   if (us > 0) { strip(g, X, ys, Wd * K.eo(us), sh);
-    K.block(g, 'tr', `“${s.translation}”`, { x: X + 30, y: ys + 10, w: Wd - 60, h: 112 }, { ...th.quote, size: 48, min: 30, align: 'center', valign: 'middle', alpha: K.seg(lt, .7, 1) });
-    K.block(g, 'ref', `— ${s.ref}`, { x: X + 36, y: ys + 124, w: Wd - 72, h: 30 }, { ...th.label, size: 24, min: 18, align: 'center', alpha: K.seg(lt, .8, 1.1) }); }
+    K.block(g, 'tr', `“${s.translation}”`, { x: X + 30, y: ys + 10, w: Wd - 60, h: sh - 48 }, { ...th.quote, size: s.arabic ? 48 : 54, min: 30, align: 'center', valign: 'middle', alpha: K.seg(lt, .7, 1) });
+    K.block(g, 'ref', `— ${s.ref}`, { x: X + 36, y: ys + sh - 36, w: Wd - 72, h: 30 }, { ...th.label, size: 24, min: 18, align: 'center', alpha: K.seg(lt, .8, 1.1) }); }
   // the line
   const yTop = 820, yLow = 1070, pts = vPath(X - 10, X + Wd + 10, yTop, yLow, 120), head = at(pts, A.p);
   lowFx(g, c, s.fx, cx, yLow, low, A.rise);

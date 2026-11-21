@@ -1,0 +1,96 @@
+{
+ "title": "Mereka Nabi, Lah Kita Siapa?",
+ "style": "paper-lantern",
+ "music": "none",
+ "ambience": "auto",
+ "sfx": true,
+ "scenes": [
+  {
+   "id": 1,
+   "type": "custom",
+   "code": "custom/garis-doa.js",
+   "curve": "reply",
+   "ladder": "night",
+   "comment": "lah mereka nabi, kita siapa?",
+   "headline": "Allah sudah menjawabnya",
+   "vo": "Mereka nabi, lah kita siapa? Allah sudah menjawabnya, tepat di ayat setelah kisah Nabi Yunus.",
+   "ambience": "room"
+  },
+  {
+   "id": 2,
+   "type": "custom",
+   "code": "custom/garis-doa.js",
+   "curve": "story",
+   "ladder": "night",
+   "eyebrow": "QS. AL-ANBIYA: 88",
+   "arabic": "وَكَذَٰلِكَ نُنجِي الْمُؤْمِنِينَ",
+   "translation": "Dan demikianlah Kami menyelamatkan orang-orang yang beriman.",
+   "ref": "QS. Al-Anbiya: 88",
+   "name": "Nabi Yunus",
+   "context": "Perut ikan",
+   "fx": "sea",
+   "saved": "Orang beriman = kamu",
+   "beats": {
+    "bottom": "demikianlah",
+    "doa": "bukan",
+    "rise": "orang"
+   },
+   "vo": "Dan demikianlah Kami menyelamatkan orang-orang yang beriman. Bukan para nabi saja. Orang beriman. Itu kamu."
+  },
+  {
+   "id": 3,
+   "type": "custom",
+   "code": "custom/garis-doa.js",
+   "curve": "story",
+   "ladder": "dusk",
+   "eyebrow": "BUKAN NABI",
+   "arabic": "",
+   "translation": "Tiga orang terjebak di gua. Mereka berdoa dengan amal terbaiknya, batu itu pun bergeser.",
+   "ref": "HR. Bukhari 2272, Muslim 2743",
+   "name": "Tiga orang biasa",
+   "context": "Gua tertutup batu",
+   "fx": "dim",
+   "saved": "Batu bergeser",
+   "beats": {
+    "bottom": "batu",
+    "doa": "berdoa",
+    "rise": "bergeser"
+   },
+   "vo": "Tiga orang biasa terjebak di gua, pintunya tertutup batu besar. Mereka berdoa dengan amal terbaiknya, dan batu itu bergeser."
+  },
+  {
+   "id": 4,
+   "type": "custom",
+   "code": "custom/garis-doa.js",
+   "curve": "pattern",
+   "ladder": "night",
+   "arabic": "لَا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ الظَّالِمِينَ",
+   "ref": "Doa Nabi Yunus · HR. Tirmidzi 3505",
+   "labels": [
+    "YUNUS",
+    "TIGA ORANG",
+    "KAMU"
+   ],
+   "beats": {
+    "fall": "tidaklah",
+    "doa": "berdoa",
+    "rise": "yunus",
+    "multi": "kecuali"
+   },
+   "vo": "Rasulullah bersabda, tidaklah seorang muslim berdoa dengan doa Nabi Yunus, kecuali Allah mengabulkannya.",
+   "gap_after_ms": 1200
+  },
+  {
+   "id": 5,
+   "type": "custom",
+   "code": "custom/garis-doa.js",
+   "curve": "end",
+   "ladder": "green",
+   "eyebrow": "UNTUKMU",
+   "arabic": "أُجِيبُ دَعْوَةَ الدَّاعِ إِذَا دَعَانِ",
+   "translation": "Aku mengabulkan doa orang yang berdoa apabila ia berdoa kepada-Ku.",
+   "ref": "QS. Al-Baqarah: 186",
+   "vo": "Jadi jangan merasa doamu kecil. Kirim ke orang yang merasa doanya tidak sepenting doa para nabi."
+  }
+ ]
+}
