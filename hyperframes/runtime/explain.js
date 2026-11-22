@@ -165,7 +165,9 @@
 
   // ---------- generic parts
   function parts(B, list) { list.forEach(p => { const g = p, r = p.role || 'ink', o = { at: p.at, sw: p.sw };
-    if (p.shape === 'image') { const outer = el('g', { transform: `rotate(${p.rot || 0} ${p.x + p.w / 2} ${p.y + p.h / 2})` }, B.layer), pad = p.pad ?? 18;   // photo (polaroid): {src: 'img/x.jpg', x, y, w, h, rot}
+    if (p.shape === 'image') { const zg = el('g', {}, B.layer), outer = el('g', { transform: `rotate(${p.rot || 0} ${p.x + p.w / 2} ${p.y + p.h / 2})` }, zg), pad = p.pad ?? 18;
+      if (p.zoom) { const z = p.zoom, cx = p.x + p.w / 2, cy = p.y + p.h / 2;   // zoom: {at, dur?, scale, x?, y?} → push in toward (x,y) in panel coords
+        tl.to(zg, { scale: z.scale || 1.6, x: (z.x ?? 500) - cx, y: (z.y ?? 420) - cy, svgOrigin: `${cx} ${cy}`, duration: z.dur || 1.2, ease: 'power2.inOut' }, B.T(z.at)); }   // photo (polaroid): {src: 'img/x.jpg', x, y, w, h, rot}
       el('rect', { x: p.x - pad, y: p.y - pad, width: p.w + 2 * pad, height: p.h + pad * 4, fill: '#fff', stroke: B.C.ink, 'stroke-width': 3 }, outer);
       el('image', { href: 'assets/' + p.src, x: p.x, y: p.y, width: p.w, height: p.h, preserveAspectRatio: 'xMidYMid slice' }, outer); return; }
     if (p.shape === 'text') B.text(p.x, p.y, p.text, { size: p.size, role: p.role, at: p.at, anchor: p.anchor }); else B.shape(p.shape, g, r, o); }); }
