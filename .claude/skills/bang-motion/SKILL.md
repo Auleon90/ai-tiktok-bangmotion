@@ -119,6 +119,13 @@ Built-in scene types (rendered automatically by modes 1 and 2):
 | `action` | a moment acted out on a field — landscape kits: `headline`, `sub?`, `terrain` {kind: hill/dunes/plain, hill: left/right, label, features: [{type: well/cave/city/trench/river/sea, at, name, label, side, split}]}, `groups` [{label, count, color, mode: figures/dots, act: move/gather/scatter/surround/rows/wait/follow, from, via[], to, at, start, end, run, route, banner, leader}], `hero?` (full reference in `lemo/action.js`) |
 | `clash` | battle / two-sided clash with faceless figures — Lemo native ⚔ kits only: `headline`, `sub?`, `left`/`right`: `{label, count, color?, cavalry? (0–6)}`, `winner?` ("left"/"right": the other side routs at the end), `hero?`: `{side, prophet?, rider?}` |
 
+### No pasted images (owner rule, 22 Nov 2026)
+
+Default: NO AI or photo images pasted into the frame (no photo panels, polaroids, collages, image windows, full-bleed photos). Every visual is
+drawn by code in the kit's own language (lines, shapes, landscapes, faceless silhouettes, 3D, typography). Prefer styles that never use photos:
+Lemo native landscape kits (paper-lantern, paper-popup, colored-pencil, urban-sketch, watercolor) and memphis-diorama; Bang Motion kartun-panggung /
+explainer-aliran; in mode 1 with Opuscar styles, draw the scene instead of using `image`. Use the FLUX section below ONLY when the owner asks for images.
+
 ### AI illustrations (Cloudflare FLUX — any theme, per scene where it fits)
 
 Any scene may add `"image": "<English prompt>"` (or `{"prompt": "...", "steps": 6}`); top-level `"image_style"` is appended to every prompt
@@ -177,8 +184,9 @@ Perkiraan durasi: ~Xs · Gambar AI: N dari M scene
 
 ### Sound (all modes)
 
-**Default = NO music, ambience AUTO, SFX ON (owner rule, Nov 2026: music was noisy; ambience keeps the silence alive for retention).**
-Every storyboard sets `"music": "none", "ambience": "auto", "sfx": true` (the `produce.py` defaults): Cartesia VO + a toneless ambience bed
+**Default = NO music, NO ambience, SFX ON (owner rule, 22 Nov 2026).**
+Every storyboard sets `"music": "none", "ambience": "none", "sfx": true` (the `produce.py` / `ambience.py` defaults); ambience below only when the owner asks.
+(Older note: ambience was "auto" by default from 19–21 Nov.): Cartesia VO + a toneless ambience bed
 + SFX (built-in cut whooshes/hits/ding + scene SFX where the picture shows an event). Add music ONLY when the user asks; turn ambience or SFX
 off only when asked. Approval summary line: `🎵 Musik: none · 🌬️ Ambience: <per-scene plan> · 🔊 SFX: on`.
 

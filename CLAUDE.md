@@ -27,14 +27,15 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
       dengan scene `action` (bukit/dataran + siluet atau titik koordinat yang bergerak, mis. pemanah turun dari bukit Uhud). Adegan lain yang tidak ada tipenya: scene `custom` (kode per video di
       `output/custom/<nama>.js`, tetap memakai gaya kit) — JANGAN menambal kit untuk kebutuhan satu video.
    5. **Auto** — Claude memilih sesuai topik & storyboard (aturan di skill)
-3. Gambar AI (Cloudflare FLUX) untuk TEMA APA PUN: nilai tiap scene — kalau adegannya punya sesuatu yang bisa dilihat
+3. Gambar AI: DEFAULT TIDAK DIPAKAI (aturan pemilik 22 Nov 2026: tanpa gambar tempel, lihat "Visual @valsyz7"). Bila pemilik memintanya — Gambar AI (Cloudflare FLUX) untuk TEMA APA PUN: nilai tiap scene — kalau adegannya punya sesuatu yang bisa dilihat
    (tempat, benda, alam, hewan, peristiwa, proses, suasana) dan gambar membuatnya lebih menarik, pakai gambar. Biasanya 3–6 gambar per video,
    dicampur scene yang digambar kode. Angka/grafik/rumus/teks tetap digambar kode (boleh di atas gambar).
    Tandai scene 🖼️ di storyboard + jumlahnya, supaya user bisa menolak.
    Batasan GAMBAR AI: tanpa wajah manusia untuk konten Islami, tanpa teks Arab dari AI, tidak pernah menggambar Nabi ﷺ/sahabat dengan AI;
    Manim tidak mendukung gambar.
    Kuota Cloudflare HANYA untuk gambar — jangan dipakai untuk QA atau hal lain.
-4. Audio (semua mode): DEFAULT TANPA MUSIK, AMBIENCE + SFX ON — storyboard `"music": "none", "ambience": "auto", "sfx": true`: VO Cartesia + suasana
+4. Audio (semua mode): DEFAULT TANPA MUSIK DAN TANPA AMBIENCE, SFX ON — storyboard `"music": "none", "ambience": "none", "sfx": true` (aturan pemilik 22 Nov 2026).
+   Ambience hanya bila diminta: suasana
    tanpa nada per scene (`scripts/ambience.py`: room, wind, rain, sea, night, fire, space — dipilih otomatis dari kata di scene, crossfade)
    + SFX (keputusan pemilik: musik berisik; ambience untuk retensi, level 60% dari loudness VO — `"ambience_level"`). Musik hanya kalau user memintanya; ambience/SFX dimatikan hanya kalau diminta; bila diminta: backsound (musik + ambience) 35% dari loudness VO; musik orisinal (`music`: warm/epic/tense/calm/playful/sacred/none) + SFX otomatis dari `scripts/score.py`
    (modul `audio/lemo/`, MIT dari Lemo-Opuscar). Sirah → `sacred` atau `none`.
@@ -67,7 +68,13 @@ Gambar AI (FLUX) tetap tanpa Nabi ﷺ/sahabat dan tanpa wajah untuk konten Islam
 
 **Gaya explainer, bukan gaya tempel (aturan pemilik, 2026-11-21):** video yang menjelaskan makna/perumpamaan/cara kerja memakai gaya explainer yang digambar (Bang `papan-tulis` default, `infografik-flat`, `sketsa-diagram`, `kartun-cutaway`, Lemo `stick-explainer`), bukan jendela 3D/foto yang ditempel di kartu. Detail di SKILL.md.
 
-**Audio @valsyz7 (aturan pemilik, 2026-11-20): TANPA musik BGM** — selalu `"music": "none"`, hanya ambience (`"ambience": "wind"`) + SFX, untuk semua video berikutnya kecuali pemilik minta musik.
+**Audio @valsyz7 (aturan pemilik, 2026-11-22): TANPA musik dan TANPA ambience** — selalu `"music": "none", "ambience": "none", "sfx": true`:
+hanya VO Cartesia + SFX, untuk semua video berikutnya kecuali pemilik minta musik/ambience.
+
+**Visual @valsyz7 (aturan pemilik, 2026-11-22): TANPA gambar tempel** — jangan menempelkan gambar/foto (FLUX atau lainnya) ke dalam frame,
+panel, polaroid, kolase atau jendela. Semua visual digambar kode dalam gaya kit (garis, bentuk, lanskap, siluet, 3D, tipografi).
+Pilih gaya yang tidak memakai foto (Lemo native lanskap: paper-lantern, paper-popup, colored-pencil, urban-sketch, watercolor, memphis-diorama;
+Bang Motion tanpa gambar: kartun-panggung, explainer-aliran). Gambar AI hanya kalau pemilik memintanya.
 
 
 Ketika user mengetik `/bang-motion`, SELALU gunakan skill `.claude/skills/bang-motion/SKILL.md` dari repo ini — JANGAN gunakan `anthropic-skills:tiktok-motion-generator`.

@@ -66,7 +66,7 @@ def pick(scene):
 
 def plan(sb, scenes, fps):
     """[(name, t0, t1)] per scene, merged when neighbours share a name. Empty list = no ambience."""
-    top = sb.get("ambience", "auto")
+    top = sb.get("ambience", "none")   # owner rule (22 Nov 2026): ambience off unless asked
     if top == "none": return []
     out, src = [], {x.get("id"): x for x in sb.get("scenes", [])}
     for s in scenes:
