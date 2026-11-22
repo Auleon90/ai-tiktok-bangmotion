@@ -38,3 +38,4 @@ Sudah dipakai, hasil biasa (±200–350 views) — hindari sudut yang sama:
 - i'tidal, Nabi Musa di istana Firaun, usaha tidak mengkhianati hasil, husnudzon
 - membandingkan hidup, validasi & barang mahal, berbakti orang tua, doa ilmu & rezeki
 - mikro drama "Memaafkan Bukan Berarti Harus Kembali" (ep. 1–3)
+- 2026-11-22 · Gelas yang Bocor (rasa cukup, sifat dunia) · hook tuduhan-lembut "Barang baru. Senangnya cuma sebentar" · Al-Hadid 20, Ar-Ra'd 28 · bang:jurnalisme-visual + 3 FLUX latar bergerak

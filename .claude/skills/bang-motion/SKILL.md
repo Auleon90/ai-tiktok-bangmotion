@@ -119,12 +119,13 @@ Built-in scene types (rendered automatically by modes 1 and 2):
 | `action` | a moment acted out on a field — landscape kits: `headline`, `sub?`, `terrain` {kind: hill/dunes/plain, hill: left/right, label, features: [{type: well/cave/city/trench/river/sea, at, name, label, side, split}]}, `groups` [{label, count, color, mode: figures/dots, act: move/gather/scatter/surround/rows/wait/follow, from, via[], to, at, start, end, run, route, banner, leader}], `hero?` (full reference in `lemo/action.js`) |
 | `clash` | battle / two-sided clash with faceless figures — Lemo native ⚔ kits only: `headline`, `sub?`, `left`/`right`: `{label, count, color?, cavalry? (0–6)}`, `winner?` ("left"/"right": the other side routs at the end), `hero?`: `{side, prophet?, rider?}` |
 
-### No pasted images (owner rule, 22 Nov 2026)
+### Images must MOVE (owner rule, 22 Nov 2026, clarified)
 
-Default: NO AI or photo images pasted into the frame (no photo panels, polaroids, collages, image windows, full-bleed photos). Every visual is
-drawn by code in the kit's own language (lines, shapes, landscapes, faceless silhouettes, 3D, typography). Prefer styles that never use photos:
-Lemo native landscape kits (paper-lantern, paper-popup, colored-pencil, urban-sketch, watercolor) and memphis-diorama; Bang Motion kartun-panggung /
-explainer-aliran; in mode 1 with Opuscar styles, draw the scene instead of using `image`. Use the FLUX section below ONLY when the owner asks for images.
+A static pasted image (photo panel, polaroid, collage, window with no motion) is NOT allowed. An image (FLUX or other) IS allowed when it
+moves (Ken Burns / parallax / zoom, hover, animated entrance/exit, transition) and serves as a BACKGROUND that shows the viewer what the
+scene's narration/dialogue means (VO "habis liburan" → a slowly drifting beach behind the drawn text). Code-drawn text/diagrams stay on top.
+Images stay optional: propose them per scene (🖼️) where they clarify the narration. Explain pages without `imageSrc` (papan-tulis,
+infografik-flat, sketsa-diagram) cannot show backgrounds — use kartun-cutaway (dive) or an image-capable page when images are wanted.
 
 ### AI illustrations (Cloudflare FLUX — any theme, per scene where it fits)
 

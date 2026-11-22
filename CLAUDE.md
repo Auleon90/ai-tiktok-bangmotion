@@ -71,10 +71,10 @@ Gambar AI (FLUX) tetap tanpa Nabi ﷺ/sahabat dan tanpa wajah untuk konten Islam
 **Audio @valsyz7 (aturan pemilik, 2026-11-22): TANPA musik dan TANPA ambience** — selalu `"music": "none", "ambience": "none", "sfx": true`:
 hanya VO Cartesia + SFX, untuk semua video berikutnya kecuali pemilik minta musik/ambience.
 
-**Visual @valsyz7 (aturan pemilik, 2026-11-22): TANPA gambar tempel** — jangan menempelkan gambar/foto (FLUX atau lainnya) ke dalam frame,
-panel, polaroid, kolase atau jendela. Semua visual digambar kode dalam gaya kit (garis, bentuk, lanskap, siluet, 3D, tipografi).
-Pilih gaya yang tidak memakai foto (Lemo native lanskap: paper-lantern, paper-popup, colored-pencil, urban-sketch, watercolor, memphis-diorama;
-Bang Motion tanpa gambar: kartun-panggung, explainer-aliran). Gambar AI hanya kalau pemilik memintanya.
+**Visual @valsyz7 (aturan pemilik, 2026-11-22, diperjelas): gambar DIAM yang ditempel TIDAK boleh** — gambar/foto (FLUX atau lainnya)
+hanya boleh bila BERGERAK (Ken Burns/parallax/zoom, hover, animasi, transisi masuk/keluar) dan dipakai sebagai GAMBAR LATAR yang
+memperlihatkan maksud narasi/dialog scene itu (mis. VO "habis liburan" → latar pantai yang bergerak pelan). Teks/diagram kode tetap di atasnya.
+Dilarang: gambar statis di frame/panel/polaroid/kolase/jendela tanpa gerak. Gambar AI tetap opsional — usulkan di storyboard (🖼️) bila membantu.
 
 
 Ketika user mengetik `/bang-motion`, SELALU gunakan skill `.claude/skills/bang-motion/SKILL.md` dari repo ini — JANGAN gunakan `anthropic-skills:tiktok-motion-generator`.
