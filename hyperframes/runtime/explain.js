@@ -10,7 +10,7 @@
        cylinder: stroke = intake|compression|power|exhaust|cycle
        cycle4:   active = 0..3 | "cycle", hub = text in the centre circle
        motor:    focus = label at the engine (default "ruang bakar")
-       parts:    [{shape: rect|circle|ellipse|poly|line|arrow|text, role, at (0..1 of scene), ...geometry in a 1000×936 box}]
+       parts:    [{shape: rect|circle|ellipse|poly|line|arrow|text|image (src 'img/x.jpg' from output/img, polaroid, rot), role, at (0..1 of scene), ...geometry in a 1000×936 box}]
      items      counter [{value,label,prefix,suffix}] or list ["..."] when there is no diagram
    Panel: viewBox 1000×936 drawn at x 40, y 380 (keep content above y≈880 of the box: captions start at 1320 px). */
 (function () {
@@ -165,6 +165,9 @@
 
   // ---------- generic parts
   function parts(B, list) { list.forEach(p => { const g = p, r = p.role || 'ink', o = { at: p.at, sw: p.sw };
+    if (p.shape === 'image') { const outer = el('g', { transform: `rotate(${p.rot || 0} ${p.x + p.w / 2} ${p.y + p.h / 2})` }, B.layer), pad = p.pad ?? 18;   // photo (polaroid): {src: 'img/x.jpg', x, y, w, h, rot}
+      el('rect', { x: p.x - pad, y: p.y - pad, width: p.w + 2 * pad, height: p.h + pad * 4, fill: '#fff', stroke: B.C.ink, 'stroke-width': 3 }, outer);
+      el('image', { href: 'assets/' + p.src, x: p.x, y: p.y, width: p.w, height: p.h, preserveAspectRatio: 'xMidYMid slice' }, outer); return; }
     if (p.shape === 'text') B.text(p.x, p.y, p.text, { size: p.size, role: p.role, at: p.at, anchor: p.anchor }); else B.shape(p.shape, g, r, o); }); }
   function counter(B, s) { const it = (s.items || [])[0] || {}; const t = B.text(500, 420, '0', { size: 230, weight: 900, role: 'accent', font: B.C.numFont });
     const tx = t.inner.querySelector('text'), target = parseFloat(String(it.value).replace(/\./g, '').replace(',', '.')) || 0;
