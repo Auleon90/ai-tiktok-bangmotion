@@ -21,8 +21,7 @@
     if (/^\*.*\*$/.test(p)) { const s = document.createElement('span'); s.className = 'w'; s.innerHTML = `<span class="hl ${hlCycle[k++ % hlCycle.length]}"><i></i>${esc(p.slice(1, -1))}</span>`; el.appendChild(s); }
     else p.split(/\s+/).filter(Boolean).forEach(w => { const s = document.createElement('span'); s.className = 'w'; s.textContent = w; el.appendChild(s); }); }); };
   let sayMode = 'rise';
-  const say = (el, at, { dur = .55, st = .08 } = {}) => { const ws = $$('.w', el); tl.set(el, { opacity: 1 }, at);
-    if (sayMode === 'scale') tl.fromTo(ws, { opacity: 0, scale: .7, rotate: -3, filter: 'blur(8px)' }, { opacity: 1, scale: 1, rotate: 0, filter: 'blur(0px)', duration: dur, ease: 'back.out(1.6)', stagger: st, immediateRender: false }, at);
+  const say = (el, at, { dur = .55, st = .08 } = {}) => { const ws = $$('.w', el); tl.set(el, { opacity: 1 }, at);    if (sayMode === 'scale') tl.fromTo(ws, { opacity: 0, scale: .7, rotate: -3, filter: 'blur(8px)' }, { opacity: 1, scale: 1, rotate: 0, filter: 'blur(0px)', duration: dur, ease: 'back.out(1.6)', stagger: st, immediateRender: false }, at);
     else tl.fromTo(ws, { opacity: 0, yPercent: 60, scaleY: 1.25, filter: 'blur(10px)' }, { opacity: 1, yPercent: 0, scaleY: 1, filter: 'blur(0px)', duration: dur, ease: 'power4.out', stagger: st, immediateRender: false }, at);
     $$('.hl i', el).forEach((hi, k) => tl.fromTo(hi, { scaleX: 0 }, { scaleX: 1, duration: .4, ease: 'power3.out', immediateRender: false }, at + st * ws.length + .2 + k * .2)); };
   const label = (el, at) => tl.fromTo(el, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .4, ease: 'power3.out', immediateRender: false }, at);
@@ -51,7 +50,7 @@
     P.scenes.forEach((s, i) => {
       const a = area(i), t0 = s.startMs / 1000, d = s.durationMs / 1000, t1 = t0 + d, cx = a.x + 540, cy = a.y + 960;
       const put = (html, x, y, extra = '') => { const e = h(html); e.style.left = (a.x + x) + 'px'; e.style.top = (a.y + y) + 'px'; if (extra) e.style.cssText += extra; world.appendChild(e); return e; };
-      const hasImg = !!s.imageSrc && S.images !== false, T_ = s.type, textAt = t0 + 1.5, yr = yearOf(s);
+      const hasImg = !!s.imageSrc && S.images !== false, T_ = s.type, textAt = i ? t0 + 1.5 : 0, yr = yearOf(s);
       const annot = (x, y, w, hh, at, d2 = ring) => { const e = put(`<svg class="anno" viewBox="0 0 900 720" preserveAspectRatio="none" style="width:${w}px;height:${hh}px"><path d="${d2}"/></svg>`, x, y); draw(e, at, .9); return e; };
       const ctx = { s, i, a, t0, t1, d, textAt, put, hasImg, yr, annot, n: P.scenes.length };
       if (yr && S.ghost !== false) { const g = put(`<div class="ghost">${esc(yr)}</div>`, S.ghostX ?? 60, S.ghostY ?? 820); tl.fromTo(g, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 1.2, ease: 'power2.out', immediateRender: false }, t0 + .15); }
@@ -180,7 +179,7 @@
     const applyCam = () => { stages.forEach((st, k) => { st.style.transform = `translate(${540 - C.x * C.z + C.ox}px,${960 - C.y * C.z + C.oy}px) scale(${C.z})`; }); world.style.filter = C.b > .2 ? `blur(${C.b.toFixed(1)}px)` : 'none'; };
     const cam = (at, x, y, z, dur, ease = 'sine.inOut') => tl.to(C, { x, y, z, duration: dur, ease, onUpdate: applyCam }, at);
     P.scenes.forEach((s, i) => {
-      const t0 = s.startMs / 1000, d = s.durationMs / 1000, t1 = t0 + d, textAt = t0 + .55, T_ = s.type, pl = pal[i % pal.length], R = rng(i + 7);
+      const t0 = s.startMs / 1000, d = s.durationMs / 1000, t1 = t0 + d, textAt = i ? t0 + .55 : 0, T_ = s.type, pl = pal[i % pal.length], R = rng(i + 7);
       const st = h(`<div class="stage" style="background:linear-gradient(180deg,${pl.sky[0]},${pl.sky[1]} 62%)"></div>`); world.appendChild(st); stages.push(st);
       const svg = svgEl('svg', { viewBox: '0 0 1080 1920', width: 1080, height: 1920, class: 'stsvg' }, st);
       const put = (html, x, y, extra = '') => { const e = h(html); e.style.left = x + 'px'; e.style.top = y + 'px'; if (extra) e.style.cssText += extra; st.appendChild(e); return e; };
