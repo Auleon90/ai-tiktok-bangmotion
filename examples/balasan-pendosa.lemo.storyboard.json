@@ -1,0 +1,98 @@
+{
+ "title": "Bagaimana Dengan Aku, Sang Pendosa?",
+ "style": "paper-lantern",
+ "music": "none",
+ "ambience": "none",
+ "sfx": true,
+ "scenes": [
+  {
+   "id": 1,
+   "type": "custom",
+   "code": "custom/garis-doa.js",
+   "curve": "reply",
+   "ladder": "night",
+   "comment": "lantas bagaimana dengan ku sang pendosa hebat..",
+   "headline": "Doa Yunus adalah doa pendosa",
+   "beats": {
+    "bottom": "doa"
+   },
+   "vo": "Bagaimana dengan aku, sang pendosa? Justru doa Nabi Yunus adalah doa orang yang mengaku salah."
+  },
+  {
+   "id": 2,
+   "type": "custom",
+   "code": "custom/garis-doa.js",
+   "curve": "story",
+   "ladder": "night",
+   "eyebrow": "QS. AL-ANBIYA: 87",
+   "arabic": "إِنِّي كُنتُ مِنَ الظَّالِمِينَ",
+   "translation": "Sungguh aku termasuk orang-orang yang zalim.",
+   "ref": "QS. Al-Anbiya: 87",
+   "name": "Nabi Yunus",
+   "context": "Pergi dalam keadaan marah",
+   "fx": "sea",
+   "saved": "Diselamatkan",
+   "beats": {
+    "bottom": "marah",
+    "doa": "mengaku",
+    "rise": "diselamatkan"
+   },
+   "vo": "Ia pergi meninggalkan kaumnya dalam keadaan marah. Di perut ikan ia mengaku: sungguh aku termasuk orang yang zalim. Dan ia diselamatkan."
+  },
+  {
+   "id": 3,
+   "type": "custom",
+   "code": "custom/garis-doa.js",
+   "curve": "story",
+   "ladder": "dusk",
+   "eyebrow": "ORANG BIASA",
+   "arabic": "",
+   "translation": "Seorang pembunuh seratus jiwa bertobat, wafat di perjalanan, dan Allah mengampuninya.",
+   "ref": "HR. Bukhari 3470, Muslim 2766",
+   "name": "Pembunuh 100 jiwa",
+   "context": "Dosa sebesar itu",
+   "fx": "dim",
+   "saved": "Diampuni",
+   "beats": {
+    "bottom": "seratus",
+    "doa": "bertobat",
+    "rise": "mengampuninya"
+   },
+   "vo": "Ada orang yang membunuh seratus jiwa. Ia bertobat, wafat di tengah jalan, dan Allah mengampuninya."
+  },
+  {
+   "id": 4,
+   "type": "custom",
+   "code": "custom/garis-doa.js",
+   "curve": "pattern",
+   "ladder": "night",
+   "arabic": "إِنَّ اللَّهَ يَغْفِرُ الذُّنُوبَ جَمِيعًا",
+   "ref": "QS. Az-Zumar: 53",
+   "labels": [
+    "YUNUS",
+    "100 JIWA",
+    "KAMU"
+   ],
+   "beats": {
+    "fall": "jangan",
+    "doa": "rahmat",
+    "rise": "sungguh",
+    "multi": "mengampuni"
+   },
+   "gap_after_ms": 1200,
+   "vo": "Allah berfirman: jangan berputus asa dari rahmat Allah. Sungguh, Allah mengampuni semua dosa."
+  },
+  {
+   "id": 5,
+   "type": "custom",
+   "code": "custom/garis-doa.js",
+   "curve": "end",
+   "ladder": "green",
+   "eyebrow": "MULAI MALAM INI",
+   "arabic": "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ",
+   "translation": "Aku memohon ampun kepada Allah dan bertobat kepada-Nya.",
+   "ref": "HR. Bukhari 6307",
+   "vo": "Pintunya masih terbuka. Kirim ke orang yang merasa dosanya terlalu besar untuk diampuni."
+  }
+ ]
+}
