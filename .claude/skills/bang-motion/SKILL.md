@@ -168,19 +168,25 @@ Content rules:
 - Verify facts (numbers, dates, hadith wording) and cite them in `quote.source` / `ayat.ref`.
 - Keep important visuals above pixel y≈1280; captions sit at y 1320+.
 
-Approval summary format:
+Approval summary format (owner preference, 23 Nov 2026: detailed table, in Indonesian). Present it in chat, not just the JSON file:
 ```
-📋 STORYBOARD — [title]
-━━━━━━━━━━━━━━━━━━━━━━━━
-Scene 1 [type]: [eyebrow]            (🖼️ if it uses an AI image, 🧊 preset if it has a 3D scene, 🔊 name if it has scene SFX)
-  🎬 Visual: [what is shown]
-  🎙️ VO: "[vo]"
-...
-━━━━━━━━━━━━━━━━━━━━━━━━
-🎨 Gaya: <style or default> · 🎵 Musik: <mood> · 🔊 SFX: on
-Perkiraan durasi: ~Xs · Gambar AI: N dari M scene
-(mode 1: "🎨 Gaya" WAJIB berisi gaya Lemo + link galeri)
+## Storyboard: "[title]" (N scene, ±X menit)
+
+**Alur besarnya:** [one line: hook → isi → penyeimbang → CTA]
+
+| # | Teks di layar | Isi narasi (ringkas) | Dalil |
+|---|---|---|---|
+| 1 | **[headline]** | **Hook:** "[vo ringkas]" | — |
+| … | … | **Analogi:** … / **CTA:** … | QS. …: … / HR. … no. … |
+
+**Rancangan caption:** [1–3 kalimat] #… #creatorsearchinsights #videofypシ゚
+**Visual:** [gaya + apa yang digambar; tanpa gambar tempel] · Audio: VO + SFX
+**Yang perlu Anda putuskan / cek:** [durasi vs pola akun, dalil yang perlu dicek ulang]
 ```
+- Column "Dalil" holds every Quran/hadith reference with its number; mark hook, analogy, balancing scene and CTA in bold.
+- For religious content, check that each hadith really matches the ayat's context (sebab nuzul > thematic match) and add a
+  balancing scene when a story could be misread (e.g. "dirahmati tanpa tobat" → tobat nasuha, QS. An-Nisa: 18).
+- Mark 🖼️ / 🧊 / 🔊 scenes in the table when used; mode 1 must name the Lemo style + gallery link.
 
 ### Sound (all modes)
 
