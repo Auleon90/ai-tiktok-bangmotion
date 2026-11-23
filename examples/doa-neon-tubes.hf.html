@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<!--
+  "Neon Tubes" (Lemo-Opuscar by Lemomo (LemoLab), style guide .lemo/lemo-opuscar/styles/neon-tubes/STYLE.md) adapted to a
+  2D HyperFrames page (no GPU here): glass tubes on painted boards against a wet brick wall, halo + hot core + clear unlit glass,
+  two-flash strikes, crack & drain, one sign left, reflections in the wet asphalt, rain and ripples, mains shimmer.
+  Video: "Kenapa Doamu Belum Dikabulkan".
+-->
+<link rel="stylesheet" href="assets/bm/bm.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="assets/props.js"></script>
+<script src="assets/bm/bm.js"></script>
+<style>
+  @font-face{font-family:"Cav";font-weight:700;src:url("assets/fonts/lemo/caveat-700.woff2")}
+  @font-face{font-family:"Jost";font-weight:600;src:url("assets/fonts/lemo/jost-600.woff2")}
+  html,body{margin:0;background:#000}
+  #root{position:relative;width:1080px;height:1920px;overflow:hidden;background:#07080b}
+  #cam{position:absolute;inset:0;transform-origin:540px 700px}
+  #wall,#svg{position:absolute;left:0;top:0}
+  .bm-captions{top:1400px}
+  .bm-line{font-family:"Inter";font-weight:800;font-size:58px}
+  .bm-word{color:#efe9e1;-webkit-text-stroke:12px rgba(4,5,8,.92);text-shadow:0 0 26px rgba(0,0,0,.9)}
+  #vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 42%,transparent 50%,rgba(0,0,0,.6) 100%)}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="root" data-start="0" data-duration="__TOTAL_S__" data-width="1080" data-height="1920">
+  <audio id="vo" src="assets/audio.mp3" data-start="0" data-duration="__TOTAL_S__"></audio>
+  <div id="cam">
+    <canvas id="wall" width="1080" height="1920"></canvas>
+    <svg id="svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+      <defs>
+        <filter id="neon" filterUnits="userSpaceOnUse" x="-200" y="-200" width="1480" height="1600">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="22" result="b1"/>
+          <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b2"/>
+          <feMorphology in="SourceAlpha" operator="erode" radius="2.2" result="er"/>
+          <feFlood flood-color="#fff" flood-opacity=".78"/>
+          <feComposite in2="er" operator="in" result="core"/>
+          <feMerge><feMergeNode in="b1"/><feMergeNode in="b1"/><feMergeNode in="b2"/><feMergeNode in="SourceGraphic"/><feMergeNode in="core"/></feMerge>
+        </filter>
+        <filter id="glass" filterUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1200">
+          <feMorphology in="SourceAlpha" operator="erode" radius="1.6" result="er"/>
+          <feFlood flood-color="#9aa3b0" flood-opacity=".22"/><feComposite in2="SourceAlpha" operator="in" result="rim"/>
+          <feFlood flood-color="#0b0d12" flood-opacity=".9"/><feComposite in2="er" operator="in" result="bore"/>
+          <feMerge><feMergeNode in="rim"/><feMergeNode in="bore"/></feMerge>
+        </filter>
+        <filter id="spill" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="70"/></filter>
+        <filter id="refl" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency=".004 .06" numOctaves="2" seed="7" result="n"/>
+          <feDisplacementMap in="SourceGraphic" in2="n" scale="26" xChannelSelector="R" yChannelSelector="G" result="d"/>
+          <feGaussianBlur in="d" stdDeviation="3 9"/>
+        </filter>
+        <clipPath id="below"><rect x="0" y="1160" width="1080" height="760"/></clipPath>
+        <clipPath id="above"><rect x="0" y="0" width="1080" height="1160"/></clipPath>
+      </defs>
+      <g id="signs" clip-path="url(#above)"></g>
+      <g clip-path="url(#below)" opacity=".5" filter="url(#refl)"><use href="#signs" transform="matrix(1 0 0 -1 0 2320)"/></g>
+      <g id="ripples"></g>
+      <g id="rain" stroke="#9fb4c8" stroke-linecap="round"></g>
+    </svg>
+  </div>
+  <div id="vig"></div>
+  <div id="caps" class="bm-captions"></div>
+</div>
+<script>
+(function () {
+  const P = window.PROPS, tl = gsap.timeline({ paused: true });
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (tag, a, parent) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (parent) parent.appendChild(e); return e; };
+  const TOTAL = P.totalMs / 1000;
+  const C = { doa: "#1ff2d9", pink: "#ff3d9e", red: "#ff4a1c", blue: "#3d75ff", pale: "#d9ccff" };
+  const S = P.scenes.map(s => ({ t0: s.startMs / 1000, t1: (s.startMs + s.durationMs) / 1000, s }));
+  const norm = w => w.toLowerCase().replace(/[^a-z0-9-]/g, "");
+  // time of the first word in scene i starting with `pre` (after `after` s into the scene)
+  const W = (i, pre, after = 0) => { const a = S[i].t0 + after, b = S[i].t1;
+    const w = P.words.find(w => { const t = w.startMs / 1000; return t >= a && t < b && norm(w.text).startsWith(pre); });
+    return w ? w.startMs / 1000 : a + 1; };
+
+  /* ---------- the wall: dark brick, kerb, wet asphalt (static, deterministic) ---------- */
+  (function wall() {
+    const cv = document.getElementById("wall"), g = cv.getContext("2d"), R = BM.rng(5);
+    g.fillStyle = "#0d0b0c"; g.fillRect(0, 0, 1080, 1160);
+    for (let row = 0, y = 0; y < 1160; row++, y += 46) for (let x = (row % 2) * -60; x < 1080; x += 120) {
+      const v = 14 + R() * 12; g.fillStyle = `rgb(${v + 8},${v},${v - 2})`; g.fillRect(x + 3, y + 3, 114, 40);
+      if (R() < .3) { g.fillStyle = "rgba(0,0,0,.25)"; g.fillRect(x + 3 + R() * 80, y + 5, 30, 34); } }
+    const wet = g.createLinearGradient(0, 900, 0, 1160); wet.addColorStop(0, "rgba(0,0,0,0)"); wet.addColorStop(1, "rgba(0,0,0,.55)");
+    g.fillStyle = wet; g.fillRect(0, 900, 1080, 260);
+    g.fillStyle = "#1b1c20"; g.fillRect(0, 1148, 1080, 14);                       // kerb
+    const asp = g.createLinearGradient(0, 1162, 0, 1920); asp.addColorStop(0, "#08090c"); asp.addColorStop(1, "#030305");
+    g.fillStyle = asp; g.fillRect(0, 1162, 1080, 758);
+    for (let k = 0; k < 2600; k++) { g.fillStyle = `rgba(160,170,190,${R() * .08})`; g.fillRect(R() * 1080, 1162 + R() * 758, 2, 2); }
+  })();
+
+  /* ---------- tube builders ---------- */
+  const signs = document.getElementById("signs");
+  // a lit element = halo spill + glowing tube; the unlit glass copy is always there underneath
+  function tube(parent, make, col, { spill = true } = {}) {
+    const g = el("g", {}, parent);
+    const glass = el("g", { filter: "url(#glass)" }, g); make(glass, "#888");
+    const lit = el("g", {}, g);
+    const tb = el("g", { filter: "url(#neon)" }, lit); make(tb, col);
+    lit._col = col; return { g, lit, tb, make };
+  }
+  const txt = (font, size, anchor = "middle") => (str, x, y) => (g, col) => { const t = el("text", { x, y, fill: col, "font-family": font, "font-weight": font === "Cav" ? 700 : 600,
+      "font-size": size, "text-anchor": anchor, "letter-spacing": font === "Jost" ? 6 : 0 }, g); t.textContent = str; return t; };
+  const NT = (g, str, x, y, size, col, font = "Jost") => tube(g, txt(font, size)(str, x, y), col);
+  const box = (x, y, w, h) => (g, col) => el("rect", { x, y, width: w, height: h, rx: 26, fill: "none", stroke: col, "stroke-width": 13, "stroke-linejoin": "round" }, g);
+  const path = d => (g, col) => el("path", { d, fill: "none", stroke: col, "stroke-width": 13, "stroke-linecap": "round", "stroke-linejoin": "round" }, g);
+  function board(g, x, y, w, h, fill) {
+    el("rect", { x, y, width: w, height: h, rx: 14, fill, stroke: "#000", "stroke-opacity": .5, "stroke-width": 4 }, g);
+    [[x + 22, y + 22], [x + w - 22, y + 22], [x + 22, y + h - 22], [x + w - 22, y + h - 22]].forEach(([a, b]) => el("circle", { cx: a, cy: b, r: 6, fill: "#2a2d33" }, g));
+    el("rect", { x: x + w - 120, y: y + h + 18, width: 84, height: 52, rx: 6, fill: "#15171b", stroke: "#26292f", "stroke-width": 3 }, g);   // transformer box
+  }
+  const paint = (g, str, x, y, size = 34, col = "#bdb4a8", anchor = "middle") => { const t = el("text", { x, y, fill: col, "font-family": "Inter", "font-weight": 800, "font-size": size,
+      "letter-spacing": 4, "text-anchor": anchor, opacity: .72 }, g); t.textContent = str; return t; };
+  function spillOf(lit, x, y, w, h, col) { const r = el("rect", { x, y, width: w, height: h, fill: col, opacity: .2, filter: "url(#spill)" }); lit.insertBefore(r, lit.firstChild); }
+
+  /* ---------- switching: strikes, drains (never tweens on figures; light only switches) ---------- */
+  const off = (x, t = 0) => tl.set(x.lit || x, { opacity: 0 }, t);
+  const on = (x, t) => tl.set(x.lit || x, { opacity: 1 }, t);
+  function strike(x, t) { const L = x.lit || x;
+    tl.set(L, { opacity: 1 }, t); tl.set(L, { opacity: 0 }, t + .05); tl.set(L, { opacity: .7 }, t + .12); tl.set(L, { opacity: 0 }, t + .17);
+    tl.fromTo(L, { opacity: .25 }, { opacity: 1, duration: .1, ease: "none", immediateRender: false }, t + .2); }
+  function crack(x, t) {   // white flash, column goes pale, then dies with a crackle
+    const L = x.lit, white = el("g", { filter: "url(#neon)", opacity: 0 }, L); x.make(white, "#ffffff");
+    const pale = el("g", { filter: "url(#neon)", opacity: 0 }, L);   x.make(pale, C.pale);
+    tl.set(white, { opacity: 1 }, t); tl.set(white, { opacity: 0 }, t + .07);
+    tl.set(x.tb, { opacity: 0 }, t + .07); tl.set(pale, { opacity: 1 }, t + .07);
+    [.35, .42, .5, .62, .7].forEach((d, k) => tl.set(pale, { opacity: k % 2 ? .9 : .15 }, t + d));
+    tl.set(pale, { opacity: 0 }, t + .85); }
+
+  /* ---------- scenes ---------- */
+  const G = S.map(() => el("g", { opacity: 0 }, signs));
+  S.forEach((sc, i) => { tl.set(G[i], { opacity: 1 }, i ? sc.t0 : 0); if (i < S.length - 1) tl.set(G[i], { opacity: 0 }, sc.t1); });
+  const BX = 90, BY = 230, BW = 900, BH = 860;
+
+  // 1 — hook, lit from frame 0
+  function hook(g, i) {
+    board(g, BX, BY, BW, BH, "#0a1626");
+    const a = NT(g, "Doamu", 540, 410, 170, C.doa, "Cav"), b = NT(g, "TIDAK PERNAH", 540, 570, 104, C.pink), c = NT(g, "ditolak.", 540, 730, 170, C.doa, "Cav");
+    spillOf(a.lit, 200, 280, 680, 520, C.doa);
+    const boxes = [150, 445, 740].map(x => { const bx = tube(g, box(x, 820, 190, 200), C.blue), q = NT(g, "?", x + 95, 960, 120, C.blue); return [bx, q]; });
+    return { words: [a, b, c], boxes };
+  }
+  const h1 = hook(G[0]); paint(G[0], "KENAPA DOAMU BELUM DIKABULKAN?", 540, 190, 32);
+  h1.words.forEach(w => on(w, 0));
+  h1.boxes.forEach(([bx, q], k) => { off(bx); off(q); strike(bx, W(0, "tiga") + k * .2); strike(q, W(0, "kotak") + k * .2); });
+  crack(h1.boxes[2][0], W(0, "tutup")); crack(h1.boxes[2][1], W(0, "tutup"));
+
+  // 2 — three answers, one sign per beat
+  board(G[1], BX, BY, BW, BH, "#0b1d16"); paint(G[1], "HR. AHMAD 11133", 540, 300, 34, "#cfc6b8");
+  [["1", "disegerakan", "dikabulkan"], ["2", "disimpan akhirat", "disimpan"], ["3", "dijauhkan musibah", "dijauhkan"]].forEach(([n, lab, cue], k) => {
+    const y = 350 + k * 240, bx = tube(G[1], box(150, y, 780, 200), C.doa), num = NT(G[1], n, 250, y + 140, 130, C.blue), l = NT(G[1], lab, 610, y + 128, 88, C.doa, "Cav");
+    spillOf(bx.lit, 150, y, 780, 200, C.doa);
+    [bx, num, l].forEach(x => { off(x); strike(x, W(1, cue) - .05); }); });
+
+  // 3 — 1000 prayers, 0 wasted
+  board(G[2], BX, BY, BW, BH, "#1a0a24"); paint(G[2], "HITUNG ULANG", 540, 300, 34, "#cfc6b8");
+  const n1000 = NT(G[2], "1000", 540, 520, 230, C.blue), dDoa = NT(G[2], "DOA", 540, 610, 70, C.blue);
+  const n0 = NT(G[2], "0", 380, 860, 250, C.pink), sia = NT(G[2], "sia-sia", 640, 820, 110, C.pink, "Cav");
+  const lagi = NT(G[2], "Allah lebih banyak lagi", 540, 1020, 84, C.doa, "Cav");
+  spillOf(n1000.lit, 250, 330, 580, 300, C.blue); spillOf(n0.lit, 250, 650, 580, 260, C.pink);
+  [n1000, dDoa].forEach(x => { off(x); strike(x, W(2, "seribu")); });
+  [n0, sia].forEach(x => { off(x); strike(x, W(2, "nol")); });
+  off(lagi); strike(lagi, W(2, "allah"));
+
+  // 4 — the fourth box: the prayer that stops (crack & drain)
+  board(G[3], BX, BY, BW, BH, "#2a0b0d"); paint(G[3], "TAPI HATI-HATI", 540, 300, 34, "#e2c9bd");
+  const terb = NT(G[3], "terburu-buru", 540, 450, 130, C.pink, "Cav");
+  const q1 = NT(G[3], "AKU SUDAH BERDOA,", 540, 640, 66, C.red), q2 = NT(G[3], "TAPI TAK DIJAWAB.", 540, 740, 66, C.red);
+  const stop = NT(G[3], "lalu berhenti", 540, 920, 110, C.red, "Cav");
+  paint(G[3], "HR. BUKHARI 6340 · MUSLIM 2735", 540, 1050, 28, "#e2c9bd");
+  spillOf(q1.lit, 160, 560, 760, 220, C.red);
+  off(terb); strike(terb, W(3, "terburu"));
+  [q1, q2].forEach(x => { off(x); strike(x, W(3, "aku")); crack(x, W(3, "tak") + .1); });
+  off(stop); strike(stop, W(3, "dijawab") + .5);
+
+  // 5 — when did you stop? a stack of nights dies a level at a time
+  board(G[4], BX, BY, BW, BH, "#0a1626");
+  const kap = NT(G[4], "KAPAN KAMU", 540, 340, 72, C.blue), ber = NT(G[4], "berhenti?", 540, 470, 130, C.pink, "Cav");
+  on(kap, S[4].t0); on(ber, S[4].t0);
+  const bars = [...Array(8)].map((_, k) => { const y = 1010 - k * 60; return tube(G[4], path(`M170 ${y} H470`), C.doa); });
+  bars.forEach((b, k) => { off(b); strike(b, S[4].t0 + .4 + k * .22); });
+  const tStop = Math.max(W(4, "hentikan"), S[4].t0 + 2.3); bars.slice(3).reverse().forEach((b, k) => tl.set(b.lit, { opacity: 0 }, tStop + .25 + k * .25));
+  const j1 = NT(G[4], "jawabannya", 770, 800, 84, C.doa, "Cav"), j2 = NT(G[4], "disimpan", 770, 900, 104, C.doa, "Cav");
+  spillOf(j2.lit, 560, 700, 420, 260, C.doa);
+  [j1, j2].forEach(x => { off(x); strike(x, W(4, "disimpan")); });
+
+  // 6 — tonight: three ticks, then one sign left, then the hook strikes again (loop)
+  board(G[5], BX, BY, BW, BH, "#0a1626");
+  const mal = NT(G[5], "MALAM INI", 540, 340, 72, C.blue), ul = NT(G[5], "ulangi", 540, 490, 150, C.pink, "Cav"), sd = NT(G[5], "satu doa itu", 540, 640, 120, C.doa, "Cav");
+  spillOf(ul.lit, 200, 380, 680, 300, C.pink);
+  [mal, ul, sd].forEach(x => on(x, S[5].t0));
+  const ticks = [150, 445, 740].map(x => [tube(G[5], box(x, 760, 190, 200), C.doa), tube(G[5], path(`M${x + 45} ${862} l35 38 l70 -80`), C.doa)]);
+  ticks.forEach((p, k) => p.forEach(x => { off(x); strike(x, W(5, "sekali") + k * .25); }));
+  const tLeft = W(5, "kirim"); [mal, sd, ...ticks.flat()].forEach(x => tl.set(x.lit, { opacity: 0 }, tLeft));   // one sign left
+  const tLoop = W(5, "karena"); tl.set(G[5], { opacity: 0 }, tLoop);
+  const H = el("g", { opacity: 0 }, signs), h6 = hook(H); tl.set(H, { opacity: 1 }, tLoop);
+  [...h6.words, ...h6.boxes.flat()].forEach((x, k) => { off(x); strike(x, tLoop + (k < 3 ? k * .18 : .6 + (k - 3) * .08)); });
+
+  /* ---------- camera: slow push per scene, a small lateral truck on cuts ---------- */
+  const cam = document.getElementById("cam");
+  S.forEach((sc, i) => tl.fromTo(cam, { scale: 1.0, x: i % 2 ? 14 : -14 }, { scale: 1.045, x: 0, duration: sc.t1 - sc.t0, ease: "none", immediateRender: !i }, sc.t0));
+
+  /* ---------- rain, ripples, mains shimmer (pure functions of time) ---------- */
+  const rain = document.getElementById("rain"), rip = document.getElementById("ripples"), R = BM.rng(21);
+  const drops = [...Array(110)].map(() => ({ x: R() * 1180 - 50, p: R(), v: .75 + R() * .5, l: 26 + R() * 30, e: el("line", { "stroke-width": 1.6 + R() * 1.4, opacity: .14 + R() * .2 }, rain) }));
+  const rings = [...Array(14)].map(() => ({ x: 40 + R() * 1000, y: 1180 + R() * 700, p: R(), e: el("ellipse", { fill: "none", stroke: "#8fa6bd", "stroke-width": 2 }, rip) }));
+  const tick = { t: 0 };
+  tl.fromTo(tick, { t: 0 }, { t: TOTAL, duration: TOTAL, ease: "none", onUpdate: () => {
+    const t = tick.t;
+    drops.forEach(d => { const y = ((d.p + t * d.v * 1.1) % 1) * 2100 - 100, x = d.x - (y / 2100) * 60;
+      d.e.setAttribute("x1", x); d.e.setAttribute("y1", y); d.e.setAttribute("x2", x - 6); d.e.setAttribute("y2", y + d.l); });
+    rings.forEach(r => { const f = (r.p + t * .9) % 1; r.e.setAttribute("cx", r.x); r.e.setAttribute("cy", r.y);
+      r.e.setAttribute("rx", 6 + f * 70); r.e.setAttribute("ry", 2 + f * 14); r.e.setAttribute("opacity", (1 - f) * .35); });
+    signs.setAttribute("opacity", (.97 + .03 * Math.sin(t * 2 * Math.PI * 7.3) * Math.sin(t * 13.1)).toFixed(3));
+  } }, 0);
+
+  BM.captions(tl, document.getElementById("caps"), P.words, { accent: C.pink, text: "#efe9e1" });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["root"] = tl;
+})();
+</script>
+</body>
+</html>

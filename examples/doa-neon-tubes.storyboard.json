@@ -1,0 +1,71 @@
+{
+ "title": "Kenapa Doamu Belum Dikabulkan",
+ "music": "none",
+ "ambience": "none",
+ "sfx": true,
+ "style": "neon-tubes",
+ "scenes": [
+  {
+   "id": 1,
+   "vo": "Doamu yang belum terkabul, tidak pernah ditolak. Ada tiga kotak jawaban. Dan satu kotak, sering kita tutup sendiri.",
+   "eyebrow": "Kenapa doamu belum dikabulkan?",
+   "type": "title",
+   "title": "Doamu *tidak pernah* ditolak.",
+   "subtitle": "3 kotak jawaban · 1 kotak kita tutup sendiri"
+  },
+  {
+   "id": 2,
+   "vo": "Rasulullah bersabda: setiap doa pasti dijawab dengan salah satu dari tiga. Dikabulkan segera, disimpan untuk akhirat, atau dijauhkan dari musibah.",
+   "eyebrow": "HR. Ahmad 11133",
+   "type": "list",
+   "headline": "Pasti *1 dari 3*",
+   "items": [
+    "Disegerakan di dunia",
+    "Disimpan untuk akhirat",
+    "Dijauhkan dari musibah"
+   ]
+  },
+  {
+   "id": 3,
+   "vo": "Dari seribu doa, tidak ada yang bernilai nol. Sahabat berkata: kalau begitu kami perbanyak. Rasulullah menjawab: Allah lebih banyak lagi.",
+   "eyebrow": "Hitung ulang",
+   "type": "counter",
+   "headline": "Dari 1.000 doa, yang sia-sia:",
+   "items": [
+    {
+     "value": 0,
+     "label": "tidak satu pun"
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "vo": "Tapi ada satu doa yang berhenti. Doa orang yang terburu, lalu berkata: aku sudah berdoa, tapi tak juga dijawab.",
+   "eyebrow": "Tapi hati-hati · HR. Bukhari 6340, Muslim 2735",
+   "sfx": [
+    {
+     "name": "glass_break",
+     "at": 0.8
+    }
+   ],
+   "type": "quote",
+   "text": "Aku sudah berdoa, tapi tak dijawab. Lalu ia *berhenti*."
+  },
+  {
+   "id": 5,
+   "vo": "Coba ingat satu doa yang kamu hentikan. Bisa jadi, jawabannya sedang disimpan, tepat di hari kamu berhenti.",
+   "eyebrow": "Sebenarnya kamu tahu",
+   "type": "title",
+   "title": "Kapan kamu *berhenti*?",
+   "subtitle": "Jawabannya mungkin sedang disimpan."
+  },
+  {
+   "id": 6,
+   "vo": "Malam ini, ulangi doa itu sekali lagi. Kirim ke orang yang hampir berhenti berdoa. Karena doanya, tidak pernah ditolak.",
+   "eyebrow": "Malam ini",
+   "type": "title",
+   "title": "Malam ini, *ulangi* satu doa itu.",
+   "subtitle": "Kirim ke yang hampir berhenti berdoa."
+  }
+ ]
+}
