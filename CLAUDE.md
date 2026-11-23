@@ -40,7 +40,9 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
    + SFX (keputusan pemilik: musik berisik; ambience untuk retensi, level 60% dari loudness VO — `"ambience_level"`). Musik hanya kalau user memintanya; ambience/SFX dimatikan hanya kalau diminta; bila diminta: backsound (musik + ambience) 35% dari loudness VO; musik orisinal (`music`: warm/epic/tense/calm/playful/sacred/none) + SFX otomatis dari `scripts/score.py`
    (modul `audio/lemo/`, MIT dari Lemo-Opuscar). Sirah → `sacred` atau `none`.
 5. Mode 1 WAJIB memakai salah satu gaya: 99 gaya Lemo-Opuscar ATAU 6 gaya Bang Motion (`hyperframes/bang/styles.json`, MIT, tanpa gambar wajib) — sesuai sub-pilihan mode 1. Untuk Opuscar (usulkan di storyboard; template polos hanya jika user minta; halaman bergaya wajib menampilkan gambar FLUX) (`scripts/styles.py`, diunduh ke `.lemo/` — JANGAN commit STYLE.md, lisensi CC BY-NC).
-6. QA lokal & gratis SEBELUM render: jalankan dulu `produce.py ... --check-only` (VO + `hyperframes check` / cek komposisi 9:16 Lemo native / still per scene Remotion
+6. QA ISI (aturan pemilik 23 Nov 2026) sebelum approval & sebelum render: `output/qa_content.md` — pesan utama 1 kalimat, tabel klaim → dalil (klaim tanpa dalil dibuang),
+   baca scene 1→N berurutan (tanpa kontradiksi, twist dijelaskan, penutup nyambung), istilah dalil tidak dilunakkan. Gagal = tidak render.
+   QA lokal & gratis SEBELUM render: jalankan dulu `produce.py ... --check-only` (VO + `hyperframes check` / cek komposisi 9:16 Lemo native / still per scene Remotion
    → `output/qa_precheck.md`, `output/qa_prerender.jpg`). Render otomatis DIHENTIKAN kalau ada masalah nyata; tumpukan yang disengaja
    masuk `"qa_allow"` di storyboard. Setelah render: QA file akhir (`output/qa_report.md`, `output/qa_sheet.jpg`). Baca sebelum kirim.
 7. Animasi 3D (three.js, `lib3d/bm3d.js`, panduan skill `threejs-*` dari cloudai-x/threejs-skills): 1–2 scene 🧊 per video bila kedalaman membantu

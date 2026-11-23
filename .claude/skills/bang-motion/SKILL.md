@@ -291,6 +291,17 @@ Options: `accent`, `bg` (null = transparent), `fog`, `seed`, `speed`, `progress`
 
 ### QA (local and free — never uses Cloudflare or other quota) — runs BEFORE the render
 
+**Content QA (owner rule, 2026-11-23) — done by Claude BEFORE asking for approval and again before every render.** The machine QA below
+checks only audio and layout, never meaning. Write `output/qa_content.md` and show its verdict in the approval summary:
+1. **Main message** in one sentence. Every scene must serve it.
+2. **Claim → source table:** each factual/religious claim in `vo` and on-screen text, with the dalil/source that says it. A claim with no
+   source (e.g. "jawabannya disimpan tepat di hari kamu berhenti") is removed or rewritten; never present your own inference as the dalil's.
+3. **Read scenes 1→N in order as a viewer:** no scene contradicts an earlier one, each "tapi/twist" is explained, the ending's action follows
+   from the argument (e.g. twist "berhenti = kehilangan" → ending "ulangi doa", not comfort for having stopped).
+4. **Key terms kept:** words from the dalil (tergesa-gesa, putus asa, sabar…) are not swapped for vaguer synonyms to fix TTS or timing.
+5. **Vague lines:** any line that makes the viewer ask "maksudnya apa?" (e.g. a bare "Tapi hati-hati") gets its meaning said in the VO.
+Any failure blocks the render until fixed; when the fix changes approved VO, show the new lines to the owner first.
+
 `produce.py` gates every render on a **pre-render QA** (`scripts/qa.py precheck` → `output/qa_precheck.md`):
 
 | Check | Engines | Blocks the render? |
