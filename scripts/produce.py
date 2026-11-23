@@ -273,6 +273,10 @@ def main():
     verdict = [l for l in pre.stdout.splitlines() if l.startswith("### ✅") or l.startswith("### ❌") or l.startswith("- ")]
     print("\n".join(l for l in verdict if not l.startswith("- ✅"))[:3000])
     extra = remotion_prestills(props_path, props) if engine == "remotion" else []
+    if pre.returncode not in (0, 2):   # the QA itself crashed: never treat that as a pass
+        print(pre.stderr[-3000:])
+        if "--accept-qa" not in flags:
+            sys.exit("STOPPED before render: pre-render QA crashed (see above); fix it or re-run with --accept-qa after checking by hand.")
     if (pre.returncode == 2 or extra) and "--accept-qa" not in flags:
         sys.exit("STOPPED before render: fix the issues in output/qa_precheck.md (or re-run with --accept-qa after reviewing).")
     if "--check-only" in flags:

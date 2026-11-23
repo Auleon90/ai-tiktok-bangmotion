@@ -168,25 +168,25 @@
 
   // 4 — the fourth box: the prayer that stops (crack & drain)
   board(G[3], BX, BY, BW, BH, "#2a0b0d"); paint(G[3], "TAPI HATI-HATI", 540, 300, 34, "#e2c9bd");
-  const terb = NT(G[3], "terburu-buru", 540, 450, 130, C.pink, "Cav");
-  const q1 = NT(G[3], "AKU SUDAH BERDOA,", 540, 640, 66, C.red), q2 = NT(G[3], "TAPI TAK DIJAWAB.", 540, 740, 66, C.red);
+  const terb = NT(G[3], "tidak sabar", 540, 450, 130, C.pink, "Cav");
+  const q1 = NT(G[3], "AKU SUDAH BERDOA,", 540, 640, 60, C.red), q2 = NT(G[3], "TAPI TAK DIKABULKAN.", 540, 740, 60, C.red);
   const stop = NT(G[3], "lalu berhenti", 540, 920, 110, C.red, "Cav");
   paint(G[3], "HR. BUKHARI 6340 · MUSLIM 2735", 540, 1050, 28, "#e2c9bd");
   spillOf(q1.lit, 160, 560, 760, 220, C.red);
-  off(terb); strike(terb, W(3, "terburu"));
-  [q1, q2].forEach(x => { off(x); strike(x, W(3, "aku")); crack(x, W(3, "tak") + .1); });
-  off(stop); strike(stop, W(3, "dijawab") + .5);
+  off(terb); strike(terb, W(3, "sabar"));
+  [q1, q2].forEach(x => { off(x); strike(x, W(3, "aku")); crack(x, W(3, "berhenti")); });
+  off(stop); strike(stop, W(3, "berhenti") + .5);
 
   // 5 — when did you stop? a stack of nights dies a level at a time
   board(G[4], BX, BY, BW, BH, "#0a1626");
-  const kap = NT(G[4], "KAPAN KAMU", 540, 340, 72, C.blue), ber = NT(G[4], "berhenti?", 540, 470, 130, C.pink, "Cav");
-  on(kap, S[4].t0); on(ber, S[4].t0);
+  const kap = NT(G[4], "YANG MENUTUP PINTU", 540, 340, 60, C.blue), ber = NT(G[4], "kita sendiri", 540, 470, 130, C.pink, "Cav");
+  on(kap, S[4].t0); off(ber); strike(ber, W(4, "kita"));
   const bars = [...Array(8)].map((_, k) => { const y = 1010 - k * 60; return tube(G[4], path(`M170 ${y} H470`), C.doa); });
   bars.forEach((b, k) => { off(b); strike(b, S[4].t0 + .4 + k * .22); });
-  const tStop = Math.max(W(4, "hentikan"), S[4].t0 + 2.3); bars.slice(3).reverse().forEach((b, k) => tl.set(b.lit, { opacity: 0 }, tStop + .25 + k * .25));
-  const j1 = NT(G[4], "jawabannya", 770, 800, 84, C.doa, "Cav"), j2 = NT(G[4], "disimpan", 770, 900, 104, C.doa, "Cav");
+  const tStop = Math.max(W(4, "berhenti"), S[4].t0 + 2.3); bars.slice(3).reverse().forEach((b, k) => tl.set(b.lit, { opacity: 0 }, tStop + .25 + k * .25));
+  const j1 = NT(G[4], "satu doa yang", 770, 800, 80, C.doa, "Cav"), j2 = NT(G[4], "ditinggalkan", 770, 900, 92, C.doa, "Cav");
   spillOf(j2.lit, 560, 700, 420, 260, C.doa);
-  [j1, j2].forEach(x => { off(x); strike(x, W(4, "disimpan")); });
+  [j1, j2].forEach(x => { off(x); strike(x, W(4, "tinggalkan")); });
 
   // 6 — tonight: three ticks, then one sign left, then the hook strikes again (loop)
   board(G[5], BX, BY, BW, BH, "#0a1626");

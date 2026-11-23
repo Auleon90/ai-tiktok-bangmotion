@@ -40,12 +40,12 @@
   },
   {
    "id": 4,
-   "vo": "Tapi ada satu doa yang berhenti. Doa orang yang terburu, lalu berkata: aku sudah berdoa, tapi tak juga dijawab.",
+   "vo": "Tapi ada satu doa yang tidak lagi dijawab. Doa orang yang tidak sabar, lalu berkata: aku sudah berdoa, tapi tak juga dikabulkan. Lalu ia berhenti berdoa.",
    "eyebrow": "Tapi hati-hati · HR. Bukhari 6340, Muslim 2735",
    "sfx": [
     {
      "name": "glass_break",
-     "at": 0.8
+     "at": 0.86
     }
    ],
    "type": "quote",
@@ -53,7 +53,7 @@
   },
   {
    "id": 5,
-   "vo": "Coba ingat satu doa yang kamu hentikan. Bisa jadi, jawabannya sedang disimpan, tepat di hari kamu berhenti.",
+   "vo": "Jadi yang menutup pintunya bukan Allah, tapi kita sendiri, saat berhenti meminta. Coba ingat satu doa yang pernah kamu tinggalkan.",
    "eyebrow": "Sebenarnya kamu tahu",
    "type": "title",
    "title": "Kapan kamu *berhenti*?",
