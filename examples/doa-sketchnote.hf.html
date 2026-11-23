@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<!--
+  "Sketchnote" (Lemo-Opuscar by Lemomo (LemoLab), style guide .lemo/lemo-opuscar/styles/sketchnote/STYLE.md) as a 9:16 HyperFrames page.
+  The drawing engine (fineliner, marker, ribbons, boxes, arrows) is the demo's own Canvas 2D code (MIT); letters are written one by
+  one at pen speed (no glyph skeletons here). One dot-grid page of six note blocks; the camera pans down the page block by block and
+  whips back to the hook at the end. Video: "Kenapa Doamu Belum Dikabulkan". Fonts: Kalam Bold, Patrick Hand (OFL).
+-->
+<link rel="stylesheet" href="assets/bm/bm.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="assets/props.js"></script>
+<script src="assets/bm/bm.js"></script>
+<style>
+  @font-face{font-family:KB;src:url("assets/fonts/lemo/kalam-700.woff2");font-display:block}
+  @font-face{font-family:PH;src:url("assets/fonts/lemo/patrickhand-400.woff2");font-display:block}
+  html,body{margin:0;background:#fbfaf6}
+  #root{position:relative;width:1080px;height:1920px;overflow:hidden;background:#fbfaf6}
+  #c{position:absolute;left:0;top:0}
+  #pre{position:absolute;left:-9999px;font:40px KB}#pre2{position:absolute;left:-9999px;font:40px PH}
+  /* subtitles: a paper slip with a strip of washi tape, in the note hand */
+  .bm-captions{top:1440px;left:90px;right:90px}
+  .bm-line{font-family:PH;font-size:66px;font-weight:400}
+  .bm-word{color:#1e1e22;-webkit-text-stroke:12px #fbfaf6;paint-order:stroke fill;text-shadow:none}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="root" data-start="0" data-duration="__TOTAL_S__" data-width="1080" data-height="1920">
+  <audio id="vo" src="assets/audio.mp3" data-start="0" data-duration="__TOTAL_S__"></audio>
+  <canvas id="c" width="1080" height="1920"></canvas>
+  <div id="pre">Ag</div><div id="pre2">Ag</div>
+  <div id="caps" class="bm-captions"></div>
+</div>
+<script>
+(function () {
+const W = 1080, H = 1920, FPS = 30;
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+const OC = document.createElement('canvas'); OC.width = W; OC.height = H; const octx = OC.getContext('2d');
+// ---------- palette: paper, one fineliner, grey marker in three strengths, one yellow ----------
+// The accent (yellow) is a multiply marker; the volume colour (grey) is the same marker laid in three strengths.
+const PL = { paper: '#fbfaf6', ink: [30, 30, 34], ink2: '#5b5852',
+  acc: [255, 205, 40], accA: 0.80, accD: [245, 170, 0], accS: [232, 140, 0],
+  shd: [100, 100, 110], shd2: [80, 80, 92], shd3: [52, 52, 64], dot: [150, 144, 132] };
+const rgba = (c, a) => `rgba(${c.map(v => Math.round(v)).join(',')},${a})`;
+const hex = c => '#' + c.map(v => Math.round(v).toString(16).padStart(2, '0')).join('');
+const PAPER = PL.paper, DOT = rgba(PL.dot || PL.shd.map(v => v * 0.5 + 95), 0.55);
+const INK = hex(PL.ink), INK2 = PL.ink2;                       // pen, secondary pen (small notes)
+const YEL = rgba(PL.acc, PL.accA), YELD = rgba(PL.accD, 0.95), YELS = rgba(PL.accS, 0.22);   // the one accent colour
+const GRY = rgba(PL.shd, 0.16), GRY2 = rgba(PL.shd2 || PL.shd.map(v => v * 0.8), 0.28), GRYD = rgba(PL.shd3 || PL.shd.map(v => v * 0.52), 0.45);
+const INKM = a => rgba(PL.ink, a);                             // solid marker in pen colour (bee stripes, eye)
+const TAU = Math.PI * 2;
+
+// ---------- seeded randomness ----------
+let SEED = 1, BOIL = 0;
+function rnd() { SEED |= 0; SEED = SEED + 0x6D2B79F5 | 0; let t = Math.imul(SEED ^ SEED >>> 15, 1 | SEED); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }
+const rr = (a, b) => a + (b - a) * rnd();
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+const eio = t => { t = clamp(t); return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+const eo = t => 1 - Math.pow(1 - clamp(t), 3);
+const BO = [0, 1, -0.8];   // boil offsets: three drawings, cycled on twos
+
+// ---------- geometry ----------
+function resample(pts, step = 3) {
+  const out = [pts[0].slice()];
+  for (let i = 1; i < pts.length; i++) {
+    const [x0, y0] = pts[i - 1], [x1, y1] = pts[i];
+    const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) / step));
+    for (let k = 1; k <= n; k++) out.push([x0 + (x1 - x0) * k / n, y0 + (y1 - y0) * k / n]);
+  }
+  return out;
+}
+function plen(pts) { let s = 0; for (let i = 1; i < pts.length; i++) s += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); return s; }
+function noiseFn(amp) {   // static shape + a small boil phase shift
+  const ks = [[amp, rr(0.003, 0.008), rr(0, TAU), rr(0.35, 0.7)], [amp * 0.5, rr(0.012, 0.022), rr(0, TAU), rr(0.35, 0.7)], [amp * 0.22, rr(0.035, 0.06), rr(0, TAU), rr(0.35, 0.7)]];
+  const b = BO[BOIL];
+  return s => ks.reduce((a, [A, f, p, d]) => a + A * Math.sin(f * s + p + d * b), 0);
+}
+function jitter(pts, amp) {
+  const P = resample(pts, 3), n = noiseFn(amp), out = []; let s = 0;
+  for (let i = 0; i < P.length; i++) {
+    if (i) s += Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]);
+    const a = P[Math.max(0, i - 1)], b = P[Math.min(P.length - 1, i + 1)];
+    let tx = b[0] - a[0], ty = b[1] - a[1]; const L = Math.hypot(tx, ty) || 1; tx /= L; ty /= L;
+    const d = n(s); out.push([P[i][0] - ty * d, P[i][1] + tx * d]);
+  }
+  return out;
+}
+const line = (x1, y1, x2, y2) => [[x1, y1], [x2, y2]];
+function ell(cx, cy, rx, ry, a0 = 0, a1 = TAU, n = 90, rot = 0) { const p = [], c = Math.cos(rot), s = Math.sin(rot); for (let i = 0; i <= n; i++) { const a = a0 + (a1 - a0) * i / n, x = rx * Math.cos(a), y = ry * Math.sin(a); p.push([cx + x * c - y * s, cy + x * s + y * c]); } return p; }
+function rrect(x, y, w, h, r) {
+  const p = [];
+  const arc = (cx, cy, a0) => { for (let i = 0; i <= 8; i++) { const a = a0 + Math.PI / 2 * i / 8; p.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]); } };
+  arc(x + w - r, y + r, -Math.PI / 2); arc(x + w - r, y + h - r, 0); arc(x + r, y + h - r, Math.PI / 2); arc(x + r, y + r, Math.PI);
+  return p;
+}
+function bez(p0, p1, p2, p3, n = 40) { const o = []; for (let i = 0; i <= n; i++) { const t = i / n, u = 1 - t; o.push([u * u * u * p0[0] + 3 * u * u * t * p1[0] + 3 * u * t * t * p2[0] + t * t * t * p3[0], u * u * u * p0[1] + 3 * u * u * t * p1[1] + 3 * u * t * t * p2[1] + t * t * t * p3[1]]); } return o; }
+const shift = (pts, dx, dy) => pts.map(([x, y]) => [x + dx, y + dy]);
+function hexPts(cx, cy, r, rot = 0) { const p = []; for (let i = 0; i < 6; i++) { const a = rot + i / 6 * TAU; p.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]); } return p; }
+function pathOf(pts, close = true) { const p = new Path2D(); p.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) p.lineTo(pts[i][0], pts[i][1]); if (close) p.closePath(); return p; }
+function bbox(pts) { let a = 1e9, b = 1e9, c = -1e9, d = -1e9; for (const [x, y] of pts) { a = Math.min(a, x); b = Math.min(b, y); c = Math.max(c, x); d = Math.max(d, y); } return [a, b, c, d]; }
+
+// ---------- pen (fineliner) ----------
+function inkDraw(pts, o, prog) {
+  let { w = 3, amp = 1.5, passes = 2, col = INK, closed = false, alpha = 1, dash = null } = o;
+  w *= 1.2; let base;
+  if (closed) {   // overshoot the join a little, start at a random point
+    base = resample(pts.concat([pts[0]]), 3);
+    const st = Math.floor(rr(0, base.length)); base = base.slice(st).concat(base.slice(1, st + 1));
+    base = base.concat(base.slice(1, 2 + Math.floor(base.length * rr(0.02, 0.05))));
+  } else base = resample(pts, 3);
+  ctx.save(); ctx.strokeStyle = col; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  for (let p = 0; p < passes; p++) {
+    const P = jitter(base, amp * (p ? 1.4 : 1)); const n = Math.max(2, Math.floor(P.length * prog));
+    const wn = noiseFn(0.22); ctx.globalAlpha = alpha * (p ? 0.5 : 0.94);
+    let s = 0;
+    for (let i = 0; i < n - 1; i += 6) {
+      let on = true;
+      if (dash) on = (s % (dash[0] + dash[1])) < dash[0];
+      const end = Math.min(n - 1, i + 6);
+      for (let j = i + 1; j <= end; j++) s += Math.hypot(P[j][0] - P[j - 1][0], P[j][1] - P[j - 1][1]);
+      if (!on) continue;
+      ctx.beginPath(); ctx.moveTo(P[i][0], P[i][1]); for (let j = i + 1; j <= end; j++) ctx.lineTo(P[j][0], P[j][1]);
+      ctx.lineWidth = w * (p ? 0.62 : 1) * (1 + wn(i * 3)); ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+// ---------- marker (semi-transparent, multiply, streaky) ----------
+function markerDraw(clips, o, prog) {
+  const { col = GRY, w = 18, ang = -0.55, gap = 0.62, amp = 2.2, edge = true, op = 'multiply' } = o;
+  const region = jitter(clips[0].concat([clips[0][0]]), amp);
+  const [x0, y0, x1, y1] = bbox(region), cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, R = Math.hypot(x1 - x0, y1 - y0) / 2 + w;
+  const strokes = []; for (let o2 = -R; o2 < R; o2 += w * gap * rr(0.85, 1.15)) strokes.push([o2, w * rr(0.9, 1.08), rr(-4, 4), rr(-6, 6), rr(-6, 6), rr(-2, 2)]);
+  ctx.save();
+  ctx.clip(pathOf(region));
+  if (clips.length > 1) { const p = pathOf(region); for (let i = 1; i < clips.length; i++) p.addPath(pathOf(clips[i])); ctx.clip(p, 'evenodd'); }
+  ctx.globalCompositeOperation = op; ctx.strokeStyle = col; ctx.lineCap = 'round';
+  ctx.translate(cx, cy); ctx.rotate(ang);
+  const stop = -R + 2 * R * prog;
+  for (const [o2, lw, bow, a, b, c] of strokes) {
+    if (o2 >= stop) break;
+    ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(-R + a, o2); ctx.quadraticCurveTo(0, o2 + bow, R + b, o2 + c); ctx.stroke();
+  }
+  ctx.restore();
+  if (edge && prog >= 1) { ctx.save(); ctx.clip(pathOf(region)); ctx.globalCompositeOperation = 'multiply'; ctx.strokeStyle = col; ctx.globalAlpha = 0.45; ctx.lineWidth = 4; ctx.stroke(pathOf(region)); ctx.restore(); }
+}
+function mstrokeDraw(pts, o, prog) {   // a single marker stroke (rays, swashes)
+  const { col = YEL, w = 8, amp = 1 } = o; const P = jitter(pts, amp); const n = Math.max(2, Math.ceil(P.length * prog));
+  ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.strokeStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.stroke(pathOf(P.slice(0, n), false)); ctx.restore();
+}
+
+// ---------- hand lettering, written stroke by stroke along glyph skeletons ----------
+let GLY = null;
+const FONTN = { KB: 'KB', PH: 'PH', ZH: 'ZH' };
+function textLayout(s, x, y, size, o = {}) {
+  const { f = 'PH', align = 'left', jit = 1, sp = 0.98, rot = 0 } = o;
+  ctx.save(); ctx.font = `${size}px ${f}`;
+  const ch = [...s], ws = ch.map(c => ctx.measureText(c).width * sp); ctx.restore();
+  const tot = ws.reduce((a, b) => a + b, 0);
+  let cx = align === 'center' ? -tot / 2 : align === 'right' ? -tot : 0;
+  const G = (GLY && GLY[f]) || { g: {}, hw: 0.05 }, chars = []; let L = 0;
+  ch.forEach((c, i) => {
+    const dy = rr(-1, 1) * jit * size * 0.03, r = rr(-1, 1) * jit * 0.045, k = rr(-1, 1);
+    const sk = (G.g[c] || []).map(a => { const P = []; for (let j = 0; j < a.length; j += 2) P.push([a[j] * size, a[j + 1] * size]); return P; });
+    const lens = sk.map(plen); const len = sk.length ? lens.reduce((a, b) => a + b, 0) + sk.length * size * 0.12 : (c === ' ' ? size * 0.2 : size * 0.55);   // no skeleton: letter by letter at pen speed
+    chars.push({ c, ox: cx, dy, r, sk, lens, len, L0: L }); L += len;
+    cx += ws[i] * (1 + k * 0.02);
+  });
+  return { s, x, y, size, f, rot, chars, L, hw: G.hw * size, tot, col: o.col || INK };
+}
+function textDraw(T, prog) {
+  const target = prog * T.L;
+  ctx.save(); ctx.translate(T.x, T.y); ctx.rotate(T.rot);
+  ctx.font = `${T.size}px ${T.f}`; ctx.fillStyle = T.col; ctx.textBaseline = 'alphabetic';
+  for (const C of T.chars) {
+    if (C.L0 >= target) break;
+    const part = target - C.L0;
+    ctx.save(); ctx.translate(C.ox, C.dy); ctx.rotate(C.r);
+    if (part >= C.len || !C.sk.length) { ctx.fillText(C.c, 0, 0); ctx.restore(); continue; }
+    // partial glyph: draw it on the side canvas, keep only what the pen has covered
+    const m = ctx.getTransform();
+    octx.setTransform(1, 0, 0, 1, 0, 0); octx.clearRect(0, 0, W, H);
+    octx.setTransform(m); octx.font = ctx.font; octx.fillStyle = T.col; octx.textBaseline = 'alphabetic';
+    octx.fillText(C.c, 0, 0);
+    octx.globalCompositeOperation = 'destination-in'; octx.lineCap = 'round'; octx.lineJoin = 'round'; octx.lineWidth = T.hw * 2.9 + 1.5; octx.strokeStyle = '#000';
+    let left = part;
+    octx.beginPath();
+    for (let k = 0; k < C.sk.length && left > 0; k++) {
+      const P = C.sk[k]; octx.moveTo(P[0][0], P[0][1]); if (P.length === 1) octx.lineTo(P[0][0] + 0.1, P[0][1]);
+      for (let j = 1; j < P.length && left > 0; j++) {
+        const d = Math.hypot(P[j][0] - P[j - 1][0], P[j][1] - P[j - 1][1]);
+        if (d <= left) { octx.lineTo(P[j][0], P[j][1]); left -= d; }
+        else { const u = left / d; octx.lineTo(P[j - 1][0] + (P[j][0] - P[j - 1][0]) * u, P[j - 1][1] + (P[j][1] - P[j - 1][1]) * u); left = 0; }
+      }
+      left -= T.size * 0.12;
+    }
+    octx.stroke(); octx.globalCompositeOperation = 'source-over';
+    ctx.restore(); ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(OC, 0, 0); ctx.restore();
+  }
+  ctx.restore();
+}
+
+// ---------- timeline of strokes ----------
+// Each element = one pen/marker action with a start time and a duration; drawn in registration order (z).
+const EL = [];
+let BSEED = 1000;
+function addEl(t0, d, kind, draw, wx) { EL.push({ t0, d: Math.max(d, 1 / FPS), kind, draw, seed: (BSEED += 7919), wx }); return t0 + d; }
+const cen = pts => { const b = bbox(pts); return (b[0] + b[2]) / 2; };
+const INK_ = (pts, o, t0, d) => addEl(t0, d, 'pen', p => inkDraw(pts, o, p), cen(pts));
+const MRK = (clips, o, t0, d) => addEl(t0, d, 'marker', p => markerDraw(clips, o, p), cen(clips[0]));
+const MST = (pts, o, t0, d) => addEl(t0, d, 'marker', p => mstrokeDraw(pts, o, p), cen(pts));
+const FILL = (pts, t0) => addEl(t0, 0, 'fill', () => { ctx.save(); ctx.fillStyle = PAPER; ctx.fill(pathOf(pts)); ctx.restore(); }, cen(pts));
+const PAGE_TEXTS = [];   // every written text, for window.TEXTS (reading-time check)
+function TXT(s, x, y, size, o, t0, d) {
+  const T = textLayout(s, x, y, size, o);
+  const end = addEl(t0, d == null ? T.L / (o.cps || 2200) : d, 'write', p => textDraw(T, p), x + (o.align === 'center' ? 0 : T.tot / 2));
+  PAGE_TEXTS.push({ T, t0: EL[EL.length - 1].t0 });
+  return end;
+}
+
+// ---------- composite parts ----------
+function dropShadow(pts, dx, dy, t0, d = 0.12, o = {}) { MRK([shift(pts, dx, dy), pts], { col: GRY2, w: 12, ...o }, t0, d); }
+function box(x, y, w, h, t0, d = 0.32) {
+  const p = rrect(x, y, w, h, 28);
+  dropShadow(p, 9, 10, t0 + d * 0.9);
+  return INK_(p, { closed: true, w: 3.2, amp: 1.6 }, t0, d) + 0.12;
+}
+function ribbon(cx, cy, w, h, label, size, t0, o = {}) {
+  const { fill = YEL, arc = 3, f = 'KB', d = 0.3 } = o;
+  const dy = h * 0.34, tl = h * 0.95;
+  for (const sd of [-1, 1]) {
+    const xe = cx + sd * w / 2;
+    const tp = [[xe - sd * h * 0.4, cy - h / 2 + dy], [xe + sd * tl, cy - h / 2 + dy], [xe + sd * (tl - h * 0.36), cy + dy], [xe + sd * tl, cy + h / 2 + dy], [xe - sd * h * 0.4, cy + h / 2 + dy]];
+    FILL(tp, t0 + d * 0.5); MRK([tp], { col: GRY2, w: 14, ang: 0.9 }, t0 + d * 0.7, d * 0.3);
+    INK_(tp, { closed: true, w: 2.8, amp: 0.9 }, t0 + d * 0.5, d * 0.35);
+    const fold = [[xe, cy + h / 2 - 2], [xe, cy + h / 2 + dy], [xe - sd * h * 0.4, cy + h / 2 + dy]];
+    MRK([fold], { col: GRYD, w: 8, edge: false }, t0 + d * 0.8, d * 0.2);
+  }
+  const body = []; const N = 40;
+  for (let i = 0; i <= N; i++) { const u = i / N; body.push([cx - w / 2 + w * u, cy - h / 2 - arc * Math.sin(Math.PI * u)]); }
+  for (let i = N; i >= 0; i--) { const u = i / N; body.push([cx - w / 2 + w * u, cy + h / 2 - arc * Math.sin(Math.PI * u)]); }
+  FILL(body, t0);
+  if (fill) MRK([body], { col: fill, w: 20 }, t0 + d * 0.55, d * 0.45);
+  INK_(body, { closed: true, w: 3.2, amp: 1 }, t0, d * 0.6);
+  let end = t0 + d;
+  if (label) end = TXT(label, cx, cy + size * 0.36 - arc, size, { f, align: 'center', jit: 0.7 }, t0 + d * 0.8, o.td);
+  return end;
+}
+function fatArrow(x1, y, x2, t0, o = {}) {
+  const h = o.h || 30, hh = o.hh || 36, hl = o.hl || 36, d = o.d || 0.22;
+  const p = [[x1, y - h / 2], [x2 - hl, y - h / 2 - 2], [x2 - hl + 2, y - hh], [x2, y], [x2 - hl + 2, y + hh], [x2 - hl, y + h / 2 + 2], [x1, y + h / 2]];
+  dropShadow(p, 5, 6, t0 + d, 0.08, { w: 10 });
+  FILL(p, t0); MRK([p], { col: YEL, w: 14 }, t0 + d * 0.6, d * 0.5);
+  return INK_(p, { closed: true, w: 3, amp: 0.9 }, t0, d * 0.7) + d * 0.4;
+}
+function arrowHead(x, y, ang, s, o, t0, d = 0.05) {
+  return INK_([[x + Math.cos(ang + 2.6) * s, y + Math.sin(ang + 2.6) * s], [x, y], [x + Math.cos(ang - 2.6) * s, y + Math.sin(ang - 2.6) * s]], { w: 3, amp: 0.5, passes: 1, ...o }, t0, d);
+}
+function inkArrow(pts, o, t0, d) {
+  const P = resample(pts, 3); const e = INK_(P, o, t0, d);
+  const a = P[P.length - 1], b = P[Math.max(0, P.length - 6)];
+  return arrowHead(a[0], a[1], Math.atan2(a[1] - b[1], a[0] - b[0]), o.head || 14, { w: o.w || 3 }, e);
+}
+function sparks(cx, cy, r1, r2, angs, t0, d = 0.12) {
+  angs.forEach((a, i) => MST(line(cx + Math.cos(a) * r1, cy + Math.sin(a) * r1, cx + Math.cos(a) * r2, cy + Math.sin(a) * r2), { w: 6, col: YELD }, t0 + i * d * 0.25, d * 0.5));
+  return t0 + d;
+}
+function bullet(x, y, t0) { const c = ell(x, y, 8, 8, 0, TAU, 20); MRK([c], { col: YEL, w: 8 }, t0 + 0.04, 0.05); return INK_(c, { closed: true, w: 2.2, amp: 0.3, passes: 1 }, t0, 0.06); }
+
+const P = window.PROPS, tl = gsap.timeline({ paused: true });
+const TOTAL = P.totalMs / 1000;
+const SC = P.scenes.map(s => ({ t0: s.startMs / 1000, t1: (s.startMs + s.durationMs) / 1000 }));
+const norm = w => w.toLowerCase().replace(/[^a-z0-9]/g, '');
+// time of the first word starting with `pre` at or after `from` seconds
+const T = (pre, from = 0) => { const w = P.words.find(w => w.startMs / 1000 >= from - 0.01 && norm(w.text).startsWith(pre)); return w ? w.startMs / 1000 : from; };
+const BLK = 1150, top = i => i * BLK;   // six blocks stacked down one page
+const C = (s, x, y, size, t0, o = {}) => TXT(s, x, y, size, { f: 'KB', align: 'center', jit: 0.8, cps: 1500, ...o }, t0);
+const N = (s, x, y, size, t0, o = {}) => TXT(s, x, y, size, { f: 'PH', align: 'center', col: INK2, jit: 0.6, cps: 1700, ...o }, t0);
+const swash = (x1, x2, y, t0, w = 22) => MST(bez([x1, y + 4], [x1 + (x2 - x1) * .3, y - 4], [x1 + (x2 - x1) * .7, y + 6], [x2, y - 2]), { w, col: YEL }, t0, 0.35);
+const tick = (x, y, t0) => { MST([[x, y], [x + 30, y + 34], [x + 90, y - 40]], { w: 16, col: YEL }, t0 + 0.12, 0.2); return INK_([[x, y], [x + 30, y + 34], [x + 90, y - 40]], { w: 5, amp: 0.8 }, t0, 0.18); };
+let built = false;
+function build() {
+  built = true;
+  // ---- 1 · the hook (written before frame 0, so it is readable at once) ----
+  let y = top(0);
+  ribbon(540, y + 95, 760, 76, 'DOA YANG BELUM TERKABUL', 40, -3.2);
+  C('tidak pernah', 540, y + 300, 118, -2.7);
+  C('DITOLAK', 540, y + 455, 160, -2.2);
+  swash(330, 760, y + 485, -1.4, 28);
+  const s1 = SC[0].t0;
+  N('Allah selalu menjawab, dengan 1 dari 3 cara', 540, y + 575, 44, T('allah', s1));
+  [120, 420, 720].forEach((x, k) => { const t = T('salah', s1) + k * 0.3; box(x, y + 620, 240, 220, t); C('?', x + 120, y + 785, 140, t + 0.2); });
+  C('kecuali kamu BERHENTI berdoa', 540, y + 960, 60, T('kecuali', s1));
+  MRK([rrect(100, y + 600, 880, 262, 30)], { col: GRYD, w: 26, ang: -0.5 }, T('berhenti', s1), 0.55);   // all three boxes go dark at once
+
+  // ---- 2 · three answers (HR. Ahmad 11133) ----
+  y = top(1); const s2 = SC[1].t0;
+  ribbon(540, y + 80, 520, 72, 'HR. AHMAD 11133', 38, s2 + 0.1);
+  N('setiap doa pasti dijawab dengan salah satu dari tiga:', 540, y + 175, 40, T('setiap', s2));
+  [['dikabulkan', 'Dikabulkan segera', 'di dunia'], ['disimpan', 'Disimpan', 'untuk akhiratmu'], ['jauhkan', 'Dijauhkan', 'dari musibah yang sebanding']].forEach(([cue, a, b], k) => {
+    const t = T(cue, s2) - 0.35, by = y + 220 + k * 270;
+    box(90, by, 900, 220, t);
+    const c = ell(185, by + 110, 52, 52, 0, TAU, 40); MRK([c], { col: YEL, w: 16 }, t + 0.25, 0.2); INK_(c, { closed: true, w: 3, amp: 0.8 }, t + 0.2, 0.15);
+    C(String(k + 1), 185, by + 138, 80, t + 0.3);
+    C(a, 270, by + 100, 66, t + 0.35, { align: 'left' }); N(b, 270, by + 170, 46, t + 0.6, { align: 'left' }); });
+
+  // ---- 3 · 1000 prayers, 0 wasted; "Allah lebih banyak lagi" and what it means ----
+  y = top(2); const s3 = SC[2].t0;
+  C('1000 doa', 270, y + 180, 104, T('seribu', s3));
+  fatArrow(480, y + 150, 640, T('seribu', s3) + 0.6);
+  C('0', 820, y + 210, 190, T('nol', s3));
+  MST(ell(820, y + 150, 95, 110, -1.2, TAU - 0.9, 60), { w: 10, col: YELD }, T('nol', s3) + 0.4, 0.4);
+  N('yang sia-sia', 820, y + 300, 44, T('nol', s3) + 0.5);
+  box(90, y + 360, 900, 190, T('sahabat', s3));
+  N('Sahabat:', 150, y + 420, 42, T('sahabat', s3) + 0.2, { align: 'left' });
+  C('"Kalau begitu, kami perbanyak doa!"', 540, y + 505, 54, T('kalau', s3));
+  const tr = T('rasulullah', s3 + 3);
+  box(90, y + 590, 900, 190, tr);
+  N('Rasulullah:', 150, y + 650, 42, tr + 0.2, { align: 'left' });
+  C('"Allah lebih banyak lagi."', 540, y + 735, 64, T('allah', tr));
+  const ta = T('artinya', s3);
+  N('artinya:', 540, y + 860, 46, ta);
+  C('pemberian-Nya selalu', 540, y + 945, 66, T('sebanyak', ta));
+  C('LEBIH BANYAK dari doamu', 540, y + 1035, 66, T('pemberian', ta));
+  swash(250, 830, y + 1055, T('lebih', ta + 3));
+
+  // ---- 4 · the prayer that is no longer answered (HR. Bukhari 6340, Muslim 2735) ----
+  y = top(3); const s4 = SC[3].t0;
+  ribbon(540, y + 80, 300, 72, 'TAPI...', 42, T('tapi', s4));
+  C('satu doa tidak lagi dijawab', 540, y + 215, 64, T('satu', s4));
+  N('doa orang yang', 540, y + 320, 46, T('doa', s4 + 1));
+  C('TIDAK SABAR', 540, y + 430, 110, T('tidak', s4 + 2));
+  swash(250, 830, y + 455, T('sabar', s4) + 0.2);
+  box(90, y + 510, 900, 200, T('berkata', s4));
+  C('"Aku sudah berdoa,', 540, y + 595, 60, T('aku', s4));
+  C('tapi tak juga dikabulkan."', 540, y + 675, 60, T('tapi', s4 + 5));
+  const tl1 = T('lalu', s4 + 7), tb = T('berhenti', tl1);
+  INK_([[130, y + 845], [550, y + 845]], { w: 5, amp: 1, dash: [12, 16] }, tl1, 0.6);
+  N('hari-hari berdoa', 340, y + 815, 40, tl1);
+  INK_([[575, y + 815], [635, y + 875]], { w: 7, amp: 0.6, passes: 1 }, tb, 0.12); INK_([[635, y + 815], [575, y + 875]], { w: 7, amp: 0.6, passes: 1 }, tb + 0.12, 0.12);
+  C('berhenti berdoa', 840, y + 862, 52, tb + 0.15);
+  N('HR. Bukhari 6340 · Muslim 2735', 540, y + 975, 38, tb + 0.5);
+
+  // ---- 5 · not Allah who refuses ----
+  y = top(4); const s5 = SC[4].t0;
+  C('bukan Allah', 540, y + 170, 96, T('bukan', s5));
+  C('yang menolak', 540, y + 285, 96, T('allah', s5));
+  C('KITA', 540, y + 470, 170, T('kita', s5));
+  swash(390, 690, y + 495, T('kita', s5) + 0.3, 30);
+  C('yang berhenti meminta', 540, y + 580, 64, T('yang', s5 + 2.5));
+  INK_(rrect(110, y + 660, 860, 270, 30), { closed: true, w: 3.5, amp: 1.4, dash: [16, 13] }, T('coba', s5), 0.5);
+  N('ingat satu doa yang', 540, y + 765, 50, T('ingat', s5));
+  C('pernah kamu tinggalkan', 540, y + 860, 64, T('pernah', s5));
+
+  // ---- 6 · tonight; then back to the hook ----
+  y = top(5); const s6 = SC[5].t0;
+  ribbon(540, y + 85, 440, 76, 'MALAM INI', 46, T('malam', s6));
+  C('ulangi doa itu', 540, y + 275, 104, T('ulangi', s6));
+  C('sekali lagi', 540, y + 385, 76, T('sekali', s6));
+  swash(370, 710, y + 405, T('sekali', s6) + 0.3);
+  [120, 420, 720].forEach((x, k) => { const t = T('sekali', s6) + 0.2 + k * 0.25; box(x, y + 460, 240, 200, t); tick(x + 75, y + 565, t + 0.2); });
+  fatArrow(110, y + 800, 330, T('kirim', s6));
+  C('kirim ke yang hampir', 660, y + 785, 54, T('kirim', s6) + 0.2);
+  C('berhenti berdoa', 660, y + 865, 54, T('hampir', s6));
+  // loop: back on the first block, the pen adds the condition and circles the promise
+  const tk = T('karena', s6);
+  C('selama ia terus berdoa', 540, top(0) + 1080, 60, T('selama', tk) + 0.25);
+  MST(ell(540, top(0) + 400, 360, 160, -1.9, TAU - 1.6, 80), { w: 10, col: YELD }, T('doanya', tk), 0.7);
+}
+
+/* ---------- camera: pan down the page block by block, whip back to the hook at the end ---------- */
+const CAMK = []; const cy = i => top(i) + 810;   // block top sits at screen y 150
+SC.forEach((s, i) => { if (i) CAMK.push([s.t0 - 0.45, 540, cy(i - 1), 1.035, 'eio']); CAMK.push([i ? s.t0 + 0.35 : 0, 540, cy(i), 1, 'eio']); });
+const tk0 = () => T('karena', SC[5].t0);
+let CAMR = null;
+function camKeys() { const k = CAMK.slice(); const t = tk0(); k.push([t - 0.1, 540, cy(5), 1.03, 'eio'], [t + 0.55, 540, cy(0) + 60, 0.97, 'whip'], [TOTAL + 1, 540, cy(0) + 60, 1.0, 'eio']); return k; }
+const quint = t => { t = clamp(t); return t < .5 ? 16 * t ** 5 : 1 - Math.pow(-2 * t + 2, 5) / 2; };
+function cam(t) {
+  const K = CAMR || (CAMR = camKeys());
+  if (t <= K[0][0]) return { x: K[0][1], y: K[0][2], z: K[0][3] };
+  for (let i = 1; i < K.length; i++) if (t < K[i][0]) { const a = K[i - 1], b = K[i], u = (t - a[0]) / (b[0] - a[0]), e = b[4] === 'whip' ? quint(u) : eio(u);
+    return { x: lerp(a[1], b[1], e), y: lerp(a[2], b[2], e), z: Math.exp(lerp(Math.log(a[3]), Math.log(b[3]), e)) }; }
+  const L = K[K.length - 1]; return { x: L[1], y: L[2], z: L[3] };
+}
+
+/* ---------- paper: warm white, screen grain, dot grid anchored to the page ---------- */
+const GRAIN = document.createElement('canvas'); GRAIN.width = W; GRAIN.height = H;
+(function () { const g = GRAIN.getContext('2d'); SEED = 9; for (let i = 0; i < 26000; i++) { g.fillStyle = `rgba(90,80,60,${rr(0.015, 0.05)})`; g.fillRect(rr(0, W), rr(0, H), rr(0.8, 2.6), rr(0.8, 2.6)); } })();
+function paper(c) {
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H); ctx.drawImage(GRAIN, 0, 0);
+  ctx.setTransform(c.z, 0, 0, c.z, W / 2 - c.x * c.z, H / 2 - c.y * c.z);
+  const x0 = c.x - W / 2 / c.z, x1 = c.x + W / 2 / c.z, y0 = c.y - H / 2 / c.z, y1 = c.y + H / 2 / c.z, st = 26;
+  ctx.fillStyle = DOT;
+  for (let y = Math.floor((y0 - 13) / st) * st + 13; y < y1 + st; y += st) for (let x = Math.floor((x0 - 13) / st) * st + 13; x < x1 + st; x += st) ctx.fillRect(x - 1.3, y - 1.3, 2.6, 2.6);
+}
+function renderFilm(t) {
+  if (!built) build();
+  const f = Math.round(t * FPS); BOIL = Math.floor(f / 2) % 3;
+  const c = cam(t); paper(c);
+  for (const e of EL) { if (t < e.t0) continue; SEED = e.seed; e.draw(clamp((t - e.t0) / e.d)); }
+}
+const tick0 = { t: 0 };
+tl.fromTo(tick0, { t: 0 }, { t: TOTAL, duration: TOTAL, ease: 'none', onUpdate: () => renderFilm(tick0.t) }, 0);
+BM.captions(tl, document.getElementById('caps'), P.words, { accent: '#c98a00', text: '#1e1e22' });
+window.__timelines = window.__timelines || {};
+window.__timelines['root'] = tl;
+document.fonts.ready.then(() => { built = false; EL.length = 0; PAGE_TEXTS.length = 0; BSEED = 1000; renderFilm(tick0.t); });
+})();
+</script>
+</body>
+</html>
