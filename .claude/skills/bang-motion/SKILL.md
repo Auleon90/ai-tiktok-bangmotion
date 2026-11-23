@@ -64,6 +64,10 @@ shares drive reach (hit: 1,123 shares) and come from loss/"ini aku" reflections,
   In HyperFrames pages set the scene-1 words/stage to their end state at t=0.
 - **Duration:** 30–45 s, ONE message, one blessing (≤ 25 s for one strong line); never over 55 s. If the idea has 4 stories, use 2 or make a
   series. 4–6 scenes, a new visual every 2–3 s, synced to the spoken words (`K.WORDS` in Lemo custom scenes, word beats in HyperFrames).
+- **Clarity beats duration (owner rule, 2026-11-23):** never shorten the VO to hit a duration target if the message gets unclear,
+  loses a step of the argument or softens a key term from the dalil (e.g. "tergesa-gesa" → "terburu"). A clear 60–75 s video is better
+  than a confusing 50 s one; the 30–55 s target is a preference, not a hard limit. If VO is rewritten after approval for any reason,
+  show the new lines to the owner before rendering.
 - **Retention:** an open loop in the hook paid off at ~70 % of the video; one repeated pattern the viewer learns and anticipates
   (e.g. jatuh → berdoa → diangkat with a step bar); one big contrast number drawn large; no noisy backsound (`music: none` unless asked).
 - **Ending:** a share CTA aimed at ONE specific person ("Kirim ke orang yang sedang di titik terendahnya" / "…yang sering lupa minum"),

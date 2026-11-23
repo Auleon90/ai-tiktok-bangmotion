@@ -71,6 +71,9 @@ Gambar AI (FLUX) tetap tanpa Nabi ﷺ/sahabat dan tanpa wajah untuk konten Islam
 **Audio @valsyz7 (aturan pemilik, 2026-11-22): TANPA musik dan TANPA ambience** — selalu `"music": "none", "ambience": "none", "sfx": true`:
 hanya VO Cartesia + SFX, untuk semua video berikutnya kecuali pemilik minta musik/ambience.
 
+**Durasi vs kejelasan (aturan pemilik, 2026-11-23):** JANGAN memangkas durasi/VO kalau pesannya jadi membingungkan, kehilangan langkah logika,
+atau istilah dalilnya melunak. Lebih baik 60–75 detik yang jelas daripada 50 detik yang membingungkan. VO yang berubah setelah approve wajib ditunjukkan ulang sebelum render.
+
 **Visual @valsyz7 (aturan pemilik, 2026-11-22): TANPA gambar tempel** — jangan menempelkan gambar/foto (FLUX atau lainnya) ke dalam frame,
 panel, polaroid, kolase atau jendela. Semua visual digambar kode dalam gaya kit (garis, bentuk, lanskap, siluet, 3D, tipografi).
 Pilih gaya yang tidak memakai foto (Lemo native lanskap: paper-lantern, paper-popup, colored-pencil, urban-sketch, watercolor, memphis-diorama;
