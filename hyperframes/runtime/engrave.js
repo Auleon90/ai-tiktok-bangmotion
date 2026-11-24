@@ -281,8 +281,11 @@
     const draw = () => { const t = drv.t; X.setTransform(1, 0, 0, 1, 0, 0); X.globalAlpha = 1; X.drawImage(bg, 0, 0);
       plates.forEach(pl => { const a = pl.t0 === 0 ? 1 : clamp((t - pl.t0) / .35), b = clamp((pl.t0 + pl.d + .25 - t) / .35); const al = Math.min(a, b);
         if (t >= pl.t0 - .01 && t <= pl.t0 + pl.d + .3) drawPlate(pl, t, al); });
-      X.globalAlpha = .7; X.fillStyle = INK; X.font = 'italic 22px "Cormorant", Georgia, serif'; X.textAlign = 'left'; X.fillText(K.del || 'Bang del.', 116, NS.H - 128);
-      X.textAlign = 'right'; X.fillText(K.sculp || 'sculp.', NS.W - 116, NS.H - 128); X.globalAlpha = 1; };
+      X.globalAlpha = .7; X.fillStyle = INK; X.font = 'italic 22px "Cormorant", Georgia, serif'; X.textAlign = 'right'; X.fillText(K.sculp || 'sculp.', NS.W - 116, NS.H - 128);
+      if (K.mark !== false) {   // owner's account engraved up the left margin of the plate (faint; the left edge is never covered by TikTok's UI)
+        const m = K.mark || '@valsyz7'; X.save(); X.translate(118, 1060); X.rotate(-Math.PI / 2); X.globalAlpha = .42; X.fillStyle = INK; X.textAlign = 'center';
+        X.font = 'italic 24px "Cormorant", Georgia, serif'; X.letterSpacing = '3px'; X.fillText('ex collectione  ' + m, 0, 0); X.letterSpacing = '0px'; X.restore(); }
+      X.globalAlpha = 1; };
     tl.fromTo(drv, { at: 0 }, { at: T, duration: T, ease: 'none' }, 0);
     draw();
     if (P.words && window.BM) BM.captions(tl, document.getElementById('caps'), P.words, { accent: K.capAccent || '#9a5a12', text: INK, maxWords: 3 });

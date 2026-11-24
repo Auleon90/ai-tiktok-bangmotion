@@ -79,6 +79,11 @@ Pilih gaya yang tidak memakai foto (Lemo native lanskap: paper-lantern, paper-po
 Bang Motion tanpa gambar: kartun-panggung, explainer-aliran). Gambar AI hanya kalau pemilik memintanya.
 
 
+**Watermark @valsyz7 (aturan pemilik, 2026-11-24):** setiap video diberi nama akun samar — otomatis di `produce.py`
+(`add_watermark`: teks `@valsyz7` 34% di kiri atas, di bawah tab TikTok, aman dari ikon kanan & caption bawah).
+Halaman yang menggambar cap sendiri memakai atribut `data-watermark` (Ukiran Tembaga: "ex collectione @valsyz7" tegak di tepi kiri plat).
+Storyboard `"watermark": "<teks>"` mengganti teks, `false` mematikan (hanya bila pemilik minta).
+
 Ketika user mengetik `/bang-motion`, SELALU gunakan skill `.claude/skills/bang-motion/SKILL.md` dari repo ini — JANGAN gunakan `anthropic-skills:tiktok-motion-generator`.
 
 Output MP4 disimpan di `output/` (folder ini di-gitignore).

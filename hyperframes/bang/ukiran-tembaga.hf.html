@@ -22,11 +22,11 @@ html,body{margin:0;background:#000}
 </style></head><body>
 <div id="root" data-composition-id="root" data-start="0" data-duration="__TOTAL_S__" data-width="1080" data-height="1920">
   <audio id="vo" src="assets/audio.mp3" data-start="0" data-duration="__TOTAL_S__"></audio>
-  <canvas id="plate" width="1080" height="1920"></canvas>
+  <canvas id="plate" data-watermark width="1080" height="1920"></canvas>
   <div id="caps" class="bm-captions"></div>
 </div>
 <script>
-ENGRAVE.run({ gallery: 'MUSEUM ALAM · PLAT KAJIAN', del: 'Bang del.', sculp: 'Claude sculp.' });
+ENGRAVE.run({ gallery: 'MUSEUM ALAM · PLAT KAJIAN', mark: '@valsyz7', sculp: 'Claude sculp.' });
 window.__timelines = window.__timelines || {}; window.__timelines["root"] = ENGRAVE.tl;
 Promise.all([document.fonts.load('500 40px "Cormorant"'),document.fonts.load('italic 500 40px "Cormorant"')]).catch(()=>{}).then(()=>ENGRAVE.tl.progress(ENGRAVE.tl.progress()));
 </script></body></html>
