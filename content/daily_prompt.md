@@ -7,7 +7,7 @@ Setelah jadi: caption TikTok, jam posting terbaik, dan tambahkan baris ke conten
 Mode: Auto.
 ```
 
-Yang otomatis diikuti tanpa perlu ditulis (sudah jadi aturan di skill/CLAUDE.md): durasi 30–45 s satu pesan, hook terbaca di frame 0,
+Yang otomatis diikuti tanpa perlu ditulis (sudah jadi aturan di skill/CLAUDE.md): durasi mengikuti isi (tidak harus pendek), bahasan dalam + analogi nyata + CTA kuat, satu pesan, hook terbaca di frame 0,
 visual tersinkron dengan kata, CTA share ke satu orang + loop, tanpa musik (ambience auto 60 % + SFX), caption ditutup
 `#creatorsearchinsights #videofypシ゚`.
 

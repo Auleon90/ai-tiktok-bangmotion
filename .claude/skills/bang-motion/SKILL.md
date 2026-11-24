@@ -62,8 +62,11 @@ shares drive reach (hit: 1,123 shares) and come from loss/"ini aku" reflections,
 - **Hook on frame 0:** scene 1's hook text is fully visible from the first frame (no word-by-word entrance, no fade-in from black);
   motion is ALREADY moving at frame 0 (a line falling, a zoom, a 3D object turning) and VO starts within 0.2 s.
   In HyperFrames pages set the scene-1 words/stage to their end state at t=0.
-- **Duration:** 30–45 s, ONE message, one blessing (≤ 25 s for one strong line); never over 55 s. If the idea has 4 stories, use 2 or make a
-  series. 4–6 scenes, a new visual every 2–3 s, synced to the spoken words (`K.WORDS` in Lemo custom scenes, word beats in HyperFrames).
+- **Depth over length (owner rule, 2026-11-24):** duration is NOT capped short — length follows the content (typically 45–90 s). What matters:
+  no shallow/"receh" content. Every video has (1) a strong, deep hook that may carry emotion (a loss, a confession, a moment the viewer
+  recognises), (2) a deep, sharp discussion — the real mechanism/argument, not a list of facts — (3) at least one concrete real-life analogy
+  that makes it instantly understandable, and (4) a strong closing CTA aimed at one specific person. Still ONE core message; a new visual every
+  2–3 s, synced to the spoken words (`K.WORDS` in Lemo custom scenes, word beats in HyperFrames); scene count follows the content (5–10).
 - **Retention:** an open loop in the hook paid off at ~70 % of the video; one repeated pattern the viewer learns and anticipates
   (e.g. jatuh → berdoa → diangkat with a step bar); one big contrast number drawn large; no noisy backsound (`music: none` unless asked).
 - **Ending:** a share CTA aimed at ONE specific person ("Kirim ke orang yang sedang di titik terendahnya" / "…yang sering lupa minum"),
@@ -99,7 +102,7 @@ shares drive reach (hit: 1,123 shares) and come from loss/"ini aku" reflections,
 ```
 
 Every scene: `id`, `type`, `vo` (spoken Indonesian, ~2.3 words/s), optional `eyebrow`, `pad_before_ms`, `gap_after_ms`, `lottie`.
-Durations come from the real audio — never set them by hand. 6–9 scenes, ~55–60 s. Scene 1 must hook.
+Durations come from the real audio — never set them by hand. Scene count and length follow the content (see "Depth over length"). Scene 1 must hook.
 
 Built-in scene types (rendered automatically by modes 1 and 2):
 
