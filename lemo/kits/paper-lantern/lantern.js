@@ -2,7 +2,7 @@
 // of 6 parallel cut-paper sheets lit from behind. Back sheets bright and translucent, the front almost black (that value ladder IS the
 // depth); a warm light glows through the paper pulp near the light point; windows and the moon are holes that burn and bloom; every
 // sheet casts a soft shadow on the sheets behind; a warm rim on each sheet's top edge, a dark band on its bottom edge; shallow DOF.
-// Text in the picture is paper: cut strips that grow from an anchor edge, or (for an ayat) letters cut out of a dark sheet so the light
+// Text in the picture is paper: cut strips that grow from an anchor edge, or (for an ayat) glowing letters in the sky (no dark plate) so the light
 // burns through them; subtitles are a quiet warm serif on the darkest band. The demo renders the stack in three.js; here it is
 // composited in 2D (the motif and paper-finish code below is the demo's own Canvas2D code — MIT, Lemomo (LemoLab)).
 import { W, H, SAFE, TAU, clamp, lerp, seg, eo, ss, at, SC, IMG, block, text, capAt, stdBody, boot, reg, fit, font, cover, duotone, KIT, countUp } from './kit.js';
@@ -153,7 +153,7 @@ function draw(g, t) {
   g.drawImage(sky, -60 + travel * .1, 0);
   // the moon / light source burning through the sky sheet
   const mx = 760, my = 520; const halo = g.createRadialGradient(mx, my, 40, mx, my, 520); halo.addColorStop(0, hexA(Ld.light, .55 * on * flick)); halo.addColorStop(1, hexA(Ld.light, 0)); g.fillStyle = halo; g.fillRect(0, 0, W, H);
-  if (Ld.moon) { g.save(); g.shadowColor = Ld.light; g.shadowBlur = 60 * on; g.fillStyle = '#fff3d6'; g.beginPath(); g.arc(mx, my, 92, 0, TAU); g.fill(); g.fillStyle = Ld.sky[0]; g.beginPath(); g.arc(mx + 38, my - 18, 82, 0, TAU); g.fill(); g.restore(); }   // a crescent cut
+  if (Ld.moon && s.type !== 'ayat') { g.save(); g.shadowColor = Ld.light; g.shadowBlur = 60 * on; g.fillStyle = '#fff3d6'; g.beginPath(); g.arc(mx, my, 92, 0, TAU); g.fill(); g.fillStyle = Ld.sky[0]; g.beginPath(); g.arc(mx + 38, my - 18, 82, 0, TAU); g.fill(); g.restore(); }   // a crescent cut
   // sheets back → front: each casts a soft shadow onto what is behind it, then is drawn lit; windows burn on its glow pass
   layers.forEach(L => {
     const par = (L.k + 1) / layers.length, ox = -120 + travel * par + drift * par, oy = 0; if (L.k === 4) FRONT = { c: L.lit, ox, dz };
@@ -180,10 +180,13 @@ function content(g, t, s, lt, img, Ld) {
   const eyebrow = () => { if (!s.eyebrow) return; const st = strip(g, W / 2 - 200, top, 400, 58, seg(lt, .2, .7), '#e6d3ad'); if (st) block(g, 'eyebrow', s.eyebrow, { x: W / 2 - 180, y: top + 8, w: 360, h: 42 }, { ...TH.label, align: 'center', alpha: seg(lt, .5, .8) }); };
   if (T === 'custom') return stdBody(g, t, s, { x: SAFE.x0, y: SAFE.y0, w: SAFE.x1 - SAFE.x0, h: SAFE.y1 - SAFE.y0 }, TH);
   eyebrow();
-  if (T === 'ayat') {   // the verse cut out of a dark sheet: the light burns through the letters
-    const y = top + 90, h = 430, u = seg(lt, .2, 1), ww = Wd * eo(u);
-    g.save(); g.shadowColor = 'rgba(0,0,0,.5)'; g.shadowBlur = 20; g.shadowOffsetY = 10; g.fillStyle = '#120c08'; g.fillRect(X, y, ww, h); g.restore();
-    if (u > .8) { g.save(); g.shadowColor = Ld.light; g.shadowBlur = 30; block(g, 'ar', s.arabic, { x: X + 40, y: y + 30, w: Wd - 80, h: h - 60 }, { family: 'Amiri', weight: 700, size: 104, min: 44, lh: 1.6, color: '#ffd89a', align: 'center', valign: 'middle' }); g.restore(); }
+  if (T === 'ayat') {   // owner rule 24 Nov 2026: NO dark plate (looked pasted) — the verse glows straight in the night sky, lit by the lantern light
+    const y = top + 90, h = 430, u = seg(lt, .2, 1.2), cx = W / 2, cy = y + h / 2;
+    const halo = g.createRadialGradient(cx, cy, 30, cx, cy, Wd * .62); halo.addColorStop(0, hexA('#05060c', .38 * u)); halo.addColorStop(1, hexA('#05060c', 0));
+    g.fillStyle = halo; g.fillRect(X - 60, y - 80, Wd + 120, h + 160);   // soft dusk behind the letters (no edge) so they read on any ladder
+    g.save(); g.globalAlpha = eo(u); g.shadowColor = Ld.light; g.shadowBlur = 34;
+    block(g, 'ar', s.arabic, { x: X + 20, y: y + 20, w: Wd - 40, h: h - 40 }, { family: 'Amiri', weight: 700, size: 108, min: 44, lh: 1.6, color: '#fff1cf', align: 'center', valign: 'middle' });
+    g.restore();
     const st = strip(g, X, y + h + 40, Wd, 330, seg(lt, 1, 1.6)); if (st) stdBody(g, t, { ...s, type: 'quote', text: s.translation, source: s.ref }, { x: X + 40, y: y + h + 70, w: Wd - 80, h: 270 }, TH);
     return;
   }
