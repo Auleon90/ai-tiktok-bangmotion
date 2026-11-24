@@ -76,8 +76,9 @@ panel, polaroid, kolase atau jendela. Semua visual digambar kode dalam gaya kit 
 Pilih gaya yang tidak memakai foto (Lemo native lanskap: paper-lantern, paper-popup, colored-pencil, urban-sketch, watercolor, memphis-diorama;
 Bang Motion tanpa gambar: kartun-panggung, explainer-aliran). Gambar AI hanya kalau pemilik memintanya.
 
-**Ayat di paper-lantern (aturan pemilik, 2026-11-24): TANPA latar hitam/kotak gelap** — teks Arab ayat bercahaya langsung di langit
-malam lanskap (seperti contoh https://vt.tiktok.com/ZSsN7mw5y/), bulan disembunyikan di scene ayat; terjemahan tetap di strip kertas.
+**Ayat di paper-lantern (aturan pemilik, 2026-11-24): TANPA latar hitam/kotak gelap** — teks Arab emas langsung di langit dengan
+bayangan hitam lembut per huruf (jatuh sedikit ke bawah), diapit dua garis emas berhias belah ketupat, kartu terjemahan tepat di bawahnya
+(contoh https://vt.tiktok.com/ZSsN7mw5y/, adegan Nabi Ayyub); bulan disembunyikan di scene ayat.
 Kotak gelap di belakang ayat terkesan tempelan. Sudah diterapkan di `lemo/kits/paper-lantern/lantern.js`.
 
 Ketika user mengetik `/bang-motion`, SELALU gunakan skill `.claude/skills/bang-motion/SKILL.md` dari repo ini — JANGAN gunakan `anthropic-skills:tiktok-motion-generator`.

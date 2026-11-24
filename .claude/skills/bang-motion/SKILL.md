@@ -507,7 +507,8 @@ Give a clash scene ≥ 7 s of VO so every phase reads.
 4. Render: same command without `--check-only` (`--workers=6` on a free machine).
 
 **Ayat in paper-lantern (owner rule, 24 Nov 2026):** never put the Arabic on a dark/black plate (reads as pasted). The kit draws the
-verse glowing straight in the night sky with a soft edgeless dusk behind it and hides the moon on ayat scenes; reference:
+verse in gold straight on the sky with a soft black drop shadow on each letter (offset down), between two thin gold rules with a
+centre diamond, translation card right below, a faint edgeless dusk behind, and hides the moon on ayat scenes; reference:
 https://vt.tiktok.com/ZSsN7mw5y/. Apply the same idea to any custom ayat drawing in landscape kits.
 
 **Custom scenes (`"type": "custom"`) — use them instead of patching kits.** When an adegan needs something no built-in type draws

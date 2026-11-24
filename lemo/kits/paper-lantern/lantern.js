@@ -180,14 +180,18 @@ function content(g, t, s, lt, img, Ld) {
   const eyebrow = () => { if (!s.eyebrow) return; const st = strip(g, W / 2 - 200, top, 400, 58, seg(lt, .2, .7), '#e6d3ad'); if (st) block(g, 'eyebrow', s.eyebrow, { x: W / 2 - 180, y: top + 8, w: 360, h: 42 }, { ...TH.label, align: 'center', alpha: seg(lt, .5, .8) }); };
   if (T === 'custom') return stdBody(g, t, s, { x: SAFE.x0, y: SAFE.y0, w: SAFE.x1 - SAFE.x0, h: SAFE.y1 - SAFE.y0 }, TH);
   eyebrow();
-  if (T === 'ayat') {   // owner rule 24 Nov 2026: NO dark plate (looked pasted) — the verse glows straight in the night sky, lit by the lantern light
-    const y = top + 90, h = 430, u = seg(lt, .2, 1.2), cx = W / 2, cy = y + h / 2;
-    const halo = g.createRadialGradient(cx, cy, 30, cx, cy, Wd * .62); halo.addColorStop(0, hexA('#05060c', .38 * u)); halo.addColorStop(1, hexA('#05060c', 0));
-    g.fillStyle = halo; g.fillRect(X - 60, y - 80, Wd + 120, h + 160);   // soft dusk behind the letters (no edge) so they read on any ladder
-    g.save(); g.globalAlpha = eo(u); g.shadowColor = Ld.light; g.shadowBlur = 34;
-    block(g, 'ar', s.arabic, { x: X + 20, y: y + 20, w: Wd - 40, h: h - 40 }, { family: 'Amiri', weight: 700, size: 108, min: 44, lh: 1.6, color: '#fff1cf', align: 'center', valign: 'middle' });
+  if (T === 'ayat') {   // owner rule 24 Nov 2026: NO dark plate (looked pasted). Like the owner's reference (Nabi Ayyub video): gold letters straight
+    // on the sky with a soft black drop shadow on each letter, between two thin gold rules with a diamond, translation card right below.
+    const y = top + 90, h = 330, u = seg(lt, .2, 1.2), a = eo(u), gold = '#f2d394', cx = W / 2;
+    const halo = g.createRadialGradient(cx, y + h / 2, 30, cx, y + h / 2, Wd * .6); halo.addColorStop(0, hexA('#05060c', .2 * a)); halo.addColorStop(1, hexA('#05060c', 0));
+    g.fillStyle = halo; g.fillRect(X - 60, y - 60, Wd + 120, h + 120);
+    const rl = (ry) => { const ww = (Wd - 120) * a; g.save(); g.globalAlpha = a; g.strokeStyle = gold; g.lineWidth = 3; g.beginPath(); g.moveTo(cx - ww / 2, ry); g.lineTo(cx + ww / 2, ry); g.stroke();
+      g.fillStyle = gold; g.beginPath(); g.moveTo(cx, ry - 9); g.lineTo(cx + 9, ry); g.lineTo(cx, ry + 9); g.lineTo(cx - 9, ry); g.closePath(); g.fill(); g.restore(); };
+    rl(y); rl(y + h);
+    g.save(); g.globalAlpha = a; g.shadowColor = 'rgba(0,0,0,.6)'; g.shadowBlur = 16; g.shadowOffsetY = 7;
+    block(g, 'ar', s.arabic, { x: X + 30, y: y + 18, w: Wd - 60, h: h - 36 }, { family: 'Amiri', weight: 700, size: 100, min: 44, lh: 1.6, color: gold, align: 'center', valign: 'middle' });
     g.restore();
-    const st = strip(g, X, y + h + 40, Wd, 330, seg(lt, 1, 1.6)); if (st) stdBody(g, t, { ...s, type: 'quote', text: s.translation, source: s.ref }, { x: X + 40, y: y + h + 70, w: Wd - 80, h: 270 }, TH);
+    const st = strip(g, X - 20, y + h + 30, Wd + 40, 310, seg(lt, 1, 1.6)); if (st) stdBody(g, t, { ...s, type: 'quote', text: s.translation, source: s.ref }, { x: X + 20, y: y + h + 50, w: Wd - 40, h: 270 }, TH);
     return;
   }
   if (T === 'action') {
