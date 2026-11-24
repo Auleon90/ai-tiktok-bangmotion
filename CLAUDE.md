@@ -66,7 +66,7 @@ Gambar AI (FLUX) tetap tanpa Nabi ﷺ/sahabat dan tanpa wajah untuk konten Islam
 
 ## Penting
 
-**Gaya explainer, bukan gaya tempel (aturan pemilik, 2026-11-21):** video yang menjelaskan makna/perumpamaan/cara kerja memakai gaya explainer yang digambar (Bang `papan-tulis` default, `infografik-flat`, `sketsa-diagram`, `kartun-cutaway`, Lemo `stick-explainer`), bukan jendela 3D/foto yang ditempel di kartu. Detail di SKILL.md.
+**Gaya explainer, bukan gaya tempel (aturan pemilik, 2026-11-21):** video yang menjelaskan makna/perumpamaan/cara kerja memakai gaya explainer yang digambar (Bang `ukiran-tembaga` = gaya khas pemilik untuk ayat kauniyah/penciptaan/alam/sains detail (2026-11-24), `papan-tulis`, `infografik-flat`, `sketsa-diagram`, `kartun-cutaway`, Lemo `stick-explainer`), bukan jendela 3D/foto yang ditempel di kartu. Detail di SKILL.md.
 
 **Audio @valsyz7 (aturan pemilik, 2026-11-22): TANPA musik dan TANPA ambience** — selalu `"music": "none", "ambience": "none", "sfx": true`:
 hanya VO Cartesia + SFX, untuk semua video berikutnya kecuali pemilik minta musik/ambience.

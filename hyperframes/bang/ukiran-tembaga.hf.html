@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="id">
+<!-- Ukiran Tembaga — Bang Motion explainer style: a natural-history copperplate that engraves itself, scene by scene
+     (runtime: hyperframes/runtime/engrave.js, Canvas 2D, no images, no 3D). Fields: plate, subject, figs, wash — see engrave.js.
+     Placeholder: __TOTAL_S__ -->
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="assets/bm/bm.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="assets/props.js"></script>
+<script src="assets/bm/bm.js"></script>
+<script src="assets/bm/engrave.js"></script>
+<style>
+@font-face{font-family:"Cormorant";font-weight:500;src:url("assets/fonts/lemo/cormorant-500.woff2")}
+@font-face{font-family:"Cormorant";font-weight:500;font-style:italic;src:url("assets/fonts/lemo/cormorant-500i.woff2")}
+html,body{margin:0;background:#000}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden;background:#efe4cb}
+#plate{position:absolute;left:0;top:0;width:1080px;height:1920px}
+.bm-captions{top:1440px!important}
+.bm-line{font-family:"Cormorant",Georgia,serif!important;font-style:italic;font-weight:500!important;font-size:74px!important}
+.bm-word{-webkit-text-stroke:0!important;text-shadow:0 0 10px #efe4cb,0 0 4px #efe4cb!important}
+</style></head><body>
+<div id="root" data-composition-id="root" data-start="0" data-duration="__TOTAL_S__" data-width="1080" data-height="1920">
+  <audio id="vo" src="assets/audio.mp3" data-start="0" data-duration="__TOTAL_S__"></audio>
+  <canvas id="plate" width="1080" height="1920"></canvas>
+  <div id="caps" class="bm-captions"></div>
+</div>
+<script>
+ENGRAVE.run({ gallery: 'MUSEUM ALAM · PLAT KAJIAN', del: 'Bang del.', sculp: 'Claude sculp.' });
+window.__timelines = window.__timelines || {}; window.__timelines["root"] = ENGRAVE.tl;
+Promise.all([document.fonts.load('500 40px "Cormorant"'),document.fonts.load('italic 500 40px "Cormorant"')]).catch(()=>{}).then(()=>ENGRAVE.tl.progress(ENGRAVE.tl.progress()));
+</script></body></html>

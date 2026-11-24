@@ -74,7 +74,8 @@ shares drive reach (hit: 1,123 shares) and come from loss/"ini aku" reflections,
   one spelling of the handle or none; no names of other people/preachers, no "Upload Method" lines, no repeated #fyp.
 - **Audio (owner rule, 2026-11-20): NO background music** — always `"music": "none"`, keep ambience (`"ambience": "wind"`) + SFX. Applies to every future video unless the owner asks for music.
 - **Explainer, not "gaya tempel" (owner rule, 2026-11-21):** when the video explains a meaning, an analogy (perumpamaan) or a
-  "kenapa/cara kerja", use an explainer style where the idea is DRAWN and moves: Bang `papan-tulis` (default), `infografik-flat`,
+  "kenapa/cara kerja", use an explainer style where the idea is DRAWN and moves: Bang `ukiran-tembaga` (owner's signature style since 2026-11-24:
+  ayat kauniyah, penciptaan, alam, hewan, tumbuhan, sains detail), `papan-tulis`, `infografik-flat`,
   `sketsa-diagram`, `kartun-cutaway` (dive), or Lemo `stick-explainer`. Do NOT use the pasted look (a 3D/photo window stuck on a
   card with text under it, e.g. watercolor + `lib3d/lemo-scene.js` windows). Draw each analogy as a diagram (`"type": "diagram"`
   with `parts`), e.g. 1 kesulitan → 2 kemudahan as branching circles. 3D only when it fills the scene, never as a pasted window.
@@ -391,6 +392,17 @@ Engine: `hyperframes/` (npm `hyperframes` 0.8.218, GSAP, lottie-web). Renders by
 | infografik-flat | navy, flat bright vectors with soft shadow, shapes pop in, slide cuts, Jakarta/Fredoka | explain | none |
 | sketsa-diagram | Excalidraw-like: dot grid, hachure pastel fills, camera pans across one canvas, sticky-note subtitle | explain | none |
 | kartun-cutaway | full-frame flat cartoon street + scooter (faceless helmeted rider), camera keys zoom in, torn X-ray window into the tank (preset `street`, `hyperframes/runtime/explain-cutaway.js`; example `examples/bensin-sedikit.storyboard.json`) | explain | none |
+| ukiran-tembaga | ★ owner's signature explainer: cream laid paper, natural-history copperplate that ENGRAVES ITSELF per scene (burin lines that swell/taper, tone only from 1–3 hatching families, fur/stipple), numbered roundels with leaders open on details, watercolour wash arrives last; Cormorant caps title + italic latin + ayat ref; Canvas 2D, light (~3–4 min render per 60 s) | engrave | none |
+
+**Ukiran Tembaga (`ukiran-tembaga.hf.html`, runtime `hyperframes/runtime/engrave.js`, example `examples/madu-lebah.ukiran.storyboard.json`)** —
+one scene = one engraved plate (PL. I, II, …) that draws itself: header → contours → hatching → roundels → wash. Scene fields:
+`plate` {title, latin, ref} (ref = surah · ayat), `subject` {preset, …} or {parts:[…]}, `figs` [{x, y, label, note, detail}] (≤2, x/y on the
+figure in box coords centred 0,0, about ±540 × ±500), `"wash": false` for a monochrome plate. Presets: `bee`, `honeycomb` {fill}, `flower`,
+`globe` {moon}, `cosmos` {split 0..1: heaven & earth parting (Al-Anbiya 30)}, `embryo` {stage 1 nutfah · 2 'alaqah · 3 mudghah · 4 bones clothed —
+ABSTRACT forms only, never a face}, `drop`, `mountain`, `sun`, `moon`, `tree`, `seed`. Roundel `detail`: hex, cells, rings, grain, stars,
+layers, fibers, veins. Generic parts: `ell` (tone sphere|flat|band), `poly` (v = darkness 0..1, ang = hatch angle), `line`, `dots`;
+`wash` names amber gold rose leaf sky sea earth night clay ivory brown. Pace: 6–9 s per plate (it needs time to engrave); 6–9 plates per minute.
+A new subject that has no preset → write it as `parts` in the storyboard (do not patch the runtime for one video).
 
 **Dive explainer (kartun-cutaway page, preset `dive`, `hyperframes/runtime/explain-dive.js`)** — outside → inside for ANY subject (body → heart →
 vessels, mountain → soil → groundwater, building → floors → rooms, leaf → cell → chloroplast). One scene = one level: its `image` (FLUX, flat
