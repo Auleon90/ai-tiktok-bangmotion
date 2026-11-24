@@ -4,7 +4,7 @@ Kenapa: "Titik Terendah" (19 Nov 2026) = 24.129 views, 703 share, tonton rata-ra
 kolom komentar berisi curhat nyata (diamputasi, diselingkuhi, ditinggal keluarga karena utang). Penonton membagikan video yang
 MENYEBUT masalah mereka dan memberi jalan keluar, bukan sekadar fakta. Pilar 1 (nikmat yang sering dilupa) tetap jalan; pilar 2 bergantian dengannya.
 
-## Rumus (30–45 s)
+## Rumus (durasi mengikuti isi; dalam, tidak receh)
 1. **Luka (0–4 s)** — sebut masalahnya dengan kata penonton sendiri, langsung "kamu": "Utangmu menumpuk dan malu bercerita?"
 2. **Teladan (4–20 s)** — nabi / sahabat / orang biasa dalam hadits yang pernah di posisi SAMA, digambar sebagai pola jatuh → berdoa → diangkat
    (`garis-doa.js`, seri visual yang sudah dikenali penonton).

@@ -68,6 +68,10 @@ Gambar AI (FLUX) tetap tanpa Nabi ﷺ/sahabat dan tanpa wajah untuk konten Islam
 
 ## Penting
 
+**Kedalaman, bukan durasi pendek (aturan pemilik, 2026-11-24):** durasi tidak harus pendek. Yang wajib: konten tidak receh — hook kuat & mendalam (boleh emosional), bahasan dalam dan tajam, analogi nyata yang membuat penonton mudah paham, ditutup CTA kuat. Detail di SKILL.md.
+
+**Perubahan aturan (aturan pemilik, 2026-11-24):** setiap aturan baru dari pemilik langsung di-commit dan di-push ke `main`.
+
 **Gaya explainer, bukan gaya tempel (aturan pemilik, 2026-11-21):** video yang menjelaskan makna/perumpamaan/cara kerja memakai gaya explainer yang digambar (Bang `ukiran-tembaga` = gaya khas pemilik untuk ayat kauniyah/penciptaan/alam/sains detail (2026-11-24), `papan-tulis`, `infografik-flat`, `sketsa-diagram`, `kartun-cutaway`, Lemo `stick-explainer`), bukan jendela 3D/foto yang ditempel di kartu. Detail di SKILL.md.
 
 **Audio @valsyz7 (aturan pemilik, 2026-11-22): TANPA musik dan TANPA ambience** — selalu `"music": "none", "ambience": "none", "sfx": true`:
