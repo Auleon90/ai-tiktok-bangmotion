@@ -1,0 +1,2555 @@
+{
+ "title": "Ahli Ibadah yang Masuk Neraka",
+ "style": "bang:papan-tulis",
+ "music": "none",
+ "ambience": "none",
+ "sfx": true,
+ "scenes": [
+  {
+   "id": 1,
+   "type": "diagram",
+   "eyebrow": "Kisah dalam hadits",
+   "headline": "Rajin ibadah, tapi masuk *neraka*?",
+   "diagram": {
+    "parts": [
+     {
+      "shape": "circle",
+      "cx": 260,
+      "cy": 408.79999999999995,
+      "r": 36.300000000000004,
+      "role": "airSoft",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        260,
+        445.1
+       ],
+       [
+        260,
+        540.8
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        213.8,
+        620
+       ],
+       [
+        260,
+        540.8
+       ],
+       [
+        306.2,
+        620
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        200.6,
+        514.4
+       ],
+       [
+        260,
+        468.20000000000005
+       ],
+       [
+        319.4,
+        514.4
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "text",
+      "x": 260,
+      "y": 680,
+      "text": "ahli ibadah",
+      "size": 52,
+      "role": "mute",
+      "at": 0.08
+     },
+     {
+      "shape": "circle",
+      "cx": 740,
+      "cy": 408.79999999999995,
+      "r": 36.300000000000004,
+      "role": "gasSoft",
+      "at": 0.08
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        740,
+        445.1
+       ],
+       [
+        740,
+        540.8
+       ]
+      ],
+      "role": "ink",
+      "at": 0.08
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        693.8,
+        620
+       ],
+       [
+        740,
+        540.8
+       ],
+       [
+        786.2,
+        620
+       ]
+      ],
+      "role": "ink",
+      "at": 0.08
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        680.6,
+        514.4
+       ],
+       [
+        740,
+        468.20000000000005
+       ],
+       [
+        799.4,
+        514.4
+       ]
+      ],
+      "role": "ink",
+      "at": 0.08
+     },
+     {
+      "shape": "text",
+      "x": 740,
+      "y": 680,
+      "text": "pendosa",
+      "size": 52,
+      "role": "mute",
+      "at": 0.11
+     },
+     {
+      "shape": "rect",
+      "x": 130,
+      "y": 630,
+      "w": 260,
+      "h": 24,
+      "r": 6,
+      "role": "fuel",
+      "at": 0.1
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 330,
+      "text": "?",
+      "size": 160,
+      "role": "accent",
+      "at": 0.15
+     },
+     {
+      "shape": "arrow",
+      "pts": [
+       [
+        260,
+        720
+       ],
+       [
+        260,
+        800
+       ]
+      ],
+      "role": "accent",
+      "at": 0.45,
+      "curve": false
+     },
+     {
+      "shape": "rect",
+      "x": 150,
+      "y": 800,
+      "w": 220,
+      "h": 80,
+      "r": 18,
+      "role": "fireSoft",
+      "at": 0.5
+     },
+     {
+      "shape": "text",
+      "x": 260,
+      "y": 855,
+      "text": "neraka",
+      "size": 54,
+      "role": "accent",
+      "at": 0.52
+     }
+    ]
+   },
+   "vo": "Dia rajin ibadah. Saudaranya rajin maksiat. Tapi di akhirat, yang digiring ke neraka justru ahli ibadahnya. Gara-gara satu kalimat. Tonton sampai akhir, karena ada satu hal yang sering disalahpahami dari kisah ini."
+  },
+  {
+   "id": 2,
+   "type": "diagram",
+   "eyebrow": "Bani Israil",
+   "headline": "Dua *bersaudara*",
+   "diagram": {
+    "parts": [
+     {
+      "shape": "circle",
+      "cx": 260,
+      "cy": 428.79999999999995,
+      "r": 36.300000000000004,
+      "role": "airSoft",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        260,
+        465.1
+       ],
+       [
+        260,
+        560.8
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        213.8,
+        640
+       ],
+       [
+        260,
+        560.8
+       ],
+       [
+        306.2,
+        640
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        200.6,
+        534.4
+       ],
+       [
+        260,
+        488.20000000000005
+       ],
+       [
+        319.4,
+        534.4
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "text",
+      "x": 260,
+      "y": 700,
+      "text": "tekun ibadah",
+      "size": 52,
+      "role": "mute",
+      "at": 0.08
+     },
+     {
+      "shape": "circle",
+      "cx": 740,
+      "cy": 428.79999999999995,
+      "r": 36.300000000000004,
+      "role": "gasSoft",
+      "at": 0.15
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        740,
+        465.1
+       ],
+       [
+        740,
+        560.8
+       ]
+      ],
+      "role": "ink",
+      "at": 0.15
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        693.8,
+        640
+       ],
+       [
+        740,
+        560.8
+       ],
+       [
+        786.2,
+        640
+       ]
+      ],
+      "role": "ink",
+      "at": 0.15
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        680.6,
+        534.4
+       ],
+       [
+        740,
+        488.20000000000005
+       ],
+       [
+        799.4,
+        534.4
+       ]
+      ],
+      "role": "ink",
+      "at": 0.15
+     },
+     {
+      "shape": "text",
+      "x": 740,
+      "y": 700,
+      "text": "sering berdosa",
+      "size": 52,
+      "role": "mute",
+      "at": 0.18
+     },
+     {
+      "shape": "rect",
+      "x": 130,
+      "y": 650,
+      "w": 260,
+      "h": 24,
+      "r": 6,
+      "role": "fuel",
+      "at": 0.1
+     },
+     {
+      "shape": "circle",
+      "cx": 640,
+      "cy": 270,
+      "r": 16,
+      "role": "gas",
+      "at": 0.3
+     },
+     {
+      "shape": "circle",
+      "cx": 685,
+      "cy": 300,
+      "r": 16,
+      "role": "gas",
+      "at": 0.32999999999999996
+     },
+     {
+      "shape": "circle",
+      "cx": 730,
+      "cy": 270,
+      "r": 16,
+      "role": "gas",
+      "at": 0.36
+     },
+     {
+      "shape": "circle",
+      "cx": 775,
+      "cy": 300,
+      "r": 16,
+      "role": "gas",
+      "at": 0.39
+     },
+     {
+      "shape": "circle",
+      "cx": 820,
+      "cy": 270,
+      "r": 16,
+      "role": "gas",
+      "at": 0.42
+     }
+    ]
+   },
+   "vo": "Rasulullah shallallahu alaihi wasallam bercerita tentang dua bersaudara dari Bani Israil. Yang satu tekun beribadah, yang satu terus berbuat dosa."
+  },
+  {
+   "id": 3,
+   "type": "diagram",
+   "eyebrow": "Teguran",
+   "headline": "\"*Berhentilah!*\"",
+   "diagram": {
+    "parts": [
+     {
+      "shape": "circle",
+      "cx": 220,
+      "cy": 568.0,
+      "r": 33.0,
+      "role": "airSoft",
+      "at": 0.02
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        220,
+        601.0
+       ],
+       [
+        220,
+        688.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.02
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        178.0,
+        760
+       ],
+       [
+        220,
+        688.0
+       ],
+       [
+        262.0,
+        760
+       ]
+      ],
+      "role": "ink",
+      "at": 0.02
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        166.0,
+        664.0
+       ],
+       [
+        220,
+        622.0
+       ],
+       [
+        274.0,
+        664.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.02
+     },
+     {
+      "shape": "circle",
+      "cx": 780,
+      "cy": 568.0,
+      "r": 33.0,
+      "role": "gasSoft",
+      "at": 0.02
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        780,
+        601.0
+       ],
+       [
+        780,
+        688.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.02
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        738.0,
+        760
+       ],
+       [
+        780,
+        688.0
+       ],
+       [
+        822.0,
+        760
+       ]
+      ],
+      "role": "ink",
+      "at": 0.02
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        726.0,
+        664.0
+       ],
+       [
+        780,
+        622.0
+       ],
+       [
+        834.0,
+        664.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.02
+     },
+     {
+      "shape": "rect",
+      "x": 60,
+      "y": 250,
+      "w": 360,
+      "h": 130,
+      "r": 18,
+      "role": "hl",
+      "at": 0.1
+     },
+     {
+      "shape": "text",
+      "x": 240,
+      "y": 330,
+      "text": "Berhentilah!",
+      "size": 54,
+      "role": "ink",
+      "at": 0.12
+     },
+     {
+      "shape": "arrow",
+      "pts": [
+       [
+        300,
+        400
+       ],
+       [
+        250,
+        520
+       ]
+      ],
+      "role": "ink",
+      "at": 0.15,
+      "curve": false
+     },
+     {
+      "shape": "rect",
+      "x": 540,
+      "y": 300,
+      "w": 420,
+      "h": 170,
+      "r": 18,
+      "role": "card",
+      "at": 0.5
+     },
+     {
+      "shape": "text",
+      "x": 750,
+      "y": 370,
+      "text": "Biarkan aku\ndengan Tuhanku!",
+      "size": 52,
+      "role": "ink",
+      "at": 0.52
+     },
+     {
+      "shape": "arrow",
+      "pts": [
+       [
+        760,
+        480
+       ],
+       [
+        780,
+        540
+       ]
+      ],
+      "role": "ink",
+      "at": 0.55,
+      "curve": false
+     }
+    ]
+   },
+   "vo": "Setiap melihat saudaranya bermaksiat, si ahli ibadah menegur: berhentilah! Tapi saudaranya menjawab: biarkan aku dengan Tuhanku. Apa kamu diutus untuk mengawasiku?"
+  },
+  {
+   "id": 4,
+   "type": "diagram",
+   "eyebrow": "Satu kalimat",
+   "headline": "Kalimat yang *fatal*",
+   "diagram": {
+    "parts": [
+     {
+      "shape": "circle",
+      "cx": 220,
+      "cy": 608.0,
+      "r": 33.0,
+      "role": "airSoft",
+      "at": 0.02
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        220,
+        641.0
+       ],
+       [
+        220,
+        728.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.02
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        178.0,
+        800
+       ],
+       [
+        220,
+        728.0
+       ],
+       [
+        262.0,
+        800
+       ]
+      ],
+      "role": "ink",
+      "at": 0.02
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        166.0,
+        704.0
+       ],
+       [
+        220,
+        662.0
+       ],
+       [
+        274.0,
+        704.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.02
+     },
+     {
+      "shape": "circle",
+      "cx": 800,
+      "cy": 608.0,
+      "r": 33.0,
+      "role": "gasSoft",
+      "at": 0.02
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        800,
+        641.0
+       ],
+       [
+        800,
+        728.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.02
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        758.0,
+        800
+       ],
+       [
+        800,
+        728.0
+       ],
+       [
+        842.0,
+        800
+       ]
+      ],
+      "role": "ink",
+      "at": 0.02
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        746.0,
+        704.0
+       ],
+       [
+        800,
+        662.0
+       ],
+       [
+        854.0,
+        704.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.02
+     },
+     {
+      "shape": "rect",
+      "x": 60,
+      "y": 120,
+      "w": 880,
+      "h": 300,
+      "r": 18,
+      "role": "fireSoft",
+      "at": 0.1
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 230,
+      "text": "\"Demi Allah,\nAllah tidak akan\nmengampunimu!\"",
+      "size": 58,
+      "role": "accent",
+      "at": 0.15
+     },
+     {
+      "shape": "arrow",
+      "pts": [
+       [
+        260,
+        440
+       ],
+       [
+        230,
+        560
+       ]
+      ],
+      "role": "ink",
+      "at": 0.2,
+      "curve": false
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 520,
+      "text": "⚠ memastikan nasib akhirat orang",
+      "size": 48,
+      "role": "mute",
+      "at": 0.6
+     }
+    ]
+   },
+   "vo": "Lalu keluarlah kalimat yang fatal. Demi Allah, Allah tidak akan mengampunimu. Allah tidak akan memasukkanmu ke surga."
+  },
+  {
+   "id": 5,
+   "type": "diagram",
+   "eyebrow": "HR. Abu Dawud 4901",
+   "headline": "Akhir yang *mengejutkan*",
+   "diagram": {
+    "parts": [
+     {
+      "shape": "circle",
+      "cx": 260,
+      "cy": 328.0,
+      "r": 33.0,
+      "role": "airSoft",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        260,
+        361.0
+       ],
+       [
+        260,
+        448.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        218.0,
+        520
+       ],
+       [
+        260,
+        448.0
+       ],
+       [
+        302.0,
+        520
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        206.0,
+        424.0
+       ],
+       [
+        260,
+        382.0
+       ],
+       [
+        314.0,
+        424.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "text",
+      "x": 260,
+      "y": 580,
+      "text": "ahli ibadah",
+      "size": 52,
+      "role": "mute",
+      "at": 0.08
+     },
+     {
+      "shape": "circle",
+      "cx": 740,
+      "cy": 328.0,
+      "r": 33.0,
+      "role": "gasSoft",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        740,
+        361.0
+       ],
+       [
+        740,
+        448.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        698.0,
+        520
+       ],
+       [
+        740,
+        448.0
+       ],
+       [
+        782.0,
+        520
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        686.0,
+        424.0
+       ],
+       [
+        740,
+        382.0
+       ],
+       [
+        794.0,
+        424.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "text",
+      "x": 740,
+      "y": 580,
+      "text": "pendosa",
+      "size": 52,
+      "role": "mute",
+      "at": 0.08
+     },
+     {
+      "shape": "arrow",
+      "pts": [
+       [
+        740,
+        600
+       ],
+       [
+        740,
+        700
+       ]
+      ],
+      "role": "air",
+      "at": 0.5,
+      "curve": false
+     },
+     {
+      "shape": "rect",
+      "x": 610,
+      "y": 710,
+      "w": 260,
+      "h": 110,
+      "r": 18,
+      "role": "airSoft",
+      "at": 0.52
+     },
+     {
+      "shape": "text",
+      "x": 740,
+      "y": 760,
+      "text": "SURGA",
+      "size": 50,
+      "role": "airText",
+      "at": 0.55
+     },
+     {
+      "shape": "text",
+      "x": 740,
+      "y": 805,
+      "text": "dengan rahmat-Nya",
+      "size": 40,
+      "role": "mute",
+      "at": 0.57
+     },
+     {
+      "shape": "arrow",
+      "pts": [
+       [
+        260,
+        600
+       ],
+       [
+        260,
+        700
+       ]
+      ],
+      "role": "accent",
+      "at": 0.75,
+      "curve": false
+     },
+     {
+      "shape": "rect",
+      "x": 130,
+      "y": 710,
+      "w": 260,
+      "h": 110,
+      "r": 18,
+      "role": "fireSoft",
+      "at": 0.77
+     },
+     {
+      "shape": "text",
+      "x": 260,
+      "y": 775,
+      "text": "NERAKA",
+      "size": 50,
+      "role": "accent",
+      "at": 0.8
+     }
+    ]
+   },
+   "vo": "Keduanya wafat dan dihadapkan kepada Allah. Kepada ahli ibadah, Allah bertanya: apakah kamu tahu tentang-Ku? Apakah kamu kuasa atas apa yang ada di tangan-Ku? Lalu si pendosa dimasukkan ke surga dengan rahmat-Nya, dan si ahli ibadah digiring ke neraka."
+  },
+  {
+   "id": 6,
+   "type": "diagram",
+   "eyebrow": "HR. Muslim 2621",
+   "headline": "\"Aku *hapus* amalmu\"",
+   "diagram": {
+    "parts": [
+     {
+      "shape": "rect",
+      "x": 300,
+      "y": 180,
+      "w": 400,
+      "h": 90,
+      "r": 18,
+      "role": "airSoft",
+      "at": 0.05
+     },
+     {
+      "shape": "rect",
+      "x": 300,
+      "y": 300,
+      "w": 400,
+      "h": 90,
+      "r": 18,
+      "role": "airSoft",
+      "at": 0.1
+     },
+     {
+      "shape": "rect",
+      "x": 300,
+      "y": 420,
+      "w": 400,
+      "h": 90,
+      "r": 18,
+      "role": "airSoft",
+      "at": 0.15000000000000002
+     },
+     {
+      "shape": "rect",
+      "x": 300,
+      "y": 540,
+      "w": 400,
+      "h": 90,
+      "r": 18,
+      "role": "airSoft",
+      "at": 0.2
+     },
+     {
+      "shape": "rect",
+      "x": 300,
+      "y": 660,
+      "w": 400,
+      "h": 90,
+      "r": 18,
+      "role": "airSoft",
+      "at": 0.25
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 240,
+      "text": "amal ibadah",
+      "size": 52,
+      "role": "ink",
+      "at": 0.07
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 360,
+      "text": "amal ibadah",
+      "size": 52,
+      "role": "ink",
+      "at": 0.12000000000000001
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 480,
+      "text": "amal ibadah",
+      "size": 52,
+      "role": "ink",
+      "at": 0.17
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 600,
+      "text": "amal ibadah",
+      "size": 52,
+      "role": "ink",
+      "at": 0.22000000000000003
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 720,
+      "text": "amal ibadah",
+      "size": 52,
+      "role": "ink",
+      "at": 0.27
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        240,
+        200
+       ],
+       [
+        760,
+        720
+       ]
+      ],
+      "role": "accent",
+      "at": 0.6
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        760,
+        200
+       ],
+       [
+        240,
+        720
+       ]
+      ],
+      "role": "accent",
+      "at": 0.62
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 860,
+      "text": "karena bersumpah atas nama Allah",
+      "size": 48,
+      "role": "accent",
+      "at": 0.7
+     }
+    ]
+   },
+   "vo": "Dalam riwayat Muslim, Allah berfirman: siapa yang bersumpah atas nama-Ku bahwa Aku tidak mengampuni si fulan? Sungguh Aku telah mengampuninya, dan Aku hapus amalmu."
+  },
+  {
+   "id": 7,
+   "type": "diagram",
+   "eyebrow": "QS. An-Najm: 32",
+   "headline": "Jangan merasa *paling suci*",
+   "diagram": {
+    "parts": [
+     {
+      "shape": "rect",
+      "x": 700,
+      "y": 150,
+      "w": 240,
+      "h": 560,
+      "r": 18,
+      "role": "card",
+      "at": 0.02
+     },
+     {
+      "shape": "text",
+      "x": 820,
+      "y": 130,
+      "text": "rumah bos",
+      "size": 48,
+      "role": "mute",
+      "at": 0.03
+     },
+     {
+      "shape": "circle",
+      "cx": 735,
+      "cy": 440,
+      "r": 12,
+      "role": "ink",
+      "at": 0.03
+     },
+     {
+      "shape": "circle",
+      "cx": 560,
+      "cy": 508.0,
+      "r": 33.0,
+      "role": "metal",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        560,
+        541.0
+       ],
+       [
+        560,
+        628.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        518.0,
+        700
+       ],
+       [
+        560,
+        628.0
+       ],
+       [
+        602.0,
+        700
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        506.0,
+        604.0
+       ],
+       [
+        560,
+        562.0
+       ],
+       [
+        614.0,
+        604.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "text",
+      "x": 560,
+      "y": 760,
+      "text": "satpam",
+      "size": 52,
+      "role": "mute",
+      "at": 0.08
+     },
+     {
+      "shape": "circle",
+      "cx": 200,
+      "cy": 508.0,
+      "r": 33.0,
+      "role": "gasSoft",
+      "at": 0.08
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        200,
+        541.0
+       ],
+       [
+        200,
+        628.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.08
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        158.0,
+        700
+       ],
+       [
+        200,
+        628.0
+       ],
+       [
+        242.0,
+        700
+       ]
+      ],
+      "role": "ink",
+      "at": 0.08
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        146.0,
+        604.0
+       ],
+       [
+        200,
+        562.0
+       ],
+       [
+        254.0,
+        604.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.08
+     },
+     {
+      "shape": "text",
+      "x": 200,
+      "y": 760,
+      "text": "tamu",
+      "size": 52,
+      "role": "mute",
+      "at": 0.11
+     },
+     {
+      "shape": "rect",
+      "x": 250,
+      "y": 430,
+      "w": 120,
+      "h": 80,
+      "r": 6,
+      "role": "hl",
+      "at": 0.12
+     },
+     {
+      "shape": "text",
+      "x": 310,
+      "y": 485,
+      "text": "undangan",
+      "size": 36,
+      "role": "ink",
+      "at": 0.13
+     },
+     {
+      "shape": "rect",
+      "x": 380,
+      "y": 150,
+      "w": 330,
+      "h": 140,
+      "r": 18,
+      "role": "card",
+      "at": 0.2
+     },
+     {
+      "shape": "text",
+      "x": 545,
+      "y": 210,
+      "text": "Bos tak mau\nketemu kamu!",
+      "size": 48,
+      "role": "ink",
+      "at": 0.22
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        470,
+        340
+       ],
+       [
+        650,
+        520
+       ]
+      ],
+      "role": "accent",
+      "at": 0.5
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        650,
+        340
+       ],
+       [
+        470,
+        520
+       ]
+      ],
+      "role": "accent",
+      "at": 0.52
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 870,
+      "text": "Yang berhak memutuskan hanya Allah",
+      "size": 48,
+      "role": "accent",
+      "at": 0.7
+     }
+    ]
+   },
+   "vo": "Ibaratnya satpam yang mengusir tamu sambil berkata, bos tidak mau ketemu kamu. Padahal bosnya sendiri yang mengundang. Menegur itu baik. Yang salah adalah memastikan nasib akhirat orang lain. Janganlah kamu menganggap dirimu suci, Dia lebih tahu siapa yang bertakwa."
+  },
+  {
+   "id": 8,
+   "type": "diagram",
+   "eyebrow": "Hati-hati",
+   "headline": "Tapi jangan *salah paham*!",
+   "diagram": {
+    "parts": [
+     {
+      "shape": "poly",
+      "pts": [
+       [
+        500,
+        150
+       ],
+       [
+        820,
+        690
+       ],
+       [
+        180,
+        690
+       ]
+      ],
+      "role": "hl",
+      "at": 0.05
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 560,
+      "text": "!",
+      "size": 260,
+      "role": "ink",
+      "at": 0.1
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 800,
+      "text": "Ini BUKAN izin untuk terus berdosa",
+      "size": 54,
+      "role": "accent",
+      "at": 0.4
+     }
+    ]
+   },
+   "vo": "Tapi hati-hati. Kisah ini bukan berarti dosa tidak apa-apa, nanti juga dirahmati. Kita tidak tahu kapan ajal datang, dan ada pintu yang bisa tertutup."
+  },
+  {
+   "id": 9,
+   "type": "diagram",
+   "eyebrow": "QS. An-Nisa: 18 · HR. Tirmidzi",
+   "headline": "Pintu tobat punya *batas*",
+   "diagram": {
+    "parts": [
+     {
+      "shape": "line",
+      "pts": [
+       [
+        60,
+        500
+       ],
+       [
+        940,
+        500
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "text",
+      "x": 80,
+      "y": 460,
+      "text": "hidup",
+      "size": 50,
+      "role": "mute",
+      "at": 0.06,
+      "anchor": "start"
+     },
+     {
+      "shape": "circle",
+      "cx": 760,
+      "cy": 500,
+      "r": 22,
+      "role": "accent",
+      "at": 0.1
+     },
+     {
+      "shape": "text",
+      "x": 760,
+      "y": 580,
+      "text": "ajal",
+      "size": 52,
+      "role": "accent",
+      "at": 0.12
+     },
+     {
+      "shape": "rect",
+      "x": 160,
+      "y": 250,
+      "w": 200,
+      "h": 200,
+      "r": 18,
+      "role": "airSoft",
+      "at": 0.2
+     },
+     {
+      "shape": "text",
+      "x": 260,
+      "y": 370,
+      "text": "pintu\nterbuka",
+      "size": 48,
+      "role": "ink",
+      "at": 0.22
+     },
+     {
+      "shape": "text",
+      "x": 260,
+      "y": 640,
+      "text": "tobat diterima",
+      "size": 50,
+      "role": "airText",
+      "at": 0.3
+     },
+     {
+      "shape": "rect",
+      "x": 820,
+      "y": 250,
+      "w": 140,
+      "h": 200,
+      "r": 18,
+      "role": "fireSoft",
+      "at": 0.5
+     },
+     {
+      "shape": "text",
+      "x": 890,
+      "y": 620,
+      "text": "terlambat",
+      "size": 48,
+      "role": "accent",
+      "at": 0.55
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        830,
+        290
+       ],
+       [
+        950,
+        410
+       ]
+      ],
+      "role": "accent",
+      "at": 0.55
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        950,
+        290
+       ],
+       [
+        830,
+        410
+       ]
+      ],
+      "role": "accent",
+      "at": 0.5700000000000001
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 820,
+      "text": "selama nyawa belum di tenggorokan",
+      "size": 50,
+      "role": "ink",
+      "at": 0.7
+     }
+    ]
+   },
+   "vo": "Allah berfirman: tidaklah tobat itu diterima dari orang yang terus berbuat dosa, hingga saat maut datang ia berkata, sekarang aku bertobat. Rasulullah bersabda, Allah menerima tobat hamba selama nyawanya belum sampai di tenggorokan. Hadits riwayat Tirmidzi."
+  },
+  {
+   "id": 10,
+   "type": "diagram",
+   "eyebrow": "HR. Bukhari 4810 · Muslim 122",
+   "headline": "\"Masih adakah *jalan pulang*?\"",
+   "diagram": {
+    "parts": [
+     {
+      "shape": "circle",
+      "cx": 200,
+      "cy": 616.8,
+      "r": 28.05,
+      "role": "gasSoft",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        200,
+        644.85
+       ],
+       [
+        200,
+        718.8
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        164.3,
+        780
+       ],
+       [
+        200,
+        718.8
+       ],
+       [
+        235.7,
+        780
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        154.1,
+        698.4
+       ],
+       [
+        200,
+        662.7
+       ],
+       [
+        245.9,
+        698.4
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "circle",
+      "cx": 330,
+      "cy": 626.8,
+      "r": 28.05,
+      "role": "gasSoft",
+      "at": 0.08
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        330,
+        654.85
+       ],
+       [
+        330,
+        728.8
+       ]
+      ],
+      "role": "ink",
+      "at": 0.08
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        294.3,
+        790
+       ],
+       [
+        330,
+        728.8
+       ],
+       [
+        365.7,
+        790
+       ]
+      ],
+      "role": "ink",
+      "at": 0.08
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        284.1,
+        708.4
+       ],
+       [
+        330,
+        672.7
+       ],
+       [
+        375.9,
+        708.4
+       ]
+      ],
+      "role": "ink",
+      "at": 0.08
+     },
+     {
+      "shape": "circle",
+      "cx": 460,
+      "cy": 616.8,
+      "r": 28.05,
+      "role": "gasSoft",
+      "at": 0.11
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        460,
+        644.85
+       ],
+       [
+        460,
+        718.8
+       ]
+      ],
+      "role": "ink",
+      "at": 0.11
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        424.3,
+        780
+       ],
+       [
+        460,
+        718.8
+       ],
+       [
+        495.7,
+        780
+       ]
+      ],
+      "role": "ink",
+      "at": 0.11
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        414.1,
+        698.4
+       ],
+       [
+        460,
+        662.7
+       ],
+       [
+        505.9,
+        698.4
+       ]
+      ],
+      "role": "ink",
+      "at": 0.11
+     },
+     {
+      "shape": "rect",
+      "x": 140,
+      "y": 330,
+      "w": 420,
+      "h": 130,
+      "r": 18,
+      "role": "card",
+      "at": 0.2
+     },
+     {
+      "shape": "text",
+      "x": 350,
+      "y": 410,
+      "text": "Ada penebusnya?",
+      "size": 54,
+      "role": "ink",
+      "at": 0.22
+     },
+     {
+      "shape": "arrow",
+      "pts": [
+       [
+        800,
+        60
+       ],
+       [
+        790,
+        300
+       ],
+       [
+        640,
+        420
+       ]
+      ],
+      "role": "air",
+      "at": 0.6,
+      "curve": true
+     },
+     {
+      "shape": "text",
+      "x": 820,
+      "y": 450,
+      "text": "ayat\nturun",
+      "size": 48,
+      "role": "airText",
+      "at": 0.65
+     }
+    ]
+   },
+   "vo": "Dulu, orang-orang yang pernah membunuh dan berzina datang kepada Rasulullah dan bertanya: masih adakah penebus untuk dosa kami? Lalu turunlah jawabannya dari langit."
+  },
+  {
+   "id": 11,
+   "type": "diagram",
+   "eyebrow": "QS. Al-Furqan: 70",
+   "headline": "Bukan sekadar dihapus, tapi *diganti*",
+   "diagram": {
+    "parts": [
+     {
+      "shape": "rect",
+      "x": 60,
+      "y": 150,
+      "w": 330,
+      "h": 450,
+      "r": 18,
+      "role": "card",
+      "at": 0.05
+     },
+     {
+      "shape": "text",
+      "x": 225,
+      "y": 130,
+      "text": "sebelum",
+      "size": 48,
+      "role": "mute",
+      "at": 0.06
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        195,
+        210
+       ],
+       [
+        255,
+        270
+       ]
+      ],
+      "role": "accent",
+      "at": 0.08
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        255,
+        210
+       ],
+       [
+        195,
+        270
+       ]
+      ],
+      "role": "accent",
+      "at": 0.1
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        195,
+        320
+       ],
+       [
+        255,
+        380
+       ]
+      ],
+      "role": "accent",
+      "at": 0.11
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        255,
+        320
+       ],
+       [
+        195,
+        380
+       ]
+      ],
+      "role": "accent",
+      "at": 0.13
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        195,
+        430
+       ],
+       [
+        255,
+        490
+       ]
+      ],
+      "role": "accent",
+      "at": 0.14
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        255,
+        430
+       ],
+       [
+        195,
+        490
+       ]
+      ],
+      "role": "accent",
+      "at": 0.16
+     },
+     {
+      "shape": "arrow",
+      "pts": [
+       [
+        420,
+        380
+       ],
+       [
+        580,
+        380
+       ]
+      ],
+      "role": "ink",
+      "at": 0.4,
+      "curve": false
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 340,
+      "text": "tobat",
+      "size": 52,
+      "role": "accent",
+      "at": 0.42
+     },
+     {
+      "shape": "rect",
+      "x": 610,
+      "y": 150,
+      "w": 330,
+      "h": 450,
+      "r": 18,
+      "role": "airSoft",
+      "at": 0.55
+     },
+     {
+      "shape": "text",
+      "x": 775,
+      "y": 130,
+      "text": "sesudah",
+      "size": 48,
+      "role": "mute",
+      "at": 0.56
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        740,
+        250
+       ],
+       [
+        765,
+        280
+       ],
+       [
+        815,
+        215
+       ]
+      ],
+      "role": "air",
+      "at": 0.6
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        740,
+        360
+       ],
+       [
+        765,
+        390
+       ],
+       [
+        815,
+        325
+       ]
+      ],
+      "role": "air",
+      "at": 0.64
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        740,
+        470
+       ],
+       [
+        765,
+        500
+       ],
+       [
+        815,
+        435
+       ]
+      ],
+      "role": "air",
+      "at": 0.6799999999999999
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 760,
+      "text": "dosa → pahala",
+      "size": 64,
+      "role": "accent",
+      "at": 0.8
+     }
+    ]
+   },
+   "vo": "Kecuali orang yang bertobat, beriman, dan beramal saleh. Maka kejahatan mereka diganti Allah dengan kebaikan. Bukan sekadar dihapus. Seperti kertas ujian penuh coretan merah, yang bukan cuma dibersihkan, tapi diganti nilai bagus."
+  },
+  {
+   "id": 12,
+   "type": "diagram",
+   "eyebrow": "QS. At-Tahrim: 8",
+   "headline": "Syarat *tobat nasuha*",
+   "diagram": {
+    "parts": [
+     {
+      "shape": "rect",
+      "x": 100,
+      "y": 130,
+      "w": 90,
+      "h": 90,
+      "r": 10,
+      "role": "card",
+      "at": 0.08
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        115,
+        175
+       ],
+       [
+        140,
+        205
+       ],
+       [
+        180,
+        140
+       ]
+      ],
+      "role": "accent",
+      "at": 0.12
+     },
+     {
+      "shape": "text",
+      "x": 230,
+      "y": 195,
+      "text": "Menyesal",
+      "size": 50,
+      "role": "ink",
+      "at": 0.1,
+      "anchor": "start"
+     },
+     {
+      "shape": "rect",
+      "x": 100,
+      "y": 310,
+      "w": 90,
+      "h": 90,
+      "r": 10,
+      "role": "card",
+      "at": 0.22999999999999998
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        115,
+        355
+       ],
+       [
+        140,
+        385
+       ],
+       [
+        180,
+        320
+       ]
+      ],
+      "role": "accent",
+      "at": 0.27
+     },
+     {
+      "shape": "text",
+      "x": 230,
+      "y": 375,
+      "text": "Berhenti sekarang",
+      "size": 50,
+      "role": "ink",
+      "at": 0.25,
+      "anchor": "start"
+     },
+     {
+      "shape": "rect",
+      "x": 100,
+      "y": 490,
+      "w": 90,
+      "h": 90,
+      "r": 10,
+      "role": "card",
+      "at": 0.38
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        115,
+        535
+       ],
+       [
+        140,
+        565
+       ],
+       [
+        180,
+        500
+       ]
+      ],
+      "role": "accent",
+      "at": 0.42
+     },
+     {
+      "shape": "text",
+      "x": 230,
+      "y": 555,
+      "text": "Tekad tak mengulangi",
+      "size": 50,
+      "role": "ink",
+      "at": 0.4,
+      "anchor": "start"
+     },
+     {
+      "shape": "rect",
+      "x": 100,
+      "y": 670,
+      "w": 90,
+      "h": 90,
+      "r": 10,
+      "role": "card",
+      "at": 0.5299999999999999
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        115,
+        715
+       ],
+       [
+        140,
+        745
+       ],
+       [
+        180,
+        680
+       ]
+      ],
+      "role": "accent",
+      "at": 0.57
+     },
+     {
+      "shape": "text",
+      "x": 230,
+      "y": 735,
+      "text": "Kembalikan hak orang",
+      "size": 50,
+      "role": "ink",
+      "at": 0.5499999999999999,
+      "anchor": "start"
+     }
+    ]
+   },
+   "vo": "Tapi tobatnya harus tobat nasuha. Kata Imam Nawawi, syaratnya: menyesal, berhenti sekarang juga, bertekad tidak mengulangi. Dan kalau menyangkut hak orang lain, kembalikan haknya atau minta maaf."
+  },
+  {
+   "id": 13,
+   "type": "diagram",
+   "eyebrow": "HR. Bukhari 6309 · Muslim 2747",
+   "headline": "Allah lebih *gembira*",
+   "diagram": {
+    "parts": [
+     {
+      "shape": "line",
+      "pts": [
+       [
+        40,
+        640
+       ],
+       [
+        300,
+        600
+       ],
+       [
+        600,
+        650
+       ],
+       [
+        960,
+        610
+       ]
+      ],
+      "role": "fuel",
+      "at": 0.02,
+      "curve": true
+     },
+     {
+      "shape": "circle",
+      "cx": 250,
+      "cy": 428.0,
+      "r": 33.0,
+      "role": "gasSoft",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        250,
+        461.0
+       ],
+       [
+        250,
+        548.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        208.0,
+        620
+       ],
+       [
+        250,
+        548.0
+       ],
+       [
+        292.0,
+        620
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        196.0,
+        524.0
+       ],
+       [
+        250,
+        482.0
+       ],
+       [
+        304.0,
+        524.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.05
+     },
+     {
+      "shape": "text",
+      "x": 250,
+      "y": 680,
+      "text": "bekal hilang",
+      "size": 52,
+      "role": "mute",
+      "at": 0.08
+     },
+     {
+      "shape": "arrow",
+      "pts": [
+       [
+        380,
+        400
+       ],
+       [
+        600,
+        400
+       ]
+      ],
+      "role": "ink",
+      "at": 0.4,
+      "curve": false
+     },
+     {
+      "shape": "circle",
+      "cx": 760,
+      "cy": 428.0,
+      "r": 33.0,
+      "role": "hl",
+      "at": 0.45
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        760,
+        461.0
+       ],
+       [
+        760,
+        548.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.45
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        718.0,
+        620
+       ],
+       [
+        760,
+        548.0
+       ],
+       [
+        802.0,
+        620
+       ]
+      ],
+      "role": "ink",
+      "at": 0.45
+     },
+     {
+      "shape": "line",
+      "pts": [
+       [
+        706.0,
+        416.0
+       ],
+       [
+        760,
+        482.0
+       ],
+       [
+        814.0,
+        416.0
+       ]
+      ],
+      "role": "ink",
+      "at": 0.45
+     },
+     {
+      "shape": "text",
+      "x": 760,
+      "y": 680,
+      "text": "ketemu!",
+      "size": 52,
+      "role": "mute",
+      "at": 0.48
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 860,
+      "text": "Allah lebih gembira dengan tobatmu",
+      "size": 50,
+      "role": "accent",
+      "at": 0.7
+     }
+    ]
+   },
+   "vo": "Dan tahukah kamu? Allah lebih gembira dengan tobatmu, daripada seorang musafir yang kehilangan untanya beserta seluruh bekal di padang pasir, lalu menemukannya kembali."
+  },
+  {
+   "id": 14,
+   "type": "diagram",
+   "eyebrow": "Kesimpulan",
+   "headline": "*Dua* pelajaran",
+   "diagram": {
+    "parts": [
+     {
+      "shape": "rect",
+      "x": 80,
+      "y": 150,
+      "w": 840,
+      "h": 260,
+      "r": 18,
+      "role": "airSoft",
+      "at": 0.05
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 250,
+      "text": "1. Jangan memastikan\norang lain celaka",
+      "size": 54,
+      "role": "ink",
+      "at": 0.08
+     },
+     {
+      "shape": "rect",
+      "x": 80,
+      "y": 480,
+      "w": 840,
+      "h": 260,
+      "r": 18,
+      "role": "hl",
+      "at": 0.4
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 580,
+      "text": "2. Jangan menunda\ntobatmu sendiri",
+      "size": 54,
+      "role": "ink",
+      "at": 0.43
+     }
+    ]
+   },
+   "vo": "Jadi dua pelajarannya. Jangan pernah memastikan orang lain celaka. Dan jangan pernah menunda tobatmu sendiri. Kata Ibnu Athaillah, maksiat yang membuatmu merasa hina dan butuh kepada Allah, lebih baik daripada ketaatan yang membuatmu sombong."
+  },
+  {
+   "id": 15,
+   "type": "diagram",
+   "eyebrow": "Sekarang",
+   "headline": "Tulis *Astaghfirullah*",
+   "diagram": {
+    "parts": [
+     {
+      "shape": "rect",
+      "x": 120,
+      "y": 150,
+      "w": 760,
+      "h": 220,
+      "r": 18,
+      "role": "card",
+      "at": 0.05
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 280,
+      "text": "💬 Astaghfirullah",
+      "size": 64,
+      "role": "ink",
+      "at": 0.08
+     },
+     {
+      "shape": "arrow",
+      "pts": [
+       [
+        300,
+        520
+       ],
+       [
+        700,
+        520
+       ]
+      ],
+      "role": "accent",
+      "at": 0.4,
+      "curve": false
+     },
+     {
+      "shape": "text",
+      "x": 500,
+      "y": 640,
+      "text": "kirim ke yang merasa\ndosanya terlalu besar",
+      "size": 48,
+      "role": "accent",
+      "at": 0.45
+     }
+    ]
+   },
+   "vo": "Tulis Astaghfirullah di komentar sebagai tanda kamu kembali hari ini. Lalu kirim video ini ke satu orang yang merasa dosanya terlalu besar untuk diampuni."
+  }
+ ]
+}
