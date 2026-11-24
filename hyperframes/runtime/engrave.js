@@ -13,8 +13,9 @@
      figs     [{x, y, label, note, detail}]   up to 2 roundels with leaders; x,y = point on the figure (box coords, centre 0,0);
               detail: hex | cells | rings | grain | stars | layers | fibers | veins
      wash     false to keep the plate monochrome (default: colour arrives near the end of the scene)
-   Generic parts: {k:'ell', x,y,rx,ry,rot, tone:'sphere'|'flat'|'band', v, bands, wash, w}
-                  {k:'poly', pts:[[x,y]..], v (0..1 darkness), ang, wash, w}   {k:'line', pts, w}   {k:'dots', x,y,r,n}
+   Generic parts: {k:'ell', x,y,rx,ry,rot, tone:'sphere'|'flat'|'band', v, bands, wash, w, fur, stipple, craters}
+                  {k:'poly', pts:[[x,y]..], v (0..1 darkness), ang, wash, w, veins:1 (wings, leaves: veins from the first point)}   {k:'line', pts, w, taper:'both'|'end'|'none'} (curved through its points)
+                  poly smooth:true = curved outline through the points   {k:'dots', x,y,r,n}
    Wash names: amber gold rose leaf sky sea earth night clay ivory */
 (function () {
   const P = window.PROPS, NS = { W: 1080, H: 1920 };
@@ -66,9 +67,9 @@
 
   // ------------------------------------------------------------------ drawing
   let X;
-  function burin(pts, w, k = 1) { const n = pts.length; if (n < 2 || k <= 0) return; const m = Math.max(2, Math.floor(n * clamp(k)));
+  function burin(pts, w, k = 1, taper) { const n = pts.length; if (n < 2 || k <= 0) return; const m = Math.max(2, Math.floor(n * clamp(k)));
     const L = [], R = []; for (let i = 0; i < m; i++) { const u = i / (n - 1), a = pts[Math.max(0, i - 1)], b = pts[Math.min(n - 1, i + 1)];
-      const dx = b[0] - a[0], dy = b[1] - a[1], d = Math.hypot(dx, dy) || 1, sw = w * (.15 + .85 * Math.pow(Math.sin(Math.PI * u), .7)) / 2;
+      const dx = b[0] - a[0], dy = b[1] - a[1], d = Math.hypot(dx, dy) || 1, sw = w * (taper === 'end' ? (u < .7 ? .85 + .15 * Math.sin(u / .7 * Math.PI / 2) : .25 + .75 * Math.cos((u - .7) / .3 * Math.PI / 2)) : taper === 'none' ? 1 : (.15 + .85 * Math.pow(Math.sin(Math.PI * u), .7))) / 2;
       L.push([pts[i][0] - dy / d * sw, pts[i][1] + dx / d * sw]); R.push([pts[i][0] + dy / d * sw, pts[i][1] - dx / d * sw]); }
     X.fillStyle = INK; X.beginPath(); X.moveTo(L[0][0], L[0][1]); L.forEach(p => X.lineTo(p[0], p[1])); R.reverse().forEach(p => X.lineTo(p[0], p[1])); X.closePath(); X.fill(); }
   function drawHatch(hs, k) { X.strokeStyle = INK; X.lineCap = 'round';
@@ -80,7 +81,7 @@
     X.globalAlpha = .22 * k; X.lineWidth = 6; X.strokeStyle = WASH[col] || col; X.stroke(); X.restore(); }
   function text(s, x, y, size, font, al = 'center', k = 1, ls = 0, col = INK) { if (k <= 0 || !s) return; X.globalAlpha = clamp(k); X.fillStyle = col;
     X.font = `${size}px ${font}`; X.textAlign = al; X.letterSpacing = ls + 'px'; X.fillText(s, x, y); X.globalAlpha = 1; X.letterSpacing = '0px'; }
-  function fitText(s, max, size, font, ls) { X.font = `${size}px ${font}`; X.letterSpacing = ls + 'px'; while (size > 30 && X.measureText(s).width > max) { size -= 4; X.font = `${size}px ${font}`; } X.letterSpacing = '0px'; return size; }
+  function fitText(s, max, size, font, ls) { X.font = `${size}px ${font}`; X.letterSpacing = ls + 'px'; while (size > 14 && X.measureText(s).width > max) { size -= 2; X.font = `${size}px ${font}`; } X.letterSpacing = '0px'; return size; }
 
   // roundel details (drawn in a unit circle of radius r around 0,0)
   const DETAIL = {
@@ -114,9 +115,14 @@
   PR.bee = () => { const p = [];
     [[-1, 1], [1, 1], [-1, 0], [1, 0]].forEach(([s, big]) => { const L = big ? 330 : 230, Hh = big ? 95 : 65, pts = [];
       for (let i = 0; i <= 60; i++) { const a = i / 60 * Math.PI * 2; pts.push([s * (60 + (1 - Math.cos(a)) / 2 * L), -(big ? 70 : -10) - Math.sin(a) * Hh * (.6 + .4 * Math.sin(a / 2)) - (1 - Math.cos(a)) / 2 * (big ? 150 : 40)]); }
-      p.push({ k: 'poly', pts, v: .15, wash: 'sky', w: 4, ang: .3 }); });
-    [-1, 1].forEach(s => [[-60, 150, -20, 230, 60], [-10, 175, 90, 250, 200], [40, 160, 200, 215, 330]].forEach(([y0, kx, ky, fx, fy]) =>
-      p.push({ k: 'line', pts: smooth([[s * 95, y0], [s * kx, ky], [s * fx, fy]], 10), w: 11 })));
+      p.push({ k: 'poly', pts, v: .15, wash: 'sky', w: 4, ang: .3, veins: 1 }); });
+    // legs: coxa → femur → tibia → tarsus (segments taper, a knob at each joint, hairs on the tibia)
+    [-1, 1].forEach(s => [[-70, [150, -60], [215, 40], [245, 120]], [-20, [175, 60], [235, 190], [255, 280]], [30, [160, 170], [205, 300], [215, 410]]].forEach(([y0, k1, k2, ft]) => {
+      const c = [s * 100, y0], a = [s * k1[0], k1[1]], b = [s * k2[0], k2[1]], f = [s * ft[0], ft[1]];
+      p.push({ k: 'line', pts: smooth([c, a], 8), w: 16 }); p.push({ k: 'line', pts: smooth([a, b], 8), w: 12 });
+      for (let i = 0; i < 4; i++) { const u0 = i / 4, u1 = (i + .85) / 4; p.push({ k: 'line', pts: smooth([[b[0] + (f[0] - b[0]) * u0, b[1] + (f[1] - b[1]) * u0], [b[0] + (f[0] - b[0]) * u1, b[1] + (f[1] - b[1]) * u1]], 4), w: 7 }); }
+      p.push({ k: 'ell', x: a[0], y: a[1], rx: 9, ry: 9, tone: 'sphere', v: .5, w: 3 }); p.push({ k: 'ell', x: b[0], y: b[1], rx: 7, ry: 7, tone: 'sphere', v: .5, w: 3 });
+      for (let i = 1; i < 6; i++) { const u = i / 6, x = a[0] + (b[0] - a[0]) * u, y = a[1] + (b[1] - a[1]) * u; p.push({ k: 'line', pts: [[x, y], [x + s * 14, y + 4]], w: 2 }); } }));
     [-1, 1].forEach(s => p.push({ k: 'line', pts: smooth([[s * 25, -240], [s * 70, -330], [s * 140, -420]], 10), w: 7 }));
     p.push({ k: 'ell', x: 0, y: 210, rx: 150, ry: 215, tone: 'band', bands: 3.2, wash: 'amber', w: 9 });
     p.push({ k: 'ell', x: 0, y: -40, rx: 118, ry: 108, v: .12, wash: 'brown', w: 8, fur: 260 });
@@ -131,8 +137,8 @@
     return p; };
   PR.flower = () => { const p = [];
     p.push({ k: 'line', pts: smooth([[0, 60], [-20, 250], [10, 480]], 12), w: 14 });
-    p.push({ k: 'poly', pts: smooth([[-10, 300], [-160, 240], [-260, 300], [-140, 340], [-10, 300]], 8), v: .45, wash: 'leaf', w: 5, ang: .8 });
-    p.push({ k: 'poly', pts: smooth([[5, 380], [150, 320], [250, 360], [140, 410], [5, 380]], 8), v: .45, wash: 'leaf', w: 5, ang: -.8 });
+    p.push({ k: 'poly', pts: smooth([[-10, 300], [-160, 240], [-260, 300], [-140, 340], [-10, 300]], 8), v: .45, wash: 'leaf', w: 5, ang: .8, veins: 1 });
+    p.push({ k: 'poly', pts: smooth([[5, 380], [150, 320], [250, 360], [140, 410], [5, 380]], 8), v: .45, wash: 'leaf', w: 5, ang: -.8, veins: 1 });
     for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2; p.push({ k: 'ell', x: Math.cos(a) * 120, y: -60 + Math.sin(a) * 120, rx: 120, ry: 52, rot: a, v: .12, wash: 'rose', w: 5 }); }
     p.push({ k: 'ell', x: 0, y: -60, rx: 72, ry: 72, tone: 'sphere', v: .25, wash: 'gold', w: 7, stipple: 260 });
     return p; };
@@ -190,10 +196,13 @@
         if (q.stipple) { o.dots = []; for (let i = 0; i < q.stipple; i++) { const a = rnd() * 6.28, d = Math.sqrt(rnd()), x = q.x + Math.cos(a) * d * q.rx * .95, y = q.y + Math.sin(a) * d * q.ry * .95; if (tone(x, y) > .25 + rnd() * .5) o.dots.push([x, y, rnd() * 2 + .8]); } }
         if (q.craters) { o.craters = []; for (let i = 0; i < q.craters; i++) { const a = rnd() * 6.28, d = Math.sqrt(rnd()) * .8; o.craters.push([q.x + Math.cos(a) * d * q.rx, q.y + Math.sin(a) * d * q.ry, 12 + rnd() * 34]); } }
         if (q.meridians) { o.mer = []; for (let i = 1; i < 6; i++) { const f = Math.cos(i / 6 * Math.PI); o.mer.push(ellPts(q.x, q.y, q.rx * Math.abs(f) + .1, q.ry, 0, -Math.PI / 2, Math.PI / 2, 40).map(([x, y]) => [f < 0 ? 2 * q.x - x : x, y])); o.mer.push(ellPts(q.x, q.y + q.ry * Math.cos(i / 6 * Math.PI), q.rx * Math.sin(i / 6 * Math.PI), q.ry * .12 * Math.sin(i / 6 * Math.PI), 0, 0, Math.PI, 40)); } }
-      } else if (q.k === 'poly') { o.outline = q.pts.concat([q.pts[0]]); const [a, b, c, d] = bbox(q.pts), ang = q.ang ?? .7;
+      } else if (q.k === 'poly') { if (q.smooth) q = o.q = { ...q, pts: smooth(q.pts.concat([q.pts[0]]), 8).slice(0, -1) }; o.outline = q.pts.concat([q.pts[0]]); const [a, b, c, d] = bbox(q.pts), ang = q.ang ?? .7;
         const sp = clamp(Math.max(c - a, d - b) / 40, 6, 12);
         o.hs = (q.v ?? .2) > .05 ? hatch([a, b, c, d], polyTone(q.pts, q.v ?? .2), sp, [[ang, .3, .9], [ang + 1.2, .55, .75], [ang + 2.2, .8, .55]], rnd) : [];
-      } else if (q.k === 'line') { o.line = q.pts;
+        if (q.veins) { const base = q.pts[0], n = q.pts.length, pick = u => q.pts[Math.floor(u * (n - 1))]; o.veins = [];
+          [.18, .3, .42, .5, .62, .76].forEach(u => { const e = pick(u), m = [base[0] + (e[0] - base[0]) * .55, base[1] + (e[1] - base[1]) * .55 + 8]; o.veins.push(smooth([base, m, [base[0] + (e[0] - base[0]) * .93, base[1] + (e[1] - base[1]) * .93]], 8)); });
+          const nv = o.veins.length; for (let i = 0; i < nv - 1; i++) { const a = o.veins[i][Math.floor(o.veins[i].length * .6)], b = o.veins[i + 1][Math.floor(o.veins[i + 1].length * .66)]; o.veins.push([a, b]); } }
+      } else if (q.k === 'line') { o.line = q.pts.length > 2 && q.smooth !== false ? smooth(q.pts, 12) : q.pts.length === 2 ? smooth(q.pts, 16) : q.pts;
       } else if (q.k === 'dots') { o.dots = []; for (let i = 0; i < q.n; i++) { const a = rnd() * 6.28, d = Math.pow(rnd(), .7) * q.r; o.dots.push([q.x + Math.cos(a) * d, q.y + Math.sin(a) * d * .9, rnd() < .04 ? 4 : rnd() * 1.8 + .4]); }
       } else if (q.k === 'spiral') { o.arms = []; for (let a = 0; a < q.arms; a++) { const pts = []; for (let i = 0; i <= 80; i++) { const u = i / 80, th = a / q.arms * Math.PI * 2 + u * 4.2, r = u * q.r; pts.push([q.x + Math.cos(th) * r, q.y + Math.sin(th) * r * .6]); } o.arms.push(pts); } }
       return o; }); }
@@ -244,22 +253,27 @@
         if (o.craters) o.craters.forEach(([x, y, r], i) => { if (i / o.craters.length > kH * 1.4) return; burin(ellPts(x, y, r, r * .8, 0, Math.PI * .1, Math.PI * 1.3, 30), 4, 1); });
         if (o.dots && q.k !== 'dots') { X.fillStyle = INK; const m = o.dots.length * clamp(kH * 1.4); for (let i = 0; i < m; i++) { const [x, y, r] = o.dots[i]; X.beginPath(); X.arc(x, y, r, 0, 7); X.fill(); } }
         if (o.fur) { X.strokeStyle = INK; X.lineWidth = 1.6; const m = o.fur.length * f(.4, .58); for (let i = 0; i < m; i++) { const r = o.fur[i]; X.beginPath(); X.moveTo(r[0], r[1]); X.lineTo(r[2], r[3]); X.stroke(); } }
+        if (o.veins) o.veins.forEach(v => burin(v, 2.4, kc));
         if (o.outline) burin(o.outline, q.w || 7, kc);
-        if (o.line) burin(o.line, q.w || 8, kc); });
+        if (o.line) burin(o.line, q.w || 8, kc, q.taper); });
       X.restore();
       // roundels
       pl.figs.forEach((g, gi) => { const a0 = .5 + gi * .14, lk = f(a0, a0 + .08), rk = f(a0 + .05, a0 + .2); if (lk <= 0) return;
         const side = (g.side || (g.x > 0 ? 'right' : 'left')) === 'right' ? 1 : -1;
         const rx = 540 + side * 290, ry = gi ? 1180 : 590, R = 135, px = CX + g.x * z, py = CY + g.y * z;
-        const ex = rx - side * R * .72, ey = ry + (py > ry ? R * .72 : -R * .2);
-        X.strokeStyle = INK; X.lineWidth = 1.4; X.beginPath(); X.moveTo(px, py); X.lineTo(px + (ex - px) * lk, py + (ey - py) * lk); X.stroke();
+        // elbow leader: point → across → down/up a gutter outside the roundel column → into the rim (never through the label)
+        const vx = rx - side * (R + 26), path = [[px, py], [vx, py], [vx, ry], [rx - side * (R + 9), ry]];
+        let L = 0; const segs = path.slice(1).map((q, i) => { const d = Math.hypot(q[0] - path[i][0], q[1] - path[i][1]); L += d; return d; });
+        X.strokeStyle = INK; X.lineWidth = 1.4; X.beginPath(); X.moveTo(px, py); let left = L * lk;
+        segs.forEach((d, i) => { if (left <= 0) return; const a = path[i], b = path[i + 1], u = Math.min(1, left / (d || 1)); X.lineTo(a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u); left -= d; });
+        X.stroke();
         X.fillStyle = INK; X.beginPath(); X.arc(px, py, 5, 0, 7); X.fill(); 
         X.font = 'italic 26px "Cormorant", Georgia, serif'; X.textAlign = 'left'; X.globalAlpha = lk * alpha; X.fillText(String(gi + 1), px + 12, py - 10); X.globalAlpha = alpha;
         if (rk > 0) { X.save(); X.translate(rx, ry); X.scale(.4 + .6 * rk, .4 + .6 * rk); X.globalAlpha = clamp(rk * 2) * alpha; roundel(0, 0, R, g.detail, rk, mkr(900 + pl.i * 13 + gi)); X.restore(); X.globalAlpha = alpha;
-          const lx = clamp(rx, 300, 780), ly = ry + R + 50, lab = ('FIG. ' + (gi + 1) + ' · ' + (g.label || '')).toUpperCase(), ls = fitText(lab, 330, 24, '"Cormorant", Georgia, serif', 3);
-          const ka = f(a0 + .1, a0 + .2) * alpha; if (ka > 0) { X.globalAlpha = ka * .82; X.fillStyle = PAPER; X.fillRect(lx - 180, ly - 30, 360, g.note ? 90 : 44); X.globalAlpha = alpha; }
+          const lx = rx, ly = ry + R + 50, lab = ('FIG. ' + (gi + 1) + ' · ' + (g.label || '')).toUpperCase(), ls = fitText(lab, 2 * R - 6, 24, '"Cormorant", Georgia, serif', 3);
+          const ka = f(a0 + .1, a0 + .2) * alpha; if (ka > 0) { X.globalAlpha = ka * .96; X.fillStyle = PAPER; X.fillRect(lx - R - 4, ly - 30, 2 * R + 8, g.note ? 90 : 44); X.globalAlpha = ka * .6; X.strokeStyle = INK; X.lineWidth = 1; X.strokeRect(lx - R - 4, ly - 30, 2 * R + 8, g.note ? 90 : 44); X.globalAlpha = alpha; }
           text(lab, lx, ly, ls, '"Cormorant", Georgia, serif', 'center', f(a0 + .12, a0 + .22) * alpha, 3);
-          if (g.note) { X.globalAlpha = f(a0 + .15, a0 + .26) * alpha; X.fillStyle = INK; X.font = 'italic 34px "Cormorant", Georgia, serif'; X.textAlign = 'center'; X.fillText(g.note, lx, ly + 42); X.globalAlpha = alpha; } } });
+          if (g.note) { X.globalAlpha = f(a0 + .15, a0 + .26) * alpha; X.fillStyle = INK; const ns = fitText(g.note, 2 * R + 4, 34, '"Cormorant", Georgia, serif', 0); X.font = `italic ${ns}px "Cormorant", Georgia, serif`; X.textAlign = 'center'; X.fillText(g.note, lx, ly + 42); X.globalAlpha = alpha; } } });
       X.restore(); }
 
     // driver: a function property, so GSAP calls the setter on every render, even on seeks that suppress events

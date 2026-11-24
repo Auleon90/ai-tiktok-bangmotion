@@ -326,14 +326,15 @@ AskUserQuestion allows max 4 options, so ask in two steps.
 4. `Lemo native / Manim…` — "Lemo native: tampilan persis gaya Opuscar (6 gaya). Atau Manim untuk sains/matematika."
 
 If Q1 = option 2 (HyperFrames) OR Q1 = option 1 and Auto picked HyperFrames, **Q1b** — "Mode 1: gaya dari mana?", header "Gaya" (skip only if the user already named the style source):
-1. `Auto Bang Motion` — "AI memilih 1 dari 6 gaya Bang Motion. Tanpa gambar Cloudflare, tanpa gaya Opuscar, tanpa scene action/custom."
-2. `Auto Lemo-Opuscar` — "AI memilih 1 dari 99 gaya Opuscar; gambar FLUX, scene action & custom ditentukan AI."
-3. `Auto campuran` — "AI memilih koleksi yang paling cocok (Opuscar atau Bang Motion), lalu gayanya."
+1. `Ukiran Tembaga (explainer khas)` — "Plat ukiran tembaga yang terukir sendiri + lingkaran pembesar detail. Tanpa gambar, ringan." Put it FIRST and mark it (Recommended) whenever the video EXPLAINS something (ayat kauniyah, penciptaan, alam, hewan, tumbuhan, tubuh, sains, cara kerja, detail sebuah benda).
+2. `Auto Bang Motion` — "AI memilih 1 dari gaya Bang Motion. Tanpa gambar Cloudflare, tanpa gaya Opuscar, tanpa scene action/custom."
+3. `Auto Lemo-Opuscar / campuran` — "AI memilih 1 dari 99 gaya Opuscar (gambar FLUX, scene action & custom), atau koleksi campuran yang paling cocok."
 4. `Tulis bebas` — the user writes what they want (style, FLUX images yes/no, Opuscar custom yes/no, backsound yes/no, anything).
    Follow it literally; ask nothing else unless it contradicts the content rules (Islamic image rules, no Prophet ﷺ images).
 In the auto options, say in one line which style was picked and why (topic + tone of the storyboard), then go on to QA/render.
 **Bang Motion auto** = `hyperframes/bang/styles.json` themes; storyboard gets NO `image_prompt` (strip any), `"style": "bang:<slug>"`.
-**Explain styles in Auto (all sub-options, incl. Auto Bang Motion):** when the topic explains HOW something works or what is INSIDE it, pick:
+**Explain styles in Auto (all sub-options, incl. Auto Bang Motion):** the owner's default explainer is `ukiran-tembaga` (2026-11-24) for
+any topic that explains a creature, a creation, nature, the body, the sky or a scientific detail. Otherwise, when the topic explains HOW something works or what is INSIDE it, pick:
 `kartun-cutaway` preset `dive` for outside → inside levels (body → heart → vessels, mountain → soil → groundwater, building → rooms,
 leaf → cell → chloroplast; uses 3–6 FLUX images, the only Bang exception to "no images"), `kartun-cutaway` preset `street` for vehicles/fuel,
 `infografik-flat` for a machine/process with moving parts, `papan-tulis` for a step-by-step "why", `sketsa-diagram` for a flow of logic.
@@ -402,7 +403,19 @@ figure in box coords centred 0,0, about ±540 × ±500), `"wash": false` for a m
 ABSTRACT forms only, never a face}, `drop`, `mountain`, `sun`, `moon`, `tree`, `seed`. Roundel `detail`: hex, cells, rings, grain, stars,
 layers, fibers, veins. Generic parts: `ell` (tone sphere|flat|band), `poly` (v = darkness 0..1, ang = hatch angle), `line`, `dots`;
 `wash` names amber gold rose leaf sky sea earth night clay ivory brown. Pace: 6–9 s per plate (it needs time to engrave); 6–9 plates per minute.
-A new subject that has no preset → write it as `parts` in the storyboard (do not patch the runtime for one video).
+**Any other theme, built on the spot:** ukiran-tembaga is not limited to its presets. For a subject with no preset, DESIGN it in the
+storyboard as `subject.parts` while writing the storyboard (do not patch the runtime for one video): break the thing into 3–15 simple
+volumes — round masses → `ell` (tone `sphere`, `band` for stripes/segments, `flat`), plates/leaves/land/cloth/buildings → `poly`
+(control points, `v` = how dark, `ang` = hatch direction along the form), stems/limbs/rays/cracks/rivers → `line`, stars/dust/sand → `dots`.
+Order parts back → front (later parts draw on top). Keep everything inside x ±430, y ±480. Craft tips: `poly` with `"smooth": true`
+gives curved organic outlines; `v` 0.35–0.5 makes the hatching read (below 0.3 the form stays almost bare); a thick limb/trunk/neck is a
+narrow smooth `poly` (hatched), not a fat `line` (a `line` wider than ~14 px prints as a solid black bar); `line` takes `"taper": "end"`
+for tails/antennae/stems; wings and leaves take `"veins": 1`. Worked example: `examples/unta.ukiran.storyboard.json` (camel built from 8 parts). Examples: camel = ell body + ell hump +
+4 `line` legs + `line` neck + ell head; ship = `poly` hull + `poly` sail + `line` mast + `poly` waves; mosque = `poly` walls + `ell` dome (half
+under walls) + `line` minarets; heart = 2 `ell` + `poly` lower lobe + `line` vessels; mountain range, rain cloud, river = several `poly`.
+Pick 1–2 `figs` per plate on the part that carries the explanation. Run `--check-only` and LOOK at `output/qa_prerender.jpg`;
+adjust points until the silhouette reads at a glance. Faces are never drawn (people = faceless forms, embryo = abstract stages).
+If the same new subject is needed in 2+ videos, it may then become a preset in `engrave.js` (one commit, documented here).
 
 **Dive explainer (kartun-cutaway page, preset `dive`, `hyperframes/runtime/explain-dive.js`)** — outside → inside for ANY subject (body → heart →
 vessels, mountain → soil → groundwater, building → floors → rooms, leaf → cell → chloroplast). One scene = one level: its `image` (FLUX, flat
