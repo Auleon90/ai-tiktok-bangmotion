@@ -1,0 +1,130 @@
+{
+  "title": "Ada yang Menunggumu Pulang",
+  "style": "paper-lantern",
+  "music": "none",
+  "ambience": "none",
+  "sfx": true,
+  "scenes": [
+    {
+      "id": 1,
+      "type": "custom",
+      "code": "custom/pulang.js",
+      "act": "window",
+      "ladder": "night",
+      "headline": "Ada yang menunggumu pulang",
+      "vo": "Kamu kerja keras demi mereka. Padahal mereka cuma ingin satu hal: kamu pulang."
+    },
+    {
+      "id": 2,
+      "type": "custom",
+      "code": "custom/pulang.js",
+      "act": "frames",
+      "ladder": "dusk",
+      "eyebrow": "YANG TAK TEREKAM",
+      "items": [
+        "Sepeda pertama",
+        "Renang pertama",
+        "Tiup lilin"
+      ],
+      "vo": "Sepeda pertamanya. Renang pertamanya. Tiup lilinnya. Semuanya ada di foto. Kecuali kamu.",
+      "sfx": [
+        {
+          "name": "camera",
+          "at": 0.12
+        },
+        {
+          "name": "camera",
+          "at": 0.32
+        },
+        {
+          "name": "camera",
+          "at": 0.52
+        },
+        {
+          "name": "heartbeat",
+          "at": 0.85
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "custom",
+      "code": "custom/pulang.js",
+      "act": "grow",
+      "ladder": "winter",
+      "eyebrow": "UANG NAIK · WAKTU HABIS",
+      "vo": "Omzet bisa naik tiap tahun. Tapi umur anakmu tidak bisa diputar ulang. Tahu-tahu, dia sudah menikah.",
+      "sfx": [
+        {
+          "name": "clock_tick",
+          "at": 0.1
+        },
+        {
+          "name": "bell",
+          "at": 0.9
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "custom",
+      "code": "custom/pulang.js",
+      "act": "bakso",
+      "ladder": "dusk",
+      "eyebrow": "DI UJUNG GANG",
+      "headline": "Uang pas-pasan, rumah penuh tawa",
+      "vo": "Di ujung gang, abang bakso pulang dengan uang pas-pasan. Tapi rumahnya penuh tawa."
+    },
+    {
+      "id": 5,
+      "type": "custom",
+      "ladder": "dusk",
+      "eyebrow": "KEHIDUPAN YANG BAIK",
+      "arabic": "فَلَنُحْيِيَنَّهُۥ حَيَوٰةً طَيِّبَةً",
+      "translation": "Pasti Kami berikan kepadanya kehidupan yang baik.",
+      "ref": "QS. An-Nahl: 97",
+      "vo": "Allah menjanjikan kehidupan yang baik. Bukan yang paling kaya, tapi yang hatinya merasa cukup.",
+      "code": "custom/pulang.js",
+      "act": "ayat"
+    },
+    {
+      "id": 6,
+      "type": "custom",
+      "ladder": "dusk",
+      "eyebrow": "PERINGATAN",
+      "arabic": "لَا تُلْهِكُمْ أَمْوَٰلُكُمْ وَلَآ أَوْلَٰدُكُمْ عَن ذِكْرِ ٱللَّهِ",
+      "translation": "Janganlah hartamu dan anak-anakmu melalaikanmu dari mengingat Allah.",
+      "ref": "QS. Al-Munafiqun: 9",
+      "vo": "Dan Allah mengingatkan: jangan sampai hartamu, bahkan anakmu, melalaikanmu dari mengingat-Nya.",
+      "code": "custom/pulang.js",
+      "act": "ayat"
+    },
+    {
+      "id": 7,
+      "type": "custom",
+      "code": "custom/pulang.js",
+      "act": "home",
+      "ladder": "dusk",
+      "eyebrow": "MALAM INI",
+      "arabic": "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَٰجِنَا وَذُرِّيَّٰتِنَا قُرَّةَ أَعْيُنٍ",
+      "translation": "Jadikan keluarga kami penyejuk mata.",
+      "ref": "QS. Al-Furqan: 74",
+      "vo": "Malam ini, tutup laptopmu sebentar. Peluk mereka, lalu berdoa: jadikan keluarga kami penyejuk mata.",
+      "sfx": [
+        {
+          "name": "door_creak",
+          "at": 0.05
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "custom",
+      "code": "custom/pulang.js",
+      "act": "cta",
+      "ladder": "night",
+      "headline": "Kirim ke ayah yang masih di jalan",
+      "vo": "Kirim ini ke ayah yang masih di jalan. Ada yang sedang menunggunya pulang."
+    }
+  ]
+}
