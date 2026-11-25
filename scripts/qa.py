@@ -36,6 +36,8 @@ def qa_vo_full(sb_path):
     """-> (report text, blocking issues). Blocking = a word skipped/merged (count mismatch) or VO missing."""
     blocking = []
     sb = json.load(open(sb_path))
+    if sb.get("source_audio"):
+        return "## VO\n- source audio from the original video (no TTS); words from " + sb.get("source_words", "?") + "\n", []
     voice = sb.get("voice") or os.environ.get("CARTESIA_VOICE_ID", "")
     lines, issues = [], 0
     for s in sb["scenes"]:

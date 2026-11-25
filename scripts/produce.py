@@ -147,7 +147,21 @@ def main():
     print("STEP  voiceover")
     cursor = 0
     segs, scenes, words = [], [], []
-    for s in sb["scenes"]:
+    src = sb.get("source_audio")   # existing VO (+music) from a video: no TTS; scenes timed by "t": [start_s, end_s]
+    if src:
+        sw = json.load(open(sb["source_words"]))
+        sw = sw.get("words", sw)
+        src_wav = os.path.join(OUT, "source_audio.wav")
+        run(["ffmpeg", "-y", "-i", src, "-vn", "-ac", "2", "-ar", "44100", src_wav])
+        for w in sw:
+            words.append({"text": w["word"].strip(), "startFrame": ms2f(w["start"] * 1000), "endFrame": ms2f(w["end"] * 1000)})
+        for s in sb["scenes"]:
+            t0, t1 = s["t"]
+            visual = {k: v for k, v in s.items() if k not in ("vo", "t", "image")}
+            scenes.append({**visual, "startFrame": ms2f(t0 * 1000), "durationFrames": ms2f((t1 - t0) * 1000), "vo_ms": (t1 - t0) * 1000})
+            print(f"  scene {s['id']:>2} {s['type']:<9} {t1 - t0:5.2f}s (source audio)")
+        cursor = sb["scenes"][-1]["t"][1] * 1000 - TAIL_MS
+    for s in ([] if src else sb["scenes"]):
         mp3, meta = tts_cached(s["vo"], sb.get("voice", ""))
         pad = s.get("pad_before_ms", 0)
         gap = s.get("gap_after_ms", DEFAULT_GAP)
@@ -171,12 +185,15 @@ def main():
 
     print("STEP  audio mix")
     voice_wav = os.path.join(OUT, "voice.wav")
+    if src:
+        shutil.copy(src_wav, voice_wav)
     inputs, filt = [], []
     for i, (mp3, start) in enumerate(segs):
         inputs += ["-i", mp3]
         filt.append(f"[{i}:a]aformat=sample_rates=44100:channel_layouts=stereo,adelay={int(start)}|{int(start)}[v{i}]")
     filt.append("".join(f"[v{i}]" for i in range(len(segs))) + f"amix=inputs={len(segs)}:normalize=0,apad=whole_dur={total_ms/1000}[vo]")
-    run(["ffmpeg", "-y", *inputs, "-filter_complex", ";".join(filt), "-map", "[vo]", "-t", str(total_ms / 1000), voice_wav])
+    if not src:
+        run(["ffmpeg", "-y", *inputs, "-filter_complex", ";".join(filt), "-map", "[vo]", "-t", str(total_ms / 1000), voice_wav])
 
     final_audio = os.path.join(REMOTION, "public", "audio.mp3")
     os.makedirs(os.path.dirname(final_audio), exist_ok=True)
@@ -211,7 +228,7 @@ def main():
         if vo_lufs is None or m is None: return pre * BED_RATIO
         return pre * 10 ** ((vo_lufs + 20 * math.log10(BED_RATIO) - m) / 20)
     ins, chains, bed = ["-i", voice_wav], [], []
-    chains.append("[0:a]aformat=sample_rates=48000:channel_layouts=stereo,acompressor=threshold=0.1:ratio=3:attack=5:release=120,asplit=2[vo][key]")
+    chains.append("[0:a]aformat=sample_rates=48000:channel_layouts=stereo," + ("anull" if src else "acompressor=threshold=0.1:ratio=3:attack=5:release=120") + ",asplit=2[vo][key]")
     n = 1
     # ambience bed (scripts/ambience.py): "auto" by default — one toneless texture per scene from its words, crossfaded
     sys.path.insert(0, os.path.join(ROOT, "scripts")); import ambience as AMB
@@ -297,6 +314,8 @@ def main():
         print(f"DONE  {out_mp4}  {total_ms/1000:.1f}s  {size:.1f} MB")
     page_html = open(opts["html"], encoding="utf-8").read() if engine == "hyperframes" else ""
     add_watermark(out_mp4, sb.get("watermark", WATERMARK), "data-watermark" in page_html, sb.get("style", ""))
+    if sb.get("credit"):
+        add_credit(out_mp4, sb["credit"])
     if "--no-qa" not in flags:
         print("STEP  QA (local, free) -> output/qa_report.md")
         qa_args = ["all", sb_path, out_mp4]  # visual check already ran before render
@@ -328,6 +347,19 @@ def add_watermark(mp4, text, page_has_own, style=""):
           f"shadowcolor=black@0.22:shadowx=2:shadowy=2" + (f":fontfile={font}" if font else ""))
     tmp = mp4 + ".wm.mp4"
     print(f"STEP  watermark '{text}' (faint, top-{side}, y={fy})")
+    run(["ffmpeg", "-y", "-loglevel", "error", "-i", mp4, "-vf", dt, "-c:v", "libx264", "-crf", "18", "-preset", "medium",
+         "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart", tmp])
+    os.replace(tmp, mp4)
+
+
+def add_credit(mp4, text):
+    """Speaker credit for videos built on someone else's VO (storyboard "credit"): small, top-centre, whole video."""
+    font = next((f for f in ["/usr/share/fonts/opentype/inter/Inter-SemiBold.otf", "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"] if os.path.exists(f)), None)
+    esc = str(text).replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'")
+    dt = (f"drawtext=text='{esc}':x=(w-tw)/2:y=h*0.028:fontsize=h*0.016:fontcolor=white@0.85:box=1:boxcolor=black@0.35:boxborderw=12"
+          + (f":fontfile={font}" if font else ""))
+    tmp = mp4 + ".cr.mp4"
+    print(f"STEP  credit '{text}'")
     run(["ffmpeg", "-y", "-loglevel", "error", "-i", mp4, "-vf", dt, "-c:v", "libx264", "-crf", "18", "-preset", "medium",
          "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart", tmp])
     os.replace(tmp, mp4)
