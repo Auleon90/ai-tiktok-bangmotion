@@ -404,6 +404,9 @@ Engine: `hyperframes/` (npm `hyperframes` 0.8.218, GSAP, lottie-web). Renders by
 | kartun-cutaway | full-frame flat cartoon street + scooter (faceless helmeted rider), camera keys zoom in, torn X-ray window into the tank (preset `street`, `hyperframes/runtime/explain-cutaway.js`; example `examples/bensin-sedikit.storyboard.json`) | explain | none |
 | ukiran-tembaga | ★ owner's signature explainer: cream laid paper, natural-history copperplate that ENGRAVES ITSELF per scene (burin lines that swell/taper, tone only from 1–3 hatching families, fur/stipple), numbered roundels with leaders open on details, watercolour wash arrives last; Cormorant caps title + italic latin + ayat ref; Canvas 2D, light (~3–4 min render per 60 s) | engrave | none |
 
+**Watermark is mandatory (owner rule, 2026-11-25):** every generated/rendered video, any mode, draft or re-render, shows `@valsyz7` from
+second 0 to the last frame with no gap (the drawtext filter has no `enable=` window; a page's own `data-watermark` mark must also stay on
+screen the whole video). Check `qa_sheet.jpg` before delivering; never deliver a video without it.
 **Watermark (owner rule, 2026-11-24):** `produce.py` adds a faint `@valsyz7` (top-left, below TikTok's tab bar) to every final video in
 every mode. A page that draws its own mark carries `data-watermark` and is skipped (ukiran-tembaga engraves "ex collectione @valsyz7" up
 the left margin). New pages with their own mark must keep it off the right rail, the bottom 25 % (caption/handle) and the subtitles.

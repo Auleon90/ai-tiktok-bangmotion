@@ -307,7 +307,8 @@ WATERMARK = "@valsyz7"   # owner's account; storyboard "watermark": "<text>" ove
 
 
 def add_watermark(mp4, text, page_has_own):
-    """Faint account name, top-left below TikTok's tab bar (clear of the right rail, caption area and subtitles).
+    """MANDATORY (owner rule 2026-11-25): visible from 0 s to the last frame, so no enable= window on the filter.
+    Faint account name, top-left below TikTok's tab bar (clear of the right rail, caption area and subtitles).
     Pages that draw their own mark (data-watermark, e.g. ukiran-tembaga's engraved stamp) are left alone."""
     if not text or page_has_own or not os.path.exists(mp4):
         return
