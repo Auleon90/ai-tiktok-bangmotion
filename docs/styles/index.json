@@ -1,0 +1,248 @@
+[
+ {
+  "id": "lemo-kino-montage",
+  "engine": "lemo",
+  "style": "kino-montage",
+  "name": "Constructivist Montage",
+  "themes": "sejarah dunia, pengetahuan umum, tokoh & penemuan, angka besar",
+  "image": "docs/styles/lemo-kino-montage.jpg"
+ },
+ {
+  "id": "lemo-newsreel",
+  "engine": "lemo",
+  "style": "newsreel",
+  "name": "1920s Newsreel",
+  "themes": "sejarah dunia, peristiwa abad 20, pengetahuan umum",
+  "image": "docs/styles/lemo-newsreel.jpg"
+ },
+ {
+  "id": "lemo-stick-explainer",
+  "engine": "lemo",
+  "style": "stick-explainer",
+  "name": "Stick-figure Explainer",
+  "themes": "psikologi, pengetahuan umum, kebiasaan & perilaku, inspirasi hidup",
+  "image": "docs/styles/lemo-stick-explainer.jpg"
+ },
+ {
+  "id": "lemo-flat-space-explainer",
+  "engine": "lemo",
+  "style": "flat-space-explainer",
+  "name": "Flat Space Explainer",
+  "themes": "sains, astronomi, fisika & biologi, skala & ukuran",
+  "image": "docs/styles/lemo-flat-space-explainer.jpg"
+ },
+ {
+  "id": "lemo-paper-lantern",
+  "engine": "lemo",
+  "style": "paper-lantern",
+  "name": "Paper Lantern",
+  "themes": "inspirasi & motivasi hidup, renungan, inspirasi Qur'an & hadits, sejarah Islam (lanskap), adegan perang (clash)",
+  "image": "docs/styles/lemo-paper-lantern.jpg"
+ },
+ {
+  "id": "lemo-gilded-illumination",
+  "engine": "lemo",
+  "style": "gilded-illumination",
+  "name": "Gilded Illumination",
+  "themes": "inspirasi Qur'an & hadits, sejarah Islam, kisah & hikmah, adegan perang (clash)",
+  "image": "docs/styles/lemo-gilded-illumination.jpg"
+ },
+ {
+  "id": "lemo-paper-popup",
+  "engine": "lemo",
+  "style": "paper-popup",
+  "name": "Paper Pop-up Book",
+  "themes": "kisah & dongeng, pengetahuan umum anak, sejarah ringan, motivasi",
+  "image": "docs/styles/lemo-paper-popup.jpg"
+ },
+ {
+  "id": "lemo-urban-sketch",
+  "engine": "lemo",
+  "style": "urban-sketch",
+  "name": "Urban Sketch",
+  "themes": "sejarah kota & tempat, perjalanan, pengetahuan umum, psikologi sehari-hari",
+  "image": "docs/styles/lemo-urban-sketch.jpg"
+ },
+ {
+  "id": "lemo-colored-pencil",
+  "engine": "lemo",
+  "style": "colored-pencil",
+  "name": "Colored-Pencil Science Illustration",
+  "themes": "sains alam, biologi, bumi & tanah, inspirasi Qur'an tentang alam",
+  "image": "docs/styles/lemo-colored-pencil.jpg"
+ },
+ {
+  "id": "lemo-watercolor",
+  "engine": "lemo",
+  "style": "watercolor",
+  "name": "Watercolor",
+  "themes": "alam & ekologi, inspirasi hidup, renungan, sejarah (lanskap)",
+  "image": "docs/styles/lemo-watercolor.jpg"
+ },
+ {
+  "id": "lemo-memphis-diorama",
+  "engine": "lemo",
+  "style": "memphis-diorama",
+  "name": "Memphis Diorama",
+  "themes": "aktivitas penduduk, kehidupan desa/kota/pasar/pelabuhan, pengetahuan umum tentang tempat, sejarah sosial",
+  "image": "docs/styles/lemo-memphis-diorama.jpg"
+ },
+ {
+  "id": "bang-vintage-sketch",
+  "engine": "hyperframes",
+  "style": "bang:vintage-sketch",
+  "name": "Vintage Sketch (buku sketsa vintage)",
+  "themes": [
+   "sejarah dunia",
+   "tokoh & penemuan",
+   "sejarah Islam (tanpa sosok)",
+   "kisah & hikmah",
+   "inspirasi Qur'an & hadits"
+  ],
+  "image": "docs/styles/bang-vintage-sketch.jpg"
+ },
+ {
+  "id": "bang-kartun-kolase",
+  "engine": "hyperframes",
+  "style": "bang:kartun-kolase",
+  "name": "Kartun Kolase (kertas + potongan warna)",
+  "themes": [
+   "psikologi",
+   "kebiasaan & perilaku",
+   "inspirasi & motivasi hidup",
+   "pengetahuan umum ringan"
+  ],
+  "image": "docs/styles/bang-kartun-kolase.jpg"
+ },
+ {
+  "id": "bang-jurnalisme-visual",
+  "engine": "hyperframes",
+  "style": "bang:jurnalisme-visual",
+  "name": "Jurnalisme Visual (hitam + highlighter kuning)",
+  "themes": [
+   "sejarah dunia",
+   "peristiwa & fakta",
+   "data & angka",
+   "sains (fakta mengejutkan)"
+  ],
+  "image": "docs/styles/bang-jurnalisme-visual.jpg"
+ },
+ {
+  "id": "bang-katalog-putih",
+  "engine": "hyperframes",
+  "style": "bang:katalog-putih",
+  "name": "Katalog Putih (dokumen, stempel, grid)",
+  "themes": [
+   "sains & cara kerja",
+   "pengetahuan umum",
+   "perbandingan & data",
+   "benda & produk"
+  ],
+  "image": "docs/styles/bang-katalog-putih.jpg"
+ },
+ {
+  "id": "bang-kartun-panggung",
+  "engine": "hyperframes",
+  "style": "bang:kartun-panggung",
+  "name": "Kartun Panggung (panggung datar + siluet tanpa wajah)",
+  "themes": [
+   "proses & dampak",
+   "pengetahuan umum anak",
+   "kehidupan sehari-hari",
+   "motivasi",
+   "kisah (siluet, termasuk sirah dengan hero.prophet)"
+  ],
+  "image": "docs/styles/bang-kartun-panggung.jpg"
+ },
+ {
+  "id": "bang-explainer-aliran",
+  "engine": "hyperframes",
+  "style": "bang:explainer-aliran",
+  "name": "Explainer Aliran (dunia mengalir + papan jalan)",
+  "themes": [
+   "perjalanan & urutan",
+   "langkah-langkah",
+   "sejarah sebagai perjalanan waktu",
+   "pengetahuan umum"
+  ],
+  "image": "docs/styles/bang-explainer-aliran.jpg"
+ },
+ {
+  "id": "bang-papan-tulis",
+  "engine": "hyperframes",
+  "style": "bang:papan-tulis",
+  "name": "Papan Tulis (spidol di whiteboard, tergambar sendiri)",
+  "themes": [
+   "cara kerja / kenapa-bagaimana",
+   "sains & teknik",
+   "proses langkah demi langkah"
+  ],
+  "image": "docs/styles/bang-papan-tulis.jpg"
+ },
+ {
+  "id": "bang-infografik-flat",
+  "engine": "hyperframes",
+  "style": "bang:infografik-flat",
+  "name": "Infografik Flat (vektor datar cerah, latar navy)",
+  "themes": [
+   "cara kerja mesin & alat",
+   "sains populer",
+   "proses fisik yang 'wow'"
+  ],
+  "image": "docs/styles/bang-infografik-flat.jpg"
+ },
+ {
+  "id": "bang-sketsa-diagram",
+  "engine": "hyperframes",
+  "style": "bang:sketsa-diagram",
+  "name": "Sketsa Diagram (gaya Excalidraw, kanvas yang di-pan)",
+  "themes": [
+   "alur & urutan logika",
+   "sistem & diagram",
+   "perbandingan langkah"
+  ],
+  "image": "docs/styles/bang-sketsa-diagram.jpg"
+ },
+ {
+  "id": "bang-kartun-cutaway",
+  "engine": "hyperframes",
+  "style": "bang:kartun-cutaway",
+  "name": "Kartun Cutaway (jalanan kartun flat, kamera zoom, jendela x-ray robek ke dalam benda)",
+  "themes": [
+   "cara kerja kendaraan & alat",
+   "apa yang terjadi di dalam benda",
+   "kebiasaan sehari-hari + akibatnya"
+  ],
+  "image": "docs/styles/bang-kartun-cutaway.jpg"
+ },
+ {
+  "id": "bang-ukiran-tembaga",
+  "engine": "hyperframes",
+  "style": "bang:ukiran-tembaga",
+  "name": "Ukiran Tembaga (plat sejarah alam yang terukir sendiri)",
+  "themes": [
+   "ayat kauniyah & penciptaan",
+   "alam, hewan & tumbuhan",
+   "sains & cara kerja (detail)",
+   "penciptaan langit & bumi",
+   "tahap penciptaan manusia (abstrak)"
+  ],
+  "image": "docs/styles/bang-ukiran-tembaga.jpg"
+ },
+ {
+  "id": "remotion",
+  "engine": "remotion",
+  "style": "",
+  "name": "Remotion + Lottie",
+  "themes": "kualitas tertinggi, sirah dengan peta",
+  "image": "docs/styles/remotion.jpg"
+ },
+ {
+  "id": "manim",
+  "engine": "manim",
+  "style": "",
+  "name": "Manim",
+  "themes": "matematika, fisika, rumus, grafik",
+  "image": "docs/styles/manim.jpg"
+ }
+]

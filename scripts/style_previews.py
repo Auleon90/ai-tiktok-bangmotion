@@ -66,5 +66,5 @@ if __name__ == "__main__":
     except Exception: F = ImageFont.load_default()
     d = ImageDraw.Draw(G)
     for k, (im, s) in enumerate(zip(th, idx)):
-        x, y = (k % cols) * 415 + 5, (k // cols) * 420 + 5; G.paste(im, (x, y)); d.text((x + 4, y + 366), f"{k + 1}. {s['name']}"[:34], fill="#fff", font=F)
+        x, y = (k % cols) * 415 + 5, (k // cols) * 420 + 5; G.paste(im, (x, y)); d.text((x + 4, y + 366), f"{k + 1}. {s['name'].split(' (')[0]}"[:30], fill="#fff", font=F)
     G.save(os.path.join(OUT, "gallery.jpg"), quality=82)
