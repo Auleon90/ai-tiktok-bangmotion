@@ -15,7 +15,14 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
 ## Alur wajib setiap request video
 
 1. Ide → storyboard (`output/storyboard.json`) → minta approval (Lanjutkan / Revisi).
-2. SETELAH approve: WAJIB tanya mode render via AskUserQuestion (kecuali user sudah menyebut modenya):
+   **Storyboard ditampilkan LENGKAP di chat (aturan pemilik, 2026-11-25):** setiap scene dengan teks layar, narasi VO PENUH kata per kata
+   (bukan ringkasan), dalil, visual, SFX; plus caption, gaya, durasi. Tidak ada yang dipotong/diringkas, supaya pemilik bisa review penuh.
+2. SETELAH approve: WAJIB tampilkan DAFTAR SEMUA GAYA (aturan pemilik, 2026-11-25) — bukan pertanyaan mode 1/2/3/4 lagi
+   (kecuali user sudah menyebut gayanya). Daftar dibaca dari `docs/styles/index.json` (nomor, nama gaya, engine, cocok untuk, perkiraan
+   waktu render, rekomendasi ★ untuk storyboard ini), lalu kirim gambar contohnya: `docs/styles/gallery.jpg` (semua gaya, bernomor) dan/atau
+   `docs/styles/<id>.jpg` per gaya. Gambar contoh SUDAH ADA di repo — jangan di-generate saat bertanya (buat ulang hanya bila gaya baru
+   ditambahkan: `python3 scripts/style_previews.py <id>`). Gaya Opuscar (99, lisensi CC BY-NC, tidak di-commit) tampil sebagai satu baris
+   dengan link galeri https://lemomo-ai.github.io/lemo-opuscar/. Pemilik membalas dengan nomor/nama gaya. Rincian engine (referensi):
    1. **HyperFrames + GSAP + Lottie** (`hyperframes/`) — render per frame, ±2 menit. Lalu tanya sub-pilihan gaya:
       **Ukiran Tembaga** (explainer khas pemilik, `hyperframes/bang/ukiran-tembaga.hf.html`; pilihan pertama/Recommended untuk video
       yang menjelaskan: ayat kauniyah, penciptaan, alam, hewan, tubuh, sains detail; tema tanpa preset digambar mendadak lewat `subject.parts`) ·

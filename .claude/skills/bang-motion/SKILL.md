@@ -324,7 +324,18 @@ Flow:
 
 ---
 
-## Mode question
+## Style list (replaces the mode question — owner rule, 2026-11-25)
+
+After the storyboard is approved (shown IN FULL: every scene's on-screen text, the complete VO word for word, dalil, visual, SFX, caption,
+style, duration — never summarised), do NOT ask "mode 1/2/3/4". Instead show EVERY available style as a numbered list from
+`docs/styles/index.json` (no., name, engine, cocok untuk, render time; mark the 1–2 that fit this storyboard with ★ and say why), send
+`docs/styles/gallery.jpg` (all previews, numbered like the list) with SendUserFile, plus a final row "Opuscar (99 gaya) — galeri
+https://lemomo-ai.github.io/lemo-opuscar/" and "Auto — Claude memilih". The owner answers with a number/name; then QA and render with that
+style's engine. The preview images are committed and are NOT generated at question time; when a style is added, run
+`python3 scripts/style_previews.py <id>` (one 2-frame still per style + index + gallery) and commit the result.
+The old mode question below stays only as reference for what each engine does.
+
+## Mode question (legacy reference)
 
 AskUserQuestion allows max 4 options, so ask in two steps.
 
