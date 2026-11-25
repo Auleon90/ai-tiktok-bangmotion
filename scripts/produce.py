@@ -296,7 +296,7 @@ def main():
         size = os.path.getsize(out_mp4) / 1e6
         print(f"DONE  {out_mp4}  {total_ms/1000:.1f}s  {size:.1f} MB")
     page_html = open(opts["html"], encoding="utf-8").read() if engine == "hyperframes" else ""
-    add_watermark(out_mp4, sb.get("watermark", WATERMARK), "data-watermark" in page_html)
+    add_watermark(out_mp4, sb.get("watermark", WATERMARK), "data-watermark" in page_html, sb.get("style", ""))
     if "--no-qa" not in flags:
         print("STEP  QA (local, free) -> output/qa_report.md")
         qa_args = ["all", sb_path, out_mp4]  # visual check already ran before render
@@ -306,7 +306,14 @@ def main():
 WATERMARK = "@valsyz7"   # owner's account; storyboard "watermark": "<text>" overrides, false disables
 
 
-def add_watermark(mp4, text, page_has_own):
+# Per-style position (owner request 2026-11-25: the mark must not sit on a scene title). Checked on docs/styles previews:
+# most styles start their eyebrow/title at y≈0.11–0.13, so the default is the clear band above it (y 0.085, under TikTok's tabs).
+# Styles whose chip/title already starts at that band move to the top-right corner. (side, y as fraction of height)
+WM_POS = {"bang:papan-tulis": ("right", .085), "bang:infografik-flat": ("right", .085), "bang:sketsa-diagram": ("right", .085), "bang:kartun-cutaway": ("right", .125)}
+WM_DEFAULT = ("left", .085)
+
+
+def add_watermark(mp4, text, page_has_own, style=""):
     """MANDATORY (owner rule 2026-11-25): visible from 0 s to the last frame, so no enable= window on the filter.
     Faint account name, top-left below TikTok's tab bar (clear of the right rail, caption area and subtitles).
     Pages that draw their own mark (data-watermark, e.g. ukiran-tembaga's engraved stamp) are left alone."""
@@ -315,10 +322,12 @@ def add_watermark(mp4, text, page_has_own):
     font = next((f for f in ["/usr/share/fonts/opentype/inter/Inter-SemiBold.otf", "/usr/share/fonts/opentype/inter/Inter-Medium.otf",
                              "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"] if os.path.exists(f)), None)
     esc = str(text).replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'")
-    dt = (f"drawtext=text='{esc}':x=w*0.06:y=h*0.125:fontsize=h*0.019:fontcolor=white@0.34:"
+    side, fy = WM_POS.get(style, WM_DEFAULT)
+    xexpr = "w*0.06" if side == "left" else "w*0.94-tw"
+    dt = (f"drawtext=text='{esc}':x={xexpr}:y=h*{fy}:fontsize=h*0.019:fontcolor=white@0.34:"
           f"shadowcolor=black@0.22:shadowx=2:shadowy=2" + (f":fontfile={font}" if font else ""))
     tmp = mp4 + ".wm.mp4"
-    print(f"STEP  watermark '{text}' (faint, top-left)")
+    print(f"STEP  watermark '{text}' (faint, top-{side}, y={fy})")
     run(["ffmpeg", "-y", "-loglevel", "error", "-i", mp4, "-vf", dt, "-c:v", "libx264", "-crf", "18", "-preset", "medium",
          "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart", tmp])
     os.replace(tmp, mp4)

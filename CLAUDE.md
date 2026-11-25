@@ -95,7 +95,10 @@ bayangan hitam lembut per huruf (jatuh sedikit ke bawah), diapit dua garis emas 
 Kotak gelap di belakang ayat terkesan tempelan. Sudah diterapkan di `lemo/kits/paper-lantern/lantern.js`.
 
 **Watermark @valsyz7 (aturan pemilik, 2026-11-24):** setiap video diberi nama akun samar — otomatis di `produce.py`
-(`add_watermark`: teks `@valsyz7` 34% di kiri atas, di bawah tab TikTok, aman dari ikon kanan & caption bawah).
+(`add_watermark`: teks `@valsyz7` 34%, di bawah tab TikTok, aman dari ikon kanan & caption bawah).
+Posisi PER GAYA (aturan pemilik, 2026-11-25) supaya tidak menumpuk judul scene: tabel `WM_POS` di `scripts/produce.py`
+(default kiri atas y 8,5%; papan-tulis, infografik-flat, sketsa-diagram → kanan atas; kartun-cutaway → kanan atas y 12,5%).
+Gaya baru: cek gambar contohnya di `docs/styles/` lalu tambahkan ke `WM_POS` bila watermark menumpuk teks.
 Halaman yang menggambar cap sendiri memakai atribut `data-watermark` (Ukiran Tembaga: "ex collectione @valsyz7" tegak di tepi kiri plat).
 Storyboard `"watermark": "<teks>"` mengganti teks, `false` mematikan (hanya bila pemilik minta).
 **WAJIB (aturan pemilik, 2026-11-25):** setiap video yang di-generate/render, mode apa pun, membawa watermark `@valsyz7`
