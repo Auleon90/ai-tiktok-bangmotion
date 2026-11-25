@@ -309,7 +309,7 @@ WATERMARK = "@valsyz7"   # owner's account; storyboard "watermark": "<text>" ove
 # Per-style position (owner request 2026-11-25: the mark must not sit on a scene title). Checked on docs/styles previews:
 # most styles start their eyebrow/title at y≈0.11–0.13, so the default is the clear band above it (y 0.085, under TikTok's tabs).
 # Styles whose chip/title already starts at that band move to the top-right corner. (side, y as fraction of height)
-WM_POS = {"bang:papan-tulis": ("right", .085), "bang:infografik-flat": ("right", .085), "bang:sketsa-diagram": ("right", .085), "bang:kartun-cutaway": ("right", .125)}
+WM_POS = {"bang:jurnalisme-visual": ("right", .085), "bang:papan-tulis": ("right", .085), "bang:infografik-flat": ("right", .085), "bang:sketsa-diagram": ("right", .085), "bang:kartun-cutaway": ("right", .125)}
 WM_DEFAULT = ("left", .085)
 
 

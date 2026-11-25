@@ -97,7 +97,7 @@ Kotak gelap di belakang ayat terkesan tempelan. Sudah diterapkan di `lemo/kits/p
 **Watermark @valsyz7 (aturan pemilik, 2026-11-24):** setiap video diberi nama akun samar — otomatis di `produce.py`
 (`add_watermark`: teks `@valsyz7` 34%, di bawah tab TikTok, aman dari ikon kanan & caption bawah).
 Posisi PER GAYA (aturan pemilik, 2026-11-25) supaya tidak menumpuk judul scene: tabel `WM_POS` di `scripts/produce.py`
-(default kiri atas y 8,5%; papan-tulis, infografik-flat, sketsa-diagram → kanan atas; kartun-cutaway → kanan atas y 12,5%).
+(default kiri atas y 8,5%; jurnalisme-visual, papan-tulis, infografik-flat, sketsa-diagram → kanan atas; kartun-cutaway → kanan atas y 12,5%).
 Gaya baru: cek gambar contohnya di `docs/styles/` lalu tambahkan ke `WM_POS` bila watermark menumpuk teks.
 Halaman yang menggambar cap sendiri memakai atribut `data-watermark` (Ukiran Tembaga: "ex collectione @valsyz7" tegak di tepi kiri plat).
 Storyboard `"watermark": "<teks>"` mengganti teks, `false` mematikan (hanya bila pemilik minta).
