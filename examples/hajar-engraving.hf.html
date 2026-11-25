@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<!--
+  "Copperplate Engraving" (Lemo-Opuscar by Lemomo (LemoLab), style guide .lemo/lemo-opuscar/styles/engraving/STYLE.md) as a 9:16
+  HyperFrames page, own Canvas 2D engine (the demo's engine folder was not available): swelling burin lines, tone made only of
+  hatching families switched on by tone thresholds (light from the upper left), plate mark + ruled border, roman capitals cut letter
+  by letter, italic written left to right, one transparent wash laid after the print (Zamzam blue), paper slips laid down for notes.
+  Pure function of time (seeded). Video: "Hajar dan Lembah Tanpa Air". Fonts: Bodoni Moda, Pinyon Script (OFL), Amiri.
+-->
+<link rel="stylesheet" href="assets/bm/bm.css" />
+<script src="assets/lib/gsap.min.js"></script>
+<script src="assets/props.js"></script>
+<script src="assets/bm/bm.js"></script>
+<style>
+  @font-face{font-family:BOD;font-weight:600;src:url("assets/fonts/lemo/bodoni-600.woff2");font-display:block}
+  @font-face{font-family:BODI;font-weight:500;src:url("assets/fonts/lemo/bodoni-500i.woff2");font-display:block}
+  @font-face{font-family:PIN;src:url("assets/fonts/lemo/pinyon-400.woff2");font-display:block}
+  html,body{margin:0;background:#f1e8d2}
+  #root{position:relative;width:1080px;height:1920px;overflow:hidden;background:#f1e8d2}
+  #c{position:absolute;left:0;top:0}
+  .pre{position:absolute;left:-9999px}
+  .bm-captions{top:1450px;left:80px;right:80px}
+  .bm-line{font-family:BODI;font-size:64px;font-weight:500}
+  .bm-word{color:#1c1510;-webkit-text-stroke:12px #f1e8d2;paint-order:stroke fill;text-shadow:none}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="root" data-start="0" data-duration="__TOTAL_S__" data-width="1080" data-height="1920">
+  <audio id="vo" src="assets/audio.mp3" data-start="0" data-duration="__TOTAL_S__"></audio>
+  <canvas id="c" width="1080" height="1920"></canvas>
+  <div class="pre" style="font:40px BOD">Ag</div><div class="pre" style="font:40px BODI">Ag</div><div class="pre" style="font:40px PIN">Ag</div><div class="pre" style="font:40px Amiri">وَيَرْزُقْهُ</div>
+  <div id="caps" class="bm-captions"></div>
+</div>
+<script>
+(function () {
+const W = 1080, H = 1920, FPS = 30, TAU = Math.PI * 2;
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+const PAPER = '#f1e8d2', INK = '#1c1510';
+const P = window.PROPS, tl = gsap.timeline({ paused: true }), TOTAL = P.totalMs / 1000;
+const SC = P.scenes.map(s => ({ t0: s.startMs / 1000, t1: (s.startMs + s.durationMs) / 1000 }));
+const norm = w => w.toLowerCase().replace(/[^a-z0-9]/g, '');
+const T = (pre, from = 0) => { const w = P.words.find(w => w.startMs / 1000 >= from - 0.01 && norm(w.text).startsWith(pre)); return w ? w.startMs / 1000 : from; };
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x)), lerp = (a, b, t) => a + (b - a) * t;
+const eio = t => { t = clamp(t); return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }, eo = t => 1 - Math.pow(1 - clamp(t), 3);
+function rng(s) { return () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+let R = rng(77);
+
+/* ================= burin engine ================= */
+const STROKES = [];   // {pts:[[x,y,w]], t0, d, tag}
+let TAG = 0;
+const SPEED = 1400;   // burin speed, px/s (many strokes run at once)
+const swell = u => (0.2 + 0.8 * Math.pow(Math.sin(Math.PI * u), 0.7)) * clamp(Math.min(u, 1 - u) / 0.22 + 0.25);
+function cut(pts, wmax, t0, o = {}) {   // pts [[x,y]] → one swelling line
+  const L = []; let s = 0; for (let i = 0; i < pts.length; i++) { if (i) s += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); L.push(s); }
+  if (s < 2) return t0;
+  const ws = o.wfn || (u => swell(u));
+  const out = pts.map((p, i) => [p[0], p[1], Math.max(0.18, wmax * ws(L[i] / s, p))]);
+  const d = o.d || s / SPEED; STROKES.push({ pts: out, t0, d, tag: TAG }); return t0 + d;
+}
+function drawStroke(S, prog) {
+  const n = Math.max(2, Math.ceil(S.pts.length * prog)); if (prog <= 0) return;
+  const p = S.pts, Lf = [], Rt = [];
+  for (let i = 0; i < n; i++) { const a = p[Math.max(0, i - 1)], b = p[Math.min(p.length - 1, i + 1)]; let tx = b[0] - a[0], ty = b[1] - a[1]; const l = Math.hypot(tx, ty) || 1; tx /= l; ty /= l;
+    const w = p[i][2] / 2 * (i === n - 1 && prog < 1 ? 0.6 : 1); Lf.push([p[i][0] - ty * w, p[i][1] + tx * w]); Rt.push([p[i][0] + ty * w, p[i][1] - tx * w]); }
+  ctx.beginPath(); ctx.moveTo(Lf[0][0], Lf[0][1]); for (let i = 1; i < n; i++) ctx.lineTo(Lf[i][0], Lf[i][1]); for (let i = n - 1; i >= 0; i--) ctx.lineTo(Rt[i][0], Rt[i][1]); ctx.closePath(); ctx.fill();
+}
+function inPoly(x, y, poly) { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; }
+function bbox(p) { let a = 1e9, b = 1e9, c = -1e9, d = -1e9; for (const [x, y] of p) { a = Math.min(a, x); b = Math.min(b, y); c = Math.max(c, x); d = Math.max(d, y); } return [a, b, c, d]; }
+// hatch a region with one family: parallel lines at `ang`, kept where tone > thr; width follows tone; sweeps across the form
+function hatch(poly, tone, o, t0) {
+  const { ang = 0, sp = 7, thr = 0.14, w = 1.8, sweep = 1.2, excl = [], jit = 0.6, step = 4 } = o;
+  const [x0, y0, x1, y1] = bbox(poly), cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, r = Math.hypot(x1 - x0, y1 - y0) / 2 + 4;
+  const c = Math.cos(ang), s = Math.sin(ang), N = Math.ceil(2 * r / sp); let end = t0;
+  for (let k = 0; k <= N; k++) {
+    const off = -r + k * sp + (R() - 0.5) * jit; let run = [];
+    const flush = () => { if (run.length > 2) end = Math.max(end, cut(run, w, t0 + sweep * k / N, { wfn: (u, p) => swell(u) * clamp(0.35 + (tone(p[0], p[1]) - thr) * 1.6, 0.25, 1) })); run = []; };
+    for (let a = -r; a <= r; a += step) {
+      const x = cx + c * a - s * off, y = cy + s * a + c * off;
+      const ok = inPoly(x, y, poly) && !excl.some(e => inPoly(x, y, e)) && tone(x, y) > thr;
+      if (ok) run.push([x, y + Math.sin(a * 0.05 + k) * 0.6]); else flush();
+    }
+    flush();
+  }
+  return end;
+}
+// contour in several runs that pinch where they hand over; heavier away from the light (upper left)
+function outline(poly, w, t0, runs = 3, closed = true) {
+  const pts = closed ? poly.concat([poly[0]]) : poly, n = pts.length, per = Math.ceil(n / runs); let end = t0;
+  for (let r = 0; r < runs; r++) { const seg = pts.slice(r * per, Math.min(n, (r + 1) * per + 1)); if (seg.length < 2) continue;
+    end = Math.max(end, cut(seg, w, t0 + r * 0.12, { wfn: (u, p) => swell(u) * (0.6 + 0.5 * clamp((p[0] - 300) / 700 + (p[1] - 500) / 900)) })); }
+  return end;
+}
+function stipple(cx, cy, rx, ry, n, t0, size = 1.6) { for (let i = 0; i < n; i++) { const a = R() * TAU, q = Math.sqrt(R()); const x = cx + Math.cos(a) * rx * q, y = cy + Math.sin(a) * ry * q; cut([[x, y], [x + 1.2, y + 0.4]], size, t0 + R() * 0.6, { d: 0.05 }); } }
+
+/* ================= lettering ================= */
+const TEXTS = [];   // roman: cut letter by letter; italic/script: written left to right
+function letters(s, x, y, size, t0, o = {}) { TEXTS.push({ s, x, y, size, t0, f: o.f || 'BOD', track: o.track ?? 0.14, align: o.align || 'center', col: o.col || INK, cps: o.cps || 16, mode: o.mode || 'cut', dir: o.dir }); }
+function drawText(Tx, t) {
+  if (t < Tx.t0) return;
+  ctx.save(); ctx.font = `${Tx.size}px ${Tx.f}`; ctx.fillStyle = Tx.col; ctx.textBaseline = 'alphabetic'; if (Tx.dir) ctx.direction = Tx.dir;
+  if (Tx.mode === 'write') {   // one left-to-right (or right-to-left) stroke
+    const wd = ctx.measureText(Tx.s).width, x0 = Tx.align === 'center' ? Tx.x - wd / 2 : Tx.x, p = clamp((t - Tx.t0) / Math.max(0.4, Tx.s.length / Tx.cps));
+    ctx.beginPath(); if (Tx.dir === 'rtl') ctx.rect(x0 + wd * (1 - p) - 4, Tx.y - Tx.size * 1.3, wd * p + 8, Tx.size * 2); else ctx.rect(x0 - 4, Tx.y - Tx.size * 1.3, wd * p + 8, Tx.size * 2); ctx.clip();
+    ctx.textAlign = 'left'; ctx.fillText(Tx.s, x0, Tx.y);
+  } else {
+    const ch = [...Tx.s], tr = Tx.size * Tx.track, ws = ch.map(c => ctx.measureText(c).width + tr), tot = ws.reduce((a, b) => a + b, 0) - tr;
+    let x = Tx.align === 'center' ? Tx.x - tot / 2 : Tx.x; const nShow = Math.floor((t - Tx.t0) * Tx.cps) + 1;
+    ch.forEach((c, i) => { if (i < nShow) ctx.fillText(c, x, Tx.y); x += ws[i]; });
+  }
+  ctx.restore();
+}
+
+/* ================= wash (laid after the print, under the ink) ================= */
+const WASHES = [];
+function wash(poly, col, cx, cy, t0, d = 1.6) { WASHES.push({ poly, col, cx, cy, t0, d, ph: R() * 10 }); }
+function drawWash(Wa, t) {
+  if (t < Wa.t0) return; const p = eo((t - Wa.t0) / Wa.d), [x0, y0, x1, y1] = bbox(Wa.poly), Rm = Math.hypot(x1 - x0, y1 - y0) * 0.75 * p + 4;
+  ctx.save(); ctx.beginPath(); Wa.poly.forEach(([x, y], i) => i ? ctx.lineTo(x + 3, y + 2) : ctx.moveTo(x + 3, y + 2)); ctx.closePath(); ctx.clip();   // slight misregister
+  ctx.beginPath(); for (let i = 0; i <= 90; i++) { const a = i / 90 * TAU, rr = Rm * (1 + 0.12 * Math.sin(a * 5 + Wa.ph) + 0.07 * Math.sin(a * 11 + Wa.ph * 2)); const x = Wa.cx + Math.cos(a) * rr, y = Wa.cy + Math.sin(a) * rr * 0.6; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+  ctx.closePath(); ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = Wa.col; ctx.fill();
+  ctx.strokeStyle = 'rgba(40,90,130,.35)'; ctx.lineWidth = 3 + 4 * (1 - p); ctx.stroke();   // tide line at the wet edge
+  ctx.restore();
+}
+
+/* ================= paper slips laid down over the lower margin ================= */
+const SLIPS = [];
+function slip(y, h, t0) { SLIPS.push({ y, h, t0, seed: R() * 100 }); }
+function drawSlip(S, t) {
+  if (t < S.t0) return; const k = eo((t - S.t0) / 0.35), dy = (1 - k) * 26, rr = rng(S.seed | 0);
+  ctx.save(); ctx.translate(0, dy); ctx.globalAlpha = k;
+  ctx.fillStyle = 'rgba(60,40,20,.10)'; ctx.fillRect(106, S.y + 8, 880, S.h);
+  ctx.beginPath(); ctx.moveTo(100, S.y); for (let x = 100; x <= 980; x += 10) ctx.lineTo(x, S.y + rr() * 3); for (let y = S.y; y <= S.y + S.h; y += 10) ctx.lineTo(980 + rr() * 3, y);
+  for (let x = 980; x >= 100; x -= 10) ctx.lineTo(x, S.y + S.h - rr() * 3); for (let y = S.y + S.h; y >= S.y; y -= 10) ctx.lineTo(100 - rr() * 3, y); ctx.closePath();
+  ctx.fillStyle = '#f4ecd9'; ctx.fill(); ctx.restore();
+}
+
+/* ================= the plate ================= */
+const PX0 = 80, PX1 = 1000, PY0 = 320, PY1 = 1000, HOR = 690;   // ruled border box; horizon line
+const hillL = [], hillR = [];
+(function () { // Shafa (left) and Marwah (right): rocky profiles, seeded
+  const prof = (x0, x1, px, py, base, arr, seed) => { const r = rng(seed); arr.push([x0, base]);
+    for (let x = x0; x <= x1; x += 12) { const u = x < px ? (x - x0) / (px - x0) : (x1 - x) / (x1 - px); const y = base - (base - py) * Math.pow(Math.sin(u * Math.PI / 2), 1.4) + (r() - 0.5) * 10 + Math.sin(x * 0.07) * 6; arr.push([x, Math.min(base, y)]); }
+    arr.push([x1, base]); };
+  prof(PX0, 520, 250, 470, 780, hillL, 3); prof(560, PX1, 850, 600, 780, hillR, 5);
+})();
+const groundP = [[PX0, 770], [PX1, 770], [PX1, PY1], [PX0, PY1]];
+const skyP = [[PX0, PY0], [PX1, PY0], [PX1, HOR + 90], [PX0, HOR + 90]];
+const toneHill = (px, py, base, hw) => (x, y) => clamp(0.18 + 0.62 * clamp((x - px) / hw + 0.35) + 0.25 * clamp((y - py) / (base - py)) - 0.12 * clamp((px - x) / hw));
+const tL = toneHill(250, 470, 780, 230), tR = toneHill(850, 600, 780, 220);
+const tGround = (x, y) => clamp(0.12 + 0.5 * ((y - 770) / 230) + 0.1 * Math.sin(x * 0.01));
+const tSky = (x, y) => clamp(0.05 + 0.5 * ((y - PY0) / (HOR + 80 - PY0)));
+const tree = { x: 690, y: 975 }, TS = 0.6;
+const treeCanopy = []; for (let i = 0; i <= 40; i++) { const a = Math.PI + i / 40 * Math.PI; treeCanopy.push([tree.x + (Math.cos(a) * 95 + Math.sin(i * 1.7) * 6) * TS, tree.y + (-112 + Math.sin(a) * 34 + Math.cos(i * 2.3) * 4) * TS]); }
+for (let i = 40; i >= 0; i--) { const a = Math.PI + i / 40 * Math.PI; treeCanopy.push([tree.x + Math.cos(a) * 92 * TS, tree.y + (-112 - Math.sin(a) * 10 + 8) * TS]); }
+const spring = { x: 500, y: 918 };
+const poolP = []; for (let i = 0; i < 48; i++) { const a = i / 48 * TAU; poolP.push([spring.x + Math.cos(a) * 74 * (1 + 0.08 * Math.sin(a * 3)), spring.y + Math.sin(a) * 18]); }
+const streamP = [[spring.x - 66, spring.y - 6], [360, 935], [240, 955], [PX0 + 4, 968], [PX0 + 4, 986], [240, 976], [360, 956], [spring.x - 56, spring.y + 12]];
+
+let built = false;
+function build() {
+  built = true; R = rng(77); STROKES.length = 0; TEXTS.length = 0; WASHES.length = 0; SLIPS.length = 0;
+  const pre = -3.0;   // scene 1 = hook: title and the plate's outlines are cut before frame 0, the hatching is still running
+  // plate mark + ruled border
+  cut([[PX0 - 22, PY0 - 22], [PX1 + 22, PY0 - 22]], 1.2, pre, { d: .3 }); cut([[PX1 + 22, PY0 - 22], [PX1 + 22, PY1 + 22]], 1.2, pre, { d: .3 });
+  cut([[PX1 + 22, PY1 + 22], [PX0 - 22, PY1 + 22]], 1.2, pre, { d: .3 }); cut([[PX0 - 22, PY1 + 22], [PX0 - 22, PY0 - 22]], 1.2, pre, { d: .3 });
+  [[PX0, PY0, PX1, PY0], [PX1, PY0, PX1, PY1], [PX1, PY1, PX0, PY1], [PX0, PY1, PX0, PY0]].forEach(([a, b, c, d]) => { cut([[a, b], [c, d]], 3.2, pre + 0.2, { d: .35, wfn: () => 1 }); });
+  letters('PLATE  I.', 540, 192, 26, pre, { track: 0.3, cps: 40 });
+  letters('LEMBAH TANPA AIR', 540, 268, 58, pre + 0.2, { track: 0.16, cps: 40 });
+  // sky: ruled lines, denser toward the horizon
+  hatch(skyP, tSky, { ang: 0, sp: 8, thr: 0.12, w: 1.1, sweep: 2.0, jit: 0.2, excl: [hillL, hillR] }, pre + 0.5);
+  // hills: outline, then three families
+  outline(hillL, 3.6, pre + 0.3, 3, false); outline(hillR, 3.6, pre + 0.45, 3, false);
+  [[hillL, tL], [hillR, tR]].forEach(([h, tn], k) => {
+    const st = -1.6 + k * 0.4;
+    hatch(h, tn, { ang: -0.55, sp: 7, thr: 0.14, w: 1.9, sweep: 2.4 }, st);
+    hatch(h, tn, { ang: 0.45, sp: 8, thr: 0.5, w: 1.5, sweep: 2.0 }, st + 2.2);
+    hatch(h, tn, { ang: 1.35, sp: 9, thr: 0.75, w: 1.1, sweep: 1.6 }, st + 3.8); });
+  // valley floor: horizontal furrows, crossing in the foreground, stones
+  hatch(groundP, tGround, { ang: 0.04, sp: 9, thr: 0.14, w: 1.6, sweep: 2.6, excl: [treeCanopy] }, -1.2);
+  hatch(groundP, tGround, { ang: -0.5, sp: 11, thr: 0.45, w: 1.2, sweep: 2.0, excl: [treeCanopy] }, 3.2);
+  for (let i = 0; i < 9; i++) { const x = 140 + R() * 800, y = 800 + R() * 170; stipple(x, y, 14 + R() * 10, 5, 14, 2 + R() * 4); }
+  // the tree they were left under
+  cut([[tree.x - 4, tree.y + 5], [tree.x - 3, tree.y - 30], [tree.x - 12, tree.y - 60]], 3.4, pre + 0.6); cut([[tree.x + 4, tree.y + 5], [tree.x + 5, tree.y - 36], [tree.x + 20, tree.y - 59]], 3, pre + 0.7);
+  outline(treeCanopy, 2.6, pre + 0.8, 2);
+  hatch(treeCanopy, (x, y) => clamp(0.4 + (x - tree.x) / 180 + (y - (tree.y - 80)) / 70), { ang: 0.1, sp: 4, thr: 0.14, w: 1.1, sweep: 1.0 }, -1.0);
+  hatch(treeCanopy, (x, y) => clamp(0.4 + (x - tree.x) / 180 + (y - (tree.y - 80)) / 70), { ang: 0.9, sp: 5, thr: 0.55, w: 0.9, sweep: 0.8 }, 1.0);
+
+  // ---- 2 · roundel: provisions; Hajar's words on a slip ----
+  const s2 = SC[1].t0, RC = { x: 560, y: 430, r: 112 }; TAG = 1;
+  const tr = T('saat', s2);
+  const ring = []; for (let i = 0; i <= 120; i++) { const a = -Math.PI / 2 + i / 120 * TAU; ring.push([RC.x + Math.cos(a) * RC.r, RC.y + Math.sin(a) * RC.r]); }
+  const ring2 = ring.map(([x, y]) => [RC.x + (x - RC.x) * 1.06, RC.y + (y - RC.y) * 1.06]);
+  ROUNDEL.t0 = tr; ROUNDEL.c = RC;
+  cut(ring, 2.6, tr + 0.35, { wfn: () => 1 }); cut(ring2, 1.0, tr + 0.5, { wfn: () => 1 });
+  const bag = []; for (let i = 0; i <= 36; i++) { const a = i / 36 * TAU; bag.push([RC.x - 45 + Math.cos(a) * 42 * (1 + 0.15 * Math.sin(a)), RC.y + 22 + Math.sin(a) * 50]); }
+  const skin = []; for (let i = 0; i <= 36; i++) { const a = i / 36 * TAU; const rr = a < Math.PI ? 40 : 40 - 22 * Math.sin(a - Math.PI); skin.push([RC.x + 52 + Math.cos(a) * rr * 0.75, RC.y + 18 + Math.sin(a) * rr * 1.3]); }
+  outline(bag, 2.6, tr + 0.8, 2); outline(skin, 2.6, tr + 1.0, 2);
+  cut([[RC.x - 62, RC.y - 24], [RC.x - 45, RC.y - 36], [RC.x - 28, RC.y - 24]], 2.4, tr + 1.1);
+  hatch(bag, (x, y) => clamp(0.3 + (x - (RC.x - 60)) / 70), { ang: 1.2, sp: 5, thr: 0.14, w: 1.2, sweep: .8 }, tr + 1.2);
+  hatch(skin, (x, y) => clamp(0.3 + (x - RC.x - 30) / 60), { ang: -1.1, sp: 5, thr: 0.14, w: 1.2, sweep: .8 }, tr + 1.3);
+  letters('fig. 1', RC.x - 45, RC.y + 96, 20, tr + 1.6, { f: 'BODI', track: 0.04 }); letters('fig. 2', RC.x + 52, RC.y + 96, 20, tr + 1.7, { f: 'BODI', track: 0.04 }); TAG = 0;
+  letters('fig. 1 kurma · fig. 2 kantong air', RC.x, RC.y + RC.r + 34, 22, tr + 1.9, { f: 'BODI', track: 0.02, mode: 'write' });
+  const tq = T('apakah', s2);
+  slip(1040, 250, tq - 0.3);
+  letters('"Apakah Allah yang memerintahkanmu?"  —  "Ya."', 540, 1092, 30, tq, { f: 'BODI', mode: 'write', cps: 22 });
+  const tk = T('kalau', s2);
+  letters('"Kalau begitu, Allah', 540, 1180, 58, tk, { f: 'BODI', mode: 'write', cps: 14 });
+  letters('tidak akan menelantarkan kami."', 540, 1245, 58, tk + 1.2, { f: 'BODI', mode: 'write', cps: 16 });
+  letters('HR. BUKHARI 3364', 540, 1280, 18, tk + 2, { track: 0.25, cps: 30 });
+
+  // ---- 3 · seven runs between Shafa and Marwah ----
+  const s3 = SC[2].t0, tb = T('berlari', s3);
+  letters('SHAFA', 250, 440, 26, T('shafa', s3) - 0.3, { track: 0.25 }); letters('MARWAH', 850, 570, 26, T('marwah', s3) - 0.2, { track: 0.25 });
+  const runD = Math.max(0.45, (T('kali', s3 + 3) + 0.4 - tb) / 7);
+  for (let k = 0; k < 7; k++) { const y = 808 + k * 4, a = k % 2 ? [800, y] : [300, y], b = k % 2 ? [300, y] : [800, y];
+    cut([a, [lerp(a[0], b[0], .33), y - 7], [lerp(a[0], b[0], .66), y + 5], b], 2.2, tb + k * runD, { d: runD * 0.9 });
+    letters(['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'][k], 300 + k * 83, 790, 24, tb + k * runD + runD * 0.6, { track: 0.05, cps: 30 }); }
+  letters('tujuh kali', 880, 870, 30, T('kali', s3 + 3), { f: 'BODI', mode: 'write', cps: 14 });
+
+  // ---- 4 · the water appears elsewhere ----
+  const s4 = SC[3].t0;
+  const bk1 = T('bukan', s4), bk2 = T('bukan', bk1 + 0.3);
+  cut([[250, 455], [250, 380]], 1, bk1, { wfn: () => 1, d: .2 }); letters('bukan di sini', 250, 368, 28, bk1 + 0.1, { f: 'BODI', mode: 'write' });
+  cut([[850, 585], [850, 505]], 1, bk2, { wfn: () => 1, d: .2 }); letters('bukan di sini', 850, 493, 28, bk2 + 0.1, { f: 'BODI', mode: 'write' });
+  const ts = T('tapi', s4);
+  outline(poolP, 2.4, ts, 2);
+  for (let k = 1; k <= 3; k++) cut(poolP.slice(4, 22).map(([x, y]) => [spring.x + (x - spring.x) * k / 4, spring.y + (y - spring.y) * k / 4]), 1.0, ts + 0.3 + k * 0.15);
+  hatch(streamP, () => 0.4, { ang: 0.1, sp: 5, thr: 0.14, w: 1.0, sweep: .9 }, ts + 0.5);
+    const tz = T('itulah', s4);
+  letters('ZAMZAM', spring.x, 876, 30, tz + 0.2, { track: 0.25, cps: 12 });
+  wash(poolP, 'rgba(70,140,185,.55)', spring.x, spring.y, T('muncul', s4) + 4.2, 1.4);   // the first colour of the film
+  wash(streamP, 'rgba(70,140,185,.45)', spring.x - 80, spring.y, T('muncul', s4) + 4.8, 2.2);
+
+  // ---- 5 · ikhtiar / from Allah; the ayah on a new slip ----
+  const s5 = SC[4].t0;
+  letters('lari: ikhtiar', 200, 870, 30, T('ikhtiar', s5), { f: 'BODI', mode: 'write' });
+  letters('air: dari Allah', 875, 965, 30, T('allah', s5), { f: 'BODI', mode: 'write' });
+  const ta = T('allah', T('sangka', s5));
+  slip(1040, 250, ta - 0.2);
+  letters('وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ', 540, 1135, 62, ta + 0.3, { f: 'Amiri', mode: 'write', dir: 'rtl', cps: 12 });
+  letters('dan memberinya rezeki dari arah yang tidak ia sangka', 540, 1210, 30, T('rezeki', ta), { f: 'BODI', mode: 'write', cps: 24 });
+  letters('QS. AT-TALAQ 2–3', 540, 1262, 18, T('rezeki', ta) + 0.4, { track: 0.25, cps: 30 });
+
+  // ---- 6 · tomorrow ----
+  const s6 = SC[5].t0;
+  slip(1040, 250, s6 + 0.1);
+  letters('Kerjakan bagianmu,', 540, 1135, 62, T('kerjakan', s6), { f: 'BODI', mode: 'write', cps: 12 });
+  letters('serahkan hasilnya pada Allah.', 540, 1215, 52, T('serahkan', s6), { f: 'BODI', mode: 'write', cps: 16 });
+  letters('Hajar ad Vallem del. & sculp.', 540, PY1 + 58, 30, T('allah', T('rezekinya', s6)), { f: 'PIN', mode: 'write', track: 0, cps: 16 });
+}
+const ROUNDEL = { t0: 1e9, c: { x: 560, y: 430, r: 112 } };
+
+/* ================= camera: a loupe over the sheet ================= */
+function camKeys() {
+  const s3 = SC[2].t0, s4 = SC[3].t0, s5 = SC[4].t0, s6 = SC[5].t0, ts = T('tapi', s4);
+  return [[0, 540, 960, 1.0], [SC[0].t1, 540, 950, 1.025], [s3 + 0.4, 540, 940, 1.0], [SC[2].t1 - 0.3, 545, 900, 1.06],
+    [ts - 0.2, 540, 920, 1.03], [ts + 1.2, 500, 860, 1.14], [s5 - 0.3, 500, 860, 1.14], [s5 + 0.6, 540, 960, 1.0],
+    [s6, 540, 960, 1.0], [TOTAL, 540, 945, 0.965]];
+}
+let CK = null;
+function cam(t) { const K = CK || (CK = camKeys()); if (t <= K[0][0]) return { x: K[0][1], y: K[0][2], z: K[0][3] };
+  for (let i = 1; i < K.length; i++) if (t < K[i][0]) { const a = K[i - 1], b = K[i], e = eio((t - a[0]) / (b[0] - a[0])); return { x: lerp(a[1], b[1], e), y: lerp(a[2], b[2], e), z: lerp(a[3], b[3], e) }; }
+  const L = K[K.length - 1]; return { x: L[1], y: L[2], z: L[3] }; }
+
+/* ================= paper (fibres, laid lines, foxing; world space) ================= */
+const PAPC = document.createElement('canvas'); PAPC.width = W; PAPC.height = H;
+(function () { const g = PAPC.getContext('2d'), r = rng(9); g.fillStyle = PAPER; g.fillRect(0, 0, W, H);
+  for (let y = 0; y < H; y += 5) { g.fillStyle = `rgba(120,95,60,${0.015 + r() * 0.015})`; g.fillRect(0, y, W, 1); }
+  for (let i = 0; i < 2200; i++) { g.strokeStyle = `rgba(110,85,50,${0.04 + r() * 0.05})`; g.lineWidth = 0.6; const x = r() * W, y = r() * H, a = r() * TAU; g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * 9, y + Math.sin(a) * 9); g.stroke(); }
+  for (let i = 0; i < 22; i++) { const x = r() * W, y = r() * H, rr = 4 + r() * 14, gr = g.createRadialGradient(x, y, 0, x, y, rr); gr.addColorStop(0, 'rgba(150,100,50,.10)'); gr.addColorStop(1, 'rgba(150,100,50,0)'); g.fillStyle = gr; g.fillRect(x - rr, y - rr, 2 * rr, 2 * rr); }
+  // the pressed plate mark: a bevel just outside the ruled border
+  g.strokeStyle = 'rgba(255,255,250,.7)'; g.lineWidth = 3; g.strokeRect(PX0 - 36, PY0 - 36, PX1 - PX0 + 72, PY1 - PY0 + 72);
+  g.strokeStyle = 'rgba(90,70,40,.22)'; g.lineWidth = 2; g.strokeRect(PX0 - 33, PY0 - 33, PX1 - PX0 + 66, PY1 - PY0 + 66);
+})();
+
+function render(t) {
+  if (!built) build();
+  const c = cam(t);
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H);
+  ctx.setTransform(c.z, 0, 0, c.z, W / 2 - c.x * c.z, H / 2 - c.y * c.z);
+  ctx.drawImage(PAPC, 0, 0);
+  for (const Wa of WASHES) drawWash(Wa, t);
+  function ROUNDELG(t) {   // roundel ground: a halo over the plate, ruled-machine lines inside
+  if (t >= ROUNDEL.t0) { const k = eo((t - ROUNDEL.t0) / 0.45), { x, y, r } = ROUNDEL.c; ctx.save(); ctx.beginPath(); ctx.arc(x, y, r * 1.1 * k, 0, TAU); ctx.fillStyle = PAPER; ctx.fill(); ctx.clip();
+    ctx.strokeStyle = 'rgba(28,21,16,.28)'; ctx.lineWidth = 0.7; for (let yy = y - r; yy < y + r; yy += 6) { ctx.beginPath(); ctx.moveTo(x - r, yy); ctx.lineTo(x + r, yy); ctx.stroke(); }
+    ctx.beginPath(); ctx.arc(x, y + 20, 80, 0, TAU); ctx.fillStyle = PAPER; ctx.fill(); ctx.restore(); } }
+  ctx.fillStyle = INK;
+  for (const S of STROKES) if (!S.tag && t >= S.t0) drawStroke(S, clamp((t - S.t0) / S.d));
+  ROUNDELG(t); ctx.fillStyle = INK;
+  for (const S of STROKES) if (S.tag && t >= S.t0) drawStroke(S, clamp((t - S.t0) / S.d));
+  let si = -1; SLIPS.forEach((S, i) => { if (t >= S.t0) si = i; });
+  if (si >= 0) drawSlip(SLIPS[si], t);
+  for (const Tx of TEXTS) { if (Tx.y > 1030 && si >= 0) { // text on the lower margin belongs to the slip laid last
+      const own = SLIPS.findIndex((S, i) => Tx.t0 >= S.t0 - 0.31 && (i === SLIPS.length - 1 || Tx.t0 < SLIPS[i + 1].t0 - 0.31)); if (own !== si) continue; }
+    drawText(Tx, t); }
+}
+const tk0 = { t: 0 };
+tl.fromTo(tk0, { t: 0 }, { t: TOTAL, duration: TOTAL, ease: 'none', onUpdate: () => render(tk0.t) }, 0);
+BM.captions(tl, document.getElementById('caps'), P.words, { accent: '#2f6f96', text: '#1c1510' });
+window.__timelines = window.__timelines || {};
+window.__timelines['root'] = tl;
+document.fonts.ready.then(() => { built = false; render(tk0.t); });
+})();
+</script>
+</body>
+</html>

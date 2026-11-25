@@ -1,0 +1,58 @@
+{
+ "title": "Hajar dan Lembah Tanpa Air",
+ "music": "none",
+ "ambience": "none",
+ "sfx": true,
+ "style": "engraving",
+ "scenes": [
+  {
+   "id": 1,
+   "type": "title",
+   "eyebrow": "Plate I",
+   "title": "Lembah tanpa air",
+   "vo": "Cemas soal rezeki besok? Ada seorang ibu yang pernah ditinggal di lembah tanpa air, tanpa tanaman, hanya bersama bayinya."
+  },
+  {
+   "id": 2,
+   "type": "quote",
+   "eyebrow": "HR. Bukhari 3364",
+   "text": "Kalau begitu, Allah tidak akan menelantarkan kami.",
+   "vo": "Namanya Hajar. Saat Ibrahim pergi, ia hanya bertanya: apakah Allah yang memerintahkanmu? Ibrahim menjawab: ya. Hajar berkata: kalau begitu, Allah tidak akan menelantarkan kami."
+  },
+  {
+   "id": 3,
+   "type": "counter",
+   "eyebrow": "Shafa — Marwah",
+   "items": [
+    {
+     "value": 7,
+     "label": "kali berlari"
+    }
+   ],
+   "vo": "Tapi yakin bukan berarti diam. Saat air habis dan bayinya kehausan, Hajar berlari di antara bukit Shafa dan Marwah, tujuh kali."
+  },
+  {
+   "id": 4,
+   "type": "title",
+   "eyebrow": "Zamzam",
+   "title": "Air dari arah lain",
+   "vo": "Lalu air itu muncul. Bukan di Shafa, bukan di Marwah, tapi di dekat tempat ia meninggalkan bayinya. Itulah Zamzam."
+  },
+  {
+   "id": 5,
+   "type": "ayat",
+   "arabic": "وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ",
+   "translation": "dan memberinya rezeki dari arah yang tidak ia sangka",
+   "ref": "QS. At-Talaq 2–3",
+   "vo": "Larinya adalah ikhtiar. Airnya dari Allah, dari arah yang tidak ia sangka. Allah berfirman: siapa yang bertakwa, Allah beri jalan keluar, dan rezeki dari arah yang tidak disangka."
+  },
+  {
+   "id": 6,
+   "type": "title",
+   "eyebrow": "Besok",
+   "title": "Kerjakan bagianmu",
+   "vo": "Jadi besok, kerjakan bagianmu sebaik mungkin, lalu serahkan hasilnya pada Allah. Kirim ke orang yang sedang cemas soal rezekinya. Allah yang menjaga Hajar di lembah itu, juga melihatmu hari ini."
+  }
+ ],
+ "qa_allow": []
+}
