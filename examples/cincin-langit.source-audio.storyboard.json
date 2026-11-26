@@ -1,0 +1,3665 @@
+{
+ "title": "Kenapa Allah Tidak Bisa Kelihatan?",
+ "source_audio": "/root/.claude/uploads/f52048ff-2a09-5358-b1a3-2f28871e9e1d/1e41f436-lv_7649216883803065616_20261125201124.mp4",
+ "source_words": "output/source_words.json",
+ "credit": "Kajian: Ust. Khalid Basalamah",
+ "music": "none",
+ "ambience": "none",
+ "sfx": true,
+ "style": "bang:infografik-flat",
+ "caption": "Kenapa Allah tidak bisa kita lihat? Jawabannya ada di setiap takbir shalatmu: Allahu Akbar. #reminderislam #nasihatislami #tujuhlapislangit #kajianislam #creatorsearchinsights #videofypシ゚",
+ "scenes": [
+  {
+   "id": 1,
+   "type": "plate",
+   "t": [
+    0,
+    8.5
+   ],
+   "vo": "Kenapa Allah tidak bisa kelihatan? Saya akan jawab dan tolong ini jadikan sebagai pegangan hidup. Ini landasan akhidah kita. Kata para ulama, karena",
+   "plate": {
+    "title": "Kenapa Tak Terlihat?",
+    "latin": "oculus humanus",
+    "ref": "pegangan akidah"
+   },
+   "subject": {
+    "parts": [
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -330,
+        260
+       ],
+       [
+        -160,
+        170
+       ],
+       [
+        0,
+        150
+       ],
+       [
+        160,
+        170
+       ],
+       [
+        330,
+        260
+       ],
+       [
+        160,
+        340
+       ],
+       [
+        0,
+        360
+       ],
+       [
+        -160,
+        340
+       ]
+      ],
+      "v": 0.3,
+      "ang": 0.2,
+      "wash": "ivory"
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 255,
+      "rx": 90,
+      "ry": 90,
+      "tone": "sphere",
+      "v": 0.55,
+      "wash": "brown"
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 255,
+      "rx": 36,
+      "ry": 36,
+      "tone": "flat",
+      "v": 0.95
+     },
+     {
+      "k": "line",
+      "pts": [
+       [
+        0,
+        140
+       ],
+       [
+        0,
+        -40
+       ]
+      ],
+      "w": 3
+     },
+     {
+      "k": "line",
+      "pts": [
+       [
+        0,
+        -120
+       ],
+       [
+        0,
+        -440
+       ]
+      ],
+      "w": 2,
+      "taper": "end"
+     },
+     {
+      "k": "dots",
+      "x": 0,
+      "y": -280,
+      "rx": 420,
+      "ry": 180,
+      "n": 160
+     }
+    ]
+   },
+   "figs": [
+    {
+     "x": 0,
+     "y": 255,
+     "label": "Mata",
+     "note": "daya lihat terbatas",
+     "detail": "rings"
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "type": "plate",
+   "t": [
+    8.5,
+    16.5
+   ],
+   "vo": "Anda kalau sholat, Anda mengucapkan satu kalimat yang merupakan jawabannya. Allahu Akbar. Allah Maha",
+   "plate": {
+    "title": "Allahu Akbar",
+    "latin": "takbiratul ihram",
+    "ref": "jawaban dalam shalat"
+   },
+   "subject": {
+    "preset": "sun"
+   },
+   "figs": [
+    {
+     "x": 0,
+     "y": 0,
+     "label": "Akbar",
+     "note": "Maha Besar",
+     "detail": "rings"
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "type": "plate",
+   "t": [
+    16.5,
+    24
+   ],
+   "vo": "Besar. Akbar adalah siga mubalaga dalam Islam. Sesuatu yang melampuhi batas. Maha Besar. Kita terangkan.",
+   "plate": {
+    "title": "Shighat Mubalaghah",
+    "latin": "melampaui batas",
+    "ref": "bahasa Arab"
+   },
+   "subject": {
+    "parts": [
+     {
+      "k": "poly",
+      "pts": [
+       [
+        -420,
+        60
+       ],
+       [
+        150,
+        60
+       ],
+       [
+        150,
+        130
+       ],
+       [
+        -420,
+        130
+       ]
+      ],
+      "v": 0.3,
+      "ang": 1.57,
+      "wash": "clay"
+     },
+     {
+      "k": "poly",
+      "pts": [
+       [
+        190,
+        40
+       ],
+       [
+        430,
+        -120
+       ],
+       [
+        460,
+        -60
+       ],
+       [
+        220,
+        110
+       ]
+      ],
+      "v": 0.3,
+      "ang": 1.0,
+      "wash": "clay"
+     },
+     {
+      "k": "line",
+      "pts": [
+       [
+        -400,
+        60
+       ],
+       [
+        -400,
+        105
+       ]
+      ],
+      "w": 2
+     },
+     {
+      "k": "line",
+      "pts": [
+       [
+        -350,
+        60
+       ],
+       [
+        -350,
+        90
+       ]
+      ],
+      "w": 2
+     },
+     {
+      "k": "line",
+      "pts": [
+       [
+        -300,
+        60
+       ],
+       [
+        -300,
+        105
+       ]
+      ],
+      "w": 2
+     },
+     {
+      "k": "line",
+      "pts": [
+       [
+        -250,
+        60
+       ],
+       [
+        -250,
+        90
+       ]
+      ],
+      "w": 2
+     },
+     {
+      "k": "line",
+      "pts": [
+       [
+        -200,
+        60
+       ],
+       [
+        -200,
+        105
+       ]
+      ],
+      "w": 2
+     },
+     {
+      "k": "line",
+      "pts": [
+       [
+        -150,
+        60
+       ],
+       [
+        -150,
+        90
+       ]
+      ],
+      "w": 2
+     },
+     {
+      "k": "line",
+      "pts": [
+       [
+        -100,
+        60
+       ],
+       [
+        -100,
+        105
+       ]
+      ],
+      "w": 2
+     },
+     {
+      "k": "line",
+      "pts": [
+       [
+        -50,
+        60
+       ],
+       [
+        -50,
+        90
+       ]
+      ],
+      "w": 2
+     },
+     {
+      "k": "line",
+      "pts": [
+       [
+        0,
+        60
+       ],
+       [
+        0,
+        105
+       ]
+      ],
+      "w": 2
+     },
+     {
+      "k": "line",
+      "pts": [
+       [
+        50,
+        60
+       ],
+       [
+        50,
+        90
+       ]
+      ],
+      "w": 2
+     },
+     {
+      "k": "line",
+      "pts": [
+       [
+        100,
+        60
+       ],
+       [
+        100,
+        105
+       ]
+      ],
+      "w": 2
+     }
+    ]
+   },
+   "figs": [
+    {
+     "x": 300,
+     "y": -40,
+     "label": "Batas ukur",
+     "note": "dilampaui",
+     "detail": "grain"
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "type": "plate",
+   "t": [
+    24,
+    33.5
+   ],
+   "vo": "Kata Nabi SAW, perumpamaan bumi yang kalian tinggal ini dibanding dengan langit pertama di atas kepala kalian. Ada tujuh lapis langit. Allah mengatakan, sab 'an shidada.",
+   "plate": {
+    "title": "Tujuh Lapis Langit",
+    "latin": "sab'an syidada",
+    "ref": "An-Naba' · 12"
+   },
+   "subject": {
+    "parts": [
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        424.0,
+        380.0
+       ],
+       [
+        409.6,
+        253.8
+       ],
+       [
+        367.2,
+        136.2
+       ],
+       [
+        299.8,
+        35.2
+       ],
+       [
+        212.0,
+        -42.3
+       ],
+       [
+        109.7,
+        -91.0
+       ],
+       [
+        0.0,
+        -107.6
+       ],
+       [
+        -109.7,
+        -91.0
+       ],
+       [
+        -212.0,
+        -42.3
+       ],
+       [
+        -299.8,
+        35.2
+       ],
+       [
+        -367.2,
+        136.2
+       ],
+       [
+        -409.6,
+        253.8
+       ],
+       [
+        -424.0,
+        380.0
+       ]
+      ],
+      "v": 0.22999999999999998,
+      "ang": 2.1,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        372.0,
+        380.0
+       ],
+       [
+        359.3,
+        269.3
+       ],
+       [
+        322.2,
+        166.1
+       ],
+       [
+        263.0,
+        77.5
+       ],
+       [
+        186.0,
+        9.5
+       ],
+       [
+        96.3,
+        -33.2
+       ],
+       [
+        0.0,
+        -47.8
+       ],
+       [
+        -96.3,
+        -33.2
+       ],
+       [
+        -186.0,
+        9.5
+       ],
+       [
+        -263.0,
+        77.5
+       ],
+       [
+        -322.2,
+        166.1
+       ],
+       [
+        -359.3,
+        269.3
+       ],
+       [
+        -372.0,
+        380.0
+       ]
+      ],
+      "v": 0.18,
+      "ang": 1.7999999999999998,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        320.0,
+        380.0
+       ],
+       [
+        309.1,
+        284.8
+       ],
+       [
+        277.1,
+        196.0
+       ],
+       [
+        226.3,
+        119.8
+       ],
+       [
+        160.0,
+        61.3
+       ],
+       [
+        82.8,
+        24.5
+       ],
+       [
+        0.0,
+        12.0
+       ],
+       [
+        -82.8,
+        24.5
+       ],
+       [
+        -160.0,
+        61.3
+       ],
+       [
+        -226.3,
+        119.8
+       ],
+       [
+        -277.1,
+        196.0
+       ],
+       [
+        -309.1,
+        284.8
+       ],
+       [
+        -320.0,
+        380.0
+       ]
+      ],
+      "v": 0.22999999999999998,
+      "ang": 1.5,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        268.0,
+        380.0
+       ],
+       [
+        258.9,
+        300.2
+       ],
+       [
+        232.1,
+        225.9
+       ],
+       [
+        189.5,
+        162.1
+       ],
+       [
+        134.0,
+        113.1
+       ],
+       [
+        69.4,
+        82.3
+       ],
+       [
+        0.0,
+        71.8
+       ],
+       [
+        -69.4,
+        82.3
+       ],
+       [
+        -134.0,
+        113.1
+       ],
+       [
+        -189.5,
+        162.1
+       ],
+       [
+        -232.1,
+        225.9
+       ],
+       [
+        -258.9,
+        300.2
+       ],
+       [
+        -268.0,
+        380.0
+       ]
+      ],
+      "v": 0.18,
+      "ang": 1.2,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        216.0,
+        380.0
+       ],
+       [
+        208.6,
+        315.7
+       ],
+       [
+        187.1,
+        255.8
+       ],
+       [
+        152.7,
+        204.4
+       ],
+       [
+        108.0,
+        164.9
+       ],
+       [
+        55.9,
+        140.1
+       ],
+       [
+        0.0,
+        131.6
+       ],
+       [
+        -55.9,
+        140.1
+       ],
+       [
+        -108.0,
+        164.9
+       ],
+       [
+        -152.7,
+        204.4
+       ],
+       [
+        -187.1,
+        255.8
+       ],
+       [
+        -208.6,
+        315.7
+       ],
+       [
+        -216.0,
+        380.0
+       ]
+      ],
+      "v": 0.22999999999999998,
+      "ang": 0.8999999999999999,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        164.0,
+        380.0
+       ],
+       [
+        158.4,
+        331.2
+       ],
+       [
+        142.0,
+        285.7
+       ],
+       [
+        116.0,
+        246.6
+       ],
+       [
+        82.0,
+        216.7
+       ],
+       [
+        42.4,
+        197.8
+       ],
+       [
+        0.0,
+        191.4
+       ],
+       [
+        -42.4,
+        197.8
+       ],
+       [
+        -82.0,
+        216.7
+       ],
+       [
+        -116.0,
+        246.6
+       ],
+       [
+        -142.0,
+        285.7
+       ],
+       [
+        -158.4,
+        331.2
+       ],
+       [
+        -164.0,
+        380.0
+       ]
+      ],
+      "v": 0.18,
+      "ang": 0.6,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        112.0,
+        380.0
+       ],
+       [
+        108.2,
+        346.7
+       ],
+       [
+        97.0,
+        315.6
+       ],
+       [
+        79.2,
+        288.9
+       ],
+       [
+        56.0,
+        268.5
+       ],
+       [
+        29.0,
+        255.6
+       ],
+       [
+        0.0,
+        251.2
+       ],
+       [
+        -29.0,
+        255.6
+       ],
+       [
+        -56.0,
+        268.5
+       ],
+       [
+        -79.2,
+        288.9
+       ],
+       [
+        -97.0,
+        315.6
+       ],
+       [
+        -108.2,
+        346.7
+       ],
+       [
+        -112.0,
+        380.0
+       ]
+      ],
+      "v": 0.22999999999999998,
+      "ang": 0.3,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 372,
+      "rx": 46,
+      "ry": 46,
+      "tone": "sphere",
+      "v": 0.5,
+      "wash": "sea"
+     }
+    ]
+   },
+   "figs": [
+    {
+     "x": 0,
+     "y": 372,
+     "label": "Bumi",
+     "note": "di dasar",
+     "detail": "layers"
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "type": "plate",
+   "t": [
+    33.5,
+    43
+   ],
+   "vo": "Tujuh lapis langit yang kokoh. Alladhi khalaka sab 'a samawatin tibaqa. Yang menciptakan langit tibaqa bersusun. Satu, dua, tiga, empat, lima, enam, tujuh. Allah di",
+   "plate": {
+    "title": "Thibaqa — Bersusun",
+    "latin": "1 · 2 · 3 · 4 · 5 · 6 · 7",
+    "ref": "Al-Mulk · 3"
+   },
+   "subject": {
+    "parts": [
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        424.0,
+        380.0
+       ],
+       [
+        409.6,
+        253.8
+       ],
+       [
+        367.2,
+        136.2
+       ],
+       [
+        299.8,
+        35.2
+       ],
+       [
+        212.0,
+        -42.3
+       ],
+       [
+        109.7,
+        -91.0
+       ],
+       [
+        0.0,
+        -107.6
+       ],
+       [
+        -109.7,
+        -91.0
+       ],
+       [
+        -212.0,
+        -42.3
+       ],
+       [
+        -299.8,
+        35.2
+       ],
+       [
+        -367.2,
+        136.2
+       ],
+       [
+        -409.6,
+        253.8
+       ],
+       [
+        -424.0,
+        380.0
+       ]
+      ],
+      "v": 0.22999999999999998,
+      "ang": 2.1,
+      "wash": "gold",
+      "w": 3
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        372.0,
+        380.0
+       ],
+       [
+        359.3,
+        269.3
+       ],
+       [
+        322.2,
+        166.1
+       ],
+       [
+        263.0,
+        77.5
+       ],
+       [
+        186.0,
+        9.5
+       ],
+       [
+        96.3,
+        -33.2
+       ],
+       [
+        0.0,
+        -47.8
+       ],
+       [
+        -96.3,
+        -33.2
+       ],
+       [
+        -186.0,
+        9.5
+       ],
+       [
+        -263.0,
+        77.5
+       ],
+       [
+        -322.2,
+        166.1
+       ],
+       [
+        -359.3,
+        269.3
+       ],
+       [
+        -372.0,
+        380.0
+       ]
+      ],
+      "v": 0.18,
+      "ang": 1.7999999999999998,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        320.0,
+        380.0
+       ],
+       [
+        309.1,
+        284.8
+       ],
+       [
+        277.1,
+        196.0
+       ],
+       [
+        226.3,
+        119.8
+       ],
+       [
+        160.0,
+        61.3
+       ],
+       [
+        82.8,
+        24.5
+       ],
+       [
+        0.0,
+        12.0
+       ],
+       [
+        -82.8,
+        24.5
+       ],
+       [
+        -160.0,
+        61.3
+       ],
+       [
+        -226.3,
+        119.8
+       ],
+       [
+        -277.1,
+        196.0
+       ],
+       [
+        -309.1,
+        284.8
+       ],
+       [
+        -320.0,
+        380.0
+       ]
+      ],
+      "v": 0.22999999999999998,
+      "ang": 1.5,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        268.0,
+        380.0
+       ],
+       [
+        258.9,
+        300.2
+       ],
+       [
+        232.1,
+        225.9
+       ],
+       [
+        189.5,
+        162.1
+       ],
+       [
+        134.0,
+        113.1
+       ],
+       [
+        69.4,
+        82.3
+       ],
+       [
+        0.0,
+        71.8
+       ],
+       [
+        -69.4,
+        82.3
+       ],
+       [
+        -134.0,
+        113.1
+       ],
+       [
+        -189.5,
+        162.1
+       ],
+       [
+        -232.1,
+        225.9
+       ],
+       [
+        -258.9,
+        300.2
+       ],
+       [
+        -268.0,
+        380.0
+       ]
+      ],
+      "v": 0.18,
+      "ang": 1.2,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        216.0,
+        380.0
+       ],
+       [
+        208.6,
+        315.7
+       ],
+       [
+        187.1,
+        255.8
+       ],
+       [
+        152.7,
+        204.4
+       ],
+       [
+        108.0,
+        164.9
+       ],
+       [
+        55.9,
+        140.1
+       ],
+       [
+        0.0,
+        131.6
+       ],
+       [
+        -55.9,
+        140.1
+       ],
+       [
+        -108.0,
+        164.9
+       ],
+       [
+        -152.7,
+        204.4
+       ],
+       [
+        -187.1,
+        255.8
+       ],
+       [
+        -208.6,
+        315.7
+       ],
+       [
+        -216.0,
+        380.0
+       ]
+      ],
+      "v": 0.22999999999999998,
+      "ang": 0.8999999999999999,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        164.0,
+        380.0
+       ],
+       [
+        158.4,
+        331.2
+       ],
+       [
+        142.0,
+        285.7
+       ],
+       [
+        116.0,
+        246.6
+       ],
+       [
+        82.0,
+        216.7
+       ],
+       [
+        42.4,
+        197.8
+       ],
+       [
+        0.0,
+        191.4
+       ],
+       [
+        -42.4,
+        197.8
+       ],
+       [
+        -82.0,
+        216.7
+       ],
+       [
+        -116.0,
+        246.6
+       ],
+       [
+        -142.0,
+        285.7
+       ],
+       [
+        -158.4,
+        331.2
+       ],
+       [
+        -164.0,
+        380.0
+       ]
+      ],
+      "v": 0.18,
+      "ang": 0.6,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        112.0,
+        380.0
+       ],
+       [
+        108.2,
+        346.7
+       ],
+       [
+        97.0,
+        315.6
+       ],
+       [
+        79.2,
+        288.9
+       ],
+       [
+        56.0,
+        268.5
+       ],
+       [
+        29.0,
+        255.6
+       ],
+       [
+        0.0,
+        251.2
+       ],
+       [
+        -29.0,
+        255.6
+       ],
+       [
+        -56.0,
+        268.5
+       ],
+       [
+        -79.2,
+        288.9
+       ],
+       [
+        -97.0,
+        315.6
+       ],
+       [
+        -108.2,
+        346.7
+       ],
+       [
+        -112.0,
+        380.0
+       ]
+      ],
+      "v": 0.22999999999999998,
+      "ang": 0.3,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 372,
+      "rx": 46,
+      "ry": 46,
+      "tone": "sphere",
+      "v": 0.5,
+      "wash": "sea"
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": -440,
+      "rx": 300,
+      "ry": 40,
+      "tone": "flat",
+      "v": 0.08,
+      "wash": "gold"
+     }
+    ]
+   },
+   "figs": [
+    {
+     "x": 0,
+     "y": -400,
+     "label": "Langit ke-7",
+     "note": "Allah di atasnya",
+     "detail": "layers"
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "type": "plate",
+   "t": [
+    43,
+    49
+   ],
+   "vo": "atas langit ketujuh. Kata Nabi SAW, perumpamaan bumi yang kalian tinggal ini dibanding dengan langit pertama di atas kepala kalian.",
+   "plate": {
+    "title": "Cincin di Padang Pasir",
+    "latin": "bumi : langit pertama",
+    "ref": "perumpamaan Nabi ﷺ"
+   },
+   "subject": {
+    "parts": [
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        120
+       ],
+       [
+        -200,
+        60
+       ],
+       [
+        0,
+        110
+       ],
+       [
+        220,
+        50
+       ],
+       [
+        430,
+        110
+       ],
+       [
+        430,
+        480
+       ],
+       [
+        -430,
+        480
+       ]
+      ],
+      "v": 0.35,
+      "ang": 0.15,
+      "wash": "amber"
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        260
+       ],
+       [
+        -150,
+        200
+       ],
+       [
+        120,
+        250
+       ],
+       [
+        430,
+        190
+       ],
+       [
+        430,
+        480
+       ],
+       [
+        -430,
+        480
+       ]
+      ],
+      "v": 0.45,
+      "ang": -0.2,
+      "wash": "earth"
+     },
+     {
+      "k": "dots",
+      "x": 0,
+      "y": 330,
+      "rx": 420,
+      "ry": 140,
+      "n": 260
+     },
+     {
+      "k": "ell",
+      "x": 40,
+      "y": 300,
+      "rx": 28,
+      "ry": 12.6,
+      "tone": "band",
+      "v": 0.6,
+      "wash": "gold"
+     }
+    ]
+   },
+   "figs": [
+    {
+     "x": 40,
+     "y": 300,
+     "label": "Cincin",
+     "note": "= bumi",
+     "detail": "rings"
+    }
+   ]
+  },
+  {
+   "id": 7,
+   "type": "plate",
+   "t": [
+    49,
+    57
+   ],
+   "vo": "Ibaratnya seperti cincin yang dibuang di padang pasir Jadi kita tidak akan pernah bisa melihat ujungnya langit karena kita sangat kecil dan ini terbukti",
+   "plate": {
+    "title": "Ujung Langit",
+    "latin": "tak terjangkau mata",
+    "ref": "kita sangat kecil"
+   },
+   "subject": {
+    "parts": [
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        120
+       ],
+       [
+        -200,
+        60
+       ],
+       [
+        0,
+        110
+       ],
+       [
+        220,
+        50
+       ],
+       [
+        430,
+        110
+       ],
+       [
+        430,
+        480
+       ],
+       [
+        -430,
+        480
+       ]
+      ],
+      "v": 0.35,
+      "ang": 0.15,
+      "wash": "amber"
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        260
+       ],
+       [
+        -150,
+        200
+       ],
+       [
+        120,
+        250
+       ],
+       [
+        430,
+        190
+       ],
+       [
+        430,
+        480
+       ],
+       [
+        -430,
+        480
+       ]
+      ],
+      "v": 0.45,
+      "ang": -0.2,
+      "wash": "earth"
+     },
+     {
+      "k": "dots",
+      "x": 0,
+      "y": 330,
+      "rx": 420,
+      "ry": 140,
+      "n": 260
+     },
+     {
+      "k": "ell",
+      "x": 40,
+      "y": 300,
+      "rx": 11.200000000000001,
+      "ry": 5.040000000000001,
+      "tone": "band",
+      "v": 0.6,
+      "wash": "gold"
+     },
+     {
+      "k": "dots",
+      "x": 0,
+      "y": -60,
+      "rx": 430,
+      "ry": 420,
+      "n": 420
+     }
+    ]
+   },
+   "figs": [
+    {
+     "x": 0,
+     "y": -200,
+     "label": "Langit pertama",
+     "note": "tanpa ujung terlihat",
+     "detail": "stars"
+    }
+   ]
+  },
+  {
+   "id": 8,
+   "type": "plate",
+   "t": [
+    57,
+    66
+   ],
+   "vo": "secara fakta Apakah anda sudah tahu bahwasannya miliaran bintang -bintang yang ada di atas kepala anda yang jaraknya sekian miliar tahun dari bumi Dan sekian",
+   "plate": {
+    "title": "Miliaran Bintang",
+    "latin": "stellae innumerabiles",
+    "ref": "di bawah langit pertama"
+   },
+   "subject": {
+    "preset": "cosmos",
+    "split": 0
+   },
+   "figs": [
+    {
+     "x": 0,
+     "y": -100,
+     "label": "Galaksi",
+     "note": "miliaran bintang",
+     "detail": "stars"
+    }
+   ]
+  },
+  {
+   "id": 9,
+   "type": "plate",
+   "t": [
+    66,
+    74
+   ],
+   "vo": "miliarkali lebih besar daripada bumi itu semua berada di bawah langit pertama manusia tidak akan pernah bisa memegang langit ini dengan telapak tangannya karena dari sini saja",
+   "plate": {
+    "title": "Lebih Besar dari Bumi",
+    "latin": "sekian miliar kali",
+    "ref": "fakta astronomi"
+   },
+   "subject": {
+    "preset": "sun"
+   },
+   "figs": [
+    {
+     "x": 120,
+     "y": -60,
+     "label": "Bintang",
+     "note": "≫ bumi",
+     "detail": "cells"
+    }
+   ]
+  },
+  {
+   "id": 10,
+   "type": "plate",
+   "t": [
+    74,
+    84
+   ],
+   "vo": "ke Pluto jaraknya 270 tahun gak bakal bisa ada astronot dikirim kena mati di tengah jalan jaraknya jauh sekali bintang -bintang dan semua berada di bawah langit pertama kata",
+   "plate": {
+    "title": "Ke Pluto 270 Tahun",
+    "latin": "iter impossibile",
+    "ref": "astronot tak sampai"
+   },
+   "subject": {
+    "parts": [
+     {
+      "k": "dots",
+      "x": 0,
+      "y": -60,
+      "rx": 430,
+      "ry": 420,
+      "n": 420
+     },
+     {
+      "k": "ell",
+      "x": -300,
+      "y": 360,
+      "rx": 70,
+      "ry": 70,
+      "tone": "sphere",
+      "v": 0.45,
+      "wash": "sea"
+     },
+     {
+      "k": "line",
+      "pts": [
+       [
+        -240,
+        300
+       ],
+       [
+        -60,
+        80
+       ],
+       [
+        120,
+        -120
+       ],
+       [
+        300,
+        -330
+       ]
+      ],
+      "w": 3,
+      "taper": "end"
+     },
+     {
+      "k": "poly",
+      "pts": [
+       [
+        100,
+        -110
+       ],
+       [
+        150,
+        -180
+       ],
+       [
+        175,
+        -130
+       ],
+       [
+        150,
+        -80
+       ]
+      ],
+      "v": 0.5,
+      "ang": 0.8,
+      "wash": "clay"
+     },
+     {
+      "k": "ell",
+      "x": 330,
+      "y": -360,
+      "rx": 26,
+      "ry": 26,
+      "tone": "sphere",
+      "v": 0.5,
+      "wash": "ivory"
+     }
+    ]
+   },
+   "figs": [
+    {
+     "x": 330,
+     "y": -360,
+     "label": "Pluto",
+     "note": "270 tahun",
+     "detail": "grain"
+    }
+   ]
+  },
+  {
+   "id": 11,
+   "type": "plate",
+   "t": [
+    84,
+    92
+   ],
+   "vo": "Nabi SAW di atasnya ada langit kedua besarnya digabung antara bumi sama langit pertama seperti jinjin di bawah di badan pasir Langit ke -3, 2, 1 dan bumi digabung tiga -tiganya,",
+   "plate": {
+    "title": "Langit Kedua",
+    "latin": "bumi + langit 1 = cincin",
+    "ref": "perumpamaan Nabi ﷺ"
+   },
+   "subject": {
+    "parts": [
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 40.0,
+      "ry": 40.0,
+      "tone": "band",
+      "v": 0.12,
+      "wash": "sea",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 230.0,
+      "ry": 230.0,
+      "tone": "flat",
+      "v": 0.52,
+      "wash": "night",
+      "w": 3
+     }
+    ]
+   },
+   "figs": [
+    {
+     "x": 0,
+     "y": 60,
+     "label": "Bumi + langit 1",
+     "note": "seperti cincin",
+     "detail": "rings"
+    }
+   ]
+  },
+  {
+   "id": 12,
+   "type": "plate",
+   "t": [
+    92,
+    100
+   ],
+   "vo": "dimana langit ke -7 seperti",
+   "plate": {
+    "title": "Hingga Langit Ketujuh",
+    "latin": "bersusun-susun",
+    "ref": "semua jadi cincin"
+   },
+   "subject": {
+    "parts": [
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 40.0,
+      "ry": 40.0,
+      "tone": "band",
+      "v": 0.12,
+      "wash": "sea",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 94.28571428571428,
+      "ry": 94.28571428571428,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 148.57142857142856,
+      "ry": 148.57142857142856,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "sky",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 202.85714285714286,
+      "ry": 202.85714285714286,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "sea",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 257.1428571428571,
+      "ry": 257.1428571428571,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 311.42857142857144,
+      "ry": 311.42857142857144,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "sky",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 365.7142857142857,
+      "ry": 365.7142857142857,
+      "tone": "flat",
+      "v": 0.52,
+      "wash": "sea",
+      "w": 3
+     }
+    ]
+   },
+   "figs": [
+    {
+     "x": 0,
+     "y": 60,
+     "label": "Langit 1–6",
+     "note": "cincin di gurun",
+     "detail": "rings"
+    }
+   ]
+  },
+  {
+   "id": 13,
+   "type": "plate",
+   "t": [
+    100,
+    106
+   ],
+   "vo": "cincin dibuang di badan pasir. Lalu kata Nabi SAW, di atas langit ke -7 ada sidra fil muntaha.",
+   "plate": {
+    "title": "Sidratul Muntaha",
+    "latin": "pohon bidara batas",
+    "ref": "An-Najm · 14"
+   },
+   "subject": {
+    "preset": "tree"
+   },
+   "figs": [
+    {
+     "x": 0,
+     "y": -150,
+     "label": "Sidrah",
+     "note": "di atas langit 7",
+     "detail": "veins"
+    }
+   ]
+  },
+  {
+   "id": 14,
+   "type": "plate",
+   "t": [
+    106,
+    112
+   ],
+   "vo": "Besarnya digabung antara 7 rapis langit dan bumi, 8 -8 hanya seperti cincin dibuang di badan pasir.",
+   "plate": {
+    "title": "Delapan Jadi Cincin",
+    "latin": "7 langit + bumi",
+    "ref": "di hadapan Sidrah"
+   },
+   "subject": {
+    "parts": [
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 40.0,
+      "ry": 40.0,
+      "tone": "band",
+      "v": 0.12,
+      "wash": "sea",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 87.5,
+      "ry": 87.5,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 135.0,
+      "ry": 135.0,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "sky",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 182.5,
+      "ry": 182.5,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "sea",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 230.0,
+      "ry": 230.0,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 277.5,
+      "ry": 277.5,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "sky",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 325.0,
+      "ry": 325.0,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "sea",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 372.5,
+      "ry": 372.5,
+      "tone": "flat",
+      "v": 0.52,
+      "wash": "night",
+      "w": 3
+     }
+    ]
+   },
+   "figs": [
+    {
+     "x": 0,
+     "y": 60,
+     "label": "8 lapis",
+     "note": "= cincin",
+     "detail": "rings"
+    }
+   ]
+  },
+  {
+   "id": 15,
+   "type": "plate",
+   "t": [
+    112,
+    118
+   ],
+   "vo": "di atas sidratil muntaha ada sebuah lautan yang Allah ciptakan lautan itu besarnya digamung",
+   "plate": {
+    "title": "Lautan di Atasnya",
+    "latin": "mare supremum",
+    "ref": "ciptaan Allah"
+   },
+   "subject": {
+    "parts": [
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        -116.1
+       ],
+       [
+        -370,
+        -96.5
+       ],
+       [
+        -310,
+        -93.1
+       ],
+       [
+        -250,
+        -108.3
+       ],
+       [
+        -190,
+        -131.6
+       ],
+       [
+        -130,
+        -146.9
+       ],
+       [
+        -70,
+        -143.6
+       ],
+       [
+        -10,
+        -124.0
+       ],
+       [
+        50,
+        -101.7
+       ],
+       [
+        110,
+        -92.0
+       ],
+       [
+        170,
+        -101.7
+       ],
+       [
+        230,
+        -124.0
+       ],
+       [
+        290,
+        -143.6
+       ],
+       [
+        350,
+        -146.8
+       ],
+       [
+        410,
+        -131.6
+       ],
+       [
+        430,
+        -25
+       ],
+       [
+        -430,
+        -25
+       ]
+      ],
+      "v": 0.3,
+      "ang": 0.1,
+      "wash": "sea"
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        0.4
+       ],
+       [
+        -370,
+        0.5
+       ],
+       [
+        -310,
+        -17.1
+       ],
+       [
+        -250,
+        -40.1
+       ],
+       [
+        -190,
+        -52.7
+       ],
+       [
+        -130,
+        -46.2
+       ],
+       [
+        -70,
+        -25.0
+       ],
+       [
+        -10,
+        -3.8
+       ],
+       [
+        50,
+        2.7
+       ],
+       [
+        110,
+        -9.9
+       ],
+       [
+        170,
+        -32.9
+       ],
+       [
+        230,
+        -50.5
+       ],
+       [
+        290,
+        -50.4
+       ],
+       [
+        350,
+        -32.8
+       ],
+       [
+        410,
+        -9.8
+       ],
+       [
+        430,
+        70
+       ],
+       [
+        -430,
+        70
+       ]
+      ],
+      "v": 0.33999999999999997,
+      "ang": 0.1,
+      "wash": "sea"
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        93.6
+       ],
+       [
+        -370,
+        74.0
+       ],
+       [
+        -310,
+        51.7
+       ],
+       [
+        -250,
+        42.0
+       ],
+       [
+        -190,
+        51.7
+       ],
+       [
+        -130,
+        74.0
+       ],
+       [
+        -70,
+        93.6
+       ],
+       [
+        -10,
+        96.9
+       ],
+       [
+        50,
+        81.6
+       ],
+       [
+        110,
+        58.3
+       ],
+       [
+        170,
+        43.1
+       ],
+       [
+        230,
+        46.5
+       ],
+       [
+        290,
+        66.1
+       ],
+       [
+        350,
+        88.4
+       ],
+       [
+        410,
+        98.0
+       ],
+       [
+        430,
+        165
+       ],
+       [
+        -430,
+        165
+       ]
+      ],
+      "v": 0.38,
+      "ang": 0.1,
+      "wash": "sea"
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        165.0
+       ],
+       [
+        -370,
+        143.9
+       ],
+       [
+        -310,
+        137.3
+       ],
+       [
+        -250,
+        149.9
+       ],
+       [
+        -190,
+        172.9
+       ],
+       [
+        -130,
+        190.5
+       ],
+       [
+        -70,
+        190.5
+       ],
+       [
+        -10,
+        172.9
+       ],
+       [
+        50,
+        149.8
+       ],
+       [
+        110,
+        137.3
+       ],
+       [
+        170,
+        143.9
+       ],
+       [
+        230,
+        165.1
+       ],
+       [
+        290,
+        186.2
+       ],
+       [
+        350,
+        192.7
+       ],
+       [
+        410,
+        180.1
+       ],
+       [
+        430,
+        260
+       ],
+       [
+        -430,
+        260
+       ]
+      ],
+      "v": 0.42,
+      "ang": 0.1,
+      "wash": "sea"
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        236.5
+       ],
+       [
+        -370,
+        233.1
+       ],
+       [
+        -310,
+        248.4
+       ],
+       [
+        -250,
+        271.6
+       ],
+       [
+        -190,
+        286.9
+       ],
+       [
+        -130,
+        283.5
+       ],
+       [
+        -70,
+        264.0
+       ],
+       [
+        -10,
+        241.6
+       ],
+       [
+        50,
+        232.0
+       ],
+       [
+        110,
+        241.7
+       ],
+       [
+        170,
+        264.1
+       ],
+       [
+        230,
+        283.6
+       ],
+       [
+        290,
+        286.8
+       ],
+       [
+        350,
+        271.5
+       ],
+       [
+        410,
+        248.3
+       ],
+       [
+        430,
+        355
+       ],
+       [
+        -430,
+        355
+       ]
+      ],
+      "v": 0.45999999999999996,
+      "ang": 0.1,
+      "wash": "sea"
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        329.5
+       ],
+       [
+        -370,
+        347.1
+       ],
+       [
+        -310,
+        370.1
+       ],
+       [
+        -250,
+        382.7
+       ],
+       [
+        -190,
+        376.1
+       ],
+       [
+        -130,
+        355.0
+       ],
+       [
+        -70,
+        333.8
+       ],
+       [
+        -10,
+        327.3
+       ],
+       [
+        50,
+        339.9
+       ],
+       [
+        110,
+        363.0
+       ],
+       [
+        170,
+        380.5
+       ],
+       [
+        230,
+        380.4
+       ],
+       [
+        290,
+        362.8
+       ],
+       [
+        350,
+        339.8
+       ],
+       [
+        410,
+        327.3
+       ],
+       [
+        430,
+        450
+       ],
+       [
+        -430,
+        450
+       ]
+      ],
+      "v": 0.5,
+      "ang": 0.1,
+      "wash": "sea"
+     }
+    ]
+   },
+   "figs": [
+    {
+     "x": 0,
+     "y": 100,
+     "label": "Lautan",
+     "note": "di atas Sidrah",
+     "detail": "layers"
+    }
+   ]
+  },
+  {
+   "id": 16,
+   "type": "plate",
+   "t": [
+    118,
+    124
+   ],
+   "vo": "antara sidratil muntaha 7 lapis langit dan bumi 8 -8 9 -9 nya seperti jin -jin dibuang di padang pasir makanya",
+   "plate": {
+    "title": "Sembilan Jadi Cincin",
+    "latin": "lautan meliputi semua",
+    "ref": "perumpamaan Nabi ﷺ"
+   },
+   "subject": {
+    "parts": [
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        -116.1
+       ],
+       [
+        -370,
+        -96.5
+       ],
+       [
+        -310,
+        -93.1
+       ],
+       [
+        -250,
+        -108.3
+       ],
+       [
+        -190,
+        -131.6
+       ],
+       [
+        -130,
+        -146.9
+       ],
+       [
+        -70,
+        -143.6
+       ],
+       [
+        -10,
+        -124.0
+       ],
+       [
+        50,
+        -101.7
+       ],
+       [
+        110,
+        -92.0
+       ],
+       [
+        170,
+        -101.7
+       ],
+       [
+        230,
+        -124.0
+       ],
+       [
+        290,
+        -143.6
+       ],
+       [
+        350,
+        -146.8
+       ],
+       [
+        410,
+        -131.6
+       ],
+       [
+        430,
+        -25
+       ],
+       [
+        -430,
+        -25
+       ]
+      ],
+      "v": 0.3,
+      "ang": 0.1,
+      "wash": "sea"
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        0.4
+       ],
+       [
+        -370,
+        0.5
+       ],
+       [
+        -310,
+        -17.1
+       ],
+       [
+        -250,
+        -40.1
+       ],
+       [
+        -190,
+        -52.7
+       ],
+       [
+        -130,
+        -46.2
+       ],
+       [
+        -70,
+        -25.0
+       ],
+       [
+        -10,
+        -3.8
+       ],
+       [
+        50,
+        2.7
+       ],
+       [
+        110,
+        -9.9
+       ],
+       [
+        170,
+        -32.9
+       ],
+       [
+        230,
+        -50.5
+       ],
+       [
+        290,
+        -50.4
+       ],
+       [
+        350,
+        -32.8
+       ],
+       [
+        410,
+        -9.8
+       ],
+       [
+        430,
+        70
+       ],
+       [
+        -430,
+        70
+       ]
+      ],
+      "v": 0.33999999999999997,
+      "ang": 0.1,
+      "wash": "sea"
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        93.6
+       ],
+       [
+        -370,
+        74.0
+       ],
+       [
+        -310,
+        51.7
+       ],
+       [
+        -250,
+        42.0
+       ],
+       [
+        -190,
+        51.7
+       ],
+       [
+        -130,
+        74.0
+       ],
+       [
+        -70,
+        93.6
+       ],
+       [
+        -10,
+        96.9
+       ],
+       [
+        50,
+        81.6
+       ],
+       [
+        110,
+        58.3
+       ],
+       [
+        170,
+        43.1
+       ],
+       [
+        230,
+        46.5
+       ],
+       [
+        290,
+        66.1
+       ],
+       [
+        350,
+        88.4
+       ],
+       [
+        410,
+        98.0
+       ],
+       [
+        430,
+        165
+       ],
+       [
+        -430,
+        165
+       ]
+      ],
+      "v": 0.38,
+      "ang": 0.1,
+      "wash": "sea"
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        165.0
+       ],
+       [
+        -370,
+        143.9
+       ],
+       [
+        -310,
+        137.3
+       ],
+       [
+        -250,
+        149.9
+       ],
+       [
+        -190,
+        172.9
+       ],
+       [
+        -130,
+        190.5
+       ],
+       [
+        -70,
+        190.5
+       ],
+       [
+        -10,
+        172.9
+       ],
+       [
+        50,
+        149.8
+       ],
+       [
+        110,
+        137.3
+       ],
+       [
+        170,
+        143.9
+       ],
+       [
+        230,
+        165.1
+       ],
+       [
+        290,
+        186.2
+       ],
+       [
+        350,
+        192.7
+       ],
+       [
+        410,
+        180.1
+       ],
+       [
+        430,
+        260
+       ],
+       [
+        -430,
+        260
+       ]
+      ],
+      "v": 0.42,
+      "ang": 0.1,
+      "wash": "sea"
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        236.5
+       ],
+       [
+        -370,
+        233.1
+       ],
+       [
+        -310,
+        248.4
+       ],
+       [
+        -250,
+        271.6
+       ],
+       [
+        -190,
+        286.9
+       ],
+       [
+        -130,
+        283.5
+       ],
+       [
+        -70,
+        264.0
+       ],
+       [
+        -10,
+        241.6
+       ],
+       [
+        50,
+        232.0
+       ],
+       [
+        110,
+        241.7
+       ],
+       [
+        170,
+        264.1
+       ],
+       [
+        230,
+        283.6
+       ],
+       [
+        290,
+        286.8
+       ],
+       [
+        350,
+        271.5
+       ],
+       [
+        410,
+        248.3
+       ],
+       [
+        430,
+        355
+       ],
+       [
+        -430,
+        355
+       ]
+      ],
+      "v": 0.45999999999999996,
+      "ang": 0.1,
+      "wash": "sea"
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        329.5
+       ],
+       [
+        -370,
+        347.1
+       ],
+       [
+        -310,
+        370.1
+       ],
+       [
+        -250,
+        382.7
+       ],
+       [
+        -190,
+        376.1
+       ],
+       [
+        -130,
+        355.0
+       ],
+       [
+        -70,
+        333.8
+       ],
+       [
+        -10,
+        327.3
+       ],
+       [
+        50,
+        339.9
+       ],
+       [
+        110,
+        363.0
+       ],
+       [
+        170,
+        380.5
+       ],
+       [
+        230,
+        380.4
+       ],
+       [
+        290,
+        362.8
+       ],
+       [
+        350,
+        339.8
+       ],
+       [
+        410,
+        327.3
+       ],
+       [
+        430,
+        450
+       ],
+       [
+        -430,
+        450
+       ]
+      ],
+      "v": 0.5,
+      "ang": 0.1,
+      "wash": "sea"
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 20,
+      "rx": 24,
+      "ry": 11,
+      "tone": "band",
+      "v": 0.6,
+      "wash": "gold"
+     }
+    ]
+   },
+   "figs": [
+    {
+     "x": 0,
+     "y": 20,
+     "label": "Cincin",
+     "note": "9 lapis",
+     "detail": "rings"
+    }
+   ]
+  },
+  {
+   "id": 17,
+   "type": "plate",
+   "t": [
+    124,
+    133
+   ],
+   "vo": "kalau anda baca Quran anda baca ayat wakana arshu alal ma' singa sana Allah di atas air ini maknanya air adalah ada lautan lalu kata Nabi SAW arshnya",
+   "plate": {
+    "title": "'Arsy di Atas Air",
+    "latin": "wa kāna 'arsyuhu 'alal-mā'",
+    "ref": "Hud · 7"
+   },
+   "subject": {
+    "parts": [
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        -116.1
+       ],
+       [
+        -370,
+        -96.5
+       ],
+       [
+        -310,
+        -93.1
+       ],
+       [
+        -250,
+        -108.3
+       ],
+       [
+        -190,
+        -131.6
+       ],
+       [
+        -130,
+        -146.9
+       ],
+       [
+        -70,
+        -143.6
+       ],
+       [
+        -10,
+        -124.0
+       ],
+       [
+        50,
+        -101.7
+       ],
+       [
+        110,
+        -92.0
+       ],
+       [
+        170,
+        -101.7
+       ],
+       [
+        230,
+        -124.0
+       ],
+       [
+        290,
+        -143.6
+       ],
+       [
+        350,
+        -146.8
+       ],
+       [
+        410,
+        -131.6
+       ],
+       [
+        430,
+        -25
+       ],
+       [
+        -430,
+        -25
+       ]
+      ],
+      "v": 0.3,
+      "ang": 0.1,
+      "wash": "sea"
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        0.4
+       ],
+       [
+        -370,
+        0.5
+       ],
+       [
+        -310,
+        -17.1
+       ],
+       [
+        -250,
+        -40.1
+       ],
+       [
+        -190,
+        -52.7
+       ],
+       [
+        -130,
+        -46.2
+       ],
+       [
+        -70,
+        -25.0
+       ],
+       [
+        -10,
+        -3.8
+       ],
+       [
+        50,
+        2.7
+       ],
+       [
+        110,
+        -9.9
+       ],
+       [
+        170,
+        -32.9
+       ],
+       [
+        230,
+        -50.5
+       ],
+       [
+        290,
+        -50.4
+       ],
+       [
+        350,
+        -32.8
+       ],
+       [
+        410,
+        -9.8
+       ],
+       [
+        430,
+        70
+       ],
+       [
+        -430,
+        70
+       ]
+      ],
+      "v": 0.33999999999999997,
+      "ang": 0.1,
+      "wash": "sea"
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        93.6
+       ],
+       [
+        -370,
+        74.0
+       ],
+       [
+        -310,
+        51.7
+       ],
+       [
+        -250,
+        42.0
+       ],
+       [
+        -190,
+        51.7
+       ],
+       [
+        -130,
+        74.0
+       ],
+       [
+        -70,
+        93.6
+       ],
+       [
+        -10,
+        96.9
+       ],
+       [
+        50,
+        81.6
+       ],
+       [
+        110,
+        58.3
+       ],
+       [
+        170,
+        43.1
+       ],
+       [
+        230,
+        46.5
+       ],
+       [
+        290,
+        66.1
+       ],
+       [
+        350,
+        88.4
+       ],
+       [
+        410,
+        98.0
+       ],
+       [
+        430,
+        165
+       ],
+       [
+        -430,
+        165
+       ]
+      ],
+      "v": 0.38,
+      "ang": 0.1,
+      "wash": "sea"
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        165.0
+       ],
+       [
+        -370,
+        143.9
+       ],
+       [
+        -310,
+        137.3
+       ],
+       [
+        -250,
+        149.9
+       ],
+       [
+        -190,
+        172.9
+       ],
+       [
+        -130,
+        190.5
+       ],
+       [
+        -70,
+        190.5
+       ],
+       [
+        -10,
+        172.9
+       ],
+       [
+        50,
+        149.8
+       ],
+       [
+        110,
+        137.3
+       ],
+       [
+        170,
+        143.9
+       ],
+       [
+        230,
+        165.1
+       ],
+       [
+        290,
+        186.2
+       ],
+       [
+        350,
+        192.7
+       ],
+       [
+        410,
+        180.1
+       ],
+       [
+        430,
+        260
+       ],
+       [
+        -430,
+        260
+       ]
+      ],
+      "v": 0.42,
+      "ang": 0.1,
+      "wash": "sea"
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        236.5
+       ],
+       [
+        -370,
+        233.1
+       ],
+       [
+        -310,
+        248.4
+       ],
+       [
+        -250,
+        271.6
+       ],
+       [
+        -190,
+        286.9
+       ],
+       [
+        -130,
+        283.5
+       ],
+       [
+        -70,
+        264.0
+       ],
+       [
+        -10,
+        241.6
+       ],
+       [
+        50,
+        232.0
+       ],
+       [
+        110,
+        241.7
+       ],
+       [
+        170,
+        264.1
+       ],
+       [
+        230,
+        283.6
+       ],
+       [
+        290,
+        286.8
+       ],
+       [
+        350,
+        271.5
+       ],
+       [
+        410,
+        248.3
+       ],
+       [
+        430,
+        355
+       ],
+       [
+        -430,
+        355
+       ]
+      ],
+      "v": 0.45999999999999996,
+      "ang": 0.1,
+      "wash": "sea"
+     },
+     {
+      "k": "poly",
+      "smooth": true,
+      "pts": [
+       [
+        -430,
+        329.5
+       ],
+       [
+        -370,
+        347.1
+       ],
+       [
+        -310,
+        370.1
+       ],
+       [
+        -250,
+        382.7
+       ],
+       [
+        -190,
+        376.1
+       ],
+       [
+        -130,
+        355.0
+       ],
+       [
+        -70,
+        333.8
+       ],
+       [
+        -10,
+        327.3
+       ],
+       [
+        50,
+        339.9
+       ],
+       [
+        110,
+        363.0
+       ],
+       [
+        170,
+        380.5
+       ],
+       [
+        230,
+        380.4
+       ],
+       [
+        290,
+        362.8
+       ],
+       [
+        350,
+        339.8
+       ],
+       [
+        410,
+        327.3
+       ],
+       [
+        430,
+        450
+       ],
+       [
+        -430,
+        450
+       ]
+      ],
+      "v": 0.5,
+      "ang": 0.1,
+      "wash": "sea"
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": -440,
+      "rx": 300,
+      "ry": 40,
+      "tone": "flat",
+      "v": 0.08,
+      "wash": "gold"
+     }
+    ]
+   },
+   "figs": [
+    {
+     "x": 0,
+     "y": -420,
+     "label": "Cahaya agung",
+     "note": "'Arsy tidak digambar",
+     "detail": "stars"
+    }
+   ]
+  },
+  {
+   "id": 18,
+   "type": "plate",
+   "t": [
+    133,
+    143.4
+   ],
+   "vo": "Allah di atas lautan itu singa sananya Allah besarnya digabung antara lautan, sidotemuntah 7 abis langit dan bumi, 10 -10 nya hanya seperti cincin dibuang di padam pasir",
+   "plate": {
+    "title": "Allahu Akbar",
+    "latin": "sepuluh lapis = cincin",
+    "ref": "Maha Besar"
+   },
+   "subject": {
+    "parts": [
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 40.0,
+      "ry": 40.0,
+      "tone": "band",
+      "v": 0.12,
+      "wash": "sea",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 78.0,
+      "ry": 78.0,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 116.0,
+      "ry": 116.0,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "sky",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 154.0,
+      "ry": 154.0,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "sea",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 192.0,
+      "ry": 192.0,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 230.0,
+      "ry": 230.0,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "sky",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 268.0,
+      "ry": 268.0,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "sea",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 306.0,
+      "ry": 306.0,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "night",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 344.0,
+      "ry": 344.0,
+      "tone": "flat",
+      "v": 0.12,
+      "wash": "sky",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": 60,
+      "rx": 382.0,
+      "ry": 382.0,
+      "tone": "flat",
+      "v": 0.52,
+      "wash": "sea",
+      "w": 3
+     },
+     {
+      "k": "ell",
+      "x": 0,
+      "y": -440,
+      "rx": 300,
+      "ry": 40,
+      "tone": "flat",
+      "v": 0.08,
+      "wash": "gold"
+     }
+    ]
+   },
+   "figs": [
+    {
+     "x": 0,
+     "y": 60,
+     "label": "Semua ciptaan",
+     "note": "cincin di padang pasir",
+     "detail": "rings"
+    }
+   ]
+  }
+ ]
+}
