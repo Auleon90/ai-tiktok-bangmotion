@@ -98,6 +98,14 @@ bayangan hitam lembut per huruf (jatuh sedikit ke bawah), diapit dua garis emas 
 (contoh https://vt.tiktok.com/ZSsN7mw5y/, adegan Nabi Ayyub); bulan disembunyikan di scene ayat.
 Kotak gelap di belakang ayat terkesan tempelan. Sudah diterapkan di `lemo/kits/paper-lantern/lantern.js`.
 
+**Thumbnail di detik 00:00:00 (aturan pemilik, 2026-11-26):** frame PERTAMA setiap video (t=0, tanpa fade-in dari hitam/kosong)
+WAJIB sudah berupa visual utuh yang layak jadi thumbnail/cover TikTok: judul hook besar 2 baris (kata kunci diwarnai beda, mis. emas/merah,
+huruf tebal kapital, kontras tinggi), subjudul kecil opsional, plus satu ikon/ilustrasi pusat yang langsung terbaca (teks Arab kunci,
+sosok siluet, benda/simbol) di atas latar gelap/bertema. Semua elemen muncul penuh di frame 0 — animasi masuk dimulai SETELAH frame 0
+atau elemen sudah tampil lalu bergerak. Teks thumbnail di zona aman (di bawah tab TikTok, jauh dari ikon kanan & caption bawah) dan
+tidak menumpuk watermark. Storyboard scene 1 wajib punya field `"thumbnail"` (judul, subjudul, visual). Cek di QA: frame 0 diekstrak
+(`ffmpeg -ss 0 -frames:v 1`) dan dilihat sebelum kirim; frame 0 kosong/hitam/setengah muncul = tidak boleh dikirim.
+
 **Watermark @valsyz7 (aturan pemilik, 2026-11-24):** setiap video diberi nama akun samar — otomatis di `produce.py`
 (`add_watermark`: teks `@valsyz7` 34%, di bawah tab TikTok, aman dari ikon kanan & caption bawah).
 Posisi PER GAYA (aturan pemilik, 2026-11-25) supaya tidak menumpuk judul scene: tabel `WM_POS` di `scripts/produce.py`

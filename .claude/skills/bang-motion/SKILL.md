@@ -85,6 +85,16 @@ shares drive reach (hit: 1,123 shares) and come from loss/"ini aku" reflections,
 - Vary the visual style from the previous video (see the style column in `content/topics_used.md`).
 - Daily prompt to reuse: `content/daily_prompt.md`.
 
+## Thumbnail frame at 00:00:00 (owner rule, 2026-11-26)
+
+frame PERTAMA setiap video (t=0, tanpa fade-in dari hitam/kosong)
+WAJIB sudah berupa visual utuh yang layak jadi thumbnail/cover TikTok: judul hook besar 2 baris (kata kunci diwarnai beda, mis. emas/merah,
+huruf tebal kapital, kontras tinggi), subjudul kecil opsional, plus satu ikon/ilustrasi pusat yang langsung terbaca (teks Arab kunci,
+sosok siluet, benda/simbol) di atas latar gelap/bertema. Semua elemen muncul penuh di frame 0 — animasi masuk dimulai SETELAH frame 0
+atau elemen sudah tampil lalu bergerak. Teks thumbnail di zona aman (di bawah tab TikTok, jauh dari ikon kanan & caption bawah) dan
+tidak menumpuk watermark. Storyboard scene 1 wajib punya field `"thumbnail"` (judul, subjudul, visual). Cek di QA: frame 0 diekstrak
+(`ffmpeg -ss 0 -frames:v 1`) dan dilihat sebelum kirim; frame 0 kosong/hitam/setengah muncul = tidak boleh dikirim.
+
 ## Storyboard format (shared by all modes)
 
 ```json
