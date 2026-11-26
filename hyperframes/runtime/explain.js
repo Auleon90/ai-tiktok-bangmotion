@@ -115,6 +115,7 @@
       // ---- entrances (draw-on for the rough skins, pop for flat)
       let k = 0;
       enters.forEach(e => {
+        if (i === 0) return;   // scene 1 = thumbnail: everything fully drawn at frame 0 (owner rule 2026-11-26)
         const at = e.at != null ? t0 + e.at * d : t0 + .45 + (k++) * K.stagger;
         if (K.enter === 'draw' && !e.text) {
           const ps = $$('path', e.el); ps.forEach(p => { const L = Math.ceil(p.getTotalLength ? p.getTotalLength() : 600) + 2; p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
