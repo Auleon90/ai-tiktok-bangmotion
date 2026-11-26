@@ -99,7 +99,9 @@ def remotion_prestills(props_path, props):
 
 def run_qa(args):
     r = subprocess.run([sys.executable, os.path.join(ROOT, "scripts", "qa.py"), *args], capture_output=True, text=True)
-    print(r.stdout if r.returncode == 0 else f"  QA failed: {r.stderr[-400:]}")
+    print(r.stdout if r.returncode in (0, 3) else f"  QA failed: {r.stderr[-400:]}")
+    if r.returncode == 3:
+        print("  ❌ THUMBNAIL: frame 00:00:00 is not cover-ready — fix scene 1 and re-render before delivering (output/qa_thumb.jpg)")
 
 
 def main():

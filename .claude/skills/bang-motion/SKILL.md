@@ -94,6 +94,8 @@ sosok siluet, benda/simbol) di atas latar gelap/bertema. Semua elemen muncul pen
 atau elemen sudah tampil lalu bergerak. Teks thumbnail di zona aman (di bawah tab TikTok, jauh dari ikon kanan & caption bawah) dan
 tidak menumpuk watermark. Storyboard scene 1 wajib punya field `"thumbnail"` (judul, subjudul, visual). Cek di QA: frame 0 diekstrak
 (`ffmpeg -ss 0 -frames:v 1`) dan dilihat sebelum kirim; frame 0 kosong/hitam/setengah muncul = tidak boleh dikirim.
+OTOMATIS: `qa.py precheck` memblokir render bila scene 1 tanpa `"thumbnail"`; `qa.py all` (setelah render) / `qa.py thumb <mp4>`
+menyimpan `output/qa_thumb.jpg` dan gagal (exit 3, "DO NOT DELIVER") bila frame 0 hitam, datar, atau detailnya < 60% frame detik 1.
 
 ## Storyboard format (shared by all modes)
 
