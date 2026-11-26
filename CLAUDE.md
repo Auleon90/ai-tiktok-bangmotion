@@ -55,7 +55,12 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
 7. Animasi 3D (three.js, `lib3d/bm3d.js`, panduan skill `threejs-*` dari cloudai-x/threejs-skills): 1–2 scene 🧊 per video bila kedalaman membantu
    (kosmos, bumi, perjalanan, benda berputar, data). Mode 1 HyperFrames: field `"three": {"preset": ...}` di scene mana pun; mode 4 Lemo native:
    scene `custom` dengan `"code": "lib3d/lemo-scene.js"`; mode Auto memilihnya sesuai topik. Preset: terrain, globe, crystal, galaxy, bars, water.
-8. Caption setiap video: 1–3 kalimat + 3–5 hashtag niche, SELALU ditutup `#creatorsearchinsights #videofypシ゚` (ejaan persis).
+8. Caption setiap video (aturan pemilik, 2026-11-26): ditulis dengan 3 bagian, tidak boleh datar/sekadar ringkasan judul —
+   **HOOK** (kalimat pertama, ±≤70 karakter supaya terbaca sebelum "lainnya": pertanyaan menohok/fakta mengejutkan/"ini aku" yang
+   membuat penasaran, tidak membocorkan jawaban) → **PENJELASAN** (1–3 kalimat yang MENAMBAH isi VO: makna, dalil singkat, analogi
+   nyata, atau satu insight yang tidak ada di video) → **CTA kuat** (ajakan spesifik yang memancing interaksi: jawab pertanyaan di
+   komentar, simpan untuk diingat, kirim ke orang yang butuh — bukan "like & follow" generik) + 3–5 hashtag niche, SELALU ditutup
+   `#creatorsearchinsights #videofypシ゚` (ejaan persis). Di storyboard tulis caption lengkap dengan label [Hook]/[Penjelasan]/[CTA].
 9. Semua mode berakhir di `output/final.mp4` dengan VO Cartesia — tidak pernah berhenti di halaman HTML.
 
 Detail lengkap: `.claude/skills/bang-motion/SKILL.md`. Semua mode dijalankan lewat `scripts/produce.py`.

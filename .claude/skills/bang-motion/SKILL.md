@@ -72,7 +72,11 @@ shares drive reach (hit: 1,123 shares) and come from loss/"ini aku" reflections,
 - **Ending:** a share CTA aimed at ONE specific person ("Kirim ke orang yang sedang di titik terendahnya" / "…yang sering lupa minum"),
   never "follow untuk part 2"; the last line leads back into the hook so the video loops. Comment prompts only now and then, and meaningful
   ("tulis nama orang yang kamu ingat"), not "MAU"/"AAMIIN" every time.
-- **Caption:** 1–3 sentences that ADD to the VO (first one an "ini aku" question) + 3–5 niche hashtags (#nikmatallah #syukur #renunganislami
+- **Caption (owner rule, 2026-11-26): HOOK → PENJELASAN → CTA, all strong.** HOOK = first sentence ≤≈70 chars (visible before
+  "lainnya"): a piercing question / surprising fact / "ini aku" line that creates curiosity without giving the answer away.
+  PENJELASAN = 1–3 sentences that ADD to the VO (meaning, short dalil, real-life analogy, one insight not in the video). CTA = a
+  specific interaction prompt (answer a question in the comments, save it, send it to someone who needs it) — never a generic
+  "like & follow". Show it in the storyboard labelled [Hook]/[Penjelasan]/[CTA]. Then + 3–5 niche hashtags (#nikmatallah #syukur #renunganislami
   + 1–2 topical) and ALWAYS end with the two owner hashtags `#creatorsearchinsights #videofypシ゚` (exact spelling);
   one spelling of the handle or none; no names of other people/preachers, no "Upload Method" lines, no repeated #fyp.
 - **Audio (owner rule, 2026-11-20): NO background music** — always `"music": "none"`, keep ambience (`"ambience": "wind"`) + SFX. Applies to every future video unless the owner asks for music.
@@ -195,7 +199,7 @@ Approval summary format (owner preference, 23 Nov 2026: detailed table, in Indon
 | 1 | **[headline]** | **Hook:** "[vo ringkas]" | — |
 | … | … | **Analogi:** … / **CTA:** … | QS. …: … / HR. … no. … |
 
-**Rancangan caption:** [1–3 kalimat] #… #creatorsearchinsights #videofypシ゚
+**Rancangan caption:** [Hook] … [Penjelasan] … [CTA] … #… #creatorsearchinsights #videofypシ゚
 **Visual:** [gaya + apa yang digambar; tanpa gambar tempel] · Audio: VO + SFX
 **Yang perlu Anda putuskan / cek:** [durasi vs pola akun, dalil yang perlu dicek ulang]
 ```
