@@ -55,6 +55,21 @@ def tts_cached(text: str, voice: str = "") -> tuple[str, dict]:
         return mp3, json.load(f)
 
 
+def source_clip(src, s) -> tuple[str, dict]:
+    """Cut scene s's span ("vo_src": [t0, t1] seconds) out of the source voice; words come from the source transcript."""
+    t0, t1 = s["vo_src"]
+    f = src["file"] if os.path.isabs(src["file"]) else os.path.join(ROOT, src["file"])
+    words = json.load(open(src["words"] if os.path.isabs(src["words"]) else os.path.join(ROOT, src["words"]))) if isinstance(src["words"], str) else src["words"]
+    h = hashlib.sha1(f"{f}|{os.path.getsize(f)}|{t0}|{t1}".encode()).hexdigest()[:16]
+    mp3 = os.path.join(VO_DIR, f"src_{h}.mp3")
+    if not os.path.exists(mp3):
+        print(f"  SRC  {t0:.2f}-{t1:.2f}s")
+        run(["ffmpeg", "-y", "-loglevel", "error", "-ss", str(t0), "-to", str(t1), "-i", f, "-vn", "-ac", "2", "-ar", "44100", "-c:a", "libmp3lame", "-q:a", "1", mp3])
+    ws = [{"text": w["text"], "start_ms": round((w["start"] - t0) * 1000), "end_ms": round((min(w["end"], t1) - t0) * 1000)}
+          for w in words if t0 <= w["start"] < t1]
+    return mp3, {"duration_ms": round((t1 - t0) * 1000), "words": ws}
+
+
 DEFAULT_IMAGE_STYLE = ("clean 2D cartoon illustration, bold outlines, soft cel shading, cinematic lighting, "
                        "rich colors, vertical composition, no text, no letters, no watermark")
 
@@ -149,10 +164,11 @@ def main():
     print("STEP  voiceover")
     cursor = 0
     segs, scenes, words = [], [], []
+    src = sb.get("vo_source")   # remake from a source voice: {"file": audio, "words": [{text,start,end} s]}; scene "vo_src": [t0, t1] s
     for s in sb["scenes"]:
-        mp3, meta = tts_cached(s["vo"], sb.get("voice", ""))
+        mp3, meta = source_clip(src, s) if src else tts_cached(s["vo"], sb.get("voice", ""))
         pad = s.get("pad_before_ms", 0)
-        gap = s.get("gap_after_ms", DEFAULT_GAP)
+        gap = s.get("gap_after_ms", 0 if src else DEFAULT_GAP)   # source clips are cut back-to-back: no extra gap
         vo_start = cursor + pad
         segs.append((mp3, vo_start))
         for w in meta["words"]:
@@ -298,7 +314,7 @@ def main():
         size = os.path.getsize(out_mp4) / 1e6
         print(f"DONE  {out_mp4}  {total_ms/1000:.1f}s  {size:.1f} MB")
     page_html = open(opts["html"], encoding="utf-8").read() if engine == "hyperframes" else ""
-    add_watermark(out_mp4, sb.get("watermark", WATERMARK), "data-watermark" in page_html, sb.get("style", ""))
+    add_watermark(out_mp4, sb.get("watermark", WATERMARK), "data-watermark" in page_html, sb.get("style", ""), sb.get("watermark_extra"))
     if "--no-qa" not in flags:
         print("STEP  QA (local, free) -> output/qa_report.md")
         qa_args = ["all", sb_path, out_mp4]  # visual check already ran before render
@@ -315,7 +331,7 @@ WM_POS = {"bang:jurnalisme-visual": ("right", .085), "bang:papan-tulis": ("right
 WM_DEFAULT = ("left", .085)
 
 
-def add_watermark(mp4, text, page_has_own, style=""):
+def add_watermark(mp4, text, page_has_own, style="", extras=None):
     """MANDATORY (owner rule 2026-11-25): visible from 0 s to the last frame, so no enable= window on the filter.
     Faint account name, top-left below TikTok's tab bar (clear of the right rail, caption area and subtitles).
     Pages that draw their own mark (data-watermark, e.g. ukiran-tembaga's engraved stamp) are left alone."""
@@ -328,6 +344,10 @@ def add_watermark(mp4, text, page_has_own, style=""):
     xexpr = "w*0.06" if side == "left" else "w*0.94-tw"
     dt = (f"drawtext=text='{esc}':x={xexpr}:y=h*{fy}:fontsize=h*0.019:fontcolor=white@0.34:"
           f"shadowcolor=black@0.22:shadowx=2:shadowy=2" + (f":fontfile={font}" if font else ""))
+    for k, extra in enumerate(extras or []):   # extra credit lines under the account name (e.g. "Sourcevoice: IG/@x")
+        ee = str(extra).replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'")
+        dt += (f",drawtext=text='{ee}':x={xexpr.replace('tw', 'text_w')}:y=h*{fy}+h*0.025*{k + 1}:fontsize=h*0.015:fontcolor=white@0.34:"
+               f"shadowcolor=black@0.22:shadowx=2:shadowy=2" + (f":fontfile={font}" if font else ""))
     tmp = mp4 + ".wm.mp4"
     print(f"STEP  watermark '{text}' (faint, top-{side}, y={fy})")
     run(["ffmpeg", "-y", "-loglevel", "error", "-i", mp4, "-vf", dt, "-c:v", "libx264", "-crf", "18", "-preset", "medium",
