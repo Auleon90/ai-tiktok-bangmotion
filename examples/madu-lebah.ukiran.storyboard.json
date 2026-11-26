@@ -1,0 +1,25 @@
+{
+ "title": "Rahasia Madu",
+ "music": "none",
+ "ambience": "none",
+ "sfx": true,
+ "style": "bang:ukiran-tembaga",
+ "scenes": [
+  {"id": 1, "type": "plate", "vo": "Allah mewahyukan kepada lebah: buatlah sarang di bukit-bukit.",
+   "plate": {"title": "Lebah Madu", "latin": "Apis mellifera", "ref": "An-Nahl · 68"},
+   "subject": {"preset": "bee"},
+   "figs": [{"x": 62, "y": -190, "label": "Mata majemuk", "note": "± 6.900 lensa", "detail": "hex"}]},
+  {"id": 2, "type": "plate", "vo": "Ia menghisap nektar dari bunga, yang isinya hampir separuh air.",
+   "plate": {"title": "Nektar", "latin": "sari bunga", "ref": "An-Nahl · 69"},
+   "subject": {"preset": "flower"},
+   "figs": [{"x": 0, "y": -60, "label": "Kelenjar nektar", "note": "± 60% air", "detail": "cells"}]},
+  {"id": 3, "type": "plate", "vo": "Di dalam sarang, air diuapkan sampai tersisa kurang dari delapan belas persen.",
+   "plate": {"title": "Sarang", "latin": "sel heksagonal", "ref": "An-Nahl · 69"},
+   "subject": {"preset": "honeycomb"},
+   "figs": [{"x": -40, "y": 470, "label": "Madu matang", "note": "air < 18%", "detail": "grain"}, {"x": 120, "y": -150, "label": "Dinding lilin", "note": "0,07 mm", "detail": "layers"}]},
+  {"id": 4, "type": "plate", "vo": "Dari perutnya keluar minuman yang bermacam warnanya, padanya ada obat bagi manusia.",
+   "plate": {"title": "Syifa", "latin": "obat bagi manusia", "ref": "An-Nahl · 69"},
+   "subject": {"preset": "drop"},
+   "figs": [{"x": 60, "y": 60, "label": "Enzim", "note": "sukrosa → glukosa", "detail": "veins"}]}
+ ]
+}

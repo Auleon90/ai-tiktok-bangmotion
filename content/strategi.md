@@ -61,3 +61,27 @@ Ulangi analisis ini tiap minggu dengan query yang sama dan perbarui angka di baw
 | Views median | ±200 | ≥ 1.000 |
 
 Kalau dua video berturut-turut di bawah target, ubah hook dulu (bukan gaya visual) — hook adalah yang pertama kali diputuskan penonton.
+
+## Creator Search Insights (screenshot pemilik, 25 Nov 2026) — WAJIB dipakai saat memberi ide konten
+
+**Pertumbuhan mingguan**
+| Minggu | Tayangan | Pengikut | Suka |
+|---|---|---|---|
+| 9–15 Nov | 126K (+38,7K) | 1,03K (+25) | 4,43K (+971) |
+| 16–22 Nov | 682K (+556K) | 2,75K (+1,71K) | 51K (+46,6K) |
+Lonjakan dari Al-Insyirah "bersama, bukan sesudah" (317K) dan "titik terendah" (169K). Postingan mengungguli 99,5% kreator di pencarian.
+
+**Pencarian, 14 hari:** impresi 2,5K (+501%), tayangan 2,1K (+623%), CTR sampul 85% (+20%), **waktu tonton rata-rata 18,2 s (+14%)**,
+engagement 14,2% (+195%). Postingan yang mengikuti topik saran TikTok: 1,1K impresi, 874 tayangan pencarian.
+Tayangan hampir semuanya dari FYP; pencarian baru ±2K dari 682K → ruang tumbuh.
+
+**Pelajaran untuk ide konten**
+1. Kelemahan utama = retensi: 18,2 s dari video 40–65 s. Setiap ide wajib punya janji di detik 1 yang dibayar bertahap, penanda bab
+   di layar ("1/3", "2/4"), jawaban terpenting di sepertiga akhir, pancingan baru tiap ±20 s bila video panjang.
+2. CTR sampul 85% → format judul/sampul sekarang sudah tepat, pertahankan.
+3. Kata kunci pencarian masuk ke: teks judul di layar, kalimat pertama VO, dan caption.
+4. Topik/kata kunci saran TikTok (Dipilih untuk Anda): **Kata kata kehidupan** 20,5K ▲266%, **motivasi dan nasihat Islami** 18,6K naik,
+   kata kata hidup motivasi 3,1K, reminder islam 1,8K, video motivasi islami 999 ▲150%, Kata Motivasi Islami 200 ▲100%, Islami quotes 299.
+   Hindari "islamic fyp" (pencarian global anjlok ±260K → ±0 sejak 19 Nov) dan "Qoutes/motivationquotes" (umum, bukan Islami).
+5. Rumus terbaik: kalimat kehidupan yang relatable → dibedah dengan ayat + hadits + analogi sehari-hari (pola Insyirah) → CTA satu kata.
+6. Perbarui bagian ini setiap pemilik mengirim screenshot analitik baru.

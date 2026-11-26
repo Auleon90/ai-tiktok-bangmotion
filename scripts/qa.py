@@ -5,6 +5,7 @@
   python3 qa.py visual <hf_project_dir>          # HyperFrames check: lint, runtime errors, layout overlap/overflow, contrast
   python3 qa.py final <video.mp4>                # loudness, true peak, black/frozen frames, A/V length, contact sheet
   python3 qa.py all <storyboard.json> <video.mp4> [hf_project_dir]   # everything -> output/qa_report.md
+  python3 qa.py thumb <video.mp4>               # frame 00:00:00 cover-ready? exit 3 = not deliverable
   python3 qa.py precheck <storyboard.json> [hf_project_dir|lemo_dir] # BEFORE render; exit 2 = blocking issues
 
 Exit code is 0, except `precheck`, which exits 2 when something must be fixed before spending render time. Read the report and fix what matters.
@@ -205,6 +206,56 @@ def qa_final(mp4):
     return "### Final file\n" + "\n".join(lines)
 
 
+# ---------------------------------------------------------------- thumbnail at 00:00:00 (owner rule 2026-11-26)
+THUMB_STD = 22        # luma std-dev below this = flat/blank frame
+THUMB_MEAN = 10       # mean luma below this = black frame
+THUMB_RATIO = 0.6     # frame 0 detail < 60% of the 1.0 s frame = elements still fading in
+
+
+def _frame_stats(mp4, t, path):
+    from PIL import Image, ImageFilter
+    import numpy as np
+    sh(["ffmpeg", "-v", "error", "-y", "-ss", f"{t}", "-i", mp4, "-frames:v", "1", path])
+    if not os.path.exists(path):
+        return None
+    g = Image.open(path).convert("L")
+    a = np.asarray(g, dtype=float)
+    edges = np.asarray(g.filter(ImageFilter.FIND_EDGES), dtype=float).mean()
+    return a.mean(), a.std(), edges
+
+
+def qa_thumbnail_sb(sb_path):
+    """-> blocking issues: scene 1 must carry a "thumbnail" spec."""
+    sc = (json.load(open(sb_path)).get("scenes") or [{}])[0]
+    th = sc.get("thumbnail")
+    if not th:
+        return ["thumbnail: scene 1 has no \"thumbnail\" field (judul, subjudul, visual) — frame 00:00:00 must be cover-ready"]
+    if isinstance(th, dict) and not th.get("judul") and not th.get("title"):
+        return ["thumbnail: scene 1 \"thumbnail\" has no judul/title"]
+    return []
+
+
+def qa_thumbnail(mp4):
+    """-> (report text, blocking issues). Frame 0 must be a full, cover-ready picture."""
+    path = os.path.join(OUT, "qa_thumb.jpg")
+    s0 = _frame_stats(mp4, 0, path)
+    s1 = _frame_stats(mp4, 1.0, os.path.join(OUT, "qa_thumb_1s.jpg"))
+    if not s0:
+        return "### Thumbnail 00:00:00\n- ❌ could not extract frame 0", ["thumbnail: frame 0 missing"]
+    block = []
+    m, sd, ed = s0
+    if m < THUMB_MEAN:
+        block.append(f"thumbnail: frame 0 is black (mean luma {m:.0f})")
+    elif sd < THUMB_STD:
+        block.append(f"thumbnail: frame 0 is flat/blank (contrast {sd:.0f} < {THUMB_STD})")
+    if s1 and s1[2] > 0 and ed < THUMB_RATIO * s1[2]:
+        block.append(f"thumbnail: frame 0 has {ed / s1[2]:.0%} of the detail at 1.0 s — title/visual still appearing (show it fully at t=0)")
+    head = "❌" if block else "✅"
+    txt = (f"### Thumbnail 00:00:00\n- {head} frame 0: luma {m:.0f}, contrast {sd:.0f}, detail {ed:.1f}"
+           + (f" (1.0 s: {s1[2]:.1f})" if s1 else "") + f"\n- frame 0 image: {path} (look at it: big 2-line hook title + one central visual)")
+    return txt + "".join(f"\n- ❌ {b}" for b in block), block
+
+
 def main():
     if len(sys.argv) < 3:
         sys.exit(__doc__)
@@ -213,6 +264,8 @@ def main():
         print(qa_vo(sys.argv[2]))
     elif cmd == "visual":
         print(qa_visual(sys.argv[2]))
+    elif cmd == "thumb":
+        t, b = qa_thumbnail(sys.argv[2]); print(t); sys.exit(3 if b else 0)
     elif cmd == "final":
         print(qa_final(sys.argv[2]))
     elif cmd == "precheck":
@@ -220,7 +273,7 @@ def main():
         hf_dir = sys.argv[3] if len(sys.argv) > 3 else None
         allow = tuple(json.load(open(sb)).get("qa_allow", []))
         vo_txt, vo_block = qa_vo_full(sb)
-        parts, block = ["## Pre-render QA", vo_txt], list(vo_block)
+        parts, block = ["## Pre-render QA", vo_txt], list(vo_block) + qa_thumbnail_sb(sb)
         if hf_dir:
             v_txt, v_block = (qa_lemo_full if os.path.exists(os.path.join(hf_dir, "kit.js")) else qa_visual_full)(hf_dir, allow)
             parts.append(v_txt); block += v_block
@@ -238,9 +291,14 @@ def main():
         if len(sys.argv) > 4:
             parts.append(qa_visual(sys.argv[4]))
         parts.append(qa_final(mp4))
+        t_txt, t_block = qa_thumbnail(mp4)
+        parts.append(t_txt)
+        if t_block:
+            parts.append("### ❌ DO NOT DELIVER — frame 00:00:00 is not cover-ready:\n" + "\n".join(f"- {b}" for b in t_block))
         rep = "\n\n".join(parts) + "\n"
         open(os.path.join(OUT, "qa_report.md"), "w").write(rep)
         print(rep)
+        sys.exit(3 if t_block else 0)
     else:
         sys.exit(__doc__)
 

@@ -127,5 +127,19 @@
     ],
     "images": "none",
     "music": "none"
+  },
+  "ukiran-tembaga": {
+    "name": "Ukiran Tembaga (plat sejarah alam yang terukir sendiri)",
+    "page": "ukiran-tembaga.hf.html",
+    "rig": "engrave",
+    "themes": [
+      "ayat kauniyah & penciptaan",
+      "alam, hewan & tumbuhan",
+      "sains & cara kerja (detail)",
+      "penciptaan langit & bumi",
+      "tahap penciptaan manusia (abstrak)"
+    ],
+    "images": "none (semua digambar kode)",
+    "music": "none"
   }
 }

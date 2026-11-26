@@ -1,0 +1,118 @@
+{
+ "title": "Ahli Ibadah yang Masuk Neraka",
+ "style": "paper-lantern",
+ "music": "none",
+ "ambience": "none",
+ "sfx": true,
+ "scenes": [
+  {
+   "id": 1,
+   "type": "headline",
+   "headline": "Rajin ibadah, tapi masuk neraka",
+   "sub": "gara-gara satu kalimat",
+   "vo": "Dia rajin ibadah. Saudaranya rajin maksiat. Tapi di akhirat, yang digiring ke neraka justru ahli ibadahnya. Gara-gara satu kalimat. Tonton sampai akhir, karena ada satu hal yang sering disalahpahami dari kisah ini."
+  },
+  {
+   "id": 2,
+   "type": "headline",
+   "headline": "Dua bersaudara Bani Israil",
+   "sub": "Satu tekun ibadah, satu sering berdosa",
+   "vo": "Rasulullah shallallahu alaihi wasallam bercerita tentang dua bersaudara dari Bani Israil. Yang satu tekun beribadah, yang satu terus berbuat dosa."
+  },
+  {
+   "id": 3,
+   "type": "headline",
+   "headline": "\"Berhentilah!\"",
+   "sub": "Ditegur berkali-kali",
+   "vo": "Setiap melihat saudaranya bermaksiat, si ahli ibadah menegur: berhentilah! Tapi saudaranya menjawab: biarkan aku dengan Tuhanku. Apa kamu diutus untuk mengawasiku?"
+  },
+  {
+   "id": 4,
+   "type": "headline",
+   "headline": "Kalimat yang fatal",
+   "sub": "\"Demi Allah, Allah tidak akan mengampunimu\"",
+   "vo": "Lalu keluarlah kalimat yang fatal. Demi Allah, Allah tidak akan mengampunimu. Allah tidak akan memasukkanmu ke surga."
+  },
+  {
+   "id": 5,
+   "type": "headline",
+   "headline": "Akhir yang mengejutkan",
+   "sub": "HR. Abu Dawud no. 4901",
+   "vo": "Keduanya wafat dan dihadapkan kepada Allah. Kepada ahli ibadah, Allah bertanya: apakah kamu tahu tentang-Ku? Apakah kamu kuasa atas apa yang ada di tangan-Ku? Lalu si pendosa dimasukkan ke surga dengan rahmat-Nya, dan si ahli ibadah digiring ke neraka."
+  },
+  {
+   "id": 6,
+   "type": "headline",
+   "headline": "\"Aku hapus amalmu\"",
+   "sub": "HR. Muslim no. 2621",
+   "vo": "Dalam riwayat Muslim, Allah berfirman: siapa yang bersumpah atas nama-Ku bahwa Aku tidak mengampuni si fulan? Sungguh Aku telah mengampuninya, dan Aku hapus amalmu."
+  },
+  {
+   "id": 7,
+   "type": "ayat",
+   "arabic": "فَلَا تُزَكُّوا أَنفُسَكُمْ",
+   "translation": "Janganlah kamu menganggap dirimu suci.",
+   "ref": "QS. An-Najm: 32",
+   "vo": "Ibaratnya satpam yang mengusir tamu sambil berkata, bos tidak mau ketemu kamu. Padahal bosnya sendiri yang mengundang. Menegur itu baik. Yang salah adalah memastikan nasib akhirat orang lain. Janganlah kamu menganggap dirimu suci, Dia lebih tahu siapa yang bertakwa."
+  },
+  {
+   "id": 8,
+   "type": "headline",
+   "headline": "Tapi jangan salah paham!",
+   "sub": "Ini bukan izin untuk terus berdosa",
+   "vo": "Tapi hati-hati. Kisah ini bukan berarti dosa tidak apa-apa, nanti juga dirahmati. Kita tidak tahu kapan ajal datang, dan ada pintu yang bisa tertutup."
+  },
+  {
+   "id": 9,
+   "type": "ayat",
+   "arabic": "حَتَّىٰ إِذَا حَضَرَ أَحَدَهُمُ الْمَوْتُ قَالَ إِنِّي تُبْتُ الْآنَ",
+   "translation": "Hingga maut datang, ia berkata: sekarang aku bertobat.",
+   "ref": "QS. An-Nisa: 18",
+   "vo": "Allah berfirman: tidaklah tobat itu diterima dari orang yang terus berbuat dosa, hingga saat maut datang ia berkata, sekarang aku bertobat. Rasulullah bersabda, Allah menerima tobat hamba selama nyawanya belum sampai di tenggorokan. Hadits riwayat Tirmidzi."
+  },
+  {
+   "id": 10,
+   "type": "headline",
+   "headline": "\"Masih adakah jalan pulang?\"",
+   "sub": "HR. Bukhari 4810, Muslim 122",
+   "vo": "Dulu, orang-orang yang pernah membunuh dan berzina datang kepada Rasulullah dan bertanya: masih adakah penebus untuk dosa kami? Lalu turunlah jawabannya dari langit."
+  },
+  {
+   "id": 11,
+   "type": "ayat",
+   "arabic": "فَأُولَٰئِكَ يُبَدِّلُ اللَّهُ سَيِّئَاتِهِمْ حَسَنَاتٍ",
+   "translation": "Maka kejahatan mereka diganti Allah dengan kebaikan.",
+   "ref": "QS. Al-Furqan: 70",
+   "vo": "Kecuali orang yang bertobat, beriman, dan beramal saleh. Maka kejahatan mereka diganti Allah dengan kebaikan. Bukan sekadar dihapus. Seperti kertas ujian penuh coretan merah, yang bukan cuma dibersihkan, tapi diganti nilai bagus."
+  },
+  {
+   "id": 12,
+   "type": "ayat",
+   "arabic": "يَا أَيُّهَا الَّذِينَ آمَنُوا تُوبُوا إِلَى اللَّهِ تَوْبَةً نَّصُوحًا",
+   "translation": "Bertobatlah kepada Allah dengan tobat yang murni.",
+   "ref": "QS. At-Tahrim: 8",
+   "vo": "Tapi tobatnya harus tobat nasuha. Kata Imam Nawawi, syaratnya: menyesal, berhenti sekarang juga, bertekad tidak mengulangi. Dan kalau menyangkut hak orang lain, kembalikan haknya atau minta maaf."
+  },
+  {
+   "id": 13,
+   "type": "headline",
+   "headline": "Allah lebih gembira",
+   "sub": "HR. Bukhari 6309, Muslim 2747",
+   "vo": "Dan tahukah kamu? Allah lebih gembira dengan tobatmu, daripada seorang musafir yang kehilangan untanya beserta seluruh bekal di padang pasir, lalu menemukannya kembali."
+  },
+  {
+   "id": 14,
+   "type": "headline",
+   "headline": "Dua pelajaran",
+   "sub": "Jangan menghakimi · Jangan menunda tobat",
+   "vo": "Jadi dua pelajarannya. Jangan pernah memastikan orang lain celaka. Dan jangan pernah menunda tobatmu sendiri. Kata Ibnu Athaillah, maksiat yang membuatmu merasa hina dan butuh kepada Allah, lebih baik daripada ketaatan yang membuatmu sombong."
+  },
+  {
+   "id": 15,
+   "type": "headline",
+   "headline": "Tulis \"Astaghfirullah\"",
+   "sub": "Kirim ke yang merasa dosanya terlalu besar",
+   "vo": "Tulis Astaghfirullah di komentar sebagai tanda kamu kembali hari ini. Lalu kirim video ini ke satu orang yang merasa dosanya terlalu besar untuk diampuni."
+  }
+ ]
+}

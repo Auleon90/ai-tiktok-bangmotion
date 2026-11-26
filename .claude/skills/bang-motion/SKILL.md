@@ -72,17 +72,34 @@ shares drive reach (hit: 1,123 shares) and come from loss/"ini aku" reflections,
 - **Ending:** a share CTA aimed at ONE specific person ("Kirim ke orang yang sedang di titik terendahnya" / "…yang sering lupa minum"),
   never "follow untuk part 2"; the last line leads back into the hook so the video loops. Comment prompts only now and then, and meaningful
   ("tulis nama orang yang kamu ingat"), not "MAU"/"AAMIIN" every time.
-- **Caption:** 1–3 sentences that ADD to the VO (first one an "ini aku" question) + 3–5 niche hashtags (#nikmatallah #syukur #renunganislami
+- **Caption (owner rule, 2026-11-26): HOOK → PENJELASAN → CTA, all strong.** HOOK = first sentence ≤≈70 chars (visible before
+  "lainnya"): a piercing question / surprising fact / "ini aku" line that creates curiosity without giving the answer away.
+  PENJELASAN = 1–3 sentences that ADD to the VO (meaning, short dalil, real-life analogy, one insight not in the video). CTA = a
+  specific interaction prompt (answer a question in the comments, save it, send it to someone who needs it) — never a generic
+  "like & follow". Show it in the storyboard labelled [Hook]/[Penjelasan]/[CTA]. Then + 3–5 niche hashtags (#nikmatallah #syukur #renunganislami
   + 1–2 topical) and ALWAYS end with the two owner hashtags `#creatorsearchinsights #videofypシ゚` (exact spelling);
   one spelling of the handle or none; no names of other people/preachers, no "Upload Method" lines, no repeated #fyp.
 - **Audio (owner rule, 2026-11-20): NO background music** — always `"music": "none"`, keep ambience (`"ambience": "wind"`) + SFX. Applies to every future video unless the owner asks for music.
 - **Explainer, not "gaya tempel" (owner rule, 2026-11-21):** when the video explains a meaning, an analogy (perumpamaan) or a
-  "kenapa/cara kerja", use an explainer style where the idea is DRAWN and moves: Bang `papan-tulis` (default), `infografik-flat`,
+  "kenapa/cara kerja", use an explainer style where the idea is DRAWN and moves: Bang `ukiran-tembaga` (owner's signature style since 2026-11-24:
+  ayat kauniyah, penciptaan, alam, hewan, tumbuhan, sains detail), `papan-tulis`, `infografik-flat`,
   `sketsa-diagram`, `kartun-cutaway` (dive), or Lemo `stick-explainer`. Do NOT use the pasted look (a 3D/photo window stuck on a
   card with text under it, e.g. watercolor + `lib3d/lemo-scene.js` windows). Draw each analogy as a diagram (`"type": "diagram"`
   with `parts`), e.g. 1 kesulitan → 2 kemudahan as branching circles. 3D only when it fills the scene, never as a pasted window.
 - Vary the visual style from the previous video (see the style column in `content/topics_used.md`).
 - Daily prompt to reuse: `content/daily_prompt.md`.
+
+## Thumbnail frame at 00:00:00 (owner rule, 2026-11-26)
+
+frame PERTAMA setiap video (t=0, tanpa fade-in dari hitam/kosong)
+WAJIB sudah berupa visual utuh yang layak jadi thumbnail/cover TikTok: judul hook besar 2 baris (kata kunci diwarnai beda, mis. emas/merah,
+huruf tebal kapital, kontras tinggi), subjudul kecil opsional, plus satu ikon/ilustrasi pusat yang langsung terbaca (teks Arab kunci,
+sosok siluet, benda/simbol) di atas latar gelap/bertema. Semua elemen muncul penuh di frame 0 — animasi masuk dimulai SETELAH frame 0
+atau elemen sudah tampil lalu bergerak. Teks thumbnail di zona aman (di bawah tab TikTok, jauh dari ikon kanan & caption bawah) dan
+tidak menumpuk watermark. Storyboard scene 1 wajib punya field `"thumbnail"` (judul, subjudul, visual). Cek di QA: frame 0 diekstrak
+(`ffmpeg -ss 0 -frames:v 1`) dan dilihat sebelum kirim; frame 0 kosong/hitam/setengah muncul = tidak boleh dikirim.
+OTOMATIS: `qa.py precheck` memblokir render bila scene 1 tanpa `"thumbnail"`; `qa.py all` (setelah render) / `qa.py thumb <mp4>`
+menyimpan `output/qa_thumb.jpg` dan gagal (exit 3, "DO NOT DELIVER") bila frame 0 hitam, datar, atau detailnya < 60% frame detik 1.
 
 ## Storyboard format (shared by all modes)
 
@@ -171,19 +188,25 @@ Content rules:
 - Verify facts (numbers, dates, hadith wording) and cite them in `quote.source` / `ayat.ref`.
 - Keep important visuals above pixel y≈1280; captions sit at y 1320+.
 
-Approval summary format:
+Approval summary format (owner preference, 23 Nov 2026: detailed table, in Indonesian). Present it in chat, not just the JSON file:
 ```
-📋 STORYBOARD — [title]
-━━━━━━━━━━━━━━━━━━━━━━━━
-Scene 1 [type]: [eyebrow]            (🖼️ if it uses an AI image, 🧊 preset if it has a 3D scene, 🔊 name if it has scene SFX)
-  🎬 Visual: [what is shown]
-  🎙️ VO: "[vo]"
-...
-━━━━━━━━━━━━━━━━━━━━━━━━
-🎨 Gaya: <style or default> · 🎵 Musik: <mood> · 🔊 SFX: on
-Perkiraan durasi: ~Xs · Gambar AI: N dari M scene
-(mode 1: "🎨 Gaya" WAJIB berisi gaya Lemo + link galeri)
+## Storyboard: "[title]" (N scene, ±X menit)
+
+**Alur besarnya:** [one line: hook → isi → penyeimbang → CTA]
+
+| # | Teks di layar | Isi narasi (ringkas) | Dalil |
+|---|---|---|---|
+| 1 | **[headline]** | **Hook:** "[vo ringkas]" | — |
+| … | … | **Analogi:** … / **CTA:** … | QS. …: … / HR. … no. … |
+
+**Rancangan caption:** [Hook] … [Penjelasan] … [CTA] … #… #creatorsearchinsights #videofypシ゚
+**Visual:** [gaya + apa yang digambar; tanpa gambar tempel] · Audio: VO + SFX
+**Yang perlu Anda putuskan / cek:** [durasi vs pola akun, dalil yang perlu dicek ulang]
 ```
+- Column "Dalil" holds every Quran/hadith reference with its number; mark hook, analogy, balancing scene and CTA in bold.
+- For religious content, check that each hadith really matches the ayat's context (sebab nuzul > thematic match) and add a
+  balancing scene when a story could be misread (e.g. "dirahmati tanpa tobat" → tobat nasuha, QS. An-Nisa: 18).
+- Mark 🖼️ / 🧊 / 🔊 scenes in the table when used; mode 1 must name the Lemo style + gallery link.
 
 ### Sound (all modes)
 
@@ -317,7 +340,18 @@ Flow:
 
 ---
 
-## Mode question
+## Style list (replaces the mode question — owner rule, 2026-11-25)
+
+After the storyboard is approved (shown IN FULL: every scene's on-screen text, the complete VO word for word, dalil, visual, SFX, caption,
+style, duration — never summarised), do NOT ask "mode 1/2/3/4". Instead show EVERY available style as a numbered list from
+`docs/styles/index.json` (no., name, engine, cocok untuk, render time; mark the 1–2 that fit this storyboard with ★ and say why), send
+`docs/styles/gallery.jpg` (all previews, numbered like the list) with SendUserFile, plus a final row "Opuscar (99 gaya) — galeri
+https://lemomo-ai.github.io/lemo-opuscar/" and "Auto — Claude memilih". The owner answers with a number/name; then QA and render with that
+style's engine. The preview images are committed and are NOT generated at question time; when a style is added, run
+`python3 scripts/style_previews.py <id>` (one 2-frame still per style + index + gallery) and commit the result.
+The old mode question below stays only as reference for what each engine does.
+
+## Mode question (legacy reference)
 
 AskUserQuestion allows max 4 options, so ask in two steps.
 
@@ -328,14 +362,15 @@ AskUserQuestion allows max 4 options, so ask in two steps.
 4. `Lemo native / Manim…` — "Lemo native: tampilan persis gaya Opuscar (6 gaya). Atau Manim untuk sains/matematika."
 
 If Q1 = option 2 (HyperFrames) OR Q1 = option 1 and Auto picked HyperFrames, **Q1b** — "Mode 1: gaya dari mana?", header "Gaya" (skip only if the user already named the style source):
-1. `Auto Bang Motion` — "AI memilih 1 dari 6 gaya Bang Motion. Tanpa gambar Cloudflare, tanpa gaya Opuscar, tanpa scene action/custom."
-2. `Auto Lemo-Opuscar` — "AI memilih 1 dari 99 gaya Opuscar; gambar FLUX, scene action & custom ditentukan AI."
-3. `Auto campuran` — "AI memilih koleksi yang paling cocok (Opuscar atau Bang Motion), lalu gayanya."
+1. `Ukiran Tembaga (explainer khas)` — "Plat ukiran tembaga yang terukir sendiri + lingkaran pembesar detail. Tanpa gambar, ringan." Put it FIRST and mark it (Recommended) whenever the video EXPLAINS something (ayat kauniyah, penciptaan, alam, hewan, tumbuhan, tubuh, sains, cara kerja, detail sebuah benda).
+2. `Auto Bang Motion` — "AI memilih 1 dari gaya Bang Motion. Tanpa gambar Cloudflare, tanpa gaya Opuscar, tanpa scene action/custom."
+3. `Auto Lemo-Opuscar / campuran` — "AI memilih 1 dari 99 gaya Opuscar (gambar FLUX, scene action & custom), atau koleksi campuran yang paling cocok."
 4. `Tulis bebas` — the user writes what they want (style, FLUX images yes/no, Opuscar custom yes/no, backsound yes/no, anything).
    Follow it literally; ask nothing else unless it contradicts the content rules (Islamic image rules, no Prophet ﷺ images).
 In the auto options, say in one line which style was picked and why (topic + tone of the storyboard), then go on to QA/render.
 **Bang Motion auto** = `hyperframes/bang/styles.json` themes; storyboard gets NO `image_prompt` (strip any), `"style": "bang:<slug>"`.
-**Explain styles in Auto (all sub-options, incl. Auto Bang Motion):** when the topic explains HOW something works or what is INSIDE it, pick:
+**Explain styles in Auto (all sub-options, incl. Auto Bang Motion):** the owner's default explainer is `ukiran-tembaga` (2026-11-24) for
+any topic that explains a creature, a creation, nature, the body, the sky or a scientific detail. Otherwise, when the topic explains HOW something works or what is INSIDE it, pick:
 `kartun-cutaway` preset `dive` for outside → inside levels (body → heart → vessels, mountain → soil → groundwater, building → rooms,
 leaf → cell → chloroplast; uses 3–6 FLUX images, the only Bang exception to "no images"), `kartun-cutaway` preset `street` for vehicles/fuel,
 `infografik-flat` for a machine/process with moving parts, `papan-tulis` for a step-by-step "why", `sketsa-diagram` for a flow of logic.
@@ -394,6 +429,36 @@ Engine: `hyperframes/` (npm `hyperframes` 0.8.218, GSAP, lottie-web). Renders by
 | infografik-flat | navy, flat bright vectors with soft shadow, shapes pop in, slide cuts, Jakarta/Fredoka | explain | none |
 | sketsa-diagram | Excalidraw-like: dot grid, hachure pastel fills, camera pans across one canvas, sticky-note subtitle | explain | none |
 | kartun-cutaway | full-frame flat cartoon street + scooter (faceless helmeted rider), camera keys zoom in, torn X-ray window into the tank (preset `street`, `hyperframes/runtime/explain-cutaway.js`; example `examples/bensin-sedikit.storyboard.json`) | explain | none |
+| ukiran-tembaga | ★ owner's signature explainer: cream laid paper, natural-history copperplate that ENGRAVES ITSELF per scene (burin lines that swell/taper, tone only from 1–3 hatching families, fur/stipple), numbered roundels with leaders open on details, watercolour wash arrives last; Cormorant caps title + italic latin + ayat ref; Canvas 2D, light (~3–4 min render per 60 s) | engrave | none |
+
+**Watermark is mandatory (owner rule, 2026-11-25):** every generated/rendered video, any mode, draft or re-render, shows `@valsyz7` from
+second 0 to the last frame with no gap (the drawtext filter has no `enable=` window; a page's own `data-watermark` mark must also stay on
+screen the whole video). Check `qa_sheet.jpg` before delivering; never deliver a video without it.
+**Watermark (owner rule, 2026-11-24):** `produce.py` adds a faint `@valsyz7` (top-left, below TikTok's tab bar) to every final video in
+every mode. A page that draws its own mark carries `data-watermark` and is skipped (ukiran-tembaga engraves "ex collectione @valsyz7" up
+the left margin). New pages with their own mark must keep it off the right rail, the bottom 25 % (caption/handle) and the subtitles.
+
+**Ukiran Tembaga (`ukiran-tembaga.hf.html`, runtime `hyperframes/runtime/engrave.js`, example `examples/madu-lebah.ukiran.storyboard.json`)** —
+one scene = one engraved plate (PL. I, II, …) that draws itself: header → contours → hatching → roundels → wash. Scene fields:
+`plate` {title, latin, ref} (ref = surah · ayat), `subject` {preset, …} or {parts:[…]}, `figs` [{x, y, label, note, detail}] (≤2, x/y on the
+figure in box coords centred 0,0, about ±540 × ±500), `"wash": false` for a monochrome plate. Presets: `bee`, `honeycomb` {fill}, `flower`,
+`globe` {moon}, `cosmos` {split 0..1: heaven & earth parting (Al-Anbiya 30)}, `embryo` {stage 1 nutfah · 2 'alaqah · 3 mudghah · 4 bones clothed —
+ABSTRACT forms only, never a face}, `drop`, `mountain`, `sun`, `moon`, `tree`, `seed`. Roundel `detail`: hex, cells, rings, grain, stars,
+layers, fibers, veins. Generic parts: `ell` (tone sphere|flat|band), `poly` (v = darkness 0..1, ang = hatch angle), `line`, `dots`;
+`wash` names amber gold rose leaf sky sea earth night clay ivory brown. Pace: 6–9 s per plate (it needs time to engrave); 6–9 plates per minute.
+**Any other theme, built on the spot:** ukiran-tembaga is not limited to its presets. For a subject with no preset, DESIGN it in the
+storyboard as `subject.parts` while writing the storyboard (do not patch the runtime for one video): break the thing into 3–15 simple
+volumes — round masses → `ell` (tone `sphere`, `band` for stripes/segments, `flat`), plates/leaves/land/cloth/buildings → `poly`
+(control points, `v` = how dark, `ang` = hatch direction along the form), stems/limbs/rays/cracks/rivers → `line`, stars/dust/sand → `dots`.
+Order parts back → front (later parts draw on top). Keep everything inside x ±430, y ±480. Craft tips: `poly` with `"smooth": true`
+gives curved organic outlines; `v` 0.35–0.5 makes the hatching read (below 0.3 the form stays almost bare); a thick limb/trunk/neck is a
+narrow smooth `poly` (hatched), not a fat `line` (a `line` wider than ~14 px prints as a solid black bar); `line` takes `"taper": "end"`
+for tails/antennae/stems; wings and leaves take `"veins": 1`. Worked example: `examples/unta.ukiran.storyboard.json` (camel built from 8 parts). Examples: camel = ell body + ell hump +
+4 `line` legs + `line` neck + ell head; ship = `poly` hull + `poly` sail + `line` mast + `poly` waves; mosque = `poly` walls + `ell` dome (half
+under walls) + `line` minarets; heart = 2 `ell` + `poly` lower lobe + `line` vessels; mountain range, rain cloud, river = several `poly`.
+Pick 1–2 `figs` per plate on the part that carries the explanation. Run `--check-only` and LOOK at `output/qa_prerender.jpg`;
+adjust points until the silhouette reads at a glance. Faces are never drawn (people = faceless forms, embryo = abstract stages).
+If the same new subject is needed in 2+ videos, it may then become a preset in `engrave.js` (one commit, documented here).
 
 **Dive explainer (kartun-cutaway page, preset `dive`, `hyperframes/runtime/explain-dive.js`)** — outside → inside for ANY subject (body → heart →
 vessels, mountain → soil → groundwater, building → floors → rooms, leaf → cell → chloroplast). One scene = one level: its `image` (FLUX, flat
@@ -502,6 +567,11 @@ Give a clash scene ≥ 7 s of VO so every phase reads.
    → composition check (`lemo/render.mjs layout`: text overflow, outside the 9:16 safe area x 84–960 / y 210–1250, captions outside the
    band y 1330–1560, overlapping texts or text over the photo) + `output/qa_prerender.jpg`. Blocking issues stop the render; shorten the text.
 4. Render: same command without `--check-only` (`--workers=6` on a free machine).
+
+**Ayat in paper-lantern (owner rule, 24 Nov 2026):** never put the Arabic on a dark/black plate (reads as pasted). The kit draws the
+verse in gold straight on the sky with a soft black drop shadow on each letter (offset down), between two thin gold rules with a
+centre diamond, translation card right below, a faint edgeless dusk behind, and hides the moon on ayat scenes; reference:
+https://vt.tiktok.com/ZSsN7mw5y/. Apply the same idea to any custom ayat drawing in landscape kits.
 
 **Custom scenes (`"type": "custom"`) — use them instead of patching kits.** When an adegan needs something no built-in type draws
 (a city mood, a caravan, a market, a process, a dialogue…), write `output/custom/<name>.js` for this video and reference it with
