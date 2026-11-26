@@ -85,3 +85,17 @@ Tayangan hampir semuanya dari FYP; pencarian baru ±2K dari 682K → ruang tumbu
    Hindari "islamic fyp" (pencarian global anjlok ±260K → ±0 sejak 19 Nov) dan "Qoutes/motivationquotes" (umum, bukan Islami).
 5. Rumus terbaik: kalimat kehidupan yang relatable → dibedah dengan ayat + hadits + analogi sehari-hari (pola Insyirah) → CTA satu kata.
 6. Perbarui bagian ini setiap pemilik mengirim screenshot analitik baru.
+
+## Pembaruan data 26 Nov 2026 (Supermetrics TIKBA `videos`, 138 video + Metricool best time)
+
+| Video | Durasi | Views | Tonton rata² | Share | Simpan | Komentar |
+|---|---|---|---|---|---|---|
+| Al-Insyirah "bersama, bukan sesudah" (21 Nov) | 48 s | 381.446 | 20,4 s | 9.491 | 10.503 | 160 |
+| "Satu kalimat menghapus semua amalnya" (24 Nov) | 207 s | 21.878 | 75,3 s | 1.009 | 1.077 | 177 |
+| "Hidupmu berat, iman dikencengin" (25 Nov) | 140 s | 7.138 | 65,7 s | 149 | 147 | 11 |
+
+- Video panjang BERHASIL bila berupa kisah dengan taruhan (amal hilang): tonton rata² 66–75 s.
+- Simpan ≥ share di video ayat yang "dibalik" maknanya → format seri "ayat yang sering salah dipahami".
+- Fakta sains murni tetap mentok 300–700 views; topik abstrak tanpa taruhan pribadi ±200.
+- 2 unggahan/hari: video kedua selalu < 230 views → 1 video/hari.
+- Jam terbaik (Metricool, WIB): Rabu–Kamis 10.00, lalu 18.00 dan 12.00; Jumat 10.00; Sabtu–Minggu ±40% lebih lemah.
