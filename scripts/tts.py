@@ -10,6 +10,7 @@ Writes:
 
 Note: sonic-2 rejects language "id"; sonic-3 supports Indonesian and timestamps.
 """
+import re
 import sys, os, json, base64, subprocess, requests
 
 API_KEY  = os.environ.get("CARTESIA_API_KEY", "")
@@ -24,13 +25,29 @@ TRAIL_PAD_S = 0.25    # silence kept after last word
 DEFAULT_VOICE = os.environ.get("CARTESIA_VOICE_ID", "694f9389-aac1-45b6-b726-9d9369183238")
 
 
+# Lafaz yang salah dibaca TTS id-ID: dikirim dalam ejaan bacaan, subtitle tetap ejaan asli (aturan pemilik 2026-11-27: Allah dibaca "Alloh").
+SAY = {"Allah": "Alloh"}
+
+
+def say(text: str) -> str:
+    for a, b in SAY.items():
+        text = re.sub(rf"\b{a}\b", b, text)
+    return text
+
+
+def unsay(word: str) -> str:
+    for a, b in SAY.items():
+        word = re.sub(rf"\b{b}\b", a, word)
+    return word
+
+
 def tts(text: str, out_file: str, voice_id: str = DEFAULT_VOICE):
     if not API_KEY:
         sys.exit("ERROR: CARTESIA_API_KEY not set.")
 
     payload = {
         "model_id": MODEL,
-        "transcript": text,
+        "transcript": say(text),
         "voice": {"mode": "id", "id": voice_id},
         "language": "id",
         "add_timestamps": True,
@@ -86,7 +103,7 @@ def tts(text: str, out_file: str, voice_id: str = DEFAULT_VOICE):
 
     duration_ms = round(len(pcm) / (RATE * BYTES_PER_SAMPLE) * 1000)
     out_words = [
-        {"text": w["text"],
+        {"text": unsay(w["text"]),
          "start_ms": round((w["start"] - cut_start) * 1000),
          "end_ms": round((w["end"] - cut_start) * 1000)}
         for w in words
