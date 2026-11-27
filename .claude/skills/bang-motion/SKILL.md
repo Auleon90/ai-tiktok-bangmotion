@@ -78,6 +78,9 @@ shares drive reach (hit: 1,123 shares) and come from loss/"ini aku" reflections,
   specific interaction prompt (answer a question in the comments, save it, send it to someone who needs it) — never a generic
   "like & follow". Show it in the storyboard labelled [Hook]/[Penjelasan]/[CTA]. Then + 3–5 niche hashtags (#nikmatallah #syukur #renunganislami
   + 1–2 topical) and ALWAYS end with the two owner hashtags `#creatorsearchinsights #videofypシ゚` (exact spelling);
+  **Sources (owner rule, 2026-11-27):** every caption carries a "📚 Sumber:" block after the CTA and before the hashtags: one "•" line per
+  ayat (QS. Surah: ayat), hadith (collector + number + grade if not Bukhari/Muslim + 3–6 words of content) and science source (study/author, year,
+  journal/book) used in the video; show it in the storyboard caption too.
   one spelling of the handle or none; no names of other people/preachers, no "Upload Method" lines, no repeated #fyp.
 - **Audio (owner rule, 2026-11-20): NO background music** — always `"music": "none"`, keep ambience (`"ambience": "wind"`) + SFX. Applies to every future video unless the owner asks for music.
 - **Explainer, not "gaya tempel" (owner rule, 2026-11-21):** when the video explains a meaning, an analogy (perumpamaan) or a

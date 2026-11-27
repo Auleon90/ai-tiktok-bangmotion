@@ -60,7 +60,10 @@ bash scripts/setup.sh   # requests/fonttools, npm install (remotion, hyperframes
    membuat penasaran, tidak membocorkan jawaban) → **PENJELASAN** (1–3 kalimat yang MENAMBAH isi VO: makna, dalil singkat, analogi
    nyata, atau satu insight yang tidak ada di video) → **CTA kuat** (ajakan spesifik yang memancing interaksi: jawab pertanyaan di
    komentar, simpan untuk diingat, kirim ke orang yang butuh — bukan "like & follow" generik) + 3–5 hashtag niche, SELALU ditutup
-   `#creatorsearchinsights #videofypシ゚` (ejaan persis). Di storyboard tulis caption lengkap dengan label [Hook]/[Penjelasan]/[CTA].
+   `#creatorsearchinsights #videofypシ゚` (ejaan persis).
+   **Sumber di caption (aturan pemilik, 2026-11-27):** setiap caption WAJIB memuat blok "📚 Sumber:" (setelah CTA, sebelum hashtag)
+   berisi SEMUA dalil & rujukan yang dipakai di video: ayat (QS. Surah: ayat), hadis (perawi + nomor + status bila bukan Bukhari/Muslim,
+   plus 3–6 kata isinya), dan sumber sains (nama studi/penulis, tahun, jurnal/buku). Satu baris per sumber, diawali "•". Di storyboard tulis caption lengkap dengan label [Hook]/[Penjelasan]/[CTA].
 9. Semua mode berakhir di `output/final.mp4` dengan VO Cartesia — tidak pernah berhenti di halaman HTML.
 
 Detail lengkap: `.claude/skills/bang-motion/SKILL.md`. Semua mode dijalankan lewat `scripts/produce.py`.
