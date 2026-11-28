@@ -89,6 +89,10 @@ Gambar AI (FLUX) tetap tanpa Nabi ﷺ/sahabat dan tanpa wajah untuk konten Islam
 di `content/strategi.md` (retensi 18,2 s = kelemahan utama; kata kunci naik: kata kata kehidupan, motivasi & nasihat Islami, reminder islam)
 dan perbarui bagian itu setiap ada screenshot analitik baru.
 
+**Mode storyboard "Contoh analogi inspirasi kehidupan" (aturan pemilik, 2026-11-28):** perumpamaan visual singkat, tajam, kena di hati
+(siluet tanpa wajah, balon teks pendek, twist + kontras dua respons, dalil + sains di akhir). Panduan, bedah video referensi & bank ide:
+`content/analogi-kehidupan.md`; contoh `examples/dua-lubang.analogi.storyboard.json`. Ide/visual baru dicari sendiri, wajib bersumber.
+
 **Perubahan aturan (aturan pemilik, 2026-11-24):** setiap aturan baru dari pemilik langsung di-commit dan di-push ke `main`.
 
 **Gaya explainer, bukan gaya tempel (aturan pemilik, 2026-11-21):** video yang menjelaskan makna/perumpamaan/cara kerja memakai gaya explainer yang digambar (Bang `ukiran-tembaga` = gaya khas pemilik untuk ayat kauniyah/penciptaan/alam/sains detail (2026-11-24), `papan-tulis`, `infografik-flat`, `sketsa-diagram`, `kartun-cutaway`, Lemo `stick-explainer`), bukan jendela 3D/foto yang ditempel di kartu. Detail di SKILL.md.

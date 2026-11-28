@@ -1,0 +1,61 @@
+{
+ "title": "Doa yang Sama, Nasib Berbeda",
+ "mode_storyboard": "analogi-kehidupan",
+ "style": "paper-lantern",
+ "music": "none",
+ "ambience": "none",
+ "sfx": true,
+ "scenes": [
+  {
+   "id": 1,
+   "type": "custom",
+   "code": "custom/dua-lubang.js",
+   "beat": "pray",
+   "thumbnail": {
+    "title": "DOA YANG SAMA,\nNASIB BERBEDA",
+    "highlight": "BERBEDA",
+    "subtitle": "Kamu yang mana?",
+    "visual": "dua siluet di dua lubang tanah, dipisah batang pohon"
+   },
+   "bubbles": [{"who": "left", "color": "blue", "text": "Ya Allah, bantulah saya"}, {"who": "right", "color": "red", "text": "Ya Allah, bantulah saya"}],
+   "vo": "Dua orang. Terjebak di lubang yang sama. Berdoa dengan doa yang sama.",
+   "gap_after_ms": 700
+  },
+  {
+   "id": 2,
+   "type": "custom",
+   "code": "custom/dua-lubang.js",
+   "beat": "fall",
+   "sfx_hint": "kayu retak, dahan jatuh",
+   "vo": "Lalu jawabannya datang. Pohon di atas mereka tumbang.",
+   "gap_after_ms": 900
+  },
+  {
+   "id": 3,
+   "type": "custom",
+   "code": "custom/dua-lubang.js",
+   "beat": "contrast",
+   "bubbles": [{"who": "right", "color": "red", "text": "Musibah apalagi ini? Saya ngga sanggup…"}, {"who": "left", "color": "blue", "text": "Apa yang bisa saya buat dengan dahan ini?"}],
+   "vo": "Yang satu melihat musibah. Yang satu melihat bahan.",
+   "gap_after_ms": 800
+  },
+  {
+   "id": 4,
+   "type": "custom",
+   "code": "custom/dua-lubang.js",
+   "beat": "climb",
+   "sfx_hint": "dahan dipatahkan, diikat, langkah memanjat",
+   "vo": "Dahan yang menimpanya, ia jadikan tangga.",
+   "gap_after_ms": 1200
+  },
+  {
+   "id": 5,
+   "type": "ayat",
+   "arabic": "لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا",
+   "translation": "Allah tidak membebani seseorang melainkan sesuai kesanggupannya.",
+   "ref": "QS. Al-Baqarah: 286",
+   "vo": "Allah tidak membebani seseorang, melainkan sesuai kesanggupannya. Ujianmu bukan tanda kamu ditinggalkan. Kadang, itu tangga yang kamu minta."
+  }
+ ],
+ "caption": "[Hook] Doanya sama. Ujiannya sama. Kenapa cuma satu yang keluar?\n\n[Penjelasan] Kadang jawaban doa datang dalam bentuk yang terasa seperti musibah. Al-Baqarah 286 menjamin bebanmu tidak melebihi kemampuanmu — artinya di dalam ujian itu sudah ada bahan untuk keluar darinya.\n\n[CTA] Kamu sekarang sedang jadi yang biru atau yang merah? Jawab jujur di komentar, lalu kirim ke teman yang lagi merasa \"ngga sanggup\".\n\n📚 Sumber:\n• QS. Al-Baqarah: 286 — Allah tidak membebani di luar kesanggupan\n• QS. Al-Insyirah: 5–6 — bersama kesulitan ada kemudahan\n\n#analogikehidupan #reminderislam #motivasiislami #katakatakehidupan #creatorsearchinsights #videofypシ゚"
+}

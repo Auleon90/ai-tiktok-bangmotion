@@ -104,6 +104,14 @@ tidak menumpuk watermark. Storyboard scene 1 wajib punya field `"thumbnail"` (ju
 OTOMATIS: `qa.py precheck` memblokir render bila scene 1 tanpa `"thumbnail"`; `qa.py all` (setelah render) / `qa.py thumb <mp4>`
 menyimpan `output/qa_thumb.jpg` dan gagal (exit 3, "DO NOT DELIVER") bila frame 0 hitam, datar, atau detailnya < 60% frame detik 1.
 
+## Storyboard mode: "Contoh analogi inspirasi kehidupan" (owner request, 2026-11-28)
+
+When the user asks for an analogy / life-inspiration / perumpamaan video (or "mode analogi"), read `content/analogi-kehidupan.md` first.
+Format: 25–45 s, 4–6 scenes, ONE visual parable told mostly by faceless code-drawn silhouettes (scene `custom`), on-screen bubbles
+≤ 8 words, thin/short VO with long gaps, structure "ini aku" → twist → contrast of two responses → result → key (ayat/hadith + one science
+fact) at the END. Ideas and visuals are yours to invent (the reference video is only an example); every analogy must be backed by a
+verifiable source listed in the caption "📚 Sumber:" block. Example: `examples/dua-lubang.analogi.storyboard.json`.
+
 ## Storyboard format (shared by all modes)
 
 ```json
